@@ -4715,6 +4715,10 @@ static TempStr URLEncodeMayTruncateTemp(const char* s) {
         if (diff > 10) {
             diff = (diff * 2) / 3;
         }
+        if ((int)diff >= maxLen) {
+            // can't reduce further
+            return nullptr;
+        }
         maxLen -= diff;
     }
     return nullptr;
