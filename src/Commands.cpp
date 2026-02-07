@@ -3,10 +3,10 @@
 
 #include "utils/BaseUtil.h"
 
+#include "Commands.h"
 #include "Settings.h"
 #include "GlobalPrefs.h"
 #include "DisplayMode.h"
-#include "Commands.h"
 
 #include "utils/Log.h"
 

@@ -18,6 +18,7 @@ extern "C" {
 #include "EngineBase.h"
 #include "EngineMupdf.h"
 #include "GlobalPrefs.h"
+#include "Commands.h"
 
 #include "utils/Log.h"
 
@@ -1111,4 +1112,12 @@ Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF p
 
     pdf_drop_annot(ctx, annot);
     return res;
+}
+
+AnnotationType CmdIdToAnnotationType(int cmdId) {
+    int annotType = cmdId - (int)CmdCreateAnnotText;
+    if (annotType < 0 || annotType > (int)AnnotationType::Last) {
+        return AnnotationType::Unknown;
+    }
+    return (AnnotationType)annotType;
 }

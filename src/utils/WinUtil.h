@@ -334,7 +334,7 @@ void HwndSetFont(HWND, HFONT);
 
 void HwndPositionToTheRightOf(HWND hwnd, HWND hwndRelative);
 void HwndPositionInCenterOf(HWND hwnd, HWND hwndRelative);
-void HwndSendCommand(HWND hwnd, int cmdId);
+void HwndSendCommand(HWND hwnd, int cmdId, LPARAM lp = 0);
 void HwndDestroyWindowSafe(HWND* hwnd);
 void HwndToForeground(HWND hwnd);
 void HwndSetVisibility(HWND hwnd, bool visible);

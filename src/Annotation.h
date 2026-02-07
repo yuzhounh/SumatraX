@@ -34,6 +34,7 @@ enum class AnnotationType {
     Watermark,
     ThreeD,
     Projection,
+    Last = Projection,
     Unknown = -1
 };
 
@@ -113,3 +114,4 @@ void SetIconName(Annotation*, const char*);
 bool SetColor(Annotation*, PdfColor);
 void DeleteAnnotation(Annotation*);
 bool IsMoveableAnnotation(AnnotationType);
+AnnotationType CmdIdToAnnotationType(int cmdId);

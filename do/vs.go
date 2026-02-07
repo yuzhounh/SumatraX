@@ -52,7 +52,7 @@ func checkAvailbleInPATH(path string) (string, bool) {
 	cmd := exec.Command(name)
 	_, err := cmd.CombinedOutput()
 	if err != nil {
-		logf("%s NOT in PATH (from '%s')\n", name, path)
+		// logf("%s NOT in PATH (from '%s')\n", name, path)
 		return "", false
 	}
 	logf("%s found in PATH (from '%s')\n", name, path)

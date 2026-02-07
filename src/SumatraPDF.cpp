@@ -140,7 +140,8 @@ static void OnSidebarSplitterMove(Splitter::MoveEvent*);
 static void OnFavSplitterMove(Splitter::MoveEvent*);
 
 EBookUI* GetEBookUI() {
-    if (!gGlobalPrefs) return nullptr;
+    if (!gGlobalPrefs)
+        return nullptr;
     return &gGlobalPrefs->eBookUI;
 }
 
@@ -5208,21 +5209,9 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         cmdId = cmd->origId;
     }
 
-    AnnotationType annotType = (AnnotationType)(cmdId - CmdCreateAnnotText);
-    switch (cmdId) {
-        case CmdCreateAnnotHighlight:
-            annotType = AnnotationType::Highlight;
-            break;
-        case CmdCreateAnnotSquiggly:
-            annotType = AnnotationType::Squiggly;
-            break;
-        case CmdCreateAnnotStrikeOut:
-            annotType = AnnotationType::StrikeOut;
-            break;
-        case CmdCreateAnnotUnderline:
-            annotType = AnnotationType::Underline;
-            break;
-    }
+    AnnotationType annotType = CmdIdToAnnotationType(cmdId);
+    // if true, we're here from Menu.cpp
+    bool annotCreateFromContextMenu = (lp == 1);
 
     // most of them require a win, the few exceptions are no-ops
     switch (cmdId) {
@@ -5954,18 +5943,6 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             break;
         }
 
-#if 0
-        case CmdSelectAnnotation: {
-            if (tab) {
-                Annotation* annot = GetAnnotionUnderCursor(tab, nullptr);
-                if (annot) {
-                    SetSelectedAnnotation(tab, annot);
-                }
-            }
-            break;
-        }
-#endif
-
         case CmdEditAnnotations: {
             if (tab) {
                 Annotation* annot = GetAnnotionUnderCursor(tab, nullptr);
@@ -5999,27 +5976,29 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             [[fallthrough]];
         case CmdCreateAnnotStrikeOut:
             [[fallthrough]];
-        case CmdCreateAnnotUnderline:
-            if (win && tab) {
-                AnnotCreateArgs args{annotType};
-                SetAnnotCreateArgs(args, cmd);
-                auto annot = MakeAnnotationsFromSelection(tab, &args);
-                if (annot) {
-                    // for built-in shortcuts, Shift also opens edit window
-                    // don't apply that to user shortcuts
-                    // https://github.com/sumatrapdfreader/sumatrapdf/discussions/5209
-                    bool defVal = IsShiftPressed();
-                    if (cmd) {
-                        defVal = false;
-                    }
-                    bool openEdit = GetCommandBoolArg(cmd, kCmdArgOpenEdit, defVal);
-                    if (openEdit) {
-                        ShowEditAnnotationsWindow(tab);
-                        SetSelectedAnnotation(tab, annot);
-                    }
-                }
+        case CmdCreateAnnotUnderline: {
+            if (!win || !tab) {
+                return 0;
             }
-            break;
+            AnnotCreateArgs args{annotType};
+            SetAnnotCreateArgs(args, cmd);
+            auto annot = MakeAnnotationsFromSelection(tab, &args);
+            if (!annot) {
+                return 0;
+            }
+            // for built-in shortcuts, Shift also opens edit window
+            // don't apply that to user shortcuts
+            // https://github.com/sumatrapdfreader/sumatrapdf/discussions/5209
+            bool defVal = IsShiftPressed();
+            if (cmd) {
+                defVal = false;
+            }
+            bool openEdit = GetCommandBoolArg(cmd, kCmdArgOpenEdit, defVal);
+            if (openEdit) {
+                ShowEditAnnotationsWindow(tab);
+                SetSelectedAnnotation(tab, annot);
+            }
+        } break;
 
             // Note: duplicated in OnWindowContextMenu because slightly different handling
         case CmdCreateAnnotText:
@@ -6035,15 +6014,14 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         case CmdCreateAnnotLine:
             [[fallthrough]];
         case CmdCreateAnnotCircle: {
-            if (!dm) {
+            if (!win || !tab || !dm) {
                 return 0;
             }
             EngineBase* engine = dm->GetEngine();
             if (!engine) {
                 return 0;
             }
-            bool handle = !win->isFullScreen && EngineSupportsAnnotations(engine);
-            if (!handle) {
+            if (!EngineSupportsAnnotations(engine)) {
                 return 0;
             }
             Point pt = HwndGetCursorPos(hwnd);
@@ -6067,7 +6045,9 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
     }
     if (lastCreatedAnnot) {
         UpdateAnnotationsList(tab->editAnnotsWindow);
-        ShowEditAnnotationsWindow(tab);
+        if (!win->isFullScreen) {
+            ShowEditAnnotationsWindow(tab);
+        }
         SetSelectedAnnotation(tab, lastCreatedAnnot);
     }
     return 0;

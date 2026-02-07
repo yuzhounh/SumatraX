@@ -1026,7 +1026,6 @@ UINT_PTR removeIfNoDiskAccessPerm[] = {
 UINT_PTR removeIfAnnotsNotSupported[] = {
     CmdSaveAnnotations,
     CmdSaveAnnotationsNewFile,
-    //CmdSelectAnnotation,
     CmdEditAnnotations,
     CmdDeleteAnnotation,
     (UINT_PTR)menuDefCreateAnnotFromSelection,
@@ -1399,7 +1398,6 @@ std::pair<bool, bool> GetCommandIdState(BuildMenuCtx* ctx, int cmdId) {
     remove |= !ctx->canSendEmail && (cmdId == CmdSendByEmail);
 
     disable |= (!ctx->hasSelection && cmdIdInList(disableIfNoSelection));
-    // disableMenu |= (!ctx->annotationUnderCursor && (cmdId == CmdSelectAnnotation));
     disable |= (!ctx->annotationUnderCursor && (cmdId == CmdDeleteAnnotation));
     disable |= !ctx->hasUnsavedAnnotations && (cmdId == CmdSaveAnnotations);
     return {remove, disable};
@@ -1911,48 +1909,62 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
         return;
     }
 
-    AnnotationType annotType = (AnnotationType)(cmdId - CmdCreateAnnotText);
-    Annotation* annot = nullptr;
+    AnnotationType annotType = CmdIdToAnnotationType(cmdId);
+    if (annotType != AnnotationType::Unknown) {
+        // handle in FrameOnCommand() in SumatraPDF.cpp
+        // 1 means it comes from here in case we need to do slightly
+        // different processing
+        HwndSendCommand(win->hwndFrame, cmdId, 1);
+        return;
+    }
     switch (cmdId) {
         case CmdCopySelection:
+            [[fallthrough]];
         case CmdTranslateSelectionWithGoogle:
+            [[fallthrough]];
         case CmdTranslateSelectionWithDeepL:
+            [[fallthrough]];
         case CmdSearchSelectionWithGoogle:
+            [[fallthrough]];
         case CmdSearchSelectionWithBing:
+            [[fallthrough]];
         case CmdSearchSelectionWithWikipedia:
+            [[fallthrough]];
         case CmdSearchSelectionWithGoogleScholar:
+            [[fallthrough]];
         case CmdSelectAll:
+            [[fallthrough]];
         case CmdSaveAs:
+            [[fallthrough]];
         case CmdPrint:
+            [[fallthrough]];
         case CmdToggleBookmarks:
+            [[fallthrough]];
         case CmdToggleTableOfContents:
+            [[fallthrough]];
         case CmdFavoriteToggle:
+            [[fallthrough]];
         case CmdProperties:
+            [[fallthrough]];
         case CmdToggleToolbar:
+            [[fallthrough]];
         case CmdToggleScrollbars:
+            [[fallthrough]];
         case CmdSaveAnnotations:
+            [[fallthrough]];
         case CmdSaveAnnotationsNewFile:
+            [[fallthrough]];
         case CmdFavoriteAdd:
+            [[fallthrough]];
+        case CmdEditAnnotations:
+            [[fallthrough]];
         case CmdToggleFullscreen:
+            [[fallthrough]];
+        case CmdDeleteAnnotation: {
             // handle in FrameOnCommand() in SumatraPDF.cpp
             HwndSendCommand(win->hwndFrame, cmdId);
-            break;
+        } break;
 
-            // note: those are duplicated in SumatraPDF.cpp to enable keyboard shortcuts for them
-#if 0
-        case CmdSelectAnnotation:
-            ReportIf(!ctx->annotationUnderCursor);
-            [[fallthrough]];
-#endif
-
-        case CmdEditAnnotations:
-            ShowEditAnnotationsWindow(tab);
-            SetSelectedAnnotation(tab, ctx->annotationUnderCursor);
-            break;
-        case CmdDeleteAnnotation: {
-            DeleteAnnotationAndUpdateUI(tab, ctx->annotationUnderCursor);
-            break;
-        }
         case CmdCopyLinkTarget: {
             TempStr tmp = CleanupURLForClipbardCopyTemp(value);
             CopyTextToClipboard(tmp);
@@ -1975,63 +1987,7 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
             DelFavorite(filePath, pageNoUnderCursor);
             break;
         }
-
-        // Note: duplicated in OnWindowContextMenu because slightly different handling
-        case CmdCreateAnnotText:
-        case CmdCreateAnnotFreeText:
-        case CmdCreateAnnotStamp:
-        case CmdCreateAnnotCaret:
-        case CmdCreateAnnotSquare:
-        case CmdCreateAnnotLine:
-        case CmdCreateAnnotCircle: {
-            AnnotCreateArgs args{annotType, {}};
-            annot = EngineMupdfCreateAnnotation(engine, pageNoUnderCursor, ptOnPage, &args);
-            UpdateAnnotationsList(tab->editAnnotsWindow);
-            break;
-        }
-        case CmdCreateAnnotHighlight: {
-            AnnotCreateArgs args{AnnotationType::Highlight};
-            annot = MakeAnnotationsFromSelection(tab, &args);
-            break;
-        }
-        case CmdCreateAnnotSquiggly: {
-            AnnotCreateArgs args{AnnotationType::Squiggly};
-            annot = MakeAnnotationsFromSelection(tab, &args);
-            break;
-        }
-        case CmdCreateAnnotStrikeOut: {
-            AnnotCreateArgs args{AnnotationType::StrikeOut};
-            annot = MakeAnnotationsFromSelection(tab, &args);
-            break;
-        }
-        case CmdCreateAnnotUnderline: {
-            AnnotCreateArgs args{AnnotationType::Underline};
-            annot = MakeAnnotationsFromSelection(tab, &args);
-            break;
-        }
-        case CmdCreateAnnotInk:
-        case CmdCreateAnnotPolyLine:
-            // TODO: implement me
-            break;
     }
-    if (annot) {
-        ShowEditAnnotationsWindow(tab);
-        SetSelectedAnnotation(tab, annot);
-    }
-    /*
-        { _TRA("Line"), CmdCreateAnnotLine, },
-        { _TR_TODON("Highlight"), CmdCreateAnnotHighlight, },
-        { _TR_TODON("Underline"), CmdCreateAnnotUnderline, },
-        { _TR_TODON("Strike Out"), CmdCreateAnnotStrikeOut, },
-        { _TR_TODON("Squiggly"), CmdCreateAnnotSquiggly, },
-        { _TR_TODON("File Attachment"), CmdCreateAnnotFileAttachment, },
-        { _TR_TODON("Redact"), CmdCreateAnnotRedact, },
-    */
-    // TODO: those require creating
-    /*
-        { _TR_TODON("Polygon"), CmdCreateAnnotPolygon, },
-        { _TR_TODON("Poly Line"), CmdCreateAnnotPolyLine, },
-    */
 }
 
 // so that we can do free everything at exit
