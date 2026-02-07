@@ -711,11 +711,11 @@ static void OnMouseLeftButtonDown(MainWindow* win, int x, int y, WPARAM key) {
     WindowTab* tab = win->CurrentTab();
     Annotation* annot = dm->GetAnnotationAtPos(pt, tab->selectedAnnotation);
     bool isMoveableAnnot = annot && (annot == tab->selectedAnnotation) && IsMoveableAnnotation(annot->type);
-    bool isResizeableAnnot = annot && (annot == tab->selectedAnnotation) && IsResizeableAnnotation(annot->type);
-
     // Check if we're clicking on a resize handle of the selected annotation
+    // must check selectedAnnotation directly (not annot) because resize handles
+    // extend beyond annotation bounds and GetAnnotationAtPos() won't find them
     ResizeHandle resizeHandle = ResizeHandle::None;
-    if (tab->selectedAnnotation && isResizeableAnnot) {
+    if (tab->selectedAnnotation && IsResizeableAnnotation(tab->selectedAnnotation->type)) {
         resizeHandle = GetResizeHandleAt(win, pt, tab->selectedAnnotation);
     }
 
