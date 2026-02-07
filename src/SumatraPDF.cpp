@@ -2648,8 +2648,14 @@ static bool MaybeSaveAnnotations(WindowTab* tab) {
         return true;
     }
     tab->askedToSaveAnnotations = true;
+    MainWindow* win = tab->win;
     auto path = dm->GetFilePath();
-    auto choice = ShouldSaveAnnotationsDialog(tab->win->hwndFrame, path);
+    auto choice = ShouldSaveAnnotationsDialog(win->hwndFrame, path);
+    // the dialog pumps messages; during that, the window can be destroyed
+    // (e.g. WM_CLOSE from plugin host) which frees win and tab
+    if (!IsMainWindowValid(win)) {
+        return true;
+    }
     switch (choice) {
         case SaveChoice::Discard:
             return true;
