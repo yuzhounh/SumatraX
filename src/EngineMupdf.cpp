@@ -3589,6 +3589,7 @@ bool EngineMupdfSaveUpdated(EngineBase* engine, const char* path, const ShowErro
         path = currPath;
     }
     auto ctx = epdf->Ctx();
+    ScopedCritSec scope(epdf->ctxAccess);
 
     pdf_write_options save_opts{};
     save_opts = pdf_default_write_options2;
