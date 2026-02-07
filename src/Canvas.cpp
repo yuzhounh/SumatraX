@@ -1229,43 +1229,31 @@ NO_INLINE static void PaintCurrentEditAnnotationMark(WindowTab* tab, HDC hdc, Di
     // Draw resize handles
     Gdiplus::SolidBrush handleBrush(Gdiplus::Color(255, 255, 255, 255)); // White
     Gdiplus::Pen handlePen(Gdiplus::Color(255, 0, 0, 0), 1);             // Black
-    int handleSize = 6;
+    int hs = 6; // handle size
+    int hh = hs / 2; // half handle
 
-    // Draw corner handles
-    gs.FillRectangle(&handleBrush, rect.x - handleSize / 2, rect.y - handleSize / 2, handleSize, handleSize);
-    gs.DrawRectangle(&handlePen, rect.x - handleSize / 2, rect.y - handleSize / 2, handleSize, handleSize);
+    int left = rect.x - hh;
+    int midX = rect.x + rect.dx / 2 - hh;
+    int right = rect.x + rect.dx - hh;
+    int top = rect.y - hh;
+    int midY = rect.y + rect.dy / 2 - hh;
+    int bottom = rect.y + rect.dy - hh;
 
-    gs.FillRectangle(&handleBrush, rect.x + rect.dx - handleSize / 2, rect.y - handleSize / 2, handleSize, handleSize);
-    gs.DrawRectangle(&handlePen, rect.x + rect.dx - handleSize / 2, rect.y - handleSize / 2, handleSize, handleSize);
+    auto drawHandle = [&](int x, int y) {
+        gs.FillRectangle(&handleBrush, x, y, hs, hs);
+        gs.DrawRectangle(&handlePen, x, y, hs, hs);
+    };
 
-    gs.FillRectangle(&handleBrush, rect.x + rect.dx - handleSize / 2, rect.y + rect.dy - handleSize / 2, handleSize,
-                     handleSize);
-    gs.DrawRectangle(&handlePen, rect.x + rect.dx - handleSize / 2, rect.y + rect.dy - handleSize / 2, handleSize,
-                     handleSize);
-
-    gs.FillRectangle(&handleBrush, rect.x - handleSize / 2, rect.y + rect.dy - handleSize / 2, handleSize, handleSize);
-    gs.DrawRectangle(&handlePen, rect.x - handleSize / 2, rect.y + rect.dy - handleSize / 2, handleSize, handleSize);
-
-    // Draw edge handles
-    gs.FillRectangle(&handleBrush, rect.x + rect.dx / 2 - handleSize / 2, rect.y - handleSize / 2, handleSize,
-                     handleSize);
-    gs.DrawRectangle(&handlePen, rect.x + rect.dx / 2 - handleSize / 2, rect.y - handleSize / 2, handleSize,
-                     handleSize);
-
-    gs.FillRectangle(&handleBrush, rect.x + rect.dx - handleSize / 2, rect.y + rect.dy / 2 - handleSize / 2, handleSize,
-                     handleSize);
-    gs.DrawRectangle(&handlePen, rect.x + rect.dx - handleSize / 2, rect.y + rect.dy / 2 - handleSize / 2, handleSize,
-                     handleSize);
-
-    gs.FillRectangle(&handleBrush, rect.x + rect.dx / 2 - handleSize / 2, rect.y + rect.dy - handleSize / 2, handleSize,
-                     handleSize);
-    gs.DrawRectangle(&handlePen, rect.x + rect.dx / 2 - handleSize / 2, rect.y + rect.dy - handleSize / 2, handleSize,
-                     handleSize);
-
-    gs.FillRectangle(&handleBrush, rect.x - handleSize / 2, rect.y + rect.dy / 2 - handleSize / 2, handleSize,
-                     handleSize);
-    gs.DrawRectangle(&handlePen, rect.x - handleSize / 2, rect.y + rect.dy / 2 - handleSize / 2, handleSize,
-                     handleSize);
+    // corners
+    drawHandle(left, top);
+    drawHandle(right, top);
+    drawHandle(right, bottom);
+    drawHandle(left, bottom);
+    // edges
+    drawHandle(midX, top);
+    drawHandle(right, midY);
+    drawHandle(midX, bottom);
+    drawHandle(left, midY);
 }
 
 static bool DrawDocument(MainWindow* win, HDC hdc, RECT* rcArea) {
