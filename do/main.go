@@ -239,7 +239,6 @@ func Main() {
 		flgRunTests        bool
 		flgTransDownload   bool
 		flgTriggerCodeQL   bool
-		flgUpdateGoDeps    bool
 		flgUpdateVer       string
 		flgUpload          bool
 		flgWc              bool
@@ -272,7 +271,6 @@ func Main() {
 		flag.BoolVar(&flgRunTests, "run-tests", false, "run test_util executable")
 		flag.BoolVar(&flgBuildLogview, "build-logview", false, "build logview-win. Use -upload to also upload it to backblaze")
 		flag.IntVar(&flgBuildNo, "build-no-info", 0, "print build number info for given build number")
-		flag.BoolVar(&flgUpdateGoDeps, "update-go-deps", false, "update go dependencies")
 		flag.BoolVar(&flgGenDocs, "gen-docs", false, "generate html docs in docs/www from markdown in docs/md")
 		flag.BoolVar(&flgGenWebsiteDocs, "gen-docs-website", false, "generate html docs in ../sumatra-website repo and check them in")
 		flag.Parse()
@@ -297,16 +295,6 @@ func Main() {
 
 	if flgGenWebsiteDocs {
 		genHTMLDocsForWebsite()
-		return
-	}
-
-	if flgUpdateGoDeps {
-		defer measureDuration()()
-		u.UpdateGoDeps(".", true)
-		u.UpdateGoDeps(filepath.Join("tools", "regress"), true)
-		// u.UpdateGoDeps(filepath.Join("tools", "logview-cli"), true)
-		// u.UpdateGoDeps(filepath.Join("tools", "logview"), true)
-		// u.UpdateGoDeps(filepath.Join("tools", "logview-web"), true)
 		return
 	}
 
