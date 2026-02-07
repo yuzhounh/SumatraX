@@ -2828,10 +2828,11 @@ void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose) {
         HwndSetFocus(win->hwndFrame);
         ReportIf(!gWindows.Contains(win));
     } else {
-        FreeMenuOwnerDrawInfoData(win->menu);
-        HWND hwndToDestroy = win->hwndFrame;
-        DeleteMainWindow(win);
-        DestroyWindow(hwndToDestroy);
+        // DestroyWindow triggers WM_DESTROY which calls CloseWindow(win, true, true)
+        // that in turn calls DeleteMainWindow(win). WM_DESTROY handler also calls
+        // FreeMenuOwnerDrawInfoData(). Must not delete win before DestroyWindow because
+        // the WM_DESTROY handler would access freed memory.
+        DestroyWindow(win->hwndFrame);
     }
 
     if (lastWindow && quitIfLast) {
