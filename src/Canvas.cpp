@@ -308,43 +308,27 @@ static ResizeHandle GetResizeHandleAt(MainWindow* win, Point pt, Annotation* ann
     }
 
     Rect rect = dm->CvtToScreen(pageNo, GetRect(annot));
-    int handleSize = kResizeHandleSize;
+    int hs = kResizeHandleSize;
 
-    // Check corners first (they have priority)
-    if (pt.x >= rect.x - handleSize && pt.x <= rect.x + handleSize && pt.y >= rect.y - handleSize &&
-        pt.y <= rect.y + handleSize) {
-        return ResizeHandle::TopLeft;
-    }
-    if (pt.x >= rect.x + rect.dx - handleSize && pt.x <= rect.x + rect.dx + handleSize && pt.y >= rect.y - handleSize &&
-        pt.y <= rect.y + handleSize) {
-        return ResizeHandle::TopRight;
-    }
-    if (pt.x >= rect.x + rect.dx - handleSize && pt.x <= rect.x + rect.dx + handleSize &&
-        pt.y >= rect.y + rect.dy - handleSize && pt.y <= rect.y + rect.dy + handleSize) {
-        return ResizeHandle::BottomRight;
-    }
-    if (pt.x >= rect.x - handleSize && pt.x <= rect.x + handleSize && pt.y >= rect.y + rect.dy - handleSize &&
-        pt.y <= rect.y + rect.dy + handleSize) {
-        return ResizeHandle::BottomLeft;
-    }
+    bool nearLeft = pt.x >= rect.x - hs && pt.x <= rect.x + hs;
+    bool nearRight = pt.x >= rect.x + rect.dx - hs && pt.x <= rect.x + rect.dx + hs;
+    bool nearTop = pt.y >= rect.y - hs && pt.y <= rect.y + hs;
+    bool nearBottom = pt.y >= rect.y + rect.dy - hs && pt.y <= rect.y + rect.dy + hs;
+    bool betweenX = pt.x >= rect.x + hs && pt.x <= rect.x + rect.dx - hs;
+    bool betweenY = pt.y >= rect.y + hs && pt.y <= rect.y + rect.dy - hs;
 
-    // Check edges
-    if (pt.y >= rect.y - handleSize && pt.y <= rect.y + handleSize && pt.x >= rect.x + handleSize &&
-        pt.x <= rect.x + rect.dx - handleSize) {
-        return ResizeHandle::Top;
-    }
-    if (pt.x >= rect.x + rect.dx - handleSize && pt.x <= rect.x + rect.dx + handleSize && pt.y >= rect.y + handleSize &&
-        pt.y <= rect.y + rect.dy - handleSize) {
-        return ResizeHandle::Right;
-    }
-    if (pt.y >= rect.y + rect.dy - handleSize && pt.y <= rect.y + rect.dy + handleSize && pt.x >= rect.x + handleSize &&
-        pt.x <= rect.x + rect.dx - handleSize) {
-        return ResizeHandle::Bottom;
-    }
-    if (pt.x >= rect.x - handleSize && pt.x <= rect.x + handleSize && pt.y >= rect.y + handleSize &&
-        pt.y <= rect.y + rect.dy - handleSize) {
-        return ResizeHandle::Left;
-    }
+    // clang-format off
+    // corners have priority over edges
+    if (nearLeft  && nearTop)    return ResizeHandle::TopLeft;
+    if (nearRight && nearTop)    return ResizeHandle::TopRight;
+    if (nearRight && nearBottom) return ResizeHandle::BottomRight;
+    if (nearLeft  && nearBottom) return ResizeHandle::BottomLeft;
+    // edges
+    if (betweenX  && nearTop)    return ResizeHandle::Top;
+    if (nearRight && betweenY)   return ResizeHandle::Right;
+    if (betweenX  && nearBottom) return ResizeHandle::Bottom;
+    if (nearLeft  && betweenY)   return ResizeHandle::Left;
+    // clang-format on
 
     return ResizeHandle::None;
 }
