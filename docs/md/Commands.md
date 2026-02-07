@@ -250,6 +250,12 @@ CmdHelpOpenManualOnWebsite,,Help: Manual On Website
 CmdHelpVisitWebsite,,Help: SumatraPDF Website
 ```
 
+## Misc
+```commands
+Command IDs,Keyboard shortcuts,Command Palette,Notes
+CmdToggleInverseSearch,,Toggle Inverse Search,"temporarily disable TeX inverse search on left mouse click, ver 3.6+"
+```
+
 ## Debug
 
 ```commands
@@ -276,6 +282,7 @@ CmdSetTheme,,don't use
 CmdViewWithExternalViewer,,don't use
 CmdSaveAttachment,,don't use
 CmdOpenAttachment,,don't use
+CmdExec,,don't use
 ```
 
 # Commands with arguments

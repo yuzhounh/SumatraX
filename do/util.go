@@ -29,9 +29,21 @@ var (
 	formatDuration    = u.FormatDuration
 	readLinesFromFile = u.ReadLines
 	toTrimmedLines    = u.ToTrimmedLines
+
+	verbose = false
 )
 
 func logf(s string, args ...any) {
+	if len(args) > 0 {
+		s = fmt.Sprintf(s, args...)
+	}
+	fmt.Print(s)
+}
+
+func logvf(s string, args ...any) {
+	if !verbose {
+		return
+	}
 	if len(args) > 0 {
 		s = fmt.Sprintf(s, args...)
 	}
@@ -267,7 +279,7 @@ func copyFile2Must(dst, src string, overwrite bool) {
 			return
 		}
 	}
-	logf("copy %s => %s\n", src, dst)
+	logvf("copy %s => %s\n", src, dst)
 	dstDir := filepath.Dir(dst)
 	err := os.MkdirAll(dstDir, 0755)
 	must(err)

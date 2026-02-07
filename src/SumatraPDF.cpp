@@ -6074,6 +6074,14 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             SelectNextTheme();
             break;
 
+        case CmdToggleInverseSearch:
+            // https://github.com/sumatrapdfreader/sumatrapdf/issues/5289
+            // allow to temporarily disable invoking tex inverse search
+            // with left mouse click
+            extern bool gDisableInteractiveInverseSearch;
+            gDisableInteractiveInverseSearch = !gDisableInteractiveInverseSearch;
+            break;
+
         default:
             return DefWindowProc(hwnd, msg, wp, lp);
     }

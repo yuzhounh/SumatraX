@@ -923,10 +923,12 @@ static void OnMouseLeftButtonUp(MainWindow* win, int x, int y, WPARAM key) {
     }
 }
 
+bool gDisableInteractiveInverseSearch = false;
+
 static void OnMouseLeftButtonDblClk(MainWindow* win, int x, int y, WPARAM key) {
     // lf("Left button clicked on %d %d", x, y);
     auto isLeft = bit::IsMaskSet(key, (WPARAM)MK_LBUTTON);
-    if (gGlobalPrefs->enableTeXEnhancements && isLeft) {
+    if (gGlobalPrefs->enableTeXEnhancements && !gDisableInteractiveInverseSearch && isLeft) {
         bool dontSelect = OnInverseSearch(win, x, y);
         if (dontSelect) {
             return;

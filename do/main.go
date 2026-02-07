@@ -242,6 +242,7 @@ func Main() {
 		flgUpdateVer       string
 		flgUpload          bool
 		flgWc              bool
+		flgVerbose         bool
 	)
 
 	{
@@ -273,6 +274,7 @@ func Main() {
 		flag.IntVar(&flgBuildNo, "build-no-info", 0, "print build number info for given build number")
 		flag.BoolVar(&flgGenDocs, "gen-docs", false, "generate html docs in docs/www from markdown in docs/md")
 		flag.BoolVar(&flgGenWebsiteDocs, "gen-docs-website", false, "generate html docs in ../sumatra-website repo and check them in")
+		flag.BoolVar(&flgVerbose, "verbose", false, "if true, verbose logging")
 		flag.Parse()
 	}
 

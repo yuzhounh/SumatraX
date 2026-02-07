@@ -896,6 +896,7 @@ static UINT_PTR disableIfNoDocument[] = {
     CmdShowInFolder,
     CmdOpenNextFileInFolder,
     CmdOpenPrevFileInFolder,
+    CmdToggleInverseSearch,
     CmdInvokeInverseSearch,
     // IDM_VIEW_WITH_XPS_VIEWER and IDM_VIEW_WITH_HTML_HELP
     // are removed instead of disabled (and can remain enabled

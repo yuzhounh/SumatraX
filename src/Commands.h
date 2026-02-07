@@ -183,6 +183,7 @@ Cmd* enum (e.g. CmdOpen) and a human-readable name (not used yet).
     V(CmdViewWithExternalViewer, "View With Custom External Viewer")               \
     V(CmdSelectionHandler, "Launch a browser or run command with selection")       \
     V(CmdSetTheme, "Set theme")                                                    \
+    V(CmdToggleInverseSearch, "Toggle Inverse Search")                             \
     V(CmdDebugCorruptMemory, "Debug: Corrupt Memory")                              \
     V(CmdDebugCrashMe, "Debug: Crash Me")                                          \
     V(CmdDebugDownloadSymbols, "Debug: Download Symbols")                          \

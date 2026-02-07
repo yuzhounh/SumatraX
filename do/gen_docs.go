@@ -23,8 +23,6 @@ import (
 	"github.com/kjk/common/u"
 )
 
-var logvf = logf
-
 type MdProcessedInfo struct {
 	mdFileName string
 	data       []byte
@@ -294,8 +292,8 @@ func astWalk(doc ast.Node) {
 			if strings.HasPrefix(uri, "https://") {
 				return ast.GoToNext
 			}
-			logf("  img.Destination:  %s\n", string(uri))
-			fileName := strings.Replace(uri, "%20", " ", -1)
+			logvf("  img.Destination:  %s\n", string(uri))
+			fileName := strings.ReplaceAll(uri, "%20", " ")
 			checkMdFileExistsMust(fileName)
 			img.Destination = []byte(fileName)
 			return ast.GoToNext
@@ -380,7 +378,7 @@ func mdToHTML(name string, force bool) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	logf("read:  %s size: %s\n", filePath, u.FormatSize(int64(len(md))))
+	logvf("read:  %s size: %s\n", filePath, u.FormatSize(int64(len(md))))
 	parser := newMarkdownParser()
 	renderer := newMarkdownHTMLRenderer(isMainPage)
 	doc := parser.Parse(md)
@@ -462,7 +460,7 @@ func writeDocsHtmlFiles() {
 		name = strings.ReplaceAll(name, ".md", ".html")
 		path := filepath.Join(wwwOutDir, name)
 		err := os.WriteFile(path, info.data, 0644)
-		logf("wrote '%s', len: %d\n", path, len(info.data))
+		logvf("wrote '%s', len: %d\n", path, len(info.data))
 		must(err)
 	}
 	{
@@ -589,7 +587,7 @@ func checkComandsAreDocumented() {
 }
 
 func copyDocsToWebsite() {
-	logf("copyDocsToWebsite()\n")
+	logvf("copyDocsToWebsite()\n")
 	updateSumatraWebsite()
 	srcDir := filepath.Join("docs", "md")
 	websiteDir := getWebsiteDir()
@@ -636,7 +634,6 @@ func genHTMLDocsForWebsite() {
 }
 
 func genHTMLDocsForApp() {
-	logf("genHTMLDocsFromMarkdown starting\n")
 	timeStart := time.Now()
 	defer func() {
 		logf("genHTMLDocsFromMarkdown finished in %s\n", time.Since(timeStart))
@@ -659,7 +656,7 @@ func genHTMLDocsForApp() {
 		dir, err := filepath.Abs(wwwOutDir)
 		must(err)
 		url := "file://" + filepath.Join(dir, "SumatraPDF-documentation.html")
-		logf("To view, open:\n%s\n", url)
+		logf("To view, open: %s\n", url)
 	}
 	checkComandsAreDocumented()
 }
