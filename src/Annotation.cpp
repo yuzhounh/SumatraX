@@ -998,6 +998,16 @@ bool IsMoveableAnnotation(AnnotationType tp) {
     return IsAnnotationInList(tp, moveableAnnotations);
 }
 
+bool IsResizeableAnnotation(AnnotationType tp) {
+    switch (tp) {
+        // TODO: for now don't allow resizing text annotation because it's just an icon
+        // would have to figure out how to change the size of the icon
+        case AnnotationType::Text:
+            return false;
+    }
+    return IsAnnotationInList(tp, moveableAnnotations);
+}
+
 Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF pos, AnnotCreateArgs* args) {
     static const float black[3] = {0, 0, 0};
 

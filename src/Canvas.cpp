@@ -776,10 +776,11 @@ static void OnMouseLeftButtonDown(MainWindow* win, int x, int y, WPARAM key) {
     WindowTab* tab = win->CurrentTab();
     Annotation* annot = dm->GetAnnotationAtPos(pt, tab->selectedAnnotation);
     bool isMoveableAnnot = annot && (annot == tab->selectedAnnotation) && IsMoveableAnnotation(annot->type);
+    bool isResizeableAnnot = annot && (annot == tab->selectedAnnotation) && IsResizeableAnnotation(annot->type);
 
     // Check if we're clicking on a resize handle of the selected annotation
     ResizeHandle resizeHandle = ResizeHandle::None;
-    if (tab->selectedAnnotation && IsMoveableAnnotation(tab->selectedAnnotation->type)) {
+    if (tab->selectedAnnotation && isResizeableAnnot) {
         resizeHandle = GetResizeHandleAt(win, pt, tab->selectedAnnotation);
     }
 
@@ -962,6 +963,7 @@ static void OnMouseLeftButtonDblClk(MainWindow* win, int x, int y, WPARAM key) {
         return;
     }
 #endif
+
     if (isOverText) {
         int pageNo = dm->GetPageNoByPoint(mousePos);
         if (win->ctrl->ValidPageNo(pageNo)) {
@@ -1200,6 +1202,7 @@ NO_INLINE static void PaintCurrentEditAnnotationMark(WindowTab* tab, HDC hdc, Di
         // it might not have zoom etc. calculated yet
         return;
     }
+    bool canResize = IsResizeableAnnotation(annot->type);
 
     Rect rect = dm->CvtToScreen(pageNo, GetRect(annot));
     if (!tab->didScrollToSelectedAnnotation) {
@@ -1218,6 +1221,10 @@ NO_INLINE static void PaintCurrentEditAnnotationMark(WindowTab* tab, HDC hdc, Di
     Gdiplus::Pen pen(&br, 4);
     Gdiplus::Graphics gs(hdc);
     gs.DrawRectangle(&pen, rect.x, rect.y, rect.dx, rect.dy);
+
+    if (!canResize) {
+        return;
+    }
 
     // Draw resize handles
     Gdiplus::SolidBrush handleBrush(Gdiplus::Color(255, 255, 255, 255)); // White
@@ -1488,7 +1495,7 @@ static LRESULT OnSetCursorMouseNone(MainWindow* win, HWND hwnd) {
     Annotation* selected = win->CurrentTab()->selectedAnnotation;
 
     // Check if hovering over resize handle of selected annotation
-    if (selected && IsMoveableAnnotation(selected->type)) {
+    if (selected && IsResizeableAnnotation(selected->type)) {
         ResizeHandle handle = GetResizeHandleAt(win, pt, selected);
         if (handle != ResizeHandle::None) {
             SetCursorCached(GetCursorForResizeHandle(handle));

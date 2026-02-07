@@ -123,4 +123,5 @@ void SetIconName(Annotation*, const char*);
 bool SetColor(Annotation*, PdfColor);
 void DeleteAnnotation(Annotation*);
 bool IsMoveableAnnotation(AnnotationType);
+bool IsResizeableAnnotation(AnnotationType);
 AnnotationType CmdIdToAnnotationType(int cmdId);
