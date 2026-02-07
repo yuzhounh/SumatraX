@@ -15,6 +15,7 @@ EXPORTS
 	pdf_annot_filespec
 	pdf_drop_annot
 	pdf_is_filespec
+	pdf_set_annot_border_width
 
 	pdf_new_vectorize_filter
 
