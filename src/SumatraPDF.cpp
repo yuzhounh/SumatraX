@@ -2975,6 +2975,32 @@ static void SaveCurrentFileAs(MainWindow* win) {
         return;
     }
 
+    // GetSaveFileNameW() runs a modal dialog that pumps messages.
+    // During the dialog, a file watcher notification can trigger ReloadDocument(),
+    // destroying the old engine and invalidating srcFileName, defExt, engine pointers.
+    // Re-acquire everything from the (potentially new) controller.
+    if (!win->IsDocLoaded()) {
+        return;
+    }
+    ctrl = win->ctrl;
+    srcFileName = (TempStr)ctrl->GetFilePath();
+    if (gPluginMode) {
+        srcFileName = (TempStr) "filename";
+        TempStr urlName = url::GetFileNameTemp(gPluginURL);
+        if (urlName) {
+            srcFileName = urlName;
+        }
+    }
+    if (!srcFileName) {
+        return;
+    }
+    defExt = ctrl->GetDefaultFileExt();
+    if (str::Leni(defExt) > 0 && defExt[0] == '.') {
+        defExt++;
+    }
+    dm = win->AsFixed();
+    engine = dm ? dm->GetEngine() : nullptr;
+
     TempStr realDstFileName = ToUtf8Temp(dstFileName);
 
     // Make sure that the file has a valid extension
