@@ -2274,6 +2274,11 @@ void UpdateDocumentColors() {
 }
 
 void UpdateFixedPageScrollbarsVisibility() {
+    // https://github.com/sumatrapdfreader/sumatrapdf/issues/191#issuecomment-3814604637
+    // was trying to avoid re-render when updating scrollbar visibility but this
+    // logic no longer works 100% with ScrollbarInSinglePage = true
+    // too lazy to fix it, so just disabling the optimization
+#if 0
     bool hideScrollbars = gGlobalPrefs->fixedPageUI.hideScrollbars;
     bool scrollbarsVisible = false; // assume no scrollbars by default
 
@@ -2291,6 +2296,7 @@ void UpdateFixedPageScrollbarsVisibility() {
     if (!rerenderRequired) {
         return;
     }
+#endif
     RerenderFixedPage();
 }
 
