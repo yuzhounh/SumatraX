@@ -594,9 +594,8 @@ static RectF CalculateResizedRect(MainWindow* win, int x, int y) {
     Rect screenPt{x, y, 1, 1};
     RectF pagePt = dm->CvtFromScreen(screenPt, pageNo);
 
-    // Calculate the new rectangle based on the resize handle and mouse movement
-    RectF originalRect = win->annotationOriginalRect;
-    RectF newRect = originalRect;
+    RectF orig = win->annotationOriginalRect;
+    RectF r = orig;
 
     Point startPt = win->dragStart;
     Rect startScreen{startPt.x, startPt.y, 1, 1};
@@ -605,90 +604,42 @@ static RectF CalculateResizedRect(MainWindow* win, int x, int y) {
     float deltaX = pagePt.x - startPage.x;
     float deltaY = pagePt.y - startPage.y;
 
-    // Ensure minimum size
     const float minSize = 10.0F;
+    auto handle = (ResizeHandle)win->resizeHandle;
 
-    switch ((ResizeHandle)win->resizeHandle) {
-        case ResizeHandle::TopLeft:
-            newRect.x = originalRect.x + deltaX;
-            newRect.y = originalRect.y + deltaY;
-            newRect.dx = originalRect.dx - deltaX;
-            newRect.dy = originalRect.dy - deltaY;
-            // Constrain width and adjust x if needed to keep right edge fixed
-            if (newRect.dx < minSize) {
-                newRect.x = originalRect.x + originalRect.dx - minSize;
-                newRect.dx = minSize;
-            }
-            // Constrain height and adjust y if needed to keep bottom edge fixed
-            if (newRect.dy < minSize) {
-                newRect.y = originalRect.y + originalRect.dy - minSize;
-                newRect.dy = minSize;
-            }
-            break;
-        case ResizeHandle::Top:
-            newRect.y = originalRect.y + deltaY;
-            newRect.dy = originalRect.dy - deltaY;
-            // Constrain height and adjust y if needed to keep bottom edge fixed
-            if (newRect.dy < minSize) {
-                newRect.y = originalRect.y + originalRect.dy - minSize;
-                newRect.dy = minSize;
-            }
-            break;
-        case ResizeHandle::TopRight:
-            newRect.y = originalRect.y + deltaY;
-            newRect.dx = originalRect.dx + deltaX;
-            newRect.dy = originalRect.dy - deltaY;
-            // Constrain width (right edge can move freely)
-            newRect.dx = std::max(newRect.dx, minSize);
-            // Constrain height and adjust y if needed to keep bottom edge fixed
-            if (newRect.dy < minSize) {
-                newRect.y = originalRect.y + originalRect.dy - minSize;
-                newRect.dy = minSize;
-            }
-            break;
-        case ResizeHandle::Right:
-            newRect.dx = originalRect.dx + deltaX;
-            // Constrain width (right edge can move freely)
-            newRect.dx = std::max(newRect.dx, minSize);
-            break;
-        case ResizeHandle::BottomRight:
-            newRect.dx = originalRect.dx + deltaX;
-            newRect.dy = originalRect.dy + deltaY;
-            // Constrain width and height (bottom-right corner can move freely)
-            newRect.dx = std::max(newRect.dx, minSize);
-            newRect.dy = std::max(newRect.dy, minSize);
-            break;
-        case ResizeHandle::Bottom:
-            newRect.dy = originalRect.dy + deltaY;
-            // Constrain height (bottom edge can move freely)
-            newRect.dy = std::max(newRect.dy, minSize);
-            break;
-        case ResizeHandle::BottomLeft:
-            newRect.x = originalRect.x + deltaX;
-            newRect.dx = originalRect.dx - deltaX;
-            newRect.dy = originalRect.dy + deltaY;
-            // Constrain width and adjust x if needed to keep right edge fixed
-            if (newRect.dx < minSize) {
-                newRect.x = originalRect.x + originalRect.dx - minSize;
-                newRect.dx = minSize;
-            }
-            // Constrain height (bottom edge can move freely)
-            newRect.dy = std::max(newRect.dy, minSize);
-            break;
-        case ResizeHandle::Left:
-            newRect.x = originalRect.x + deltaX;
-            newRect.dx = originalRect.dx - deltaX;
-            // Constrain width and adjust x if needed to keep right edge fixed
-            if (newRect.dx < minSize) {
-                newRect.x = originalRect.x + originalRect.dx - minSize;
-                newRect.dx = minSize;
-            }
-            break;
-        default:
-            break;
+    bool moveLeft = handle == ResizeHandle::TopLeft || handle == ResizeHandle::Left || handle == ResizeHandle::BottomLeft;
+    bool moveRight =
+        handle == ResizeHandle::TopRight || handle == ResizeHandle::Right || handle == ResizeHandle::BottomRight;
+    bool moveTop = handle == ResizeHandle::TopLeft || handle == ResizeHandle::Top || handle == ResizeHandle::TopRight;
+    bool moveBottom =
+        handle == ResizeHandle::BottomLeft || handle == ResizeHandle::Bottom || handle == ResizeHandle::BottomRight;
+
+    if (moveLeft) {
+        r.x = orig.x + deltaX;
+        r.dx = orig.dx - deltaX;
+        if (r.dx < minSize) {
+            r.x = orig.x + orig.dx - minSize;
+            r.dx = minSize;
+        }
+    }
+    if (moveRight) {
+        r.dx = orig.dx + deltaX;
+        r.dx = std::max(r.dx, minSize);
+    }
+    if (moveTop) {
+        r.y = orig.y + deltaY;
+        r.dy = orig.dy - deltaY;
+        if (r.dy < minSize) {
+            r.y = orig.y + orig.dy - minSize;
+            r.dy = minSize;
+        }
+    }
+    if (moveBottom) {
+        r.dy = orig.dy + deltaY;
+        r.dy = std::max(r.dy, minSize);
     }
 
-    return newRect;
+    return r;
 }
 
 static void StartAnnotationResize(MainWindow* win, Annotation* annot, Point& pt, ResizeHandle handle) {
