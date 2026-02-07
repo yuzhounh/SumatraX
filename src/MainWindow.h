@@ -233,6 +233,11 @@ struct MainWindow {
 
     FrameRateWnd* frameRateWnd = nullptr;
 
+    // set at the beginning of CloseWindow() to prevent
+    // processing commands while closing (e.g. reentrancy
+    // via modal dialogs pumping messages)
+    bool isBeingClosed = false;
+
     SumatraUIAutomationProvider* uiaProvider = nullptr;
 
     void UpdateCanvasSize();

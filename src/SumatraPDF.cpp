@@ -2769,6 +2769,7 @@ void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose) {
     }
     logf("CloseWindow: win: 0x%p, hwndFrame: 0x%x, quitIfLast: %d, forceClose: %d\n", win, win->hwndFrame,
          (int)quitIfLast, (int)forceClose);
+    win->isBeingClosed = true;
     ReportIf(forceClose && !quitIfLast);
     if (forceClose) {
         quitIfLast = true;
@@ -5254,7 +5255,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         return 0;
     }
 
-    if (!win) {
+    if (!win || win->isBeingClosed) {
         return DefWindowProc(hwnd, msg, wp, lp);
     }
 
