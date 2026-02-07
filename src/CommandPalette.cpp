@@ -402,6 +402,30 @@ static TempStr RemovePrefixFromString(const char* s) {
     return str::ReplaceTemp(s, "&", "");
 }
 
+static const char* UpdateCommandNameTemp(MainWindow* win, int cmdId, const char* s) {
+    bool isToggle = false;
+    bool newToggleValue = false;
+    switch (cmdId) {
+        case CmdToggleInverseSearch: {
+            extern bool gDisableInteractiveInverseSearch;
+            isToggle = true;
+            newToggleValue = !gDisableInteractiveInverseSearch;
+        } break;
+        case CmdToggleFrequentlyRead: {
+            isToggle = true;
+            newToggleValue = !gGlobalPrefs->showStartPage;
+        } break;
+        case CmdToggleFullscreen: {
+            isToggle = true;
+            newToggleValue = !(win->isFullScreen || win->presentation);
+        } break;
+    }
+    if (isToggle) {
+        s = (const char*)str::JoinTemp(s, newToggleValue ? ": on" : ": off");
+    }
+    return s;
+}
+
 void CommandPaletteWnd::CollectStrings(MainWindow* mainWin) {
     CommandPaletteBuildCtx ctx;
     ctx.isDocLoaded = mainWin->IsDocLoaded();
@@ -501,7 +525,8 @@ void CommandPaletteWnd::CollectStrings(MainWindow* mainWin) {
             ReportIf(str::Leni(name) == 0);
             ItemDataCP data;
             data.cmdId = (i32)cmdId;
-            tempCommands.Append(name, data);
+            auto nameUpdated = UpdateCommandNameTemp(mainWin, cmdId, (TempStr)name);
+            tempCommands.Append(nameUpdated, data);
         }
     }
 
