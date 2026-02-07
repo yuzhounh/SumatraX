@@ -661,6 +661,28 @@ static void CheckIsStoreBuild() {
     return;
 }
 
+// we delay load libmupdf.dll but it seems in some cases it fails to load
+// as seen in crash reports
+// here I'm trying to explicitly LoadLibrary() to hopefully fix that
+// if not, at least I can add logging to figure out why it fails
+static void MaybeLoadLibmupdf() {
+    if (!ExeHasInstallerResources()) {
+        // this is not a version that needs libmupdf.dll
+        return;
+    }
+    TempStr path = GetPathInExeDirTemp("libmupdf.dll");
+    HMODULE hm = LoadLibraryW(ToWStrTemp(path));
+    if (hm) {
+        logf("loaded '%s'\n", path);
+        return;
+    }
+    TempStr s = GetLastErrorStrTemp();
+    if (s) {
+        logf("%s\n", s);
+    }
+    CrashMe();
+}
+
 // TODO: maybe could set font on TDN_CREATED to Consolas, to better show the message
 static HRESULT CALLBACK TaskdialogHandleLinkscallback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam,
                                                       LONG_PTR lpRefData) {
@@ -2381,6 +2403,9 @@ ContinueOpenWindow:
         uint flg = SHGFI_SYSICONINDEX | SHGFI_SMALLICON | SHGFI_USEFILEATTRIBUTES;
         SHGetFileInfoW(L".pdf", 0, &sfi, sizeof(sfi), flg);
     }
+
+    // below is code that might use libmupdf functions so try to load it eagerly
+    MaybeLoadLibmupdf();
 
     if (restoreSession) {
         for (SessionData* data : *gInitialSessionData) {
