@@ -430,3 +430,7 @@ bool Replace(WStr& s, const WCHAR* toReplace, const WCHAR* replaceWith);
 int ParseInt(const char* bytes);
 bool IsValidProgramVersion(const char* ver);
 int CompareProgramVersion(const char* ver1, const char* ver2);
+TempStr ShortenStringUtf8Temp(const char* s, int maxRunes);
+TempStr ShortenStringUtf8InTheMiddleTemp(const char* s, int maxRunes);
+bool IsTextRtl(const WCHAR* s);
+bool IsTextRtl(const char* s);

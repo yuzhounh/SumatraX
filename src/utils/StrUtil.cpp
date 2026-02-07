@@ -2550,3 +2550,161 @@ int CompareProgramVersion(const char* txt1, const char* txt2) {
     }
     return 0;
 }
+
+// shorten a string to maxLen characters, adding ellipsis in the middle
+// ascii version that doesn't handle UTF-8
+static TempStr ShortenStringTemp(const char* s, int maxLen) {
+    int sLen = str::Leni(s);
+    if (sLen <= maxLen) {
+        return (TempStr)s;
+    }
+    char* ret = AllocArrayTemp<char>(maxLen + 2);
+    const int half = maxLen / 2;
+    const int strSize = sLen + 1; // +1 for terminating \0
+    // copy first N/2 characters, move last N/2 characters to the halfway point
+    for (int i = 0; i < half; i++) {
+        ret[i] = s[i];
+        ret[i + half] = s[strSize - half + i];
+    }
+    // add ellipsis in the middle
+    ret[half - 2] = ret[half - 1] = ret[half] = '.';
+    return ret;
+}
+
+// shorten a string to maxRunes characters, adding ellipsis at the end
+// works correctly with utf8 strings
+TempStr ShortenStringUtf8Temp(const char* s, int maxRunes) {
+    int nRunes = utf8StrLen((u8*)s);
+    if (nRunes < 0) {
+        // not a valid utf8, fall back to byte truncation
+        int sLen = str::Leni(s);
+        if (sLen <= maxRunes) {
+            return (TempStr)s;
+        }
+        int keep = maxRunes - 3; // 3 for "..."
+        if (keep < 0) {
+            keep = 0;
+        }
+        char* ret = AllocArrayTemp<char>(keep + 4);
+        memcpy(ret, s, keep);
+        ret[keep] = '.';
+        ret[keep + 1] = '.';
+        ret[keep + 2] = '.';
+        ret[keep + 3] = 0;
+        return ret;
+    }
+    if (nRunes <= maxRunes) {
+        return (TempStr)s;
+    }
+    int keep = maxRunes - 3; // 3 for "..."
+    if (keep < 0) {
+        keep = 0;
+    }
+    // over-allocate the result by 4x to be always safe
+    char* ret = AllocArrayTemp<char>(maxRunes * 4 + 1);
+    char* tmp = ret;
+    int n;
+    for (int i = 0; i < keep; i++) {
+        n = utf8RuneLen((const u8*)s);
+        ReportIf(n <= 0);
+        switch (n) {
+            default:
+                ReportIf(true);
+                break;
+            case 4:
+                *tmp++ = *s++;
+                __fallthrough;
+            case 3:
+                *tmp++ = *s++;
+                __fallthrough;
+            case 2:
+                *tmp++ = *s++;
+                __fallthrough;
+            case 1:
+                *tmp++ = *s++;
+        }
+    }
+    *tmp++ = '.';
+    *tmp++ = '.';
+    *tmp++ = '.';
+    *tmp = 0;
+    return ret;
+}
+
+// shorten a string to maxLen characters, adding ellipsis in the middle
+// works correctly with utf8 strings
+TempStr ShortenStringUtf8InTheMiddleTemp(const char* s, int maxRunes) {
+    int nRunes = utf8StrLen((u8*)s);
+    if (nRunes < 0) {
+        // not a valid utf8
+        return ShortenStringTemp(s, maxRunes);
+    }
+    if (nRunes <= maxRunes) {
+        return (TempStr)s;
+    }
+    int toRemove = (nRunes - maxRunes) + 3; // 3 for "..."
+    int removeStartingAt = (nRunes / 2) - (toRemove / 2);
+    // over-allocate the result by 4x to be always safe
+    char* ret = AllocArrayTemp<char>(maxRunes * 4 + 1);
+    char* tmp = ret;
+    int n;
+    for (int i = 0; i < nRunes; i++) {
+        n = utf8RuneLen((const u8*)s);
+        ReportIf(n <= 0);
+        if (i < removeStartingAt || i >= removeStartingAt + toRemove) {
+            switch (n) {
+                default:
+                    ReportIf(true);
+                    break;
+                case 4:
+                    *tmp++ = *s++;
+                    __fallthrough;
+                case 3:
+                    *tmp++ = *s++;
+                    __fallthrough;
+                case 2:
+                    *tmp++ = *s++;
+                    __fallthrough;
+                case 1:
+                    *tmp++ = *s++;
+            }
+        } else if (i == removeStartingAt) {
+            *tmp++ = '.';
+            *tmp++ = '.';
+            *tmp++ = '.';
+            s += n;
+        } else {
+            s += n;
+        }
+    }
+    return ret;
+}
+
+// IsTextRtl is optimized version of checking if a string is rtl
+// we look at max first 40 chars and
+bool IsTextRtl(const WCHAR* s) {
+    if (!s || !*s)
+        return false;
+    int len = str::Leni(s);
+    len = len > 40 ? 40 : len;
+    int nRtl = 0;
+    int nLtr = 0;
+    WORD* charTypes = Allocator::AllocArray<WORD>(GetTempAllocator(), len + 1);
+    if (!GetStringTypeExW(LOCALE_INVARIANT, CT_CTYPE2, s, len, charTypes)) {
+        return false; // API failure
+    }
+    for (int i = 0; i < len; ++i) {
+        WORD type = charTypes[i];
+        if (type == C2_LEFTTORIGHT) {
+            nLtr++;
+        } else if (type == C2_RIGHTTOLEFT) {
+            nRtl++;
+        }
+    }
+    return nRtl > nLtr;
+}
+
+bool IsTextRtl(const char* s) {
+    TempWStr ws = ToWStrTemp(s);
+    return IsTextRtl(ws);
+}

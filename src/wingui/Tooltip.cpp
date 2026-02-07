@@ -71,10 +71,17 @@ void TooltipRemoveAll(HWND hwnd, HWND owner) {
 }
 
 void TooltipAddTools(HWND hwnd, HWND owner, TooltipInfo* tools, int nTools) {
+    int nRtl = 0;
+    int nLtr = 0;
     for (int i = 0; i < nTools; i++) {
         TooltipInfo& tti = tools[i];
-
         TempWStr ws = ToWStrTemp(tti.s);
+        bool isRtl = IsTextRtl(ws);
+        if (isRtl) {
+            nRtl++;
+        } else {
+            nLtr++;
+        }
         TOOLINFOW ti = {};
         ti.cbSize = sizeof(ti);
         ti.hwnd = owner;
@@ -84,6 +91,8 @@ void TooltipAddTools(HWND hwnd, HWND owner, TooltipInfo* tools, int nTools) {
         ti.uFlags = TTF_SUBCLASS; // TODO: do I need this ?
         SendMessageW(hwnd, TTM_ADDTOOL, 0, (LPARAM)&ti);
     }
+    bool isRtl = nRtl > nLtr;
+    HwndSetRtl(hwnd, isRtl);
 }
 
 static TempStr TooltipGetTextTemp(HWND hwnd, HWND owner, int id) {
@@ -124,6 +133,8 @@ static bool TooltipUpdateText(HWND hwnd, HWND owner, int id, const char* s, bool
     ti.lpszText = (WCHAR*)ws;
     ti.uFlags = TTF_SUBCLASS; // TODO: do I need this ?
     SendMessageW(hwnd, TTM_UPDATETIPTEXT, 0, (LPARAM)&ti);
+    bool isRtl = IsTextRtl(ws);
+    HwndSetRtl(hwnd, isRtl);
     return true;
 }
 
@@ -162,6 +173,9 @@ void Tooltip::SetMaxWidth(int dx) {
     SendMessageW(hwnd, TTM_SETMAXTIPWIDTH, 0, dx);
 }
 
+extern bool ContainsRTL(WCHAR*);
+extern bool IsBaseDirectionRTL(WCHAR*);
+
 int Tooltip::Add(const char* s, const Rect& rc, bool multiline) {
     int id = GetNextTooltipID();
     SetMaxWidthForText(hwnd, s, multiline);
@@ -177,6 +191,8 @@ int Tooltip::Add(const char* s, const Rect& rc, bool multiline) {
     if (!ok) {
         return -1;
     }
+    bool isRtl = IsTextRtl(ws);
+    HwndSetRtl(hwnd, isRtl);
     tooltipIds.Append(id);
     return id;
 }
@@ -195,7 +211,7 @@ int Tooltip::SetSingle(const char* s, const Rect& rc, bool multiline) {
     if (str::Len(s) > 256) {
         // pathological cases make for tooltips that take too long to display
         // https://github.com/sumatrapdfreader/sumatrapdf/issues/2814
-        s = str::JoinTemp(str::DupTemp(s, 256), "...");
+        s = (const char*)ShortenStringUtf8InTheMiddleTemp(s, 250);
     }
     int n = Count();
     // if want to use more tooltips, use Add() and Update()

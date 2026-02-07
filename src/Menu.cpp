@@ -1071,75 +1071,6 @@ static bool __cmdIdInList(UINT_PTR cmdId, UINT_PTR* idsList, int n) {
 
 #define cmdIdInList(name) __cmdIdInList(cmdId, name, dimof(name))
 
-// shorten a string to maxLen characters, adding ellipsis in the middle
-// ascii version that doesn't handle UTF-8
-static TempStr ShortenStringTemp(char* s, int maxLen) {
-    int sLen = str::Leni(s);
-    if (sLen <= maxLen) {
-        return s;
-    }
-    char* ret = AllocArrayTemp<char>(maxLen + 2);
-    const int half = maxLen / 2;
-    const int strSize = sLen + 1; // +1 for terminating \0
-    // copy first N/2 characters, move last N/2 characters to the halfway point
-    for (int i = 0; i < half; i++) {
-        ret[i] = s[i];
-        ret[i + half] = s[strSize - half + i];
-    }
-    // add ellipsis in the middle
-    ret[half - 2] = ret[half - 1] = ret[half] = '.';
-    return ret;
-}
-
-// shorten a string to maxLen characters, adding ellipsis in the middle
-// works correctly with utf8 strings
-static TempStr ShortenStringUtf8Temp(char* s, int maxRunes) {
-    int nRunes = utf8StrLen((u8*)s);
-    if (nRunes < 0) {
-        // not a valid utf8
-        return ShortenStringTemp(s, maxRunes);
-    }
-    if (nRunes <= maxRunes) {
-        return s;
-    }
-    int toRemove = (nRunes - maxRunes) + 3; // 3 for "..."
-    int removeStartingAt = (nRunes / 2) - (toRemove / 2);
-    // over-allocate the result by 4x to be always safe
-    char* ret = AllocArrayTemp<char>(maxRunes * 4 + 1);
-    char* tmp = ret;
-    int n;
-    for (int i = 0; i < nRunes; i++) {
-        n = utf8RuneLen((const u8*)s);
-        ReportIf(n <= 0);
-        if (i < removeStartingAt || i >= removeStartingAt + toRemove) {
-            switch (n) {
-                default:
-                    ReportIf(true);
-                    break;
-                case 4:
-                    *tmp++ = *s++;
-                    __fallthrough;
-                case 3:
-                    *tmp++ = *s++;
-                    __fallthrough;
-                case 2:
-                    *tmp++ = *s++;
-                    __fallthrough;
-                case 1:
-                    *tmp++ = *s++;
-            }
-        } else if (i == removeStartingAt) {
-            *tmp++ = '.';
-            *tmp++ = '.';
-            *tmp++ = '.';
-            s += n;
-        } else {
-            s += n;
-        }
-    }
-    return ret;
-}
-
 static void AddFileMenuItem(HMENU menuFile, const char* filePath, int index) {
     ReportIf(!filePath || !menuFile);
     if (!filePath || !menuFile) {
@@ -1149,7 +1080,7 @@ static void AddFileMenuItem(HMENU menuFile, const char* filePath, int index) {
     TempStr menuString = path::GetBaseNameTemp(filePath);
     // shorten very long file names so that menu isn't too wide
     const size_t kMaxRunes = 70;
-    menuString = ShortenStringUtf8Temp(menuString, kMaxRunes);
+    menuString = ShortenStringUtf8InTheMiddleTemp(menuString, kMaxRunes);
 
     TempStr fileName = MenuToSafeStringTemp(menuString);
     int menuIdx = (int)((index + 1) % 10);

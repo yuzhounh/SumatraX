@@ -604,7 +604,8 @@ static RectF CalculateResizedRect(MainWindow* win, int x, int y) {
     const float minSize = 10.0F;
     auto handle = (ResizeHandle)win->resizeHandle;
 
-    bool moveLeft = handle == ResizeHandle::TopLeft || handle == ResizeHandle::Left || handle == ResizeHandle::BottomLeft;
+    bool moveLeft =
+        handle == ResizeHandle::TopLeft || handle == ResizeHandle::Left || handle == ResizeHandle::BottomLeft;
     bool moveRight =
         handle == ResizeHandle::TopRight || handle == ResizeHandle::Right || handle == ResizeHandle::BottomRight;
     bool moveTop = handle == ResizeHandle::TopLeft || handle == ResizeHandle::Top || handle == ResizeHandle::TopRight;
@@ -1161,8 +1162,8 @@ NO_INLINE static void PaintCurrentEditAnnotationMark(WindowTab* tab, HDC hdc, Di
     // Draw resize handles
     Gdiplus::SolidBrush handleBrush(Gdiplus::Color(255, 255, 255, 255)); // White
     Gdiplus::Pen handlePen(Gdiplus::Color(255, 0, 0, 0), 1);             // Black
-    int hs = 6; // handle size
-    int hh = hs / 2; // half handle
+    int hs = 6;                                                          // handle size
+    int hh = hs / 2;                                                     // half handle
 
     int left = rect.x - hh;
     int midX = rect.x + rect.dx / 2 - hh;
