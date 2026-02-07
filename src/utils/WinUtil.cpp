@@ -984,12 +984,25 @@ bool LaunchBrowser(const char* url) {
 }
 
 void OpenPathInExplorer(const char* path) {
-    if (!path) {
+    if (!path || !*path) {
         return;
     }
-    const char* process = "explorer.exe";
+
+    WCHAR winDir[MAX_PATH] = {};
+    UINT len = GetWindowsDirectoryW(winDir, MAX_PATH);
+    if (len == 0 || len >= MAX_PATH) {
+        return;
+    }
+
+    char* explorer = ToUtf8Temp(winDir);
+    explorer = path::JoinTemp(explorer, "explorer.exe");
+
+    if (!file::Exists(explorer)) {
+        return;
+    }
+
     TempStr args = str::FormatTemp("/select,\"%s\"", path);
-    CreateProcessHelper(process, args);
+    CreateProcessHelper(explorer, args);
 }
 
 HANDLE LaunchProcessWithCmdLine(const char* exe, const char* cmdLine) {
