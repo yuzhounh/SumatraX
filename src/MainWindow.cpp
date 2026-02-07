@@ -42,6 +42,7 @@
 #include "Translations.h"
 #include "uia/Provider.h"
 #include "Theme.h"
+#include "Canvas.h"
 
 #include "utils/Log.h"
 
@@ -116,6 +117,7 @@ void CreateMovePatternLazy(MainWindow* win) {
 }
 
 MainWindow::~MainWindow() {
+    KillTimer(hwndCanvas, kSmoothScrollTimerID);
     FinishStressTest(this);
 
     ReportIf(TabCount() > 0);

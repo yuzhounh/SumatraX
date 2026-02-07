@@ -78,9 +78,6 @@ enum class ResizeHandle {
 // Size of resize handle hit area (in pixels)
 constexpr int kResizeHandleSize = 8;
 
-// Timer for mouse wheel smooth scrolling
-constexpr UINT_PTR kSmoothScrollTimerID = 6;
-
 // Smooth scrolling factor. This is a value between 0 and 1.
 // Each step, we scroll the needed delta times this factor.
 // Therefore, a higher factor makes smooth scrolling faster.
@@ -2239,6 +2236,10 @@ static void OnTimer(MainWindow* win, HWND hwnd, WPARAM timerId) {
 
         case kSmoothScrollTimerID:
             DisplayModel* dm = win->AsFixed();
+            // window might have been closed while the timer was running
+            if (!dm) {
+                return;
+            }
 
             int current = dm->yOffset();
             int target = win->scrollTargetY;
