@@ -2692,6 +2692,13 @@ void CloseTab(WindowTab* tab, bool quitIfLast) {
     if (!canClose) {
         return;
     }
+    // MaybeSaveAnnotations() can show a dialog that pumps messages.
+    // During message pumping, the window might be destroyed
+    // (e.g., WM_DESTROY from a plugin host). If so, everything
+    // is already cleaned up by the reentrant CloseWindow().
+    if (!IsMainWindowValid(win)) {
+        return;
+    }
 
     int tabCount = win->TabCount();
     if (tabCount == 1 || (tabCount == 0 && quitIfLast)) {
@@ -2799,6 +2806,12 @@ void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose) {
         bool canCloseTab = MaybeSaveAnnotations(tab);
         if (!canCloseTab) {
             canCloseWindow = false;
+        }
+        // MaybeSaveAnnotations() can show a dialog that pumps messages.
+        // During message pumping, the window might be destroyed by a
+        // reentrant CloseWindow() call (e.g., from WM_DESTROY).
+        if (!IsMainWindowValid(win)) {
+            return;
         }
     }
 
@@ -6235,13 +6248,13 @@ LRESULT CALLBACK WndProcSumatraFrame(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) 
             return DefWindowProc(hwnd, msg, wp, lp);
 
         case WM_CHAR:
-            if (win) {
+            if (win && !win->isBeingClosed) {
                 FrameOnChar(win, wp, lp);
             }
             break;
 
         case WM_KEYDOWN:
-            if (win) {
+            if (win && !win->isBeingClosed) {
                 FrameOnKeydown(win, wp, lp);
             }
             break;
