@@ -768,7 +768,7 @@ static const FieldInfo gGlobalPrefsFields[] = {
     {offsetof(GlobalPrefs, escToExit), SettingType::Bool, false},
     {offsetof(GlobalPrefs, fullPathInTitle), SettingType::Bool, false},
     {offsetof(GlobalPrefs, inverseSearchCmdLine), SettingType::String, 0},
-    {offsetof(GlobalPrefs, lazyLoading), SettingType::Bool, true},
+    {offsetof(GlobalPrefs, lazyLoading), SettingType::Bool, false},
     {offsetof(GlobalPrefs, mainWindowBackground), SettingType::Color, (intptr_t)"#80fff200"},
     {offsetof(GlobalPrefs, noHomeTab), SettingType::Bool, false},
     {offsetof(GlobalPrefs, homePageSortByFrequentlyRead), SettingType::Bool, false},

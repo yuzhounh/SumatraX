@@ -62,7 +62,7 @@ InverseSearchCmdLine =
 
 ; when restoring session, delay loading of documents until their tab is selected
 ; (introduced in version 3.6)
-LazyLoading = true
+LazyLoading = false
 
 ; background color of the non-document windows, traditionally yellow
 MainWindowBackground = #80fff200
