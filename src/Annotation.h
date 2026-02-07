@@ -71,8 +71,17 @@ struct AnnotCreateArgs {
     AnnotationType annotType = AnnotationType::Unknown;
     // the following are set depending on type of the annotation
     ParsedColor col;
+    // bgCol for free text
+    ParsedColor bgCol;
+    // opacity for free text, 0-100, 0-fully transparent (invisible), 100-fully opaque
+    // if 100 we don't actually set it (it's the default)
+    int opacity = 100;
     bool copyToClipboard = false;
-    bool setContent = false;
+    // for free text, < 0 means not given
+    int textSize = -1;
+    // for free text, < 0 means not given
+    int borderWidth = -1;
+    bool setContentToSelection = false;
     TempStr content = nullptr;
 };
 

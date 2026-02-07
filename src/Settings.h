@@ -119,9 +119,15 @@ struct Annotations {
     // strike out annotation color
     char* strikeOutColor;
     ParsedColor strikeOutColorParsed;
-    // color of free text annotation
+    // text color of free text annotation
     char* freeTextColor;
     ParsedColor freeTextColorParsed;
+    // background color of free text annotation
+    char* freeTextBackgroundColor;
+    ParsedColor freeTextBackgroundColorParsed;
+    // opacity of free text annotation in percent (0-100); 0 - fully
+    // transparent (invisible), 50 - half transparent, 100 - fully opaque
+    int freeTextOpacity;
     // size of free text annotation
     int freeTextSize;
     // width of free text annotation border
@@ -588,6 +594,8 @@ static const FieldInfo gAnnotationsFields[] = {
     {offsetof(Annotations, squigglyColor), SettingType::Color, (intptr_t)"#ff00ff"},
     {offsetof(Annotations, strikeOutColor), SettingType::Color, (intptr_t)"#ff0000"},
     {offsetof(Annotations, freeTextColor), SettingType::Color, (intptr_t)""},
+    {offsetof(Annotations, freeTextBackgroundColor), SettingType::Color, (intptr_t)""},
+    {offsetof(Annotations, freeTextOpacity), SettingType::Int, 100},
     {offsetof(Annotations, freeTextSize), SettingType::Int, 12},
     {offsetof(Annotations, freeTextBorderWidth), SettingType::Int, 1},
     {offsetof(Annotations, textIconColor), SettingType::Color, (intptr_t)""},
@@ -595,9 +603,9 @@ static const FieldInfo gAnnotationsFields[] = {
     {offsetof(Annotations, defaultAuthor), SettingType::String, (intptr_t)""},
 };
 static const StructInfo gAnnotationsInfo = {
-    sizeof(Annotations), 10, gAnnotationsFields,
-    "HighlightColor\0UnderlineColor\0SquigglyColor\0StrikeOutColor\0FreeTextColor\0FreeTextSize\0FreeTextBorderWidth\0T"
-    "extIconColor\0TextIconType\0DefaultAuthor"};
+    sizeof(Annotations), 12, gAnnotationsFields,
+    "HighlightColor\0UnderlineColor\0SquigglyColor\0StrikeOutColor\0FreeTextColor\0FreeTextBackgroundColor\0FreeTextOpa"
+    "city\0FreeTextSize\0FreeTextBorderWidth\0TextIconColor\0TextIconType\0DefaultAuthor"};
 
 static const FieldInfo gExternalViewerFields[] = {
     {offsetof(ExternalViewer, commandLine), SettingType::String, 0},

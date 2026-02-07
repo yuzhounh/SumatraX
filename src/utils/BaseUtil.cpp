@@ -555,3 +555,13 @@ Func0 MkMethod0Void(funcVoidPtr fn, T* self) {
     res.self = self;
 }
 #endif
+
+int setMinMax(int& v, int minVal, int maxVal) {
+    if (v < minVal) {
+        v = minVal;
+    }
+    if (v > maxVal) {
+        v = maxVal;
+    }
+    return v;
+}

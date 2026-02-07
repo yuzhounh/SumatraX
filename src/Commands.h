@@ -322,7 +322,12 @@ const char* GetCommandStringArg(CustomCommand* cmd, const char* name, const char
 void GetCommandsWithOrigId(Vec<CustomCommand*>& commands, int origId);
 
 constexpr const char* kCmdArgColor = "color";
+constexpr const char* kCmdArgBgColor = "bgcolor";
+constexpr const char* kCmdArgOpacity = "opacity";
 constexpr const char* kCmdArgOpenEdit = "openedit";
+constexpr const char* kCmdArgTextSize = "textsize";
+constexpr const char* kCmdArgBorderWidth = "borderwidth";
+
 constexpr const char* kCmdArgCopyToClipboard = "copytoclipboard";
 constexpr const char* kCmdArgSetContent = "setcontent";
 constexpr const char* kCmdArgExe = "exe";

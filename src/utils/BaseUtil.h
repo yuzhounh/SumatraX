@@ -771,6 +771,8 @@ struct AtomicRefCount {
     volatile LONG val = 1;
 };
 
+int setMinMax(int& v, int minVal, int maxVal);
+
 #define defer const auto& CONCAT(defer__, __LINE__) = ExitScopeHelp() + [&]()
 
 extern LONG gAllowAllocFailure;

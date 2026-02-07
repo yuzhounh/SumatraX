@@ -151,7 +151,9 @@ var (
 		mkField("StrikeOutColor", Color, mkRGB(0xff, 0x00, 0x00),
 			"strike out annotation color").setVersion("3.5"),
 		// yellow
-		mkField("FreeTextColor", Color, "", "color of free text annotation").setVersion("3.5"),
+		mkField("FreeTextColor", Color, "", "text color of free text annotation").setVersion("3.5"),
+		mkField("FreeTextBackgroundColor", Color, "", "background color of free text annotation").setVersion("3.6"),
+		mkField("FreeTextOpacity", Int, 100, "opacity of free text annotation in percent (0-100); 0 - fully transparent (invisible), 50 - half transparent, 100 - fully opaque").setVersion("3.6"),
 		mkField("FreeTextSize", Int, 12, "size of free text annotation").setVersion("3.5"),
 		mkField("FreeTextBorderWidth", Int, 1, "width of free text annotation border").setVersion("3.5"),
 		mkField("TextIconColor", Color, "", "text icon annotation color"),

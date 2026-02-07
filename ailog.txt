@@ -305,3 +305,5 @@ what is the condition that led to this crash?
    check protects against a stale/null entry in the tab control's user data. If this crash reoccurs, the root cause
   investigation would need to focus on finding which code path deletes a WindowTab without properly removing it from
   tabsCtrl, or what causes tab->filePath to point to freed memory.
+----
+update CmdIdToAnnotationType() in src/Annotation.cpp to map all CmdCreateAnot* commands from src/Commands.h to AnnotationType from src/Annotation.h

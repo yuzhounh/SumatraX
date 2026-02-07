@@ -8,6 +8,8 @@
 
 Changes in [pre-release builds](https://www.sumatrapdfreader.org/prerelease):
 
+- add "bgcolor", "opacity", "textsize", "borderWidth" arguments to `CmdCreate
+- add `Annotations.FreeTextBackgroundColor` and `Annotations.FreeTextOpacity` advanced settings
 - sort thumbnails on home page by most recently used date. Set advanced setting `HomePageSortByFrequentlyRead = true` to revert to pre-3.6 behavior of sorting by frequency of use.
 - support brotli compression in PDF files
 - in Command Palette, if you start search with ":" we show everything (like in 3.5)

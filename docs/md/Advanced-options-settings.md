@@ -258,8 +258,16 @@ Annotations [
     ; strike out annotation color (introduced in version 3.5)
     StrikeOutColor = #ff0000
 
-    ; color of free text annotation (introduced in version 3.5)
+    ; text color of free text annotation (introduced in version 3.5)
     FreeTextColor = 
+
+    ; background color of free text annotation (introduced in version 3.6)
+    FreeTextBackgroundColor = 
+
+    ; opacity of free text annotation in percent (0-100); 0 - fully transparent
+    ; (invisible), 50 - half transparent, 100 - fully opaque (introduced in
+    ; version 3.6)
+    FreeTextOpacity = 100
 
     ; size of free text annotation (introduced in version 3.5)
     FreeTextSize = 12

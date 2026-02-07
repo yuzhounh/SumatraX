@@ -4444,7 +4444,7 @@ Annotation* MakeAnnotationsFromSelection(WindowTab* tab, AnnotCreateArgs* args) 
         return 0;
     }
 
-    if (args->setContent) {
+    if (args->setContentToSelection) {
         bool isTextOnlySelection = false;
         args->content = GetSelectedTextTemp(tab, "\r\n", isTextOnlySelection);
     }
@@ -5123,19 +5123,46 @@ OpenFileInBrowser:
     SumatraLaunchBrowser(url);
 }
 
+static void SetAnnotCreateArgsFromCommand(AnnotCreateArgs& args, CustomCommand* cmd) {
+    args.copyToClipboard = GetCommandBoolArg(cmd, kCmdArgCopyToClipboard, false);
+    args.setContentToSelection = GetCommandBoolArg(cmd, kCmdArgSetContent, false);
+
+    auto col = GetCommandArg(cmd, kCmdArgColor);
+    if (col && col->colorVal.parsedOk) {
+        args.col = col->colorVal;
+    }
+
+    auto bgCol = GetCommandArg(cmd, kCmdArgBgColor);
+    if (bgCol && bgCol->colorVal.parsedOk) {
+        args.bgCol = bgCol->colorVal;
+    }
+
+    args.opacity = GetCommandIntArg(cmd, kCmdArgOpacity, 100);
+    setMinMax(args.opacity, 0, 100);
+
+    args.textSize = GetCommandIntArg(cmd, kCmdArgTextSize, -1);
+    if (args.textSize >= 0) {
+        // set some reasonable limits
+        setMinMax(args.textSize, 5, 128);
+    }
+
+    args.borderWidth = GetCommandIntArg(cmd, kCmdArgBorderWidth, -1);
+    if (args.borderWidth >= 0) {
+        // set some reasonable limits
+        setMinMax(args.borderWidth, 0, 128);
+    }
+}
+
 static void SetAnnotCreateArgs(AnnotCreateArgs& args, CustomCommand* cmd) {
     if (cmd) {
-        args.copyToClipboard = GetCommandBoolArg(cmd, kCmdArgCopyToClipboard, false);
-        args.setContent = GetCommandBoolArg(cmd, kCmdArgSetContent, false);
-        auto col = GetCommandArg(cmd, kCmdArgColor);
-        ReportIf(col && !col->colorVal.parsedOk);
-        if (col && col->colorVal.parsedOk) {
-            args.col = col->colorVal;
-            return;
-        }
+        // a command definition doesn't use values from settings
+        // must specify everything explicitly
+        SetAnnotCreateArgsFromCommand(args, cmd);
+        return;
     }
     auto& a = gGlobalPrefs->annotations;
     ParsedColor* col = nullptr;
+    ParsedColor* bgCol = nullptr;
     auto typ = args.annotType;
     if (typ == AnnotationType::Text) {
         col = GetParsedColor(a.textIconColor, a.textIconColorParsed);
@@ -5149,6 +5176,13 @@ static void SetAnnotCreateArgs(AnnotCreateArgs& args, CustomCommand* cmd) {
         col = GetParsedColor(a.strikeOutColor, a.strikeOutColorParsed);
     } else if (typ == AnnotationType::FreeText) {
         col = GetParsedColor(a.freeTextColor, a.freeTextColorParsed);
+        bgCol = GetParsedColor(a.freeTextBackgroundColor, a.freeTextBackgroundColorParsed);
+        if (bgCol && bgCol->parsedOk) {
+            args.bgCol = *bgCol;
+        }
+        args.opacity = a.freeTextOpacity;
+        args.textSize = a.freeTextSize;
+        args.borderWidth = a.freeTextBorderWidth;
     } else {
         logf("SetAnnotCreateArgs: unexpected type %d for default prefs color\n", (int)typ);
         // ReportIf(true);

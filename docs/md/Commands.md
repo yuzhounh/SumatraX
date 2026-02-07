@@ -368,6 +368,18 @@ Shortcuts [
 ]
 ```
 
+## CmdCreateAnnotFreeText
+
+**Ver 3.6+**
+
+Arguments for `CmdCreateAnnotHighlight` plus:
+
+- `color` : default, color of text and border, black if not given
+- `bgcolor` : background color of annotation, fully transparent if not given
+- `textsize` : size of annotation text, 12 if not given
+- `borderwidth` : border width, 1 if not given
+- `opacity` : opacity of annotation, 0 - fully transparent (i.e. invisible), 100 - fully opaque (default if not given)
+
 ## `CmdZoomCustom`
 
 **Ver 3.6+**

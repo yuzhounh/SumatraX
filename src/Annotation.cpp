@@ -847,7 +847,7 @@ void SetBorderWidth(Annotation* annot, int newWidth) {
         auto ctx = e->Ctx();
         ScopedCritSec cs(e->ctxAccess);
         fz_try(ctx) {
-            pdf_set_annot_border(ctx, annot->pdfannot, (float)newWidth);
+            pdf_set_annot_border_width(ctx, annot->pdfannot, (float)newWidth);
             pdf_update_annot(ctx, annot->pdfannot);
         }
         fz_catch(ctx) {
@@ -1008,6 +1008,7 @@ Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF p
     pdf_annot* annot = nullptr;
     auto typ = args->annotType;
     auto col = args->col;
+    auto bgCol = args->bgCol;
     {
         ScopedCritSec cs(epdf->ctxAccess);
 
@@ -1031,6 +1032,27 @@ Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF p
             }
 
             switch (typ) {
+                case AnnotationType::Link:
+                case AnnotationType::Polygon:
+                case AnnotationType::Redact:
+                case AnnotationType::Ink:
+                case AnnotationType::Popup:
+                case AnnotationType::PolyLine:
+                case AnnotationType::Unknown:
+                case AnnotationType::FileAttachment:
+                case AnnotationType::Sound:
+                case AnnotationType::Movie:
+                case AnnotationType::RichMedia:
+                case AnnotationType::Widget:
+                case AnnotationType::Screen:
+                case AnnotationType::PrinterMark:
+                case AnnotationType::Watermark:
+                case AnnotationType::TrapNet:
+                case AnnotationType::ThreeD:
+                case AnnotationType::Projection:
+                    // do nothing
+                    break;
+
                 case AnnotationType::Highlight:
                 case AnnotationType::Underline:
                 case AnnotationType::Squiggly:
@@ -1061,14 +1083,15 @@ Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF p
                 } break;
             }
             if (typ == AnnotationType::FreeText) {
-                auto& a = gGlobalPrefs->annotations;
-                int borderWidth = a.freeTextBorderWidth;
-                if (borderWidth < 0) {
-                    borderWidth = 1; // default
+                if (args->borderWidth >= 0) {
+                    pdf_set_annot_border_width(ctx, annot, (float)args->borderWidth);
                 }
-                pdf_set_annot_border(ctx, annot, (float)borderWidth);
-                pdf_set_annot_contents(ctx, annot, "This is a text...");
-                int fontSize = a.freeTextSize;
+                if (!str::IsEmptyOrWhiteSpace(args->content)) {
+                    pdf_set_annot_contents(ctx, annot, args->content);
+                } else {
+                    pdf_set_annot_contents(ctx, annot, "This is a text...");
+                }
+                int fontSize = args->textSize;
                 if (fontSize <= 0) {
                     fontSize = 12;
                 }
@@ -1080,8 +1103,17 @@ Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF p
                     PdfColorToFloat(col.pdfCol, textColor);
                     fcol = textColor;
                 }
-
                 pdf_set_annot_default_appearance(ctx, annot, "Helv", (float)fontSize, nCol, fcol);
+                if (bgCol.parsedOk) {
+                    float bgColor[3]{};
+                    PdfColorToFloat(bgCol.pdfCol, bgColor);
+                    pdf_set_annot_color(ctx, annot, 3, bgColor);
+                }
+                // 100 is fuly opaque, the default
+                if (args->opacity < 100) {
+                    float fop = (float)args->opacity / 100.0f;
+                    pdf_set_annot_opacity(ctx, annot, fop);
+                }
             }
 
             pdf_update_annot(ctx, annot);
@@ -1107,7 +1139,15 @@ Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF p
         }
     }
     if (col.parsedOk) {
-        SetColor(res, col.pdfCol);
+        switch (typ) {
+            case AnnotationType::FreeText:
+                // do nothing. for free text we set text color via pdf_set_annot_default_appearance
+                // and SetColor() sets background color
+                break;
+            default:
+                SetColor(res, col.pdfCol);
+                break;
+        }
     }
 
     pdf_drop_annot(ctx, annot);
@@ -1115,9 +1155,27 @@ Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF p
 }
 
 AnnotationType CmdIdToAnnotationType(int cmdId) {
-    int annotType = cmdId - (int)CmdCreateAnnotText;
-    if (annotType < 0 || annotType > (int)AnnotationType::Last) {
-        return AnnotationType::Unknown;
+    // clang-format off
+    switch (cmdId) {
+        case CmdCreateAnnotText:           return AnnotationType::Text;
+        case CmdCreateAnnotLink:           return AnnotationType::Link;
+        case CmdCreateAnnotFreeText:       return AnnotationType::FreeText;
+        case CmdCreateAnnotLine:           return AnnotationType::Line;
+        case CmdCreateAnnotSquare:         return AnnotationType::Square;
+        case CmdCreateAnnotCircle:         return AnnotationType::Circle;
+        case CmdCreateAnnotPolygon:        return AnnotationType::Polygon;
+        case CmdCreateAnnotPolyLine:       return AnnotationType::PolyLine;
+        case CmdCreateAnnotHighlight:      return AnnotationType::Highlight;
+        case CmdCreateAnnotUnderline:      return AnnotationType::Underline;
+        case CmdCreateAnnotSquiggly:       return AnnotationType::Squiggly;
+        case CmdCreateAnnotStrikeOut:      return AnnotationType::StrikeOut;
+        case CmdCreateAnnotRedact:         return AnnotationType::Redact;
+        case CmdCreateAnnotStamp:          return AnnotationType::Stamp;
+        case CmdCreateAnnotCaret:          return AnnotationType::Caret;
+        case CmdCreateAnnotInk:            return AnnotationType::Ink;
+        case CmdCreateAnnotPopup:          return AnnotationType::Popup;
+        case CmdCreateAnnotFileAttachment: return AnnotationType::FileAttachment;
     }
-    return (AnnotationType)annotType;
+    // clang-format on
+    return AnnotationType::Unknown;
 }

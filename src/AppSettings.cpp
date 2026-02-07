@@ -92,15 +92,6 @@ static void setMin(int& i, int minVal) {
     }
 }
 
-static void setMinMax(int& i, int minVal, int maxVal) {
-    if (i < minVal) {
-        i = minVal;
-    }
-    if (i > maxVal) {
-        i = maxVal;
-    }
-}
-
 static void SetCommandNameAndShortcut(CustomCommand* cmd, const char* name, const char* key) {
     if (!cmd) {
         return;
@@ -260,6 +251,7 @@ bool LoadSettings() {
         gprefs->toolbarSize = 18; // same as kDefaultIconSize in Toolbar.cpp
     }
     setMinMax(gprefs->toolbarSize, 8, 64);
+    setMinMax(gprefs->annotations.freeTextOpacity, 0, 100);
 
     if (!gprefs->treeFontName) {
         gprefs->treeFontName = const_cast<char*>("automatic");

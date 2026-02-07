@@ -447,7 +447,7 @@ func genSettingsStruct() string {
 }
 
 func getWebsiteDir() string {
-	return filepath.Join("..", "sumatra-website")
+	return filepath.Join("..", "hack", "webapps", "sumatra-website")
 }
 
 func updateSumatraWebsite() string {
@@ -457,6 +457,8 @@ func updateSumatraWebsite() string {
 	must(err)
 	panicIf(!dirExists(dir), "directory for sumatra website '%s' doesn't exist", dir)
 	panicIf(!isGitClean(dir), "github repository '%s' must be clean", dir)
+	panicIf(getCurrentBranchMust(dir) != "master", "github repository '%s' must be on master branch", dir)
+	isGithubMyMasterBranch()
 	{
 		cmd := exec.Command("git", "pull")
 		cmd.Dir = dir
