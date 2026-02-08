@@ -108,16 +108,14 @@ func Main() {
 	)
 
 	var (
-		flgBuildCodeQL  bool
-		flgCIBuild      bool
-		flgGenDocs      bool
+		flgBuildCodeQL bool
+		flgGenDocs     bool
 		flgGenSettings bool
 		flgUpload      bool
-		flgVerbose         bool
+		flgVerbose     bool
 	)
 
 	{
-		flag.BoolVar(&flgCIBuild, "ci", false, "run CI steps")
 		flag.BoolVar(&flgBuildCodeQL, "build-codeql", false, "build for codeql")
 		//flag.BoolVar(&flgBuildLzsa, "build-lzsa", false, "build MakeLZSA.exe")
 		flag.BoolVar(&flgUpload, "upload", false, "upload the build to s3 and do spaces")
@@ -196,14 +194,6 @@ func Main() {
 	}
 
 	if flgPrintBuildNo {
-		return
-	}
-
-	if flgCIBuild {
-		detectLlvmPdbutil()
-		buildCi()
-		ensureAllUploadCreds()
-		uploadPdbBuildArtifacts()
 		return
 	}
 

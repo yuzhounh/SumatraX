@@ -2,19 +2,14 @@ package do
 
 import (
 	"archive/zip"
-	"compress/gzip"
 	"errors"
 	"fmt"
 	"io/fs"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
-
-	"github.com/kjk/common/u"
 )
 
 var (
@@ -78,33 +73,6 @@ func getFileNamesWithPrefix(prefix string) [][]string {
 	}
 	return files
 }
-
-func createPdbLzsa(dir string) error {
-	return createLzsaFromFiles("SumatraPDF.pdb.lzsa", dir, pdbFiles)
-}
-
-// func copyBuiltFiles(dstDir string, srcDir string, prefix string) {
-// 	files := getFileNamesWithPrefix(prefix)
-// 	for _, f := range files {
-// 		srcName := f[0]
-// 		srcPath := filepath.Join(srcDir, srcName)
-// 		dstName := f[1]
-// 		dstPath := filepath.Join(dstDir, dstName)
-// 		must(createDirForFile(dstPath))
-// 		if fileExists(srcPath) {
-// 			must(copyFile(dstPath, srcPath))
-// 		} else {
-// 			logf("Skipping copying '%s'\n", srcPath)
-// 		}
-// 	}
-// }
-
-// func copyBuiltManifest(dstDir string, ver string, prefix string) {
-// 	srcPath := manifestPath(ver)
-// 	dstName := prefix + "-manifest.txt"
-// 	dstPath := filepath.Join(dstDir, dstName)
-// 	must(copyFile(dstPath, srcPath))
-// }
 
 func extractSumatraVersionMust() string {
 	path := filepath.Join("src", "Version.h")
@@ -189,19 +157,6 @@ func cleanReleaseBuilds() {
 	}
 }
 
-func removeReleaseBuilds() {
-	for _, plat := range platforms {
-		os.RemoveAll(plat.outDir)
-	}
-	//os.RemoveAll(finalPreRelDir)
-}
-
-func runTestUtilMust(dir string) {
-	cmd := exec.Command(`.\test_util.exe`)
-	cmd.Dir = dir
-	runCmdLoggedMust(cmd)
-}
-
 func buildLzsa() {
 	// early exit if missing
 	detectSigntoolPathMust()
@@ -230,14 +185,6 @@ func getBuildConfigCommon() string {
 	return s
 }
 
-// writes src/utils/BuildConfig.h to over-ride some of build settings
-func setBuildConfigPreRelease() {
-	s := getBuildConfigCommon()
-	preRelVer := getPreReleaseVer()
-	s += fmt.Sprintf("#define PRE_RELEASE_VER %s\n", preRelVer)
-	writeFileMust(buildConfigPath(), []byte(s))
-}
-
 func setBuildConfigRelease() {
 	s := getBuildConfigCommon()
 	err := os.WriteFile(buildConfigPath(), []byte(s), 0644)
@@ -258,63 +205,6 @@ func addZipDataStore(w *zip.Writer, data []byte, nameInZip string) error {
 		return err
 	}
 	_, err = fw.Write(data)
-	return err
-}
-
-func addZipFileWithName(w *zip.Writer, path, nameInZip string) error {
-	fi, err := os.Stat(path)
-	if err != nil {
-		return err
-	}
-	fih, err := zip.FileInfoHeader(fi)
-	if err != nil {
-		return err
-	}
-	fih.Name = nameInZip
-	fih.Method = zip.Deflate
-	d, err := os.ReadFile(path)
-	if err != nil {
-		return err
-	}
-	fw, err := w.CreateHeader(fih)
-	if err != nil {
-		return err
-	}
-	_, err = fw.Write(d)
-	return err
-	// fw is just a io.Writer so we can't Close() it. It's not necessary as
-	// it's implicitly closed by the next Create(), CreateHeader()
-	// or Close() call on zip.Writer
-}
-
-func addZipFile(w *zip.Writer, path string) error {
-	nameInZip := filepath.Base(path)
-	return addZipFileWithName(w, path, nameInZip)
-}
-
-var pdbFiles = []string{"libmupdf.pdb", "SumatraPDF-dll.pdb", "SumatraPDF.pdb"}
-
-func createPdbZip(dir string) error {
-	path := filepath.Join(dir, "SumatraPDF.pdb.zip")
-	f, err := os.Create(path)
-	if err != nil {
-		return err
-	}
-	defer func() {
-		err = f.Close()
-	}()
-	w := zip.NewWriter(f)
-	for _, file := range pdbFiles {
-		err = addZipFile(w, filepath.Join(dir, file))
-		if err != nil {
-			return err
-		}
-	}
-
-	err = w.Close()
-	if err != nil {
-		return err
-	}
 	return err
 }
 
@@ -349,149 +239,6 @@ func createManifestMust(manifestPath string) {
 	writeFileCreateDirMust(manifestPath, []byte(s))
 }
 
-// func build(config, platform string) {
-// 	msbuildPath := detectMsbuildPathMust()
-// 	slnPath := filepath.Join("vs2022", "SumatraPDF.sln")
-
-// 	dir := getOutDirForPlatform(platform)
-
-// 	p := fmt.Sprintf(`/p:Configuration=%s;Platform=%s`, config, platform)
-// 	runExeLoggedMust(msbuildPath, slnPath, `/t:test_util:Rebuild`, p, `/m`)
-// 	// can't run arm binaries in x86 CI
-// 	if platform != kPlatformNameArm64 {
-// 		runTestUtilMust(dir)
-// 	}
-
-// 	runExeLoggedMust(msbuildPath, slnPath, `/t:SumatraPDF:Rebuild;SumatraPDF-dll:Rebuild;PdfFilter:Rebuild;PdfPreview:Rebuild`, p, `/m`)
-// 	err := createPdbZip(dir)
-// 	must(err)
-// 	err = createPdbLzsa(dir)
-// 	must(err)
-// }
-
-func buildCi() {
-	gev := getGitHubEventType()
-	switch gev {
-	case githubEventPush:
-		removeReleaseBuilds()
-		genHTMLDocsForApp()
-		buildPreRelease(platform64)
-	case githubEventTypeCodeQL:
-		// code ql is just a regular build, I assume intercepted by
-		// by their tooling
-		// buildSmoke() runs genHTMLDocsForApp() so no need to do it here
-		buildSmoke(false)
-	default:
-		panic("unkown value from getGitHubEventType()")
-	}
-}
-
-func detectLlvmPdbutil() string {
-	return detectPathMust(vsBasePaths, `VC\Tools\Llvm\bin\llvm-pdbutil.exe`)
-}
-
-func runLlvmPdbutilGzipped(pdbPath string, outPath string, args ...string) {
-	exePath := detectLlvmPdbutil()
-	cmdArgs := append([]string{"pretty"}, args...)
-	cmdArgs = append(cmdArgs, pdbPath)
-	cmd := exec.Command(exePath, cmdArgs...)
-	logf("> %s\n", fmtCmdShort(cmd))
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		logf("%s failed with '%s', output:\n%s\n", fmtCmdShort(cmd), err, string(out))
-		must(err)
-	}
-
-	f, err := os.Create(outPath)
-	must(err)
-	defer f.Close()
-	gz := gzip.NewWriter(f)
-	_, err = gz.Write(out)
-	must(err)
-	err = gz.Close()
-	must(err)
-	logf("wrote %s (%s)\n", outPath, formatSize(int64(len(out))))
-}
-
-func uploadPdbBuildArtifacts() {
-	pdbPath := filepath.Join("out", "rel64", "SumatraPDF.pdb")
-	if !fileExists(pdbPath) {
-		logf("uploadPdbBuildArtifacts: '%s' doesn't exist, skipping\n", pdbPath)
-		return
-	}
-
-	globalsPath := "SumatraPDF-globals.txt.gz"
-	classesPath := "SumatraPDF-classes.txt.gz"
-
-	runLlvmPdbutilGzipped(pdbPath, globalsPath, "-globals", "-symbol-order=size")
-	runLlvmPdbutilGzipped(pdbPath, classesPath, "-classes")
-
-	ver := getPreReleaseVer()
-	sha1 := getGitSha1()
-	shortSha1 := sha1[:8]
-	dateStr := time.Now().Format("2006-01-02")
-	prefix := fmt.Sprintf("software/sumatrapdf-build-artifacts/%s-%s-%s", dateStr, ver, shortSha1)
-
-	remoteGlobals := prefix + ".SumatraPDF-globals.txt.gz"
-	remoteClasses := prefix + ".SumatraPDF-classes.txt.gz"
-
-	var wg sync.WaitGroup
-	wg.Add(2)
-	go func() {
-		mc := newMinioR2Client()
-		mc.UploadFile(remoteGlobals, globalsPath, true)
-		logf("uploaded %s\n", mc.URLForPath(remoteGlobals))
-		mc.UploadFile(remoteClasses, classesPath, true)
-		logf("uploaded %s\n", mc.URLForPath(remoteClasses))
-		wg.Done()
-	}()
-	go func() {
-		mc := newMinioBackblazeClient()
-		mc.UploadFile(remoteGlobals, globalsPath, true)
-		logf("uploaded %s\n", mc.URLForPath(remoteGlobals))
-		mc.UploadFile(remoteClasses, classesPath, true)
-		logf("uploaded %s\n", mc.URLForPath(remoteClasses))
-		wg.Done()
-	}()
-	wg.Wait()
-}
-
-func ensureManualIsBuilt() {
-	// make sure we've built manual
-	path := filepath.Join("docs", "manual.dat")
-	size := u.FileSize(path)
-	panicIf(size < 2*2024, "size of '%s' is %d which indicates we didn't build it", path, size)
-}
-
-func buildPreRelease(plat *Platform) {
-	ensureManualIsBuilt()
-	ver := getPreReleaseVer()
-	s := fmt.Sprintf("buidling pre-release version %s", ver)
-	defer makePrintDuration(s)()
-	setBuildConfigPreRelease()
-	defer revertBuildConfig()
-
-	buildAll := func(config, vsplatform string, outDir string) {
-		msbuildPath := detectMsbuildPathMust()
-		slnPath := filepath.Join("vs2022", "SumatraPDF.sln")
-
-		p := fmt.Sprintf(`/p:Configuration=%s;Platform=%s`, config, vsplatform)
-		runExeLoggedMust(msbuildPath, slnPath, `/t:test_util:Rebuild`, p, `/m`)
-		// can't run arm binaries in x86 CI
-		if vsplatform != kVSPlatformArm64 {
-			runTestUtilMust(outDir)
-		}
-
-		runExeLoggedMust(msbuildPath, slnPath, `/t:signfile:Rebuild;sizer:Rebuild;PdfFilter:Rebuild;plugin-test:Rebuild;PdfPreview:Rebuild;PdfPreviewTest:Rebuild;SumatraPDF:Rebuild;SumatraPDF-dll:Rebuild`, p, `/m`)
-		err := createPdbZip(outDir)
-		must(err)
-		err = createPdbLzsa(outDir)
-		must(err)
-	}
-
-	buildAll("Release", plat.vsplatform, plat.outDir)
-}
-
 func detectVersionsCodeQL() {
 	//ver := getGitLinearVersionMust()
 	ver := 16648 // we don't have git history in codeql checkout
@@ -510,37 +257,6 @@ func buildCodeQL() {
 	msbuildPath := detectMsbuildPathMust()
 	runExeLoggedMust(msbuildPath, `vs2022\SumatraPDF.sln`, `/t:SumatraPDF:Rebuild`, `/p:Configuration=Release;Platform=x64`, `/m`)
 	revertBuildConfig()
-}
-
-// smoke build is meant to be run locally to check that we can build everything
-// it does full installer build of 64-bit release build
-// We don't build other variants for speed. It takes about 5 mins locally
-func buildSmoke(sign bool) {
-	detectSigntoolPathMust()
-	defer makePrintDuration("smoke build")()
-	removeReleaseBuilds()
-	genHTMLDocsForApp()
-
-	lzsa := absPathMust(filepath.Join("bin", "MakeLZSA.exe"))
-	panicIf(!fileExists(lzsa), "file '%s' doesn't exist", lzsa)
-
-	msbuildPath := detectMsbuildPathMust()
-	sln := `vs2022\SumatraPDF.sln`
-	t := `/t:SumatraPDF-dll:Rebuild;test_util:Rebuild`
-	p := `/p:Configuration=Release;Platform=x64`
-	runExeLoggedMust(msbuildPath, sln, t, p, `/m`)
-	outDir := filepath.Join("out", "rel64")
-	runTestUtilMust(outDir)
-
-	{
-		cmd := exec.Command(lzsa, "SumatraPDF.pdb.lzsa", "libmupdf.pdb:libmupdf.pdb", "SumatraPDF-dll.pdb:SumatraPDF-dll.pdb")
-		cmd.Dir = outDir
-		runCmdLoggedMust(cmd)
-	}
-	if sign {
-		files := []string{"SumatraPDF-dll.exe", "libmupdf.dll", "PdfFilter.dll", "PdfPreview.dll"}
-		signFiles(outDir, files)
-	}
 }
 
 func waitForEnter(s string) {
