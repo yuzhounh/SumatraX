@@ -62,7 +62,7 @@ async function main() {
   const outDir = join("out", "rel64");
 
   // run tests
-  await runLogged(join(outDir, "test_util.exe"), [], outDir);
+  await runLogged(resolve(join(outDir, "test_util.exe")), [], outDir);
 
   // create PDB lzsa archive
   await runLogged(lzsa, [
