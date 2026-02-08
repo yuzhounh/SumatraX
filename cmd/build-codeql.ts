@@ -1,20 +1,8 @@
 // build-codeql.ts - replaces Go "-build-codeql" flag
 // Just a static 64-bit release build for CodeQL analysis
 import { join } from "node:path";
-import { detectVisualStudio } from "./util.ts";
+import { detectVisualStudio, runLogged } from "./util.ts";
 
-async function runLogged(cmd: string, args: string[]): Promise<void> {
-  const short = [cmd.split("\\").pop(), ...args].join(" ");
-  console.log(`> ${short}`);
-  const proc = Bun.spawn([cmd, ...args], {
-    stdout: "inherit",
-    stderr: "inherit",
-  });
-  const exitCode = await proc.exited;
-  if (exitCode !== 0) {
-    throw new Error(`command failed with exit code ${exitCode}`);
-  }
-}
 
 function buildConfigPath(): string {
   return join("src", "utils", "BuildConfig.h");

@@ -102,6 +102,21 @@ export function detectVisualStudio(): VisualStudioInfo {
   return { vsRoot, msbuildPath, clangFormatPath, clangTidyPath, llvmPdbutilPath };
 }
 
+export async function runLogged(cmd: string, args: string[], cwd?: string): Promise<void> {
+  const short = [cmd.split("\\").pop(), ...args].join(" ");
+  console.log(`> ${short}`);
+  const proc = Bun.spawn([cmd, ...args], {
+    cwd,
+    stdout: "inherit",
+    stderr: "inherit",
+    stdin: "inherit",
+  });
+  const exitCode = await proc.exited;
+  if (exitCode !== 0) {
+    throw new Error(`command failed with exit code ${exitCode}`);
+  }
+}
+
 export async function getGitLinearVersion(): Promise<number> {
   const proc = Bun.spawn(["git", "log", "--oneline"], { stdout: "pipe", stderr: "inherit" });
   const out = await new Response(proc.stdout).text();

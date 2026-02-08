@@ -1,20 +1,6 @@
 import { join, resolve } from "node:path";
-import { detectVisualStudio } from "./util.ts";
+import { detectVisualStudio, runLogged } from "./util.ts";
 
-async function runLogged(cmd: string, args: string[], cwd?: string): Promise<void> {
-  const short = [cmd.split("\\").pop(), ...args].join(" ");
-  console.log(`> ${short}`);
-  const proc = Bun.spawn([cmd, ...args], {
-    cwd,
-    stdout: "inherit",
-    stderr: "inherit",
-    stdin: "inherit",
-  });
-  const exitCode = await proc.exited;
-  if (exitCode !== 0) {
-    throw new Error(`command failed with exit code ${exitCode}`);
-  }
-}
 
 const { msbuildPath } = detectVisualStudio();
 const slnPath = join("vs2022", "SumatraPDF.sln");

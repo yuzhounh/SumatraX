@@ -3,7 +3,7 @@
 import { existsSync, readFileSync, writeFileSync, statSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createHmac, createHash } from "node:crypto";
-import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion } from "./util.ts";
+import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion, runLogged } from "./util.ts";
 
 const sdkVersions = [
   "10.0.26100.0",
@@ -117,19 +117,6 @@ function ensureManualIsBuilt(): void {
 
 // === Command Execution ===
 
-async function runLogged(cmd: string, args: string[], cwd?: string): Promise<void> {
-  const short = [cmd.split("\\").pop(), ...args].join(" ");
-  console.log(`> ${short}`);
-  const proc = Bun.spawn([cmd, ...args], {
-    stdout: "inherit",
-    stderr: "inherit",
-    cwd: cwd,
-  });
-  const exitCode = await proc.exited;
-  if (exitCode !== 0) {
-    throw new Error(`command failed with exit code ${exitCode}`);
-  }
-}
 
 async function runCaptureOutput(cmd: string, args: string[], cwd?: string): Promise<Uint8Array> {
   const short = [cmd.split("\\").pop(), ...args].join(" ");

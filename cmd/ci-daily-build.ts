@@ -1,7 +1,7 @@
 import { existsSync, writeFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
-import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion } from "./util.ts";
+import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion, runLogged } from "./util.ts";
 
 const platforms = [
   { vsplatform: "ARM64", suffix: "arm64", outDir: join("out", "arm64") },
@@ -68,19 +68,6 @@ function ensureManualIsBuilt(): void {
   }
 }
 
-async function runLogged(cmd: string, args: string[]): Promise<void> {
-  const short = [cmd.split("\\").pop(), ...args].join(" ");
-  console.log(`> ${short}`);
-  const proc = Bun.spawn([cmd, ...args], {
-    stdout: "inherit",
-    stderr: "inherit",
-    stdin: "inherit",
-  });
-  const exitCode = await proc.exited;
-  if (exitCode !== 0) {
-    throw new Error(`command failed with exit code ${exitCode}`);
-  }
-}
 
 async function main() {
   if (!(await isGithubMyMasterBranch())) {

@@ -1,6 +1,6 @@
 import { existsSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { detectVisualStudio } from "./util.ts";
+import { detectVisualStudio, runLogged } from "./util.ts";
 
 function removeReleaseBuilds(): void {
   const dirs = [join("out", "arm64"), join("out", "rel32"), join("out", "rel64")];
@@ -9,20 +9,6 @@ function removeReleaseBuilds(): void {
   }
 }
 
-async function runLogged(cmd: string, args: string[], cwd?: string): Promise<void> {
-  const short = [cmd.split("\\").pop(), ...args].join(" ");
-  console.log(`> ${short}`);
-  const proc = Bun.spawn([cmd, ...args], {
-    cwd,
-    stdout: "inherit",
-    stderr: "inherit",
-    stdin: "inherit",
-  });
-  const exitCode = await proc.exited;
-  if (exitCode !== 0) {
-    throw new Error(`command failed with exit code ${exitCode}`);
-  }
-}
 
 async function main() {
   const timeStart = performance.now();
