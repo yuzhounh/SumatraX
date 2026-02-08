@@ -3,7 +3,7 @@
 import { existsSync, readFileSync, writeFileSync, statSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createHmac, createHash } from "node:crypto";
-import { detectMsBuild } from "./util.ts";
+import { detectVisualStudio } from "./util.ts";
 
 const sdkVersions = [
   "10.0.26100.0",
@@ -106,15 +106,6 @@ function extractSumatraVersion(): string {
 }
 
 // === Path Detection ===
-
-function detectLlvmPdbutil(vsRoot: string): string {
-  const name = String.raw`VC\Tools\Llvm\bin\llvm-pdbutil.exe`;
-  const p = join(vsRoot, name);
-  if (existsSync(p)) {
-    return p;
-  }
-  throw new Error(`didn't find ${name} in ${vsRoot}`);
-}
 
 // === Build Config ===
 
@@ -400,14 +391,14 @@ async function runLlvmPdbutilGzipped(exePath: string, pdbPath: string, outPath: 
   console.log(`wrote ${outPath} (${formatSize(output.length)})`);
 }
 
-async function uploadPdbBuildArtifacts(vsRoot: string, preRelVer: string, sha1: string): Promise<void> {
+async function uploadPdbBuildArtifacts(llvmPdbutilPath: string, preRelVer: string, sha1: string): Promise<void> {
   const pdbPath = join("out", "rel64", "SumatraPDF.pdb");
   if (!existsSync(pdbPath)) {
     console.log(`uploadPdbBuildArtifacts: '${pdbPath}' doesn't exist, skipping`);
     return;
   }
 
-  const llvmPdbutil = detectLlvmPdbutil(vsRoot);
+  const llvmPdbutil = llvmPdbutilPath;
   const globalsPath = "SumatraPDF-globals.txt.gz";
   const classesPath = "SumatraPDF-classes.txt.gz";
 
@@ -449,8 +440,8 @@ async function main() {
   console.log(`gitSha1: '${sha1}'`);
   console.log(`sumatraVersion: '${sumatraVer}'`);
 
-  const { vsRoot, msbuildPath } = detectMsBuild();
-  detectLlvmPdbutil(vsRoot); // early check
+  const { msbuildPath, llvmPdbutilPath } = detectVisualStudio();
+  if (!llvmPdbutilPath) throw new Error("couldn't find llvm-pdbutil.exe");
 
   const eventType = getGitHubEventType();
   console.log(`GitHub event type: ${eventType}`);
@@ -473,7 +464,7 @@ async function main() {
   }
 
   //ensureAllUploadCreds();
-  //await uploadPdbBuildArtifacts(vsRoot, preRelVer, sha1);
+  //await uploadPdbBuildArtifacts(llvmPdbutilPath, preRelVer, sha1);
 
   const elapsed = ((performance.now() - timeStart) / 1000).toFixed(1);
   console.log(`Finished in ${elapsed}s`);

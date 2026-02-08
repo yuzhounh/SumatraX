@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, writeFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
-import { detectMsBuild } from "./util.ts";
+import { detectVisualStudio } from "./util.ts";
 
 const platforms = [
   { vsplatform: "ARM64", suffix: "arm64", outDir: join("out", "arm64") },
@@ -118,7 +118,7 @@ async function main() {
     return;
   }
 
-  const { msbuildPath } = detectMsBuild();
+  const { msbuildPath } = detectVisualStudio();
 
   const preRelVer = String(await getGitLinearVersion());
   const sha1 = await getGitSha1();

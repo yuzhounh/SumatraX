@@ -1,5 +1,5 @@
 import { join, resolve } from "node:path";
-import { detectMsBuild } from "./util.ts";
+import { detectVisualStudio } from "./util.ts";
 
 async function runLogged(cmd: string, args: string[], cwd?: string): Promise<void> {
   const short = [cmd.split("\\").pop(), ...args].join(" ");
@@ -16,7 +16,7 @@ async function runLogged(cmd: string, args: string[], cwd?: string): Promise<voi
   }
 }
 
-const { msbuildPath } = detectMsBuild();
+const { msbuildPath } = detectVisualStudio();
 const slnPath = join("vs2022", "SumatraPDF.sln");
 await runLogged(msbuildPath, [slnPath, `/t:test_util:Rebuild`, `/p:Configuration=Release;Platform=x64`, `/m`]);
 

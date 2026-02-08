@@ -1,18 +1,7 @@
 import { Glob } from "bun";
-import { existsSync } from "node:fs";
 import { unlink, appendFile, writeFile } from "node:fs/promises";
 import { join, basename } from "node:path";
-import { detectMsBuild } from "./util.ts";
-
-function detectClangTidy(): string {
-  const relPath = String.raw`VC\Tools\Llvm\bin\clang-tidy.exe`;
-  const { vsRoot } = detectMsBuild();
-  const p = join(vsRoot, relPath);
-  if (existsSync(p)) {
-    return p;
-  }
-  return "clang-tidy.exe";
-}
+import { detectVisualStudio } from "./util.ts";
 
 const includes = [
   "-I",
@@ -133,7 +122,8 @@ async function main() {
   const args = process.argv.slice(2);
   const fix = args.includes("-fix");
 
-  const exePath = detectClangTidy();
+  const { clangTidyPath } = detectVisualStudio();
+  const exePath = clangTidyPath || "clang-tidy.exe";
   console.log(`using '${exePath}'`);
 
   await unlink(clangTidyLogFile).catch(() => {});

@@ -1,7 +1,7 @@
 // build-codeql.ts - replaces Go "-build-codeql" flag
 // Just a static 64-bit release build for CodeQL analysis
 import { join } from "node:path";
-import { detectMsBuild } from "./util.ts";
+import { detectVisualStudio } from "./util.ts";
 
 async function runLogged(cmd: string, args: string[]): Promise<void> {
   const short = [cmd.split("\\").pop(), ...args].join(" ");
@@ -32,7 +32,7 @@ async function main() {
   const timeStart = performance.now();
   console.log("build-codeql: static 64-bit release build for CodeQL analysis");
 
-  const { msbuildPath } = detectMsBuild();
+  const { msbuildPath } = detectVisualStudio();
   const slnPath = join("vs2022", "SumatraPDF.sln");
 
   await runLogged(msbuildPath, [slnPath, `/t:SumatraPDF:Rebuild`, `/p:Configuration=Release;Platform=x64`, `/m`]);

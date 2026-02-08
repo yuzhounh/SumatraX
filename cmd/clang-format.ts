@@ -1,18 +1,7 @@
 import { $, Glob } from "bun";
-import { existsSync } from "node:fs";
 import { join, basename } from "node:path";
 import { cpus } from "node:os";
-import { detectMsBuild } from "./util.ts";
-
-function detectClangFormat(): string {
-  const relPath = String.raw`VC\Tools\Llvm\bin\clang-format.exe`;
-  const { vsRoot } = detectMsBuild();
-  const p = join(vsRoot, relPath);
-  if (existsSync(p)) {
-    return p;
-  }
-  return "clang-format.exe";
-}
+import { detectVisualStudio } from "./util.ts";
 
 async function globFiles(patterns: string[]): Promise<string[]> {
   const files: string[] = [];
@@ -37,7 +26,8 @@ async function formatFile(clangFormatPath: string, path: string): Promise<void> 
 }
 
 async function main() {
-  const clangFormatPath = detectClangFormat();
+  const { clangFormatPath: cfPath } = detectVisualStudio();
+  const clangFormatPath = cfPath || "clang-format.exe";
   console.log(`using '${clangFormatPath}'`);
 
   const patterns = [

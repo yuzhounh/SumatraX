@@ -1,6 +1,6 @@
 import { existsSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { detectMsBuild } from "./util.ts";
+import { detectVisualStudio } from "./util.ts";
 
 function removeReleaseBuilds(): void {
   const dirs = [join("out", "arm64"), join("out", "rel32"), join("out", "rel64")];
@@ -35,7 +35,7 @@ async function main() {
     throw new Error(`file '${lzsa}' doesn't exist`);
   }
 
-  const { msbuildPath } = detectMsBuild();
+  const { msbuildPath } = detectVisualStudio();
   const sln = String.raw`vs2022\SumatraPDF.sln`;
   const t = `/t:SumatraPDF-dll:Rebuild;test_util:Rebuild`;
   const p = `/p:Configuration=Release;Platform=x64`;

@@ -3,7 +3,7 @@
 
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname, resolve, basename } from "node:path";
-import { detectMsBuild } from "./util.ts";
+import { detectVisualStudio } from "./util.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -1330,17 +1330,6 @@ const gLangs: string[][] = [
 // Path detection
 // ---------------------------------------------------------------------------
 
-function detectClangFormat(): string {
-  const { vsRoot } = detectMsBuild();
-  const name = String.raw`VC\Tools\Llvm\bin\clang-format.exe`;
-  const p = join(vsRoot, name);
-  if (existsSync(p)) {
-    console.log(`clang-format: ${p}`);
-    return p;
-  }
-  throw new Error(`didn't find clang-format.exe`);
-}
-
 function extractSumatraVersionMust(): string {
   const path = join("src", "Version.h");
   const lines = readFileSync(path, "utf-8").split("\n");
@@ -1431,7 +1420,8 @@ export async function main() {
   s = s.replaceAll("\t", "    ");
   const settingsPath = join("src", "Settings.h");
   writeFileMust(settingsPath, s);
-  const clangFormatPath = detectClangFormat();
+  const { clangFormatPath } = detectVisualStudio();
+  if (!clangFormatPath) throw new Error("couldn't find clang-format.exe");
   await runLogged(clangFormatPath, ["-i", "-style=file", settingsPath]);
   console.log(`Wrote '${settingsPath}'`);
 
