@@ -1,7 +1,7 @@
-import { existsSync, readFileSync, writeFileSync, statSync } from "node:fs";
+import { existsSync, writeFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
-import { detectVisualStudio } from "./util.ts";
+import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion } from "./util.ts";
 
 const platforms = [
   { vsplatform: "ARM64", suffix: "arm64", outDir: join("out", "arm64") },
@@ -33,36 +33,10 @@ async function isGitClean(dir: string): Promise<boolean> {
   return out.length === 0;
 }
 
-async function getGitLinearVersion(): Promise<number> {
-  const out = await $`git log --oneline`.text();
-  const lines = out.split("\n").filter((l) => l.trim() !== "");
-  const n = lines.length + 1000;
-  if (n < 10000) throw new Error(`getGitLinearVersion: n is ${n} (should be > 10000)`);
-  return n;
-}
-
 async function getGitSha1(): Promise<string> {
   const s = (await $`git rev-parse HEAD`.text()).trim();
   if (s.length !== 40) throw new Error(`getGitSha1: '${s}' doesn't look like sha1`);
   return s;
-}
-
-function extractSumatraVersion(): string {
-  const path = join("src", "Version.h");
-  const content = readFileSync(path, "utf-8");
-  const prefix = "#define CURR_VERSION ";
-  for (const line of content.split("\n")) {
-    if (line.startsWith(prefix)) {
-      const ver = line.substring(prefix.length).trim();
-      const parts = ver.split(".");
-      if (parts.length === 0 || parts.length > 3) throw new Error(`invalid version: ${ver}`);
-      for (const p of parts) {
-        if (isNaN(parseInt(p, 10))) throw new Error(`invalid version: ${ver}`);
-      }
-      return ver;
-    }
-  }
-  throw new Error(`couldn't extract CURR_VERSION from ${path}`);
 }
 
 function buildConfigPath(): string {

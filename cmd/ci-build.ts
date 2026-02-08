@@ -3,7 +3,7 @@
 import { existsSync, readFileSync, writeFileSync, statSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createHmac, createHash } from "node:crypto";
-import { detectVisualStudio } from "./util.ts";
+import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion } from "./util.ts";
 
 const sdkVersions = [
   "10.0.26100.0",
@@ -72,40 +72,12 @@ function ensureAllUploadCreds(): void {
 
 // === Version Detection ===
 
-async function getGitLinearVersion(): Promise<number> {
-  const proc = Bun.spawn(["git", "log", "--oneline"], { stdout: "pipe", stderr: "inherit" });
-  const out = await new Response(proc.stdout).text();
-  await proc.exited;
-  const lines = out.split("\n").filter((l) => l.trim() !== "");
-  const n = lines.length + 1000;
-  if (n < 10000) throw new Error(`getGitLinearVersion: n is ${n} (should be > 10000)`);
-  return n;
-}
-
 async function getGitSha1(): Promise<string> {
   const proc = Bun.spawn(["git", "rev-parse", "HEAD"], { stdout: "pipe", stderr: "inherit" });
   const s = (await new Response(proc.stdout).text()).trim();
   await proc.exited;
   if (s.length !== 40) throw new Error(`getGitSha1: '${s}' doesn't look like sha1`);
   return s;
-}
-
-function extractSumatraVersion(): string {
-  const path = join("src", "Version.h");
-  const content = readFileSync(path, "utf-8");
-  const prefix = "#define CURR_VERSION ";
-  for (const line of content.split("\n")) {
-    if (line.startsWith(prefix)) {
-      const ver = line.substring(prefix.length).trim();
-      const parts = ver.split(".");
-      if (parts.length === 0 || parts.length > 3) throw new Error(`invalid version: ${ver}`);
-      for (const p of parts) {
-        if (isNaN(parseInt(p, 10))) throw new Error(`invalid version: ${ver}`);
-      }
-      return ver;
-    }
-  }
-  throw new Error(`couldn't extract CURR_VERSION from ${path}`);
 }
 
 // === Build Config ===

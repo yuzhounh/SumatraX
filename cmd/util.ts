@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 
 const msBuildRelPath = String.raw`MSBuild\Current\Bin\MSBuild.exe`;
@@ -100,4 +100,32 @@ export function detectVisualStudio(): VisualStudioInfo {
   if (llvmPdbutilPath) console.log(`llvmPdbutilPath: ${llvmPdbutilPath}`);
 
   return { vsRoot, msbuildPath, clangFormatPath, clangTidyPath, llvmPdbutilPath };
+}
+
+export async function getGitLinearVersion(): Promise<number> {
+  const proc = Bun.spawn(["git", "log", "--oneline"], { stdout: "pipe", stderr: "inherit" });
+  const out = await new Response(proc.stdout).text();
+  await proc.exited;
+  const lines = out.split("\n").filter((l) => l.trim() !== "");
+  const n = lines.length + 1000;
+  if (n < 10000) throw new Error(`getGitLinearVersion: n is ${n} (should be > 10000)`);
+  return n;
+}
+
+export function extractSumatraVersion(): string {
+  const path = join("src", "Version.h");
+  const content = readFileSync(path, "utf-8");
+  const prefix = "#define CURR_VERSION ";
+  for (const line of content.split("\n")) {
+    if (line.startsWith(prefix)) {
+      const ver = line.substring(prefix.length).trim();
+      const parts = ver.split(".");
+      if (parts.length === 0 || parts.length > 3) throw new Error(`invalid version: ${ver}`);
+      for (const p of parts) {
+        if (isNaN(parseInt(p, 10))) throw new Error(`invalid version: ${ver}`);
+      }
+      return ver;
+    }
+  }
+  throw new Error(`couldn't extract CURR_VERSION from ${path}`);
 }
