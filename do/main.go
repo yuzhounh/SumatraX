@@ -109,7 +109,6 @@ func Main() {
 	)
 
 	var (
-		flgBuildNo         int
 		flgBuildSmoke      bool
 		flgBuildCodeQL     bool
 		flgCIBuild         bool
@@ -135,7 +134,6 @@ func Main() {
 		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
 		flag.StringVar(&flgUpdateVer, "update-auto-update-ver", "", "update version used for auto-update checks")
 		flag.BoolVar(&flgRunTests, "run-tests", false, "run test_util executable")
-		flag.IntVar(&flgBuildNo, "build-no-info", 0, "print build number info for given build number")
 		flag.BoolVar(&flgGenDocs, "gen-docs", false, "generate html docs in docs/www from markdown in docs/md")
 		flag.BoolVar(&flgGenWebsiteDocs, "gen-docs-website", false, "generate html docs in ../sumatra-website repo and check them in")
 		flag.BoolVar(&flgVerbose, "verbose", false, "if true, verbose logging")
@@ -189,11 +187,6 @@ func Main() {
 			// avoid "unused function" warnings
 			testGenUpdateTxt()
 		}
-		return
-	}
-
-	if flgBuildNo > 0 {
-		printBuildNoInfo(flgBuildNo)
 		return
 	}
 
@@ -256,14 +249,4 @@ func Main() {
 	}
 
 	flag.Usage()
-}
-
-func printBuildNoInfo(buildNo int) {
-	out := runExeMust("git", "log", "--oneline")
-	lines := toTrimmedLines(out)
-	// we add 1000 to create a version that is larger than the svn version
-	// from the time we used svn
-	n := len(lines) - (buildNo - 1000)
-	s := lines[n]
-	logf("%d: %s\n", buildNo, s)
 }
