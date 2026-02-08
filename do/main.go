@@ -121,7 +121,6 @@ func Main() {
 		flgGenDocs         bool
 		flgGenSettings     bool
 		flgGenWebsiteDocs  bool
-		flgRunLogView      bool
 		flgRunTests        bool
 		flgTransDownload   bool
 		flgTriggerCodeQL   bool
@@ -145,7 +144,6 @@ func Main() {
 		flag.BoolVar(&flgTriggerCodeQL, "trigger-codeql", false, "trigger codeql build")
 		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
 		flag.StringVar(&flgUpdateVer, "update-auto-update-ver", "", "update version used for auto-update checks")
-		flag.BoolVar(&flgRunLogView, "logview", false, "run logview")
 		flag.BoolVar(&flgRunTests, "run-tests", false, "run test_util executable")
 		flag.BoolVar(&flgBuildLogview, "build-logview", false, "build logview-win. Use -upload to also upload it to backblaze")
 		flag.IntVar(&flgBuildNo, "build-no-info", 0, "print build number info for given build number")
@@ -287,14 +285,6 @@ func Main() {
 		return
 	}
 
-	if flgRunLogView {
-		runLogViewWeb()
-		if false {
-			runLogViewWin()
-		}
-		return
-	}
-
 	if flgRunTests {
 		buildTestUtil()
 		dir := filepath.Join("out", "rel64")
@@ -305,36 +295,6 @@ func Main() {
 	}
 
 	flag.Usage()
-}
-
-func runLogViewWin() {
-	logf("runLogViewWin\n")
-	path := filepath.Join(logViewWinDir, "build", "bin", "logview.exe")
-	if !u.FileExists(path) {
-		logf("'%s' doesn't exist, rebuilding\n", path)
-		buildLogView()
-	} else {
-		logf("'%s' already exist. If you want to re-build:\n", path)
-		logf("rm \"%s\"\n", path)
-	}
-	cmd := exec.Command(path)
-	cmd.Dir = logViewWinDir
-	err := cmd.Start()
-	must(err)
-	logf("Started %s\n", path)
-}
-
-func runLogViewWeb() {
-	logf("runLogViewWweb\n")
-	dir := filepath.Join("tools", "logview-web")
-	cmd := exec.Command("go", "run", ".", "-run-dev")
-	cmd.Dir = dir
-	err := cmd.Start()
-	must(err)
-	logf("Started %s in %s\n", cmd.String(), dir)
-	// wait for it to finish
-	err = cmd.Wait()
-	must(err)
 }
 
 func cmdRunLoggedInDir(dir string, args ...string) {
