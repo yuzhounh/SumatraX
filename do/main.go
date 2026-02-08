@@ -117,9 +117,8 @@ func Main() {
 		flgGenDocs         bool
 		flgGenSettings     bool
 		flgGenWebsiteDocs  bool
-		flgRunTests        bool
-		flgTransDownload   bool
-		flgTriggerCodeQL   bool
+		flgRunTests      bool
+		flgTriggerCodeQL bool
 		flgUpdateVer       string
 		flgUpload          bool
 		flgVerbose         bool
@@ -132,7 +131,6 @@ func Main() {
 		flag.BoolVar(&flgBuildCodeQL, "build-codeql", false, "build for codeql")
 		//flag.BoolVar(&flgBuildLzsa, "build-lzsa", false, "build MakeLZSA.exe")
 		flag.BoolVar(&flgUpload, "upload", false, "upload the build to s3 and do spaces")
-		flag.BoolVar(&flgTransDownload, "trans-dl", false, "download latest translations to translations/translations.txt")
 		//flag.BoolVar(&flgGenTranslationsInfoCpp, "trans-gen-info", false, "generate src/TranslationLangs.cpp")
 		//flag.BoolVar(&flgPrintBuildNo, "build-no", false, "print build number")
 		flag.BoolVar(&flgTriggerCodeQL, "trigger-codeql", false, "trigger codeql build")
@@ -184,11 +182,6 @@ func Main() {
 	}
 
 	getSecrets()
-
-	if flgTransDownload {
-		downloadTranslations()
-		return
-	}
 
 	detectVersions()
 

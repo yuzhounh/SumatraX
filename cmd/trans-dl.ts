@@ -1,0 +1,243 @@
+import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { join, extname } from "node:path";
+
+const apptranslatorServer = "https://www.apptranslator.org";
+const translationsDir = "translations";
+const translationsTxtPath = join(translationsDir, "translations.txt");
+
+const translationPattern = /\b_TR[AN]?\("(.*?)"\)/g;
+
+function extractTranslations(s: string): string[] {
+  const res: string[] = [];
+  for (const match of s.matchAll(translationPattern)) {
+    res.push(match[1]);
+  }
+  return res;
+}
+
+function getFilesToProcess(): string[] {
+  const res: string[] = [];
+  const entries = readdirSync("src", { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.isFile() && extname(entry.name).toLowerCase() === ".cpp") {
+      res.push(join("src", entry.name));
+    }
+  }
+  return res;
+}
+
+function extractStringsFromCFilesNoPaths(): string[] {
+  const files = getFilesToProcess();
+  console.log(`Files to process: ${files.length}`);
+  const allStrs: string[] = [];
+  for (const path of files) {
+    const content = readFileSync(path, "utf-8");
+    const strs = extractTranslations(content);
+    allStrs.push(...strs);
+  }
+  // uniquify
+  const unique = [...new Set(allStrs)];
+  console.log(`${unique.length} strings to translate`);
+  return unique;
+}
+
+function getTransSecret(): string {
+  // try reading from secrets file first
+  const secretsPath = join("..", "secrets", "sumatrapdf.env");
+  try {
+    const content = readFileSync(secretsPath, "utf-8");
+    for (const line of content.split("\n")) {
+      const trimmed = line.trim();
+      if (trimmed.startsWith("TRANS_UPLOAD_SECRET")) {
+        const eqIdx = trimmed.indexOf("=");
+        if (eqIdx !== -1) {
+          const val = trimmed.substring(eqIdx + 1).trim();
+          if (val.length >= 4) {
+            console.log("Got TRANS_UPLOAD_SECRET");
+            return val;
+          }
+        }
+      }
+    }
+  } catch {
+    // fall through to env variable
+  }
+  const val = process.env["TRANS_UPLOAD_SECRET"] ?? "";
+  if (val.length < 4) {
+    throw new Error("must set TRANS_UPLOAD_SECRET env variable or in .env file");
+  }
+  return val;
+}
+
+async function downloadTranslationsMust(): Promise<string> {
+  const timeStart = performance.now();
+  const strs = extractStringsFromCFilesNoPaths();
+  strs.sort();
+  console.log(`uploading ${strs.length} strings for translation`);
+  const secret = getTransSecret();
+  const uri = `${apptranslatorServer}/api/dltransfor?app=SumatraPDF&secret=${secret}`;
+  const body = strs.join("\n");
+  const resp = await fetch(uri, { method: "POST", body });
+  if (!resp.ok) {
+    throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
+  }
+  const text = await resp.text();
+  const elapsed = ((performance.now() - timeStart) / 1000).toFixed(1);
+  console.log(`downloadTranslations() finished in ${elapsed}s`);
+  return text;
+}
+
+interface BadTranslation {
+  currString: string;
+  orig: string;
+  fixed: string;
+}
+
+function fixTranslation(s: string): string {
+  s = s.trim();
+  if (s.endsWith("\\n")) s = s.slice(0, -2);
+  if (s.endsWith("\\r")) s = s.slice(0, -2);
+  if (s.endsWith("\\n")) s = s.slice(0, -2);
+  s = s.trim();
+  return s;
+}
+
+function fixTranslations(d: string): { fixed: string; badTranslations: BadTranslation[] } {
+  const badTranslations: BadTranslation[] = [];
+  const lines = d.split("\n");
+  const result: string[] = [];
+  let currString = "";
+
+  for (const line of lines) {
+    if (line.startsWith(":")) {
+      currString = line.substring(1);
+      result.push(line);
+      continue;
+    }
+    const fixed = fixTranslation(line);
+    if (line !== fixed) {
+      badTranslations.push({ currString, orig: line, fixed });
+    }
+    result.push(fixed);
+  }
+  // remove last \n (join adds none at end, matching Go behavior of trimming last byte)
+  return { fixed: result.join("\n"), badTranslations };
+}
+
+function printBadTranslations(badTranslations: BadTranslation[]): void {
+  badTranslations.sort((a, b) => a.orig.localeCompare(b.orig));
+  let currLang = "";
+  for (const bt of badTranslations) {
+    const lang = bt.orig.split(":")[0];
+    if (lang !== currLang) {
+      currLang = lang;
+      const uri = `https://www.apptranslator.org/app/SumatraPDF/${lang}`;
+      console.log(`\n${uri}`);
+    }
+    console.log(`${bt.currString}\n  '${bt.orig}' => '${bt.fixed}'`);
+  }
+}
+
+function generateGoodSubset(d: string): void {
+  const lines = d.split("\n");
+  const a = lines.slice(2);
+  const perLang = new Map<string, Map<string, string>>();
+  const allStrings: string[] = [];
+  let currString = "";
+
+  for (const s of a) {
+    if (s.length === 0) continue;
+    if (s.startsWith(":")) {
+      currString = s.substring(1);
+      allStrings.push(currString);
+      continue;
+    }
+    const colonIdx = s.indexOf(":");
+    if (colonIdx === -1) continue;
+    const lang = s.substring(0, colonIdx);
+    if (lang.length > 5) throw new Error(`lang too long: '${lang}'`);
+    const trans = s.substring(colonIdx + 1);
+    let m = perLang.get(lang);
+    if (!m) {
+      m = new Map();
+      perLang.set(lang, m);
+    }
+    m.set(currString, trans);
+  }
+
+  const nStrings = allStrings.length;
+  const langsToSkip = new Set<string>();
+  const goodLangs: string[] = [];
+  const fullyTranslated: string[] = [];
+  const notTranslated: string[] = [];
+
+  for (const [lang, m] of perLang) {
+    const nMissing = nStrings - m.size;
+    let skipStr = "";
+    if (nMissing > 100) {
+      skipStr = "  SKIP";
+      langsToSkip.add(lang);
+      notTranslated.push(lang);
+    } else {
+      if (nMissing === 0) {
+        fullyTranslated.push(lang);
+      } else {
+        goodLangs.push(lang);
+      }
+    }
+    if (nMissing > 0) {
+      console.log(`Lang ${lang}, missing: ${nMissing}${skipStr}`);
+    }
+  }
+
+  // write translations-good.txt with langs that don't miss too many translations
+  allStrings.sort();
+  // for backwards compat first 2 lines are skipped by ParseTranslationsTxt()
+  const out: string[] = [
+    "AppTranslator: SumatraPDF",
+    "AppTranslator: SumatraPDF",
+  ];
+
+  const sortedLangs = [...perLang.keys()]
+    .filter((lang) => !langsToSkip.has(lang))
+    .sort();
+
+  for (const s of allStrings) {
+    out.push(":" + s);
+    for (const lang of sortedLangs) {
+      const m = perLang.get(lang)!;
+      const trans = m.get(s);
+      if (!trans) continue;
+      if (trans.includes("\n")) throw new Error(`translation contains newline`);
+      out.push(lang + ":" + trans);
+    }
+  }
+
+  const content = out.join("\n");
+  const path = join(translationsDir, "translations-good.txt");
+  writeFileSync(path, content, "utf-8");
+  console.log(`Wrote ${path} of size ${content.length}`);
+  console.log(`not translated langs: ${notTranslated}`);
+  console.log(`good langs: ${goodLangs}`);
+  console.log(`fully translated langs: ${fullyTranslated}`);
+}
+
+async function main() {
+  const d = await downloadTranslationsMust();
+  const { fixed, badTranslations } = fixTranslations(d);
+
+  printBadTranslations(badTranslations);
+
+  const path = join(translationsDir, "translations.txt");
+  const curr = readFileSync(path, "utf-8");
+  if (fixed === curr) {
+    console.log("Translations didn't change");
+  }
+
+  generateGoodSubset(fixed);
+
+  writeFileSync(path, fixed, "utf-8");
+  console.log(`Wrote ${path} of size ${fixed.length}`);
+}
+
+await main();
