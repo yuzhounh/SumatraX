@@ -100,80 +100,6 @@ func runCmdShowProgressAndLog(cmd *exec.Cmd, path string) error {
 	return cmd.Run()
 }
 
-const (
-	cppcheckLogFile = "cppcheck.out.txt"
-)
-
-func detectCppcheckExe() string {
-	// TODO: better detection logic
-	path := `c:\Program Files\Cppcheck\cppcheck.exe`
-	if pathExists(path) {
-		return path
-	}
-	return "cppcheck.exe"
-}
-
-func runCppCheck(all bool) {
-	// -q : quiet, doesn't print progress report
-	// -v : prints more info about the error
-	// --platform=win64 : sets platform to 64 bits
-	// -DWIN32 -D_WIN32 -D_MSC_VER=1990 : set some defines and speeds up
-	//    checking because cppcheck doesn't check all possible combinations
-	// --inline-suppr: honor suppression comments in the code like:
-	// // cppcheck-suppress <type>
-	// ... line with a problem
-	var cmd *exec.Cmd
-
-	// TODO: not sure if adding Windows SDK include path helps.
-	// It takes a lot of time and doesn't seem to provide value
-	//winSdkIncludeDir := `C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um`
-	// "-I", winSdkIncludeDir
-	// "-D__RPCNDR_H_VERSION__=440"
-	// STDMETHODIMP_(type)=type
-
-	args := []string{"--platform=win64", "-DWIN32", "-D_WIN32", "-D_MSC_VER=1800", "-D_M_X64", "-DIFACEMETHODIMP_(x)=x", "-DSTDMETHODIMP_(x)=x", "-DSTDAPI_(x)=x", "-DPRE_RELEASE_VER=3.4", "-q", "-v"}
-	if all {
-		args = append(args, "--enable=style")
-		args = append(args, "--suppress=constParameter")
-		// they are just fine
-		args = append(args, "--suppress=cstyleCast")
-		// we minimize use of STL
-		args = append(args, "--suppress=useStlAlgorithm")
-		// trying to make them explicit has cascading side-effects
-		args = append(args, "--suppress=noExplicitConstructor")
-		args = append(args, "--suppress=variableScope")
-		args = append(args, "--suppress=memsetClassFloat")
-		// mostly from log() calls
-		args = append(args, "--suppress=ignoredReturnValue")
-		// complains about: char* x; float* y = (float*)x;
-		// all false positives, can't write in a way that doesn't trigger warning
-		args = append(args, "--suppress=invalidPointerCast")
-		// all false postives, gets confused by MAKEINTRESOURCEW() and wcschr
-		// using auto can fix MAKEINTRESOURCEW(), casting wcschr but it's just silly
-		args = append(args, "--suppress=AssignmentIntegerToAddress")
-		// I often use global variables set at compile time to
-		// control paths to take
-		args = append(args, "--suppress=knownConditionTrueFalse")
-		args = append(args, "--suppress=constParameterPointer")
-		args = append(args, "--suppress=constVariablePointer")
-		args = append(args, "--suppress=constVariableReference")
-		args = append(args, "--suppress=constParameterReference")
-		args = append(args, "--suppress=useInitializationList")
-		args = append(args, "--suppress=duplInheritedMember")
-		args = append(args, "--suppress=unusedStructMember")
-		args = append(args, "--suppress=CastIntegerToAddressAtReturn")
-		args = append(args, "--suppress=dangerousTypeCast")
-		args = append(args, "--suppress=uselessOverride") // false positive
-	}
-	args = append(args, "--check-level=exhaustive", "--inline-suppr", "-I", "src", "-I", "src/utils", "src")
-	cppcheckExe := detectCppcheckExe()
-	cmd = exec.Command(cppcheckExe, args...)
-	os.Remove(cppcheckLogFile)
-	err := runCmdShowProgressAndLog(cmd, cppcheckLogFile)
-	must(err)
-	logf("\nLogged output to '%s'\n", cppcheckLogFile)
-}
-
 type BuildOptions struct {
 	upload                    bool
 	verifyTranslationUpToDate bool
@@ -213,8 +139,6 @@ func Main() {
 		flgBuildLzsa              = false
 		flgClangTidy              = false
 		flgClangTidyFix           = false
-		flgCppCheck               = false
-		flgCppCheckAll            = false
 		flgFindLargestFilesByExt  = false
 		flgGenTranslationsInfoCpp = false
 		flgPrintBuildNo           = false
@@ -259,8 +183,6 @@ func Main() {
 		flag.BoolVar(&flgCheckAccessKeys, "check-access-keys", false, "check access keys for menu items")
 		//flag.BoolVar(&flgPrintBuildNo, "build-no", false, "print build number")
 		flag.BoolVar(&flgTriggerCodeQL, "trigger-codeql", false, "trigger codeql build")
-		flag.BoolVar(&flgCppCheck, "cppcheck", false, "run cppcheck (must be installed)")
-		flag.BoolVar(&flgCppCheckAll, "cppcheck-all", false, "run cppcheck with more checks (must be installed)")
 		flag.BoolVar(&flgClangTidy, "clang-tidy", false, "run clang-tidy (must be installed)")
 		//flag.BoolVar(&flgClangTidyFix, "clang-tidy-fix", false, "run clang-tidy (must be installed)")
 		flag.BoolVar(&flgDiff, "diff", false, "preview diff using winmerge")
@@ -295,11 +217,6 @@ func Main() {
 
 	if flgGenWebsiteDocs {
 		genHTMLDocsForWebsite()
-		return
-	}
-
-	if flgCppCheck || flgCppCheckAll {
-		runCppCheck(flgCppCheckAll)
 		return
 	}
 
