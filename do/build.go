@@ -551,46 +551,6 @@ func buildTestUtil() {
 	runExeLoggedMust(msbuildPath, slnPath, `/t:test_util:Rebuild`, p, `/m`)
 }
 
-// build pre-release builds for ci sanity check
-// TODO: record if already built in r2 and skip if did
-// keep info in /software/sumatrapdf/last-daily-build.txt
-func buildCiDaily() {
-	if !isGithubMyMasterBranch() {
-		logf("buildCiDaily: skipping build because not on master branch\n")
-		return
-	}
-	if !isGitClean(".") {
-		logf("buildCiDaily: skipping build because git is not clean\n")
-		return
-	}
-
-	msbuildPath := detectMsbuildPathMust()
-
-	ver := getPreReleaseVer()
-	logf("building unsigned pre-release version %s\n", ver)
-
-	//cleanReleaseBuilds()
-	genHTMLDocsForApp()
-	ensureManualIsBuilt()
-
-	setBuildConfigPreRelease()
-	defer revertBuildConfig()
-
-	printAllBuildDur := makePrintDuration("all builds")
-	for _, plat := range platforms {
-		platform := plat.vsplatform
-		printBBuildDur := makePrintDuration(fmt.Sprintf("buidling pre-release %s version %s", platform, ver))
-		slnPath := filepath.Join("vs2022", "SumatraPDF.sln")
-		p := `/p:Configuration=Release;Platform=` + platform
-		// t := `/t:SumatraPDF:Rebuild;SumatraPDF-dll:Rebuild`
-		t := `/t:SumatraPDF;SumatraPDF-dll`
-		runExeLoggedMust(msbuildPath, slnPath, t, p, `/m`)
-		printBBuildDur()
-	}
-	revertBuildConfig() // can do twice
-	printAllBuildDur()
-}
-
 func waitForEnter(s string) {
 	// wait for keyboard press
 	if s == "" {

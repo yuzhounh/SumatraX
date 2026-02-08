@@ -109,10 +109,9 @@ func Main() {
 	)
 
 	var (
-		flgBuildCodeQL     bool
-		flgCIBuild         bool
-		flgCIDailyBuild    bool
-		flgGenDocs         bool
+		flgBuildCodeQL  bool
+		flgCIBuild      bool
+		flgGenDocs      bool
 		flgGenSettings     bool
 		flgGenWebsiteDocs  bool
 		flgRunTests bool
@@ -122,7 +121,6 @@ func Main() {
 
 	{
 		flag.BoolVar(&flgCIBuild, "ci", false, "run CI steps")
-		flag.BoolVar(&flgCIDailyBuild, "ci-daily", false, "run CI daily steps")
 		flag.BoolVar(&flgBuildCodeQL, "build-codeql", false, "build for codeql")
 		//flag.BoolVar(&flgBuildLzsa, "build-lzsa", false, "build MakeLZSA.exe")
 		flag.BoolVar(&flgUpload, "upload", false, "upload the build to s3 and do spaces")
@@ -208,11 +206,6 @@ func Main() {
 	}
 
 	if flgPrintBuildNo {
-		return
-	}
-
-	if flgCIDailyBuild {
-		buildCiDaily()
 		return
 	}
 
