@@ -810,9 +810,6 @@
     <None Include="..\cmd\ci-daily-build.ts">
       <Filter>cmd</Filter>
     </None>
-    <None Include="..\cmd\clang-format.ts">
-      <Filter>cmd</Filter>
-    </None>
     <None Include="..\cmd\clang-tidy.ts">
       <Filter>cmd</Filter>
     </None>
@@ -825,10 +822,19 @@
     <None Include="..\cmd\diff.ts">
       <Filter>cmd</Filter>
     </None>
+    <None Include="..\cmd\format.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\gen-commands.ts">
+      <Filter>cmd</Filter>
+    </None>
     <None Include="..\cmd\gen-docs-website.ts">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\gen-docs.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\gen-flags.ts">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\gen-settings.ts">

@@ -292,7 +292,7 @@
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug x64_asan|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\out\dbg64_asan\</OutDir>
     <IntDir>..\out\dbg64_asan\obj\x64_asan\Debug\SumatraPDF\</IntDir>
     <TargetName>SumatraPDF</TargetName>
@@ -324,7 +324,7 @@
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugFull x64_asan|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\out\dbgfull64_asan\</OutDir>
     <IntDir>..\out\dbgfull64_asan\obj\x64_asan\DebugFull\SumatraPDF\</IntDir>
     <TargetName>SumatraPDF</TargetName>
@@ -1442,13 +1442,15 @@
     <None Include="..\cmd\check-access-keys.ts" />
     <None Include="..\cmd\ci-build.ts" />
     <None Include="..\cmd\ci-daily-build.ts" />
-    <None Include="..\cmd\clang-format.ts" />
     <None Include="..\cmd\clang-tidy.ts" />
     <None Include="..\cmd\clean.ts" />
     <None Include="..\cmd\cppcheck.ts" />
     <None Include="..\cmd\diff.ts" />
+    <None Include="..\cmd\format.ts" />
+    <None Include="..\cmd\gen-commands.ts" />
     <None Include="..\cmd\gen-docs-website.ts" />
     <None Include="..\cmd\gen-docs.ts" />
+    <None Include="..\cmd\gen-flags.ts" />
     <None Include="..\cmd\gen-settings.ts" />
     <None Include="..\cmd\gen_docs.search.html" />
     <None Include="..\cmd\gen_docs.search.js" />

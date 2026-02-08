@@ -207,6 +207,7 @@ workspace "SumatraPDF"
   filter "platforms:x64_asan"
     sanitize { "Address" }
     defines { "ASAN_BUILD=1" }
+    flags { "NoIncrementalLink" }
     -- disablewarnings { "4731" }
   filter {}
 

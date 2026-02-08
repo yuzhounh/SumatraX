@@ -283,7 +283,7 @@
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug x64_asan|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\out\dbg64_asan\</OutDir>
     <IntDir>..\out\dbg64_asan\obj\x64_asan\Debug\PdfPreview2\</IntDir>
     <TargetName>PdfPreview2</TargetName>
@@ -311,7 +311,7 @@
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugFull x64_asan|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\out\dbgfull64_asan\</OutDir>
     <IntDir>..\out\dbgfull64_asan\obj\x64_asan\DebugFull\PdfPreview2\</IntDir>
     <TargetName>PdfPreview2</TargetName>
@@ -339,7 +339,7 @@
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release x64_asan|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\out\rel64_asan\</OutDir>
     <IntDir>..\out\rel64_asan\obj\x64_asan\Release\PdfPreview2\</IntDir>
     <TargetName>PdfPreview2</TargetName>
@@ -367,7 +367,7 @@
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseAnalyze x64_asan|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\out\rel64_prefast_asan\</OutDir>
     <IntDir>..\out\rel64_prefast_asan\obj\x64_asan\ReleaseAnalyze\PdfPreview2\</IntDir>
     <TargetName>PdfPreview2</TargetName>

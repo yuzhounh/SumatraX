@@ -289,7 +289,7 @@
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug x64_asan|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\out\dbg64_asan\</OutDir>
     <IntDir>..\out\dbg64_asan\obj\x64_asan\Debug\test_util\</IntDir>
     <TargetName>test_util</TargetName>
@@ -317,7 +317,7 @@
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugFull x64_asan|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>..\out\dbgfull64_asan\</OutDir>
     <IntDir>..\out\dbgfull64_asan\obj\x64_asan\DebugFull\test_util\</IntDir>
     <TargetName>test_util</TargetName>
