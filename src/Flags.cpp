@@ -15,93 +15,53 @@
 
 #include "utils/Log.h"
 
-#define ARGS(V)                                  \
-    V(Silent, "s")                               \
-    V(Silent2, "silent")                         \
-    V(FastInstall, "fast-install")               \
-    V(PrintToDefault, "print-to-default")        \
-    V(PrintDialog, "print-dialog")               \
-    V(Help, "h")                                 \
-    V(Help2, "?")                                \
-    V(Help3, "help")                             \
-    V(ExitWhenDone, "exit-when-done")            \
-    V(ExitOnPrint, "exit-on-print")              \
-    V(Restrict, "restrict")                      \
-    V(Presentation, "presentation")              \
-    V(FullScreen, "fullscreen")                  \
-    V(InvertColors, "invertcolors")              \
-    V(InvertColors2, "invert-colors")            \
-    V(Console, "console")                        \
-    V(Install, "install")                        \
-    V(UnInstall, "uninstall")                    \
-    V(WithFilter, "with-filter")                 \
-    V(WithSearch, "with-search")                 \
-    V(WithPreview, "with-preview")               \
-    V(Rand, "rand")                              \
-    V(Regress, "regress")                        \
-    V(Extract, "x")                              \
-    V(Tester, "tester")                          \
-    V(TestApp, "testapp")                        \
-    V(NewWindow, "new-window")                   \
-    V(Log, "log")                                \
-    V(CrashOnOpen, "crash-on-open")              \
-    V(ReuseInstance, "reuse-instance")           \
-    V(EscToExit, "esc-to-exit")                  \
-    V(ArgEnumPrinters, "enum-printers")          \
-    V(SleepMs, "sleep-ms")                       \
-    V(PrintTo, "print-to")                       \
-    V(PrintSettings, "print-settings")           \
-    V(InverseSearch, "inverse-search")           \
-    V(ForwardSearch1, "forward-search")          \
-    V(ForwardSearch2, "fwdsearch")               \
-    V(NamedDest, "nameddest")                    \
-    V(NamedDest2, "named-dest")                  \
-    V(Page, "page")                              \
-    V(View, "view")                              \
-    V(Zoom, "zoom")                              \
-    V(Scroll, "scroll")                          \
-    V(AppData, "appdata")                        \
-    V(Plugin, "plugin")                          \
-    V(StressTest, "stress-test")                 \
-    V(N, "n")                                    \
-    V(Max, "max")                                \
-    V(MaxFiles, "max-files")                     \
-    V(Render, "render")                          \
-    V(ExtractText, "extract-text")               \
-    V(Bench, "bench")                            \
-    V(Dir, "d")                                  \
-    V(InstallDir, "install-dir")                 \
-    V(Lang, "lang")                              \
-    V(UpdateSelfTo, "update-self-to")            \
-    V(ArgDeleteFile, "delete-file")              \
-    V(BgCol, "bgcolor")                          \
-    V(BgCol2, "bg-color")                        \
-    V(FwdSearchOffset, "fwdsearch-offset")       \
-    V(FwdSearchWidth, "fwdsearch-width")         \
-    V(FwdSearchColor, "fwdsearch-color")         \
-    V(FwdSearchPermanent, "fwdsearch-permanent") \
-    V(MangaMode, "manga-mode")                   \
-    V(Search, "search")                          \
-    V(AllUsers, "all-users")                     \
-    V(AllUsers2, "allusers")                     \
-    V(RunInstallNow, "run-install-now")          \
-    V(Adobe, "a")                                \
-    V(DDE, "dde")                                \
-    V(EngineDump, "engine-dump")                 \
-    V(SetColorRange, "set-color-range")          \
-    V(PreviewPipe, "preview-pipe")               \
-    V(IFilterPipe, "ifilter-pipe")               \
-    V(TestPreviewPipe, "test-preview-pipe")
-
-#define MAKE_ARG(__arg, __name) __arg,
-#define MAKE_STR(__arg, __name) __name "\0"
-
+// @gen-start flags
+// clang-format off
 enum class Arg {
     Unknown = -1,
-    ARGS(MAKE_ARG)
+    Silent, Silent2, FastInstall, PrintToDefault,
+    PrintDialog, Help, Help2, Help3,
+    ExitWhenDone, ExitOnPrint, Restrict, Presentation,
+    FullScreen, InvertColors, InvertColors2, Console,
+    Install, UnInstall, WithFilter, WithSearch,
+    WithPreview, Rand, Regress, Extract,
+    Tester, TestApp, NewWindow, Log,
+    CrashOnOpen, ReuseInstance, EscToExit, ArgEnumPrinters,
+    SleepMs, PrintTo, PrintSettings, InverseSearch,
+    ForwardSearch1, ForwardSearch2, NamedDest, NamedDest2,
+    Page, View, Zoom, Scroll,
+    AppData, Plugin, StressTest, N,
+    Max, MaxFiles, Render, ExtractText,
+    Bench, Dir, InstallDir, Lang,
+    UpdateSelfTo, ArgDeleteFile, BgCol, BgCol2,
+    FwdSearchOffset, FwdSearchWidth, FwdSearchColor, FwdSearchPermanent,
+    MangaMode, Search, AllUsers, AllUsers2,
+    RunInstallNow, Adobe, DDE, EngineDump,
+    SetColorRange, PreviewPipe, IFilterPipe, TestPreviewPipe,
 };
 
-static const char* gArgNames = ARGS(MAKE_STR);
+static const char* gArgNames =
+    "s\0" "silent\0" "fast-install\0" "print-to-default\0"
+    "print-dialog\0" "h\0" "?\0" "help\0"
+    "exit-when-done\0" "exit-on-print\0" "restrict\0" "presentation\0"
+    "fullscreen\0" "invertcolors\0" "invert-colors\0" "console\0"
+    "install\0" "uninstall\0" "with-filter\0" "with-search\0"
+    "with-preview\0" "rand\0" "regress\0" "x\0"
+    "tester\0" "testapp\0" "new-window\0" "log\0"
+    "crash-on-open\0" "reuse-instance\0" "esc-to-exit\0" "enum-printers\0"
+    "sleep-ms\0" "print-to\0" "print-settings\0" "inverse-search\0"
+    "forward-search\0" "fwdsearch\0" "nameddest\0" "named-dest\0"
+    "page\0" "view\0" "zoom\0" "scroll\0"
+    "appdata\0" "plugin\0" "stress-test\0" "n\0"
+    "max\0" "max-files\0" "render\0" "extract-text\0"
+    "bench\0" "d\0" "install-dir\0" "lang\0"
+    "update-self-to\0" "delete-file\0" "bgcolor\0" "bg-color\0"
+    "fwdsearch-offset\0" "fwdsearch-width\0" "fwdsearch-color\0" "fwdsearch-permanent\0"
+    "manga-mode\0" "search\0" "all-users\0" "allusers\0"
+    "run-install-now\0" "a\0" "dde\0" "engine-dump\0"
+    "set-color-range\0" "preview-pipe\0" "ifilter-pipe\0" "test-preview-pipe\0";
+// clang-format on
+// @gen-end flags
 
 static void EnumeratePrinters() {
     str::Str out;
