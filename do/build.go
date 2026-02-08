@@ -543,14 +543,6 @@ func buildSmoke(sign bool) {
 	}
 }
 
-func buildTestUtil() {
-	msbuildPath := detectMsbuildPathMust()
-	slnPath := filepath.Join("vs2022", "SumatraPDF.sln")
-
-	p := `/p:Configuration=Release;Platform=x64`
-	runExeLoggedMust(msbuildPath, slnPath, `/t:test_util:Rebuild`, p, `/m`)
-}
-
 func waitForEnter(s string) {
 	// wait for keyboard press
 	if s == "" {

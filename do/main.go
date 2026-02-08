@@ -3,7 +3,6 @@ package do
 import (
 	"flag"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -114,8 +113,7 @@ func Main() {
 		flgGenDocs      bool
 		flgGenSettings     bool
 		flgGenWebsiteDocs  bool
-		flgRunTests bool
-		flgUpload   bool
+		flgUpload bool
 		flgVerbose         bool
 	)
 
@@ -127,7 +125,6 @@ func Main() {
 		//flag.BoolVar(&flgGenTranslationsInfoCpp, "trans-gen-info", false, "generate src/TranslationLangs.cpp")
 		//flag.BoolVar(&flgPrintBuildNo, "build-no", false, "print build number")
 		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
-		flag.BoolVar(&flgRunTests, "run-tests", false, "run test_util executable")
 		flag.BoolVar(&flgGenDocs, "gen-docs", false, "generate html docs in docs/www from markdown in docs/md")
 		flag.BoolVar(&flgGenWebsiteDocs, "gen-docs-website", false, "generate html docs in ../sumatra-website repo and check them in")
 		flag.BoolVar(&flgVerbose, "verbose", false, "if true, verbose logging")
@@ -214,15 +211,6 @@ func Main() {
 		buildCi()
 		ensureAllUploadCreds()
 		uploadPdbBuildArtifacts()
-		return
-	}
-
-	if flgRunTests {
-		buildTestUtil()
-		dir := filepath.Join("out", "rel64")
-		cmd := exec.Command(".\\test_util.exe")
-		cmd.Dir = dir
-		runCmdLoggedMust(cmd)
 		return
 	}
 
