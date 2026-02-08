@@ -115,9 +115,8 @@ func Main() {
 		flgGenDocs         bool
 		flgGenSettings     bool
 		flgGenWebsiteDocs  bool
-		flgRunTests  bool
-		flgUpdateVer string
-		flgUpload          bool
+		flgRunTests bool
+		flgUpload   bool
 		flgVerbose         bool
 	)
 
@@ -130,7 +129,6 @@ func Main() {
 		//flag.BoolVar(&flgGenTranslationsInfoCpp, "trans-gen-info", false, "generate src/TranslationLangs.cpp")
 		//flag.BoolVar(&flgPrintBuildNo, "build-no", false, "print build number")
 		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
-		flag.StringVar(&flgUpdateVer, "update-auto-update-ver", "", "update version used for auto-update checks")
 		flag.BoolVar(&flgRunTests, "run-tests", false, "run test_util executable")
 		flag.BoolVar(&flgGenDocs, "gen-docs", false, "generate html docs in docs/www from markdown in docs/md")
 		flag.BoolVar(&flgGenWebsiteDocs, "gen-docs-website", false, "generate html docs in ../sumatra-website repo and check them in")
@@ -223,12 +221,6 @@ func Main() {
 		buildCi()
 		ensureAllUploadCreds()
 		uploadPdbBuildArtifacts()
-		return
-	}
-
-	if flgUpdateVer != "" {
-		ensureAllUploadCreds()
-		updateAutoUpdateVer(flgUpdateVer)
 		return
 	}
 
