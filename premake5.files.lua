@@ -1260,12 +1260,6 @@ function efi_files()
   }
 end
 
-function sizer_files()
-  files {
-    "tools/sizer/*",
-    "src/CrashHandlerNoOp.cpp",
-  }
-end
 
 function test_util_files()
   files_in_dir("src/utils", {

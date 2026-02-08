@@ -726,16 +726,6 @@ workspace "SumatraPDF"
     test_util_files()
     links { "gdiplus", "comctl32", "shlwapi", "Version", "wininet", "shcore", "wintrust", "crypt32" }
 
-  project "sizer"
-    kind "ConsoleApp"
-    language "C++"
-    cppdialect "C++latest"
-    mixed_dbg_rel_conf()
-    disablewarnings { "4996", "4706", "4100", "4505" }
-    includedirs { "tools/sizer" }
-    sizer_files()
-    links { "ole32.lib", "oleaut32.lib" }
-
   project "bin2coff"
     kind "ConsoleApp"
     language "C++"

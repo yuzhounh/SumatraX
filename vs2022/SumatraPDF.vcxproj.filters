@@ -792,6 +792,9 @@
     <None Include="..\Claude.md" />
     <None Include="..\SECURITY.md" />
     <None Include="..\ailog.txt" />
+    <None Include="..\cmd\build-codeql.ts">
+      <Filter>cmd</Filter>
+    </None>
     <None Include="..\cmd\build-no-info.ts">
       <Filter>cmd</Filter>
     </None>
@@ -802,6 +805,9 @@
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\check-access-keys.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\ci-build.ts">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\ci-daily-build.ts">
@@ -822,10 +828,28 @@
     <None Include="..\cmd\diff.ts">
       <Filter>cmd</Filter>
     </None>
+    <None Include="..\cmd\gen-docs-website.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\gen-docs.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\gen-settings.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\gen_docs.search.html">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\gen_docs.search.js">
+      <Filter>cmd</Filter>
+    </None>
     <None Include="..\cmd\logview-build.ts">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\logview.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\markdown-it.min.js">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\premake.ts">
@@ -850,31 +874,13 @@
     <None Include="..\do\build.go">
       <Filter>do</Filter>
     </None>
-    <None Include="..\do\clang_tidy_format.go">
-      <Filter>do</Filter>
-    </None>
     <None Include="..\do\compress.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\gen_docs.go">
       <Filter>do</Filter>
     </None>
     <None Include="..\do\git.go">
       <Filter>do</Filter>
     </None>
-    <None Include="..\do\github_ci.go">
-      <Filter>do</Filter>
-    </None>
     <None Include="..\do\main.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\settings_gen_code.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\settings_gen_def.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\settings_gen_html.go">
       <Filter>do</Filter>
     </None>
     <None Include="..\do\sign.go">
