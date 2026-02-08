@@ -798,10 +798,16 @@
     <None Include="..\cmd\clang-format.ts">
       <Filter>cmd</Filter>
     </None>
+    <None Include="..\cmd\clang-tidy.ts">
+      <Filter>cmd</Filter>
+    </None>
     <None Include="..\cmd\cppcheck.ts">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\diff.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\logview.ts">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\premake.ts">

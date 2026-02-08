@@ -1433,8 +1433,10 @@
     <None Include="..\ailog.txt" />
     <None Include="..\cmd\build.ts" />
     <None Include="..\cmd\clang-format.ts" />
+    <None Include="..\cmd\clang-tidy.ts" />
     <None Include="..\cmd\cppcheck.ts" />
     <None Include="..\cmd\diff.ts" />
+    <None Include="..\cmd\logview.ts" />
     <None Include="..\cmd\premake.ts" />
     <None Include="..\cmd\wc.ts" />
     <None Include="..\cppcheck.out.txt" />
