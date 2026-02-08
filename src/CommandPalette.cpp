@@ -755,14 +755,19 @@ bool CommandPaletteWnd::PreTranslateMessage(MSG& msg) {
     return false;
 }
 
-// filter is one or more words separated by whitespace
-// filter matches if all words match, ignoring the case
-static bool FilterMatches(const char* str, const char* filter) {
-    // empty filter matches all
-    if (str::IsEmptyOrWhiteSpace(filter)) {
-        return true;
+// all words must be present in str, ignoring the case
+static bool FilterMatches(const char* str, const StrVec& words) {
+    int nWords = words.Size();
+    for (int i = 0; i < nWords; i++) {
+        auto word = words.At(i);
+        if (!str::ContainsI(str, word)) {
+            return false;
+        }
     }
-    StrVec words;
+    return true;
+}
+
+static void SplitFilterToWords(const char* filter, StrVec& words) {
     char* s = str::DupTemp(filter);
     char* wordStart = s;
     bool wasWs = false;
@@ -780,22 +785,13 @@ static bool FilterMatches(const char* str, const char* filter) {
     if (str::Leni(wordStart) > 0) {
         AppendIfNotExists(&words, wordStart);
     }
-    // all words must be present
-    int nWords = words.Size();
-    for (int i = 0; i < nWords; i++) {
-        auto word = words.At(i);
-        if (!str::ContainsI(str, word)) {
-            return false;
-        }
-    }
-    return true;
 }
 
-static void FilterStrings(StrVecCP& strs, const char* filter, StrVecCP& matchedOut) {
+static void FilterStrings(StrVecCP& strs, const StrVec& words, StrVecCP& matchedOut) {
     int n = strs.Size();
     for (int i = 0; i < n; i++) {
         const char* s = strs.At(i);
-        if (!FilterMatches(s, filter)) {
+        if (!FilterMatches(s, words)) {
             continue;
         }
         matchedOut.AppendFrom(&strs, i);
@@ -805,28 +801,41 @@ static void FilterStrings(StrVecCP& strs, const char* filter, StrVecCP& matchedO
 void CommandPaletteWnd::FilterStringsForQuery(const char* filter, StrVecCP& strings) {
     // for efficiency, reusing existing model
     strings.Reset();
-    if (str::StartsWith(filter, kPalettePrefixAll)) {
-        filter++;
-        FilterStrings(tabs, filter, strings);
-        FilterStrings(fileHistory, filter, strings);
-        FilterStrings(commands, filter, strings);
-        return;
+    if (!filter) {
+        filter = "";
     }
 
-    if (str::StartsWith(filter, kPalettePrefixTabs)) {
+    // strip prefix and remember which lists to search
+    bool searchTabs = false, searchHistory = false, searchCommands = false;
+    if (str::StartsWith(filter, kPalettePrefixAll)) {
         filter++;
-        FilterStrings(tabs, filter, strings);
-        return;
-    }
-    if (str::StartsWith(filter, kPalettePrefixFileHistory)) {
+        searchTabs = searchHistory = searchCommands = true;
+    } else if (str::StartsWith(filter, kPalettePrefixTabs)) {
         filter++;
-        FilterStrings(fileHistory, filter, strings);
-        return;
-    }
-    if (str::StartsWith(filter, kPalettePrefixCommands)) {
+        searchTabs = true;
+    } else if (str::StartsWith(filter, kPalettePrefixFileHistory)) {
         filter++;
+        searchHistory = true;
+    } else {
+        if (str::StartsWith(filter, kPalettePrefixCommands)) {
+            filter++;
+        }
+        searchCommands = true;
     }
-    FilterStrings(commands, filter, strings);
+
+    // split filter into words once
+    StrVec words;
+    SplitFilterToWords(filter, words);
+
+    if (searchTabs) {
+        FilterStrings(tabs, words, strings);
+    }
+    if (searchHistory) {
+        FilterStrings(fileHistory, words, strings);
+    }
+    if (searchCommands) {
+        FilterStrings(commands, words, strings);
+    }
 }
 
 void CommandPaletteWnd::QueryChanged() {
