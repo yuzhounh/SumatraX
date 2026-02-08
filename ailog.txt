@@ -361,4 +361,4 @@ make enum and arrays compact by putting 3 elements per line and put // clang-for
 ---
 when running x64_asan build I got:
 LINK : warning LNK4300: ignoring '/INCREMENTAL' because input module contains ASAN metadata [C:\Users\kjk\src\sumatrapdf\vs2022\test_util.vcxproj]
-analyze premake5.lua, 
+analyze premake5.lua and visual studio solution files in vs2022 to figure out why

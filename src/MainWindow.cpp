@@ -767,3 +767,8 @@ void HighlightTab(MainWindow* win, WindowTab* tab) {
     }
     win->tabsCtrl->SetHighlighted(idx);
 }
+
+bool AppIsValidHWND(HWND hwnd) {
+    MainWindow* win = FindMainWindowByHwnd(hwnd);
+    return win && !win->isBeingClosed;
+}

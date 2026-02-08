@@ -437,15 +437,9 @@ LRESULT TabsCtrl::OnNotifyReflect(WPARAM wp, LPARAM lp) {
     return 0;
 }
 
+extern bool AppIsValidHWND(HWND);
+
 LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
-    // TCITEMW* tcs = nullptr;
-
-    // I'm seeing crashes when ending a drag in WM_LBUTTONUP
-    // because the MainWindow has been destroyed
-    if (!IsWindow(hwnd)) {
-        return 0;
-    }
-
     Point mousePos = {GET_X_LPARAM(lp), GET_Y_LPARAM(lp)};
     if (WM_MOUSELEAVE == msg) {
         mousePos = HwndGetCursorPos(hwnd);
@@ -458,6 +452,12 @@ LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     int tabUnderMouse = -1;
 
     if ((msg >= WM_MOUSEFIRST && msg <= WM_MOUSELAST) || (msg == WM_MOUSELEAVE)) {
+        // TODO: ugly hack, this code should not know about MainWindow
+        // MainWindow might have been deleted
+        if (!AppIsValidHWND(hwnd)) {
+            return 0;
+        }
+
         tabState = TabStateFromMousePosition(mousePos);
         tabUnderMouse = tabState.tabIdx;
         canClose = tabState.tabInfo && tabState.tabInfo->canClose;
