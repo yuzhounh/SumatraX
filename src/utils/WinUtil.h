@@ -374,3 +374,4 @@ LARGE_INTEGER TimeNow();
 double TimeDiffSecs(const LARGE_INTEGER& start, const LARGE_INTEGER& end);
 double TimeDiffMs(const LARGE_INTEGER& start, const LARGE_INTEGER& end);
 bool IsPEFileSigned(const char* filePath);
+TempStr GetExecutableSignerTemp(const char* exePath);

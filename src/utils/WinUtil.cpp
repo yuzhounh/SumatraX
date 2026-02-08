@@ -11,6 +11,7 @@
 
 #include <wintrust.h>
 #include <softpub.h>
+#include <WinCrypt.h>
 #include <bitset>
 #include <intrin.h>
 #include <mlang.h>
@@ -3214,4 +3215,52 @@ bool IsPEFileSigned(const char* filePath) {
     } else {
         return false; // File is not signed or signature is not valid
     }
+}
+
+TempStr GetExecutableSignerTemp(const char* exePath) {
+    TempWStr ws = ToWStrTemp(exePath);
+
+    HCERTSTORE hStore = nullptr;
+    HCRYPTMSG hMsg = nullptr;
+    BOOL ok = CryptQueryObject(CERT_QUERY_OBJECT_FILE, ws, CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED,
+                               CERT_QUERY_FORMAT_FLAG_BINARY, 0, nullptr, nullptr, nullptr, &hStore, &hMsg, nullptr);
+    if (!ok) {
+        return nullptr;
+    }
+
+    DWORD signerInfoSize = 0;
+    CryptMsgGetParam(hMsg, CMSG_SIGNER_INFO_PARAM, 0, nullptr, &signerInfoSize);
+    if (signerInfoSize == 0) {
+        CryptMsgClose(hMsg);
+        CertCloseStore(hStore, 0);
+        return nullptr;
+    }
+
+    auto signerInfo = (CMSG_SIGNER_INFO*)Allocator::AllocZero(GetTempAllocator(), signerInfoSize);
+    ok = CryptMsgGetParam(hMsg, CMSG_SIGNER_INFO_PARAM, 0, signerInfo, &signerInfoSize);
+    if (!ok) {
+        CryptMsgClose(hMsg);
+        CertCloseStore(hStore, 0);
+        return nullptr;
+    }
+
+    CERT_INFO certInfo = {};
+    certInfo.Issuer = signerInfo->Issuer;
+    certInfo.SerialNumber = signerInfo->SerialNumber;
+
+    PCCERT_CONTEXT certCtx = CertFindCertificateInStore(hStore, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0,
+                                                        CERT_FIND_SUBJECT_CERT, &certInfo, nullptr);
+    TempStr res = nullptr;
+    if (certCtx) {
+        char buf[512];
+        DWORD n = CertGetNameStringA(certCtx, CERT_NAME_SIMPLE_DISPLAY_TYPE, 0, nullptr, buf, dimof(buf));
+        if (n > 1) {
+            res = str::DupTemp(buf);
+        }
+        CertFreeCertificateContext(certCtx);
+    }
+
+    CryptMsgClose(hMsg);
+    CertCloseStore(hStore, 0);
+    return res;
 }

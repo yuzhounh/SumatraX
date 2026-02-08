@@ -704,7 +704,7 @@ workspace "SumatraPDF"
     includedirs { "src" }
     plugin_test_files()
     links { "utils", "mupdf" }
-    links { "shlwapi", "version", "comctl32", "wininet", "wintrust" }
+    links { "shlwapi", "version", "comctl32", "wininet", "wintrust", "crypt32" }
 
   project "test_util"
     kind "ConsoleApp"
@@ -738,7 +738,7 @@ workspace "SumatraPDF"
     includedirs { "src", "src/wingui", "mupdf/include" }
     search_filter_files()
     links { "utils", "unrar", "libmupdf" }
-    links { "comctl32", "gdiplus", "shlwapi", "version", "wininet", "wintrust" }
+    links { "comctl32", "gdiplus", "shlwapi", "version", "wininet", "wintrust", "crypt32" }
 
   project "PdfFilter2"
       kind "SharedLib"
@@ -747,7 +747,7 @@ workspace "SumatraPDF"
       disablewarnings { "4100", "4838" }
       includedirs { "src", "src/wingui" }
       search_filter2_files()
-      links { "comctl32", "gdiplus", "shlwapi", "version", "wininet", "wintrust" }
+      links { "comctl32", "gdiplus", "shlwapi", "version", "wininet", "wintrust", "crypt32" }
 
   project "PdfPreview2"
     kind "SharedLib"
@@ -768,7 +768,7 @@ workspace "SumatraPDF"
     filter {}
     -- TODO: "chm" should only be for Debug config but doing links { "chm" }
     -- in the filter breaks linking by setting LinkLibraryDependencies to false
-    links { "comctl32", "gdiplus", "msimg32", "shlwapi", "version", "wininet", "wintrust" }
+    links { "comctl32", "gdiplus", "msimg32", "shlwapi", "version", "wininet", "wintrust", "crypt32" }
 
   project "PdfPreview"
     kind "SharedLib"
@@ -792,7 +792,7 @@ workspace "SumatraPDF"
     -- TODO: "chm" should only be for Debug config but doing links { "chm" }
     -- in the filter breaks linking by setting LinkLibraryDependencies to false
     links { "utils", "unrar", "libmupdf", "chm" }
-    links { "comctl32", "gdiplus", "msimg32", "shlwapi", "version", "wininet", "wintrust" }
+    links { "comctl32", "gdiplus", "msimg32", "shlwapi", "version", "wininet", "wintrust", "crypt32" }
 
     project "PdfPreviewTest"
       kind "ConsoleApp"
@@ -854,7 +854,7 @@ workspace "SumatraPDF"
     }
     links {
       "comctl32", "delayimp", "gdiplus", "msimg32", "shlwapi", "urlmon",
-      "version", "windowscodecs", "wininet", "uiautomationcore.lib", "uxtheme", "wintrust"
+      "version", "windowscodecs", "wininet", "uiautomationcore.lib", "uxtheme", "wintrust", "crypt32"
     }
     -- this is to prevent dll hijacking
     linkoptions { "/DELAYLOAD:gdiplus.dll /DELAYLOAD:msimg32.dll /DELAYLOAD:shlwapi.dll" }

@@ -6418,7 +6418,8 @@ void GetProgramInfo(str::Str& s) {
         auto fileSizeDll = GetFileSizeAsStrTemp(dllPath);
         s.AppendFmt("Dll: %s %s\r\n", dllPath, fileSizeDll);
     }
-
+    TempStr signer = GetExecutableSignerTemp(exePath);
+    s.AppendFmt("Signer: %s\r\n", signer ? signer : "(not signed)");
     const char* exeType = IsDllBuild() ? "dll" : "static";
     if (builtOn != nullptr) {
         s.AppendFmt("BuiltOn: %s\n", builtOn);
