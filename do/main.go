@@ -108,8 +108,7 @@ func Main() {
 	)
 
 	var (
-		flgUpload  bool
-		flgVerbose bool
+		flgUpload bool
 	)
 
 	{
@@ -117,7 +116,6 @@ func Main() {
 		flag.BoolVar(&flgUpload, "upload", false, "upload the build to s3 and do spaces")
 		//flag.BoolVar(&flgGenTranslationsInfoCpp, "trans-gen-info", false, "generate src/TranslationLangs.cpp")
 		//flag.BoolVar(&flgPrintBuildNo, "build-no", false, "print build number")
-		flag.BoolVar(&flgVerbose, "verbose", false, "if true, verbose logging")
 		flag.Parse()
 	}
 
