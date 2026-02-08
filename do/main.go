@@ -68,23 +68,6 @@ func getSecrets() {
 	transUploadSecret = os.Getenv("TRANS_UPLOAD_SECRET")
 }
 
-func regenPremake() {
-	premakePath := filepath.Join("bin", "premake5.exe")
-	{
-		cmd := exec.Command(premakePath, "vs2022")
-		runCmdLoggedMust(cmd)
-	}
-	// TODO: with premake5 beta 8 switch to using vs2026 action
-	// {
-	// 	cmd := exec.Command(premakePath, "--with-2026", "vs2022")
-	// 	runCmdLoggedMust(cmd)
-	// }
-	// {
-	// 	cmd := exec.Command(premakePath, "--with-clang", "vs2022")
-	// 	runCmdLoggedMust(cmd)
-	// }
-}
-
 func openForAppend(name string) (*os.File, error) {
 	return os.OpenFile(name, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 }
@@ -157,7 +140,6 @@ func Main() {
 		flgGenSettings     bool
 		flgGenWebsiteDocs  bool
 		flgRunLogView      bool
-		flgRegenPremake    bool
 		flgRunTests        bool
 		flgTransDownload   bool
 		flgTriggerCodeQL   bool
@@ -167,7 +149,6 @@ func Main() {
 	)
 
 	{
-		flag.BoolVar(&flgRegenPremake, "premake", false, "regenerate premake*.lua files")
 		flag.BoolVar(&flgCIBuild, "ci", false, "run CI steps")
 		flag.BoolVar(&flgCIDailyBuild, "ci-daily", false, "run CI daily steps")
 		flag.BoolVar(&flgBuildSmoke, "build-smoke", false, "run smoke build (installer for 64bit release)")
@@ -218,11 +199,6 @@ func Main() {
 
 	if flgClangTidy || flgClangTidyFix {
 		runClangTidy(flgClangTidyFix)
-		return
-	}
-
-	if flgRegenPremake {
-		regenPremake()
 		return
 	}
 
