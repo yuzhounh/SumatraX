@@ -191,10 +191,6 @@ func setBuildConfigRelease() {
 	must(err)
 }
 
-func revertBuildConfig() {
-	runExeMust("git", "checkout", buildConfigPath())
-}
-
 func addZipDataStore(w *zip.Writer, data []byte, nameInZip string) error {
 	fih := &zip.FileHeader{
 		Name:   nameInZip,
@@ -237,26 +233,6 @@ func createManifestMust(manifestPath string) {
 
 	s := strings.Join(lines, "\n")
 	writeFileCreateDirMust(manifestPath, []byte(s))
-}
-
-func detectVersionsCodeQL() {
-	//ver := getGitLinearVersionMust()
-	ver := 16648 // we don't have git history in codeql checkout
-	preReleaseVerCached = strconv.Itoa(ver)
-	gitSha1Cached = getGitSha1Must()
-	sumatraVersion = extractSumatraVersionMust()
-	logf("preReleaseVer: '%s'\n", preReleaseVerCached)
-	logf("gitSha1: '%s'\n", gitSha1Cached)
-	logf("sumatraVersion: '%s'\n", sumatraVersion)
-}
-
-// build for codeql: just static 64-bit release build
-func buildCodeQL() {
-	detectVersionsCodeQL()
-	//cleanPreserveSettings()
-	msbuildPath := detectMsbuildPathMust()
-	runExeLoggedMust(msbuildPath, `vs2022\SumatraPDF.sln`, `/t:SumatraPDF:Rebuild`, `/p:Configuration=Release;Platform=x64`, `/m`)
-	revertBuildConfig()
 }
 
 func waitForEnter(s string) {

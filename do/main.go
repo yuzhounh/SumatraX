@@ -108,7 +108,6 @@ func Main() {
 	)
 
 	var (
-		flgBuildCodeQL bool
 		flgGenDocs     bool
 		flgGenSettings bool
 		flgUpload      bool
@@ -116,7 +115,6 @@ func Main() {
 	)
 
 	{
-		flag.BoolVar(&flgBuildCodeQL, "build-codeql", false, "build for codeql")
 		//flag.BoolVar(&flgBuildLzsa, "build-lzsa", false, "build MakeLZSA.exe")
 		flag.BoolVar(&flgUpload, "upload", false, "upload the build to s3 and do spaces")
 		//flag.BoolVar(&flgGenTranslationsInfoCpp, "trans-gen-info", false, "generate src/TranslationLangs.cpp")
@@ -151,11 +149,6 @@ func Main() {
 
 	if flgBuildLzsa {
 		buildLzsa()
-		return
-	}
-
-	if flgBuildCodeQL {
-		buildCodeQL()
 		return
 	}
 
