@@ -1423,6 +1423,7 @@
     <ClCompile Include="..\src\wingui\Wnd.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.clang-format" />
     <None Include="..\.github\workflows\build.yml" />
     <None Include="..\.github\workflows\codeql.yml" />
     <None Include="..\.github\workflows\daily.yml" />
@@ -1430,6 +1431,7 @@
     <None Include="..\Claude.md" />
     <None Include="..\SECURITY.md" />
     <None Include="..\ailog.txt" />
+    <None Include="..\cmd\build.ts" />
     <None Include="..\cppcheck.out.txt" />
     <None Include="..\do\build.go" />
     <None Include="..\do\check_accesskyes.go" />
