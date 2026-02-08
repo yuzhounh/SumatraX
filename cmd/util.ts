@@ -13,7 +13,22 @@ export interface VisualStudioInfo {
   msbuildPath: string;
   clangFormatPath: string;
   clangTidyPath: string;
-  llvmPdbutilPath: string;
+  llvmPdbutilPath?: string;
+}
+
+// llvm-pdbutil.exe doesn't work when invoked using absolute path
+// so it must be in %PATH% to work
+function findLlvmPdbUtil(): string | undefined {
+  try {
+    const result = Bun.spawnSync(["llvm-pdbutil", "--help"], {
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    if (result.exitCode === 0) {
+      return "llvm-pdbutil.exe";
+    }
+  } catch {}
+  return;
 }
 
 function findVsRoot(): string {
@@ -29,8 +44,16 @@ function findVsRoot(): string {
         if (!dir) continue;
         const p = join(dir, "MSBuild.exe");
         if (existsSync(p)) {
-          // dir is the Bin directory, go up 3 levels: Bin -> Current -> MSBuild -> vsRoot
-          return dirname(dirname(dirname(dir)));
+          // walk up from e.g. .../MSBuild/Current/Bin or .../MSBuild/Current/Bin/amd64
+          // until we pass the "MSBuild" directory to get vsRoot
+          let d = dir;
+          while (d && d !== dirname(d)) {
+            const base = d.split(/[\\/]/).pop()!;
+            if (base.toLowerCase() === "msbuild") {
+              return dirname(d);
+            }
+            d = dirname(d);
+          }
         }
       }
     }
@@ -64,7 +87,7 @@ export function detectVisualStudio(): VisualStudioInfo {
   const msbuildPath = findTool(vsRoot, msBuildRelPath);
   const clangFormatPath = findTool(vsRoot, clangFormatRelPath);
   const clangTidyPath = findTool(vsRoot, clangTidyRelPath);
-  const llvmPdbutilPath = findTool(vsRoot, llvmPdbutilRelPath);
+  const llvmPdbutilPath = findLlvmPdbUtil();
 
   if (!msbuildPath) {
     throw new Error(`couldn't find msbuild.exe in ${vsRoot}`);

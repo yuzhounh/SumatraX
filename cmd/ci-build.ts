@@ -20,6 +20,9 @@ const sdkVersions = [
 
 const pdbFiles = ["libmupdf.pdb", "SumatraPDF-dll.pdb", "SumatraPDF.pdb"];
 
+let llvmPdbutilPath: string | undefined;
+let msbuildPath;
+
 // === Secrets ===
 
 let r2Access = "";
@@ -300,13 +303,7 @@ async function createPdbLzsa(dir: string): Promise<void> {
   await runLogged(makeLzsa, ["SumatraPDF.pdb.lzsa", ...pdbFiles], dir);
 }
 
-async function buildPreRelease(
-  msbuildPath: string,
-  preRelVer: string,
-  sha1: string,
-  vsplatform: string,
-  outDir: string,
-): Promise<void> {
+async function buildPreRelease(preRelVer: string, sha1: string, vsplatform: string, outDir: string): Promise<void> {
   ensureManualIsBuilt();
   console.log(`building pre-release version ${preRelVer}`);
   const buildStart = performance.now();
@@ -317,7 +314,7 @@ async function buildPreRelease(
     const p = `/p:Configuration=Release;Platform=${vsplatform}`;
 
     // build and run tests (skip for ARM64)
-    await runLogged(msbuildPath, [slnPath, `/t:test_util:Rebuild`, p, `/m`]);
+    await runLogged([slnPath, `/t:test_util:Rebuild`, p, `/m`]);
     if (vsplatform !== "ARM64") {
       const testUtil = resolve(join(outDir, "test_util.exe"));
       await runLogged(testUtil, [], outDir);
@@ -326,7 +323,7 @@ async function buildPreRelease(
     // build all targets
     const targets = ["PdfFilter", "plugin-test", "PdfPreview", "PdfPreviewTest", "SumatraPDF", "SumatraPDF-dll"];
     const t = `/t:${targets.map((t) => t + ":Rebuild").join(";")}`;
-    await runLogged(msbuildPath, [slnPath, t, p, `/m`]);
+    await runLogged([slnPath, t, p, `/m`]);
 
     // create PDB archives
     await createPdbZip(outDir);
@@ -339,7 +336,7 @@ async function buildPreRelease(
   console.log(`building pre-release version ${preRelVer} took ${elapsed}s`);
 }
 
-async function buildSmoke(msbuildPath: string): Promise<void> {
+async function buildSmoke(): Promise<void> {
   const buildStart = performance.now();
   console.log("smoke build");
 
@@ -356,7 +353,7 @@ async function buildSmoke(msbuildPath: string): Promise<void> {
   const slnPath = join("vs2022", "SumatraPDF.sln");
   const t = `/t:SumatraPDF-dll:Rebuild;test_util:Rebuild`;
   const p = `/p:Configuration=Release;Platform=x64`;
-  await runLogged(msbuildPath, [slnPath, t, p, `/m`]);
+  await runLogged([slnPath, t, p, `/m`]);
 
   const outDir = join("out", "rel64");
   const testUtil = resolve(join(outDir, "test_util.exe"));
@@ -381,33 +378,60 @@ function formatSize(bytes: number): string {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
+function fileSize(path: string): number {
+  try {
+    return statSync(path).size;
+  } catch {
+    return 0;
+  }
+}
+
 async function runLlvmPdbutilGzipped(exePath: string, pdbPath: string, outPath: string, ...args: string[]) {
   const cmdArgs = ["pretty", ...args, pdbPath];
   const output = await runCaptureOutput(exePath, cmdArgs);
-  const gzipped = Bun.gzipSync(output);
-  writeFileSync(outPath, gzipped);
-  console.log(`wrote ${outPath} (${formatSize(output.length)})`);
+
+  if (true) {
+    const gzipped = Bun.gzipSync(output);
+    writeFileSync(outPath, gzipped);
+    console.log(`wrote ${outPath} (${formatSize(output.length)}) (${formatSize(fileSize(outPath))})`);
+  } else {
+    outPath += ".txt";
+    writeFileSync(outPath, output);
+    console.log(`wrote ${outPath} (${formatSize(output.length)}) (${formatSize(fileSize(outPath))})`);
+  }
 }
 
-async function uploadPdbBuildArtifacts(llvmPdbutilPath: string, preRelVer: string, sha1: string): Promise<void> {
+const globalsPath = "SumatraPDF-globals.txt.gz";
+const classesPath = "SumatraPDF-classes.txt.gz";
+
+async function extractClassesAndGlobalsFromPDB(): Promise<void> {
+  if (!llvmPdbutilPath) {
+    console.log("extractClassesAndGlobalsFromPDB: skipping because llvmPdbutilPath is not set");
+    return;
+  }
+
   const pdbPath = join("out", "rel64", "SumatraPDF.pdb");
   if (!existsSync(pdbPath)) {
     console.log(`uploadPdbBuildArtifacts: '${pdbPath}' doesn't exist, skipping`);
     return;
   }
 
-  const llvmPdbutil = llvmPdbutilPath;
-  const globalsPath = "SumatraPDF-globals.txt.gz";
-  const classesPath = "SumatraPDF-classes.txt.gz";
+  await runLlvmPdbutilGzipped(llvmPdbutilPath, pdbPath, globalsPath, "-globals", "-symbol-order=size");
+  await runLlvmPdbutilGzipped(llvmPdbutilPath, pdbPath, classesPath, "-classes");
+}
 
-  await runLlvmPdbutilGzipped(llvmPdbutil, pdbPath, globalsPath, "-globals", "-symbol-order=size");
-  await runLlvmPdbutilGzipped(llvmPdbutil, pdbPath, classesPath, "-classes");
-
+async function uploadPdbBuildArtifacts(preRelVer: string, sha1: string): Promise<void> {
+  if (!llvmPdbutilPath) {
+    console.log("uploadPdbBuildArtifacts: skipping because llvmPdbutilPath is not set");
+    return;
+  }
   const shortSha1 = sha1.slice(0, 8);
   const dateStr = new Date().toISOString().slice(0, 10);
   const prefix = `software/sumatrapdf-build-artifacts/${dateStr}-${preRelVer}-${shortSha1}`;
   const remoteGlobals = prefix + ".SumatraPDF-globals.txt.gz";
   const remoteClasses = prefix + ".SumatraPDF-classes.txt.gz";
+
+  await extractClassesAndGlobalsFromPDB();
 
   const globalsData = new Uint8Array(readFileSync(globalsPath));
   const classesData = new Uint8Array(readFileSync(classesPath));
@@ -438,8 +462,9 @@ async function main() {
   console.log(`gitSha1: '${sha1}'`);
   console.log(`sumatraVersion: '${sumatraVer}'`);
 
-  const { msbuildPath, llvmPdbutilPath } = detectVisualStudio();
-  if (!llvmPdbutilPath) throw new Error("couldn't find llvm-pdbutil.exe");
+  let res = detectVisualStudio();
+  msbuildPath = res.msbuildPath;
+  llvmPdbutilPath = res.llvmPdbutilPath;
 
   const eventType = getGitHubEventType();
   console.log(`GitHub event type: ${eventType}`);
@@ -452,17 +477,17 @@ async function main() {
         const { main: genDocs } = await import("./gen-docs.ts");
         await genDocs();
       }
-      await buildPreRelease(msbuildPath, preRelVer, sha1, "x64", join("out", "rel64"));
+      await buildPreRelease(preRelVer, sha1, "x64", join("out", "rel64"));
       break;
     case "codeql":
-      await buildSmoke(msbuildPath);
+      await buildSmoke();
       break;
     default:
       throw new Error(`unknown GitHub event type: '${eventType}'`);
   }
 
   //ensureAllUploadCreds();
-  //await uploadPdbBuildArtifacts(llvmPdbutilPath, preRelVer, sha1);
+  //await uploadPdbBuildArtifacts(preRelVer, sha1);
 
   const elapsed = ((performance.now() - timeStart) / 1000).toFixed(1);
   console.log(`Finished in ${elapsed}s`);
