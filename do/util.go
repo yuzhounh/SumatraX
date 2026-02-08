@@ -20,7 +20,6 @@ var (
 	panicIf           = u.PanicIf
 	urlify            = u.Slug
 	fileExists        = u.FileExists
-	dirExists         = u.DirExists
 	pathExists        = u.PathExists
 	formatSize        = u.FormatSize
 	getFileSize       = u.FileSize

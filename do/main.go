@@ -108,9 +108,8 @@ func Main() {
 	)
 
 	var (
-		flgGenSettings bool
-		flgUpload      bool
-		flgVerbose     bool
+		flgUpload  bool
+		flgVerbose bool
 	)
 
 	{
@@ -118,7 +117,6 @@ func Main() {
 		flag.BoolVar(&flgUpload, "upload", false, "upload the build to s3 and do spaces")
 		//flag.BoolVar(&flgGenTranslationsInfoCpp, "trans-gen-info", false, "generate src/TranslationLangs.cpp")
 		//flag.BoolVar(&flgPrintBuildNo, "build-no", false, "print build number")
-		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
 		flag.BoolVar(&flgVerbose, "verbose", false, "if true, verbose logging")
 		flag.Parse()
 	}
@@ -167,11 +165,6 @@ func Main() {
 	//opts.doCleanCheck = false // for ad-hoc testing
 
 	ensureBuildOptionsPreRequesites(opts)
-
-	if flgGenSettings {
-		genAndSaveSettingsStructs()
-		return
-	}
 
 	if flgPrintBuildNo {
 		return
