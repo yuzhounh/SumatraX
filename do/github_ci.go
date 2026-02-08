@@ -2,28 +2,8 @@ package do
 
 import (
 	"encoding/json"
-	"fmt"
-	"net/http"
 	"os"
-	"strings"
 )
-
-// https://goobar.io/2019/12/07/manually-trigger-a-github-actions-workflow/
-// send a webhook POST request to trigger a build
-func triggerBuildWebHook(typ string) {
-	ghtoken := os.Getenv("GITHUB_TOKEN")
-	panicIf(ghtoken == "", "need GITHUB_TOKEN env variable")
-	data := fmt.Sprintf(`{"event_type": "%s"}`, typ)
-	uri := "https://api.github.com/repos/sumatrapdfreader/sumatrapdf/dispatches"
-	req, err := http.NewRequest(http.MethodPost, uri, strings.NewReader(data))
-	must(err)
-	req.Header.Set("Accept", "application/vnd.github.everest-preview+json")
-	val := fmt.Sprintf("token %s", ghtoken)
-	req.Header.Set("Authorization", val)
-	rsp, err := http.DefaultClient.Do(req)
-	must(err)
-	panicIf(rsp.StatusCode >= 400)
-}
 
 const (
 	githubEventTypeCodeQL = "codeql"

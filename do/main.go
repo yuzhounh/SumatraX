@@ -117,9 +117,8 @@ func Main() {
 		flgGenDocs         bool
 		flgGenSettings     bool
 		flgGenWebsiteDocs  bool
-		flgRunTests      bool
-		flgTriggerCodeQL bool
-		flgUpdateVer       string
+		flgRunTests  bool
+		flgUpdateVer string
 		flgUpload          bool
 		flgVerbose         bool
 	)
@@ -133,7 +132,6 @@ func Main() {
 		flag.BoolVar(&flgUpload, "upload", false, "upload the build to s3 and do spaces")
 		//flag.BoolVar(&flgGenTranslationsInfoCpp, "trans-gen-info", false, "generate src/TranslationLangs.cpp")
 		//flag.BoolVar(&flgPrintBuildNo, "build-no", false, "print build number")
-		flag.BoolVar(&flgTriggerCodeQL, "trigger-codeql", false, "trigger codeql build")
 		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
 		flag.StringVar(&flgUpdateVer, "update-auto-update-ver", "", "update version used for auto-update checks")
 		flag.BoolVar(&flgRunTests, "run-tests", false, "run test_util executable")
@@ -217,11 +215,6 @@ func Main() {
 
 	if flgGenSettings {
 		genAndSaveSettingsStructs()
-		return
-	}
-
-	if flgTriggerCodeQL {
-		triggerBuildWebHook(githubEventTypeCodeQL)
 		return
 	}
 
