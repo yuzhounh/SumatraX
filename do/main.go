@@ -111,9 +111,8 @@ func Main() {
 		flgBuildCodeQL  bool
 		flgCIBuild      bool
 		flgGenDocs      bool
-		flgGenSettings     bool
-		flgGenWebsiteDocs  bool
-		flgUpload bool
+		flgGenSettings bool
+		flgUpload      bool
 		flgVerbose         bool
 	)
 
@@ -126,7 +125,6 @@ func Main() {
 		//flag.BoolVar(&flgPrintBuildNo, "build-no", false, "print build number")
 		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
 		flag.BoolVar(&flgGenDocs, "gen-docs", false, "generate html docs in docs/www from markdown in docs/md")
-		flag.BoolVar(&flgGenWebsiteDocs, "gen-docs-website", false, "generate html docs in ../sumatra-website repo and check them in")
 		flag.BoolVar(&flgVerbose, "verbose", false, "if true, verbose logging")
 		flag.Parse()
 	}
@@ -145,11 +143,6 @@ func Main() {
 
 	if flgGenDocs {
 		genHTMLDocsForApp()
-		return
-	}
-
-	if flgGenWebsiteDocs {
-		genHTMLDocsForWebsite()
 		return
 	}
 

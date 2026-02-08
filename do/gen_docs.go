@@ -586,53 +586,6 @@ func checkComandsAreDocumented() {
 	}
 }
 
-func copyDocsToWebsite() {
-	logvf("copyDocsToWebsite()\n")
-	updateSumatraWebsite()
-	srcDir := filepath.Join("docs", "md")
-	websiteDir := getWebsiteDir()
-	dstDir := filepath.Join(websiteDir, "www", "docs-md")
-	must(os.RemoveAll(dstDir))
-
-	copyFilesExtsToNormalizeNL = []string{".md", ".css"}
-	copyFileMustOverwrite = true
-	copyFilesRecurMust(dstDir, srcDir)
-	files := []string{"notion.css", "sumatra.css", "gen_toc.js"}
-	for _, name := range files {
-		srcPath := filepath.Join("docs", "www", name)
-		dstPath := filepath.Join(websiteDir, "www", name)
-		copyFileMust(dstPath, srcPath)
-	}
-
-	files = []string{"gen_docs.search.js", "gen_docs.search.html"}
-	for _, name := range files {
-		srcPath := filepath.Join("do", name)
-		dstPath := filepath.Join(websiteDir, "www", name)
-		copyFileMust(dstPath, srcPath)
-	}
-
-	obisdianDir := filepath.Join(dstDir, ".obsidian")
-	os.RemoveAll(obisdianDir)
-	d := runExeInDirMust(websiteDir, "git", "status")
-	logf("\n%s\n", string(d))
-}
-
-// TODO: for now we just copy .md files to sumatra-website repo and use
-// the existing md => html generation, which is duplicate of what we do here
-// if we improve html generation here a lot, we'll switch to generating
-// html files for sumatra-website here
-func genHTMLDocsForWebsite() {
-	logf("genHTMLDocsForWebsite starting\n")
-	dir := updateSumatraWebsite()
-	currBranch := getCurrentBranchMust(dir)
-	panicIf(currBranch != "master")
-	// don't use .html extension in links to generated .html files
-	// for docs we need them because they are shown from file system
-	// for website we prefer "clean" links because they are served via web server
-	mdHTMLExt = false
-	copyDocsToWebsite()
-}
-
 func genHTMLDocsForApp() {
 	timeStart := time.Now()
 	defer func() {
