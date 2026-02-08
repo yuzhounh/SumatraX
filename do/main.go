@@ -109,7 +109,6 @@ func Main() {
 	)
 
 	var (
-		flgBuildSmoke      bool
 		flgBuildCodeQL     bool
 		flgCIBuild         bool
 		flgCIDailyBuild    bool
@@ -125,7 +124,6 @@ func Main() {
 	{
 		flag.BoolVar(&flgCIBuild, "ci", false, "run CI steps")
 		flag.BoolVar(&flgCIDailyBuild, "ci-daily", false, "run CI daily steps")
-		flag.BoolVar(&flgBuildSmoke, "build-smoke", false, "run smoke build (installer for 64bit release)")
 		flag.BoolVar(&flgBuildCodeQL, "build-codeql", false, "build for codeql")
 		//flag.BoolVar(&flgBuildLzsa, "build-lzsa", false, "build MakeLZSA.exe")
 		flag.BoolVar(&flgUpload, "upload", false, "upload the build to s3 and do spaces")
@@ -208,11 +206,6 @@ func Main() {
 
 	if flgGenSettings {
 		genAndSaveSettingsStructs()
-		return
-	}
-
-	if flgBuildSmoke {
-		buildSmoke(true)
 		return
 	}
 
