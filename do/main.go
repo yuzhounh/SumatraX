@@ -153,7 +153,6 @@ func Main() {
 		flgCIBuild         bool
 		flgCIDailyBuild    bool
 		flgClean           bool
-		flgDiff            bool
 		flgGenDocs         bool
 		flgGenSettings     bool
 		flgGenWebsiteDocs  bool
@@ -185,7 +184,6 @@ func Main() {
 		flag.BoolVar(&flgTriggerCodeQL, "trigger-codeql", false, "trigger codeql build")
 		flag.BoolVar(&flgClangTidy, "clang-tidy", false, "run clang-tidy (must be installed)")
 		//flag.BoolVar(&flgClangTidyFix, "clang-tidy-fix", false, "run clang-tidy (must be installed)")
-		flag.BoolVar(&flgDiff, "diff", false, "preview diff using winmerge")
 		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
 		flag.StringVar(&flgUpdateVer, "update-auto-update-ver", "", "update version used for auto-update checks")
 		flag.BoolVar(&flgRunLogView, "logview", false, "run logview")
@@ -296,11 +294,6 @@ func Main() {
 	//opts.doCleanCheck = false // for ad-hoc testing
 
 	ensureBuildOptionsPreRequesites(opts)
-
-	if flgDiff {
-		u.WinmergeDiffPreview()
-		return
-	}
 
 	if flgGenSettings {
 		genAndSaveSettingsStructs()
