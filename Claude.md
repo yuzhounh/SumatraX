@@ -6,7 +6,7 @@ Assume that Visual Studio command-line tools are available in the PATH environme
 
 Our code is in src/ directory. External dependencies are in ext/ directory and mupdf\ directory
 
-To build run build.ts with bun
+To build run: bun ./cmd/build.ts
 
 This creates ./out/dbg64/SumatraPDF.exe executable
 
