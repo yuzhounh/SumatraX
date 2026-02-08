@@ -173,9 +173,6 @@ void Tooltip::SetMaxWidth(int dx) {
     SendMessageW(hwnd, TTM_SETMAXTIPWIDTH, 0, dx);
 }
 
-extern bool ContainsRTL(WCHAR*);
-extern bool IsBaseDirectionRTL(WCHAR*);
-
 int Tooltip::Add(const char* s, const Rect& rc, bool multiline) {
     int id = GetNextTooltipID();
     SetMaxWidthForText(hwnd, s, multiline);
