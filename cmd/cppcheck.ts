@@ -23,7 +23,6 @@ async function runCppCheck(all: boolean): Promise<void> {
     "-DSTDMETHODIMP_(x)=x",
     "-DSTDAPI_(x)=x",
     "-DPRE_RELEASE_VER=3.4",
-    "-q",
     "-v",
   ];
 
