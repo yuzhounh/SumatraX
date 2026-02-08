@@ -50,6 +50,7 @@ constexpr int borderWidthMax = 12;
 static const char *gFileAttachmentUcons = "Graph\0Paperclip\0PushPin\0Tag\0";
 static const char *gSoundIcons = "Speaker\0Mic\0";
 static const char *gStampIcons = "Approved\0AsIs\0Confidential\0Departmental\0Draft\0Experimental\0Expired\0Final\0ForComment\0ForPublicRelease\0NotApproved\0NotForPublicRelease\0Sold\0TopSecret\0";
+// those are in order of pdf_line_ending enum in annot.h
 static const char *gLineEndingStyles = "None\0Square\0Circle\0Diamond\0OpenArrow\0ClosedArrow\0Butt\0ROpenArrow\0RClosedArrow\0Slash\0";
 static const char* gColors = "Transparent\0Aqua\0Black\0Blue\0Fuchsia\0Gray\0Green\0Lime\0Maroon\0Navy\0Olive\0Orange\0Purple\0Red\0Silver\0Teal\0White\0Yellow\0";
 static const char *gFontNames = "Cour\0Helv\0TiRo\0";
@@ -681,23 +682,21 @@ static void DoLineStartEnd(EditAnnotationsWindow* ew, Annotation* annot) {
 }
 
 static void LineStartSelectionChanged(EditAnnotationsWindow* ew) {
-    int start = 0;
-    int end = 0;
-    GetLineEndingStyles(ew->tab->selectedAnnotation, &start, &end);
-    auto idx = ew->dropDownLineStart->GetCurrentSelection();
-    int newVal = idx;
-    start = newVal;
+    auto start = ew->dropDownLineStart->GetCurrentSelection();
+    if (start < 0) {
+        return;
+    }
+    SetLineStartStyles(ew->tab->selectedAnnotation, start);
     EnableSaveIfAnnotationsChanged(ew);
     MainWindowRerender(ew->tab->win);
 }
 
 static void LineEndSelectionChanged(EditAnnotationsWindow* ew) {
-    int start = 0;
-    int end = 0;
-    GetLineEndingStyles(ew->tab->selectedAnnotation, &start, &end);
-    auto idx = ew->dropDownLineEnd->GetCurrentSelection();
-    int newVal = idx;
-    end = newVal;
+    auto end = ew->dropDownLineEnd->GetCurrentSelection();
+    if (end < 0) {
+        return;
+    }
+    SetLineEndStyles(ew->tab->selectedAnnotation, end);
     EnableSaveIfAnnotationsChanged(ew);
     MainWindowRerender(ew->tab->win);
 }
