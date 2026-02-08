@@ -2,6 +2,7 @@ import { $ } from "bun";
 import { existsSync, mkdirSync, readdirSync, statSync, writeFileSync, copyFileSync, rmSync } from "node:fs";
 import { join, basename, dirname } from "node:path";
 import { tmpdir } from "node:os";
+import { spawn } from "node:child_process";
 
 const winMergePaths = [
   String.raw`C:\Program Files\WinMerge\WinMergeU.exe`,
@@ -153,11 +154,14 @@ async function main() {
   for (const change of changes) {
     await copyFileChange(dirBefore, dirAfter, change);
   }
-
-  // launch WinMerge without waiting
-  const proc = Bun.spawn([winMergePath, "/u", "/wl", "/wr", dirBefore, dirAfter], {
-    stdout: "ignore",
-    stderr: "ignore",
+  console.log("launching WinMerge:", winMergePath);
+  const proc = spawn(winMergePath, ["/u", "/wl", "/wr", dirBefore, dirAfter], {
+    detached: true,
+    stdio: "ignore",
+  });
+  proc.on("error", (err) => {
+    console.error(`failed to launch WinMerge: ${err.message}`);
+    process.exit(1);
   });
   proc.unref();
 }
