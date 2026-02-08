@@ -2257,7 +2257,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR, _
     DetectExternalViewers();
 
     gRenderCache = new RenderCache();
-    if (gUseDarkModeLib) {
+    if (UseDarkModeLib()) {
         DarkMode::initDarkMode();
         DarkMode::setColorizeTitleBarConfig(true);
     }

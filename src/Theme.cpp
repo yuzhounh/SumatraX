@@ -24,6 +24,10 @@ bool gUseDarkModeLib = true;
 bool gUseDarkModeLib = false;
 #endif
 
+bool UseDarkModeLib() {
+    return gUseDarkModeLib && !IsCurrentThemeDefault();
+}
+
 /*
 preserve those translations:
 _TRN("Dark")
@@ -204,7 +208,7 @@ void SetThemeByIndex(int themeIdx) {
     gCurrSetThemeCmdId = gFirstSetThemeCmdId + themeIdx;
     gCurrentTheme = gThemes->At(gCurrThemeIndex);
     str::ReplaceWithCopy(&gGlobalPrefs->theme, gCurrentTheme->name);
-    if (gUseDarkModeLib) {
+    if (UseDarkModeLib()) {
         // TODO: we should apply themes to every theme other than 0
         // but in Solarized Light in Find dialog's input field text is invisible i.e. black
         // UINT mode = themeIdx == 0 ? kModeClassic : kModeDark;

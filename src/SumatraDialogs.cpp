@@ -184,7 +184,7 @@ static INT_PTR CALLBACK Dialog_GetPassword_Proc(HWND hDlg, UINT msg, WPARAM wp, 
         data = (Dialog_GetPassword_Data*)lp;
         HwndSetText(hDlg, _TRA("Enter password"));
         SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)data);
-        if (gUseDarkModeLib) {
+        if (UseDarkModeLib()) {
             DarkMode::setDarkWndSafe(hDlg);
         }
         EnableWindow(GetDlgItem(hDlg, IDC_REMEMBER_PASSWORD), data->remember != nullptr);
@@ -266,7 +266,7 @@ static INT_PTR CALLBACK Dialog_GoToPage_Proc(HWND hDlg, UINT msg, WPARAM wp, LPA
     if (WM_INITDIALOG == msg) {
         data = (Dialog_GoToPage_Data*)lp;
         SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)data);
-        if (gUseDarkModeLib) {
+        if (UseDarkModeLib()) {
             DarkMode::setDarkWndSafe(hDlg);
         }
         HwndSetText(hDlg, _TRA("Go to page"));
@@ -348,7 +348,7 @@ static INT_PTR CALLBACK Dialog_Find_Proc(HWND hDlg, UINT msg, WPARAM wp, LPARAM 
             //[ ACCESSKEY_GROUP Find Dialog
             data = (Dialog_Find_Data*)lp;
             SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)data);
-            if (gUseDarkModeLib) {
+            if (UseDarkModeLib()) {
                 DarkMode::setDarkWndSafe(hDlg);
             }
             HwndSetText(hDlg, _TRA("Find"));
@@ -422,7 +422,7 @@ static INT_PTR CALLBACK Dialog_PdfAssociate_Proc(HWND hDlg, UINT msg, WPARAM wp,
     if (WM_INITDIALOG == msg) {
         data = (Dialog_PdfAssociate_Data*)lp;
         SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)data);
-        if (gUseDarkModeLib) {
+        if (UseDarkModeLib()) {
             DarkMode::setDarkWndSafe(hDlg);
         }
         HwndSetText(hDlg, _TRA("Associate with PDF files?"));
@@ -489,7 +489,7 @@ static INT_PTR CALLBACK Dialog_ChangeLanguage_Proc(HWND hDlg, UINT msg, WPARAM w
 
         data = (Dialog_ChangeLanguage_Data*)lp;
         SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)data);
-        if (gUseDarkModeLib) {
+        if (UseDarkModeLib()) {
             DarkMode::setDarkWndSafe(hDlg);
         }
         // for non-latin languages this depends on the correct fonts being installed,
@@ -693,7 +693,7 @@ static INT_PTR CALLBACK Dialog_CustomZoom_Proc(HWND hDlg, UINT msg, WPARAM wp, L
             //[ ACCESSKEY_GROUP Zoom Dialog
             data = (Dialog_CustomZoom_Data*)lp;
             SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)data);
-            if (gUseDarkModeLib) {
+            if (UseDarkModeLib()) {
                 DarkMode::setDarkWndSafe(hDlg);
             }
             SetupZoomComboBox(hDlg, IDC_DEFAULT_ZOOM, data->forChm, data->zoomArg);
@@ -769,7 +769,7 @@ static INT_PTR CALLBACK Dialog_Settings_Proc(HWND hDlg, UINT msg, WPARAM wp, LPA
         case WM_INITDIALOG:
             prefs = (GlobalPrefs*)lp;
             SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)prefs);
-            if (gUseDarkModeLib) {
+            if (UseDarkModeLib()) {
                 DarkMode::setDarkWndSafe(hDlg);
             }
             {
@@ -915,7 +915,7 @@ static INT_PTR CALLBACK Sheet_Print_Advanced_Proc(HWND hDlg, UINT msg, WPARAM wp
         case WM_INITDIALOG:
             data = (Print_Advanced_Data*)((PROPSHEETPAGE*)lp)->lParam;
             SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)data);
-            if (gUseDarkModeLib) {
+            if (UseDarkModeLib()) {
                 DarkMode::setDarkWndSafe(hDlg);
             }
             HwndSetDlgItemText(hDlg, IDC_SECTION_PRINT_RANGE, _TRA("Print range"));
@@ -1010,7 +1010,7 @@ static INT_PTR CALLBACK Dialog_AddFav_Proc(HWND hDlg, UINT msg, WPARAM wp, LPARA
     if (WM_INITDIALOG == msg) {
         Dialog_AddFav_Data* data = (Dialog_AddFav_Data*)lp;
         SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)data);
-        if (gUseDarkModeLib) {
+        if (UseDarkModeLib()) {
             DarkMode::setDarkWndSafe(hDlg);
         }
         HwndSetText(hDlg, _TRA("Add Favorite"));

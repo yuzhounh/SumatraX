@@ -1018,14 +1018,14 @@ void CreateToolbar(MainWindow* win) {
     win->hwndToolbar = hwndToolbar;
     SendMessageW(hwndToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 
-    if (!gUseDarkModeLib || !DarkMode::isEnabled()) {
+    if (!UseDarkModeLib() || !DarkMode::isEnabled()) {
         if (!IsCurrentThemeDefault()) {
             // without this custom draw code doesn't work
             SetWindowTheme(hwndToolbar, L"", L"");
         }
     }
 
-    if (gUseDarkModeLib) {
+    if (UseDarkModeLib()) {
         DarkMode::setWindowNotifyCustomDrawSubclass(win->hwndReBar);
     }
 

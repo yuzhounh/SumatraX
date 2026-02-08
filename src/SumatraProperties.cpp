@@ -464,7 +464,7 @@ static bool CreatePropertiesWindow(HWND hParent, PropertiesLayout* layoutData, b
     wRc.dy = std::min(rc.dy + wRc.dy - cRc.dy, work.dy);
     MoveWindow(hwnd, wRc.x, wRc.y, wRc.dx, wRc.dy, FALSE);
     CenterDialog(hwnd, hParent);
-    if (gUseDarkModeLib) {
+    if (UseDarkModeLib()) {
         DarkMode::setDarkWndSafe(hwnd);
         DarkMode::setWindowEraseBgSubclass(hwnd);
     }

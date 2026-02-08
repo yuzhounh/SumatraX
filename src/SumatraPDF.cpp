@@ -1543,6 +1543,7 @@ static MainWindow* CreateMainWindow() {
     win->infotip = new Tooltip();
     Tooltip::CreateArgs args;
     args.parent = win->hwndCanvas;
+    args.font = GetAppFont();
     win->infotip->Create(args);
 
     CreateCaption(win);
@@ -1568,12 +1569,15 @@ static MainWindow* CreateMainWindow() {
     // TODO: this is hackish. in general we should divorce
     // layout re-calculations from MainWindow and creation of windows
     win->UpdateCanvasSize();
-    if (gUseDarkModeLib) {
+    if (UseDarkModeLib()) {
         DarkMode::setDarkTitleBar(win->hwndFrame);
         DarkMode::setChildCtrlsSubclassAndTheme(win->hwndFrame);
         DarkMode::removeTabCtrlSubclass(win->tabsCtrl->hwnd);
         DarkMode::setDarkScrollBar(win->hwndCanvas);
-        DarkMode::setDarkTooltips(win->infotip->hwnd, (int)DarkMode::ToolTipsType::tooltip);
+        // TODO: this over-rides the font in the control
+        // this will only happen with themes
+        // could custom paint instead of using DarkMode
+        //DarkMode::setDarkTooltips(win->infotip->hwnd, (int)DarkMode::ToolTipsType::tooltip);
     }
     return win;
 }
@@ -1646,7 +1650,7 @@ void UpdateAfterThemeChange() {
         CaptionUpdateUI(win, win->caption);
         // TODO: probably leaking toolbar image list
         UpdateToolbarAfterThemeChange(win);
-        if (gUseDarkModeLib) {
+        if (UseDarkModeLib()) {
             DarkMode::setDarkTitleBar(win->hwndFrame);
             DarkMode::setChildCtrlsTheme(win->hwndFrame);
             DarkMode::setDarkScrollBar(win->hwndCanvas);

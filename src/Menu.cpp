@@ -1977,7 +1977,7 @@ void FreeMenuOwnerDrawInfoData(HMENU hmenu) {
 }
 
 void MarkMenuOwnerDraw(HMENU hmenu) {
-    if (gUseDarkModeLib && DarkMode::isEnabled()) {
+    if (UseDarkModeLib() && DarkMode::isEnabled()) {
         return;
     }
     if (!ThemeColorizeControls()) {

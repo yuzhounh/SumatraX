@@ -362,3 +362,21 @@ make enum and arrays compact by putting 3 elements per line and put // clang-for
 when running x64_asan build I got:
 LINK : warning LNK4300: ignoring '/INCREMENTAL' because input module contains ASAN metadata [C:\Users\kjk\src\sumatrapdf\vs2022\test_util.vcxproj]
 analyze premake5.lua and visual studio solution files in vs2022 to figure out why
+
+
+
+
+
+
+
+
+
+
+
+
+
+--- maybe fix tooltip font when using themes
+in @src/SumatraPDF.cpp in CreateMainWindow() I pass a font to win->infotip win32
+tooltip control and Wnd::CreateControl() in Wnd.cpp sets that font on the control
+hwnd after creating it; however, it doesn't seem to work i.e. I get the standard
+font

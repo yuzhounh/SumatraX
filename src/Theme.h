@@ -22,8 +22,8 @@ COLORREF ThemeNotificationsProgressColor();
 bool ThemeColorizeControls();
 bool IsCurrentThemeDefault();
 void FreeThemes();
+bool UseDarkModeLib();
 
 extern int gFirstSetThemeCmdId;
 extern int gLastSetThemeCmdId;
 extern int gCurrSetThemeCmdId;
-extern bool gUseDarkModeLib;

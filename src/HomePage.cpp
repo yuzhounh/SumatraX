@@ -30,7 +30,9 @@
 #include "Translations.h"
 #include "Version.h"
 #include "Theme.h"
+#include "AppSettings.h"
 #include "DarkModeSubclass.h"
+
 
 #ifndef ABOUT_USE_LESS_COLORS
 #define ABOUT_LINE_OUTER_SIZE 2
@@ -449,6 +451,7 @@ static void CreateInfotipForLink(StaticLinkInfo* linkInfo) {
     gAboutTooltip = new Tooltip();
     Tooltip::CreateArgs args;
     args.parent = gHwndAbout;
+    args.font = GetAppFont();
     gAboutTooltip->Create(args);
     gAboutTooltip->SetSingle(linkInfo->tooltip, linkInfo->rect, false);
 }
@@ -471,7 +474,7 @@ LRESULT CALLBACK WndProcAbout(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     switch (msg) {
         case WM_CREATE:
             ReportIf(gHwndAbout);
-            if (gUseDarkModeLib) {
+            if (UseDarkModeLib()) {
                 DarkMode::setDarkTitleBarEx(hwnd, true);
             }
             break;
