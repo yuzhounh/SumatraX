@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 
@@ -110,7 +109,6 @@ func Main() {
 	)
 
 	var (
-		flgBuildLogview    bool
 		flgBuildNo         int
 		flgBuildSmoke      bool
 		flgBuildCodeQL     bool
@@ -143,7 +141,6 @@ func Main() {
 		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
 		flag.StringVar(&flgUpdateVer, "update-auto-update-ver", "", "update version used for auto-update checks")
 		flag.BoolVar(&flgRunTests, "run-tests", false, "run test_util executable")
-		flag.BoolVar(&flgBuildLogview, "build-logview", false, "build logview-win. Use -upload to also upload it to backblaze")
 		flag.IntVar(&flgBuildNo, "build-no-info", 0, "print build number info for given build number")
 		flag.BoolVar(&flgGenDocs, "gen-docs", false, "generate html docs in docs/www from markdown in docs/md")
 		flag.BoolVar(&flgGenWebsiteDocs, "gen-docs-website", false, "generate html docs in ../sumatra-website repo and check them in")
@@ -221,14 +218,6 @@ func Main() {
 		return
 	}
 
-	if flgBuildLogview {
-		buildLogView()
-		if flgUpload {
-			uploadLogView()
-		}
-		return
-	}
-
 	opts := &BuildOptions{}
 
 	if flgUpload {
@@ -288,59 +277,6 @@ func Main() {
 	}
 
 	flag.Usage()
-}
-
-func cmdRunLoggedInDir(dir string, args ...string) {
-	cmd := exec.Command(args[0], args[1:]...)
-	cmd.Dir = dir
-	cmdRunLoggedMust(cmd)
-}
-
-var logViewWinDir = filepath.Join("tools", "logview")
-
-func buildLogView() {
-	ver := extractLogViewVersion()
-	logf("biuldLogView: ver: %s\n", ver)
-	os.RemoveAll(filepath.Join(logViewWinDir, "build", "bin"))
-	//cmdRunLoggedInDir(".", "wails", "build", "-clean", "-f", "-upx")
-	cmdRunLoggedInDir(logViewWinDir, "wails", "build", "-clean", "-f", "-upx")
-
-	path := filepath.Join(logViewWinDir, "build", "bin", "logview.exe")
-	panicIf(!u.FileExists(path))
-	// signMust(path)
-	logf("\n")
-	printFileSize(path)
-}
-
-func extractLogViewVersion() string {
-	path := filepath.Join(logViewWinDir, "frontend", "src", "version.js")
-	d, err := os.ReadFile(path)
-	must(err)
-	d = u.NormalizeNewlinesInPlace(d)
-	s := string(d)
-	// s looks like:
-	// export const version = "0.1.2";
-	parts := strings.Split(s, "\n")
-	s = parts[0]
-	parts = strings.Split(s, " ")
-	panicIf(len(parts) != 5)
-	ver := parts[4] // "0.1.2";
-	ver = strings.ReplaceAll(ver, `"`, "")
-	ver = strings.ReplaceAll(ver, `;`, "")
-	parts = strings.Split(ver, ".")
-	panicIf(len(parts) < 2) // must be at least 1.0
-	// verify all elements are numbers
-	for _, part := range parts {
-		n, err := strconv.ParseInt(part, 10, 32)
-		panicIf(err != nil)
-		panicIf(n > 100)
-	}
-	return ver
-}
-
-func printFileSize(path string) {
-	size := u.FileSize(path)
-	logf("%s: %s\n", path, u.FormatSize(size))
 }
 
 func printBuildNoInfo(buildNo int) {

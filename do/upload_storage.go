@@ -11,7 +11,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kjk/common/u"
 	"github.com/kjk/minioutil"
 )
 
@@ -521,21 +520,3 @@ func uploadToStorage(buildType BuildType, ver string, dirLocal string) {
 	wg.Wait()
 }
 
-func uploadLogView() {
-	logf("uploadLogView\n")
-	ver := extractLogViewVersion()
-	path := filepath.Join("tools", "logview", "build", "bin", "logview.exe")
-	if !fileExists(path) {
-		logf("file '%s' doesn't exist\n", path)
-		os.Exit(1)
-	}
-	remotePath := fmt.Sprintf("software/logview/rel/logview-%s.exe", ver)
-	mc := newMinioR2Client()
-	if mc.Exists(remotePath) {
-		logf("%s (%s) already uploaded\n", remotePath, mc.URLForPath(remotePath))
-		return
-	}
-	mc.UploadFile(remotePath, path, true)
-	sizeStr := u.FormatSize(getFileSize(path))
-	logf("Uploaded %s of size %s as %s\n", path, sizeStr, mc.URLForPath(remotePath))
-}
