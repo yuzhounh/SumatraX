@@ -312,7 +312,7 @@ When building I got:
          zlib.lib(gzread.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command
           line to improve linker performance
 can you analyze my build system in premake5.lua and premake5.files.lua which generates visual studio solution files in vs2022/ directory to see why this happens?
-
+---
 Write bun script cmd/gen-flags.ts which generates C code which has:
 * enum class Arg
 * static const char* gArgNames
@@ -339,3 +339,26 @@ enum class Arg {
 };
 
 static const char* gArgNames = ARGS(MAKE_STR);
+---
+optimize FilterStrings in src/CommandPalette.cpp by moving breaking filter into words from FilterMatches to FilterStrings and passing StrVec words down to FilterMatches
+---
+update DrawListBoxItem to show which parts of the string match filter by passing StrVec words to it and highlighting matching parts with yellow background
+---
+Write bun typescript script cmd/gen-commands.ts which generates C code that replicates COMMANDS, DEF_CMD, CMD_NAME, CMD_ID and CMD_DESC marcros in src/Commands.h and src/Commands.cpp
+as a source it uses a flat array in gen-commands.ts, like:
+const commands = [
+  "CmdOpenFile", "Open File...",
+  "CmdClose", "Close Document",
+  ... etc.
+]
+It generates C code for enum for commands and inserts generated code between "// @gen-start cmd-enum" and "// @gen-end cmd-enum" in Commands.h
+
+It generates C code for gCommandNames, gCommandIds, gCommandDescriptions and inserts it between "// @gen-start cmd-c" and "// @gen-end cmd-c" in Commands.cpp
+
+it replaces existing content between marker lines
+
+make enum and arrays compact by putting 3 elements per line and put // clang-format off and // clang-format on around them to prevent clang from re-formatting them
+---
+when running x64_asan build I got:
+LINK : warning LNK4300: ignoring '/INCREMENTAL' because input module contains ASAN metadata [C:\Users\kjk\src\sumatrapdf\vs2022\test_util.vcxproj]
+analyze premake5.lua, 
