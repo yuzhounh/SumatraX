@@ -2,7 +2,6 @@ package do
 
 import (
 	"flag"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -68,21 +67,6 @@ func getSecrets() {
 	transUploadSecret = os.Getenv("TRANS_UPLOAD_SECRET")
 }
 
-func openForAppend(name string) (*os.File, error) {
-	return os.OpenFile(name, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
-}
-
-func runCmdShowProgressAndLog(cmd *exec.Cmd, path string) error {
-	f, err := openForAppend(path)
-	must(err)
-	defer f.Close()
-
-	cmd.Stdout = io.MultiWriter(f, os.Stdout)
-	cmd.Stderr = io.MultiWriter(f, os.Stderr)
-	logf("> %s\n", fmtCmdShort(cmd))
-	return cmd.Run()
-}
-
 type BuildOptions struct {
 	upload                    bool
 	verifyTranslationUpToDate bool
@@ -120,8 +104,6 @@ func Main() {
 	// ad-hoc flags to be set manually (to show less options)
 	var (
 		flgBuildLzsa              = false
-		flgClangTidy              = false
-		flgClangTidyFix           = false
 		flgFindLargestFilesByExt  = false
 		flgGenTranslationsInfoCpp = false
 		flgPrintBuildNo           = false
@@ -161,8 +143,6 @@ func Main() {
 		flag.BoolVar(&flgCheckAccessKeys, "check-access-keys", false, "check access keys for menu items")
 		//flag.BoolVar(&flgPrintBuildNo, "build-no", false, "print build number")
 		flag.BoolVar(&flgTriggerCodeQL, "trigger-codeql", false, "trigger codeql build")
-		flag.BoolVar(&flgClangTidy, "clang-tidy", false, "run clang-tidy (must be installed)")
-		//flag.BoolVar(&flgClangTidyFix, "clang-tidy-fix", false, "run clang-tidy (must be installed)")
 		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
 		flag.StringVar(&flgUpdateVer, "update-auto-update-ver", "", "update version used for auto-update checks")
 		flag.BoolVar(&flgRunLogView, "logview", false, "run logview")
@@ -194,11 +174,6 @@ func Main() {
 
 	if flgGenWebsiteDocs {
 		genHTMLDocsForWebsite()
-		return
-	}
-
-	if flgClangTidy || flgClangTidyFix {
-		runClangTidy(flgClangTidyFix)
 		return
 	}
 
