@@ -147,7 +147,8 @@ async function main() {
   console.log(`building unsigned pre-release version ${preRelVer}`);
 
   // generate HTML docs
-  await $`go run . -gen-docs`;
+  const { main: genDocs } = await import("./gen-docs.ts");
+  await genDocs();
   ensureManualIsBuilt();
 
   setBuildConfigPreRelease(sha1, preRelVer);
