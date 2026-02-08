@@ -228,7 +228,6 @@ func Main() {
 		flgCheckAccessKeys bool
 		flgCIBuild         bool
 		flgCIDailyBuild    bool
-		flgClangFormat     bool
 		flgClean           bool
 		flgDiff            bool
 		flgGenDocs         bool
@@ -253,7 +252,6 @@ func Main() {
 		flag.BoolVar(&flgBuildCodeQL, "build-codeql", false, "build for codeql")
 		//flag.BoolVar(&flgBuildLzsa, "build-lzsa", false, "build MakeLZSA.exe")
 		flag.BoolVar(&flgUpload, "upload", false, "upload the build to s3 and do spaces")
-		flag.BoolVar(&flgClangFormat, "format", false, "format source files with clang-format")
 		flag.BoolVar(&flgWc, "wc", false, "show loc stats (like wc -l)")
 		flag.BoolVar(&flgTransDownload, "trans-dl", false, "download latest translations to translations/translations.txt")
 		//flag.BoolVar(&flgGenTranslationsInfoCpp, "trans-gen-info", false, "generate src/TranslationLangs.cpp")
@@ -297,11 +295,6 @@ func Main() {
 
 	if flgGenWebsiteDocs {
 		genHTMLDocsForWebsite()
-		return
-	}
-
-	if flgClangFormat {
-		clangFormatFiles()
 		return
 	}
 
