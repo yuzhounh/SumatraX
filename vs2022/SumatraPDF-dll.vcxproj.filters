@@ -795,7 +795,19 @@
     <None Include="..\Claude.md" />
     <None Include="..\SECURITY.md" />
     <None Include="..\ailog.txt" />
+    <None Include="..\cmd\build-no-info.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\build-smoke.ts">
+      <Filter>cmd</Filter>
+    </None>
     <None Include="..\cmd\build.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\check-access-keys.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\ci-daily-build.ts">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\clang-format.ts">
@@ -804,10 +816,16 @@
     <None Include="..\cmd\clang-tidy.ts">
       <Filter>cmd</Filter>
     </None>
+    <None Include="..\cmd\clean.ts">
+      <Filter>cmd</Filter>
+    </None>
     <None Include="..\cmd\cppcheck.ts">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\diff.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\logview-build.ts">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\logview.ts">
@@ -816,14 +834,23 @@
     <None Include="..\cmd\premake.ts">
       <Filter>cmd</Filter>
     </None>
+    <None Include="..\cmd\run-tests.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\trans-dl.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\trigger-codeql.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\update-auto-update-ver.ts">
+      <Filter>cmd</Filter>
+    </None>
     <None Include="..\cmd\wc.ts">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cppcheck.out.txt" />
     <None Include="..\do\build.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\check_accesskyes.go">
       <Filter>do</Filter>
     </None>
     <None Include="..\do\clang_tidy_format.go">
@@ -866,9 +893,6 @@
       <Filter>do</Filter>
     </None>
     <None Include="..\do\translations.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\update_auto_update_ver.go">
       <Filter>do</Filter>
     </None>
     <None Include="..\do\upload_storage.go">

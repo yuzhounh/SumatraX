@@ -307,3 +307,8 @@ what is the condition that led to this crash?
   tabsCtrl, or what causes tab->filePath to point to freed memory.
 ----
 update CmdIdToAnnotationType() in src/Annotation.cpp to map all CmdCreateAnot* commands from src/Commands.h to AnnotationType from src/Annotation.h
+----
+When building I got:
+         zlib.lib(gzread.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command
+          line to improve linker performance
+can you analyze my build system in premake5.lua and premake5.files.lua which generates visual studio solution files in vs2022/ directory to see why this happens?

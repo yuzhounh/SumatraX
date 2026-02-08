@@ -111,10 +111,8 @@ function mixed_dbg_rel_conf()
     defines { "NDEBUG" }
     optimize "Size"
 
-  -- asan builds:
-  -- * no ltcg
-  -- TODO: or arm64 ?
-  filter { "configurations:Release*", "platforms:x32 or x64" }
+  -- asan builds: no ltcg
+  filter { "configurations:Release*", "platforms:x32 or x64 or arm64" }
     linktimeoptimization "On"
   filter {}
 end
