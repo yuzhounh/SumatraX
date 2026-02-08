@@ -795,6 +795,21 @@
     <None Include="..\cmd\build.ts">
       <Filter>cmd</Filter>
     </None>
+    <None Include="..\cmd\clang-format.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\cppcheck.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\diff.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\premake.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\wc.ts">
+      <Filter>cmd</Filter>
+    </None>
     <None Include="..\cppcheck.out.txt" />
     <None Include="..\do\build.go">
       <Filter>do</Filter>
@@ -854,9 +869,6 @@
       <Filter>do</Filter>
     </None>
     <None Include="..\do\vs.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\wc.go">
       <Filter>do</Filter>
     </None>
     <None Include="..\docs\manual.tmpl.html">
