@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Check out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # needed to calc build number via git log --oneline
           fetch-depth: 0
@@ -21,4 +21,4 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Build
-        run: .\doit.bat -ci-daily
+        run: bun .\cmd\ci-daily-build.ts

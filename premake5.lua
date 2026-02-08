@@ -694,17 +694,6 @@ workspace "SumatraPDF"
 
   ---- executables
 
-  project "signfile"
-    kind "ConsoleApp"
-    language "C++"
-    cppdialect "C++latest"
-    mixed_dbg_rel_conf()
-    includedirs { "src", "mupdf/include"}
-    files { "src/tools/signfile.cpp", "src/CrashHandlerNoOp.cpp" }
-    links { "utils", "mupdf" }
-    links { "crypt32", "shlwapi", "version", "Comctl32", "wininet", "wintrust" }
-
-
   project "plugin-test"
     kind "WindowedApp"
     language "C++"

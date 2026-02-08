@@ -105,8 +105,6 @@ function extractSumatraVersion(): string {
   throw new Error(`couldn't extract CURR_VERSION from ${path}`);
 }
 
-// === Path Detection ===
-
 // === Build Config ===
 
 function buildConfigPath(): string {
