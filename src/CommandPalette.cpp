@@ -201,6 +201,8 @@ struct CommandPaletteWnd : Wnd {
     ListBox* listBox = nullptr;
     Static* staticInfo = nullptr;
 
+    StrVec filterWords;
+
     int currTabIdx = 0;
     bool smartTabMode = false;
     bool stickyMode = false;
@@ -824,17 +826,17 @@ void CommandPaletteWnd::FilterStringsForQuery(const char* filter, StrVecCP& stri
     }
 
     // split filter into words once
-    StrVec words;
-    SplitFilterToWords(filter, words);
+    filterWords.Reset();
+    SplitFilterToWords(filter, filterWords);
 
     if (searchTabs) {
-        FilterStrings(tabs, words, strings);
+        FilterStrings(tabs, filterWords, strings);
     }
     if (searchHistory) {
-        FilterStrings(fileHistory, words, strings);
+        FilterStrings(fileHistory, filterWords, strings);
     }
     if (searchCommands) {
-        FilterStrings(commands, words, strings);
+        FilterStrings(commands, filterWords, strings);
     }
 }
 
@@ -983,9 +985,68 @@ static void DrawListBoxItem(ListBox::DrawItemEvent* ev) {
     rc.left += padX;
     rc.right -= padX;
 
-    // draw command name on the left
-    WCHAR* itemTextW = ToWStrTemp(itemText);
-    DrawTextW(hdc, itemTextW, -1, &rc, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
+    // draw command name on the left, highlighting matched words
+    int nWords = gCommandPaletteWnd ? gCommandPaletteWnd->filterWords.Size() : 0;
+    if (nWords == 0) {
+        WCHAR* itemTextW = ToWStrTemp(itemText);
+        DrawTextW(hdc, itemTextW, -1, &rc, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
+    } else {
+        // find all match ranges in itemText
+        int textLen = str::Leni(itemText);
+        // marks which chars are part of a match
+        u8* highlighted = AllocArrayTemp<u8>(textLen);
+        const StrVec& words = gCommandPaletteWnd->filterWords;
+        for (int w = 0; w < nWords; w++) {
+            const char* word = words.At(w);
+            int wordLen = str::Leni(word);
+            if (wordLen == 0) {
+                continue;
+            }
+            const char* p = itemText;
+            while ((p = str::FindI(p, word)) != nullptr) {
+                int off = (int)(p - itemText);
+                for (int k = 0; k < wordLen && off + k < textLen; k++) {
+                    highlighted[off + k] = 1;
+                }
+                p += wordLen;
+            }
+        }
+
+        // draw text segment by segment
+        COLORREF colHighlightBg = RGB(255, 255, 0); // yellow
+        COLORREF colHighlightText = RGB(0, 0, 0);   // black text on yellow
+        RECT rcDraw = rc;
+        int pos = 0;
+        while (pos < textLen) {
+            // find run of same highlight state
+            bool isHighlight = highlighted[pos] != 0;
+            int runStart = pos;
+            while (pos < textLen && (highlighted[pos] != 0) == isHighlight) {
+                pos++;
+            }
+            int runLen = pos - runStart;
+            WCHAR* runW = ToWStrTemp(itemText + runStart, (size_t)runLen);
+
+            if (isHighlight && !ev->selected) {
+                SetBkMode(hdc, OPAQUE);
+                SetBkColor(hdc, colHighlightBg);
+                SetTextColor(hdc, colHighlightText);
+            } else {
+                SetBkMode(hdc, TRANSPARENT);
+                SetTextColor(hdc, colText);
+            }
+
+            // measure and draw this run
+            int runWLen = str::Leni(runW);
+            SIZE sz;
+            GetTextExtentPoint32W(hdc, runW, runWLen, &sz);
+            DrawTextW(hdc, runW, runWLen, &rcDraw, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
+            rcDraw.left += sz.cx;
+        }
+        // restore
+        SetBkMode(hdc, TRANSPARENT);
+        SetTextColor(hdc, colText);
+    }
 
     // draw accelerator on the right (if any)
     if (accelStr && accelStr[0]) {
