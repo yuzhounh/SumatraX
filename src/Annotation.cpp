@@ -182,9 +182,17 @@ void SetRect(Annotation* annot, RectF r) {
         auto ctx = e->Ctx();
         ScopedCritSec cs(e->ctxAccess);
         fz_rect rc = ToFzRect(r);
+        auto a = annot->pdfannot;
         fz_try(ctx) {
-            pdf_set_annot_rect(ctx, annot->pdfannot, rc);
-            pdf_update_annot(ctx, annot->pdfannot);
+            if (annot->type == AnnotationType::Line) {
+                // line annotation doesn't have a rect but a line position
+                // TODO: not sure this is the right place for this
+                fz_point p1 = { rc.x0, rc.y0 }, p2 = { rc.x1, rc.y1 };
+                pdf_set_annot_line(ctx, a, p1, p2);
+            } else {
+                pdf_set_annot_rect(ctx, a, rc);
+            }
+            pdf_update_annot(ctx, a);
         }
         fz_catch(ctx) {
             fz_report_error(ctx);
