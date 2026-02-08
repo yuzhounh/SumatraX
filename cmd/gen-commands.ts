@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 // prettier-ignore
-const commands = [
+export const commands = [
     "CmdOpenFile", "Open File...",
     "CmdClose", "Close Document",
     "CmdCloseCurrentDocument", "Close Current Document",
@@ -332,4 +332,6 @@ function main() {
     console.log("Generated arrays in src/Commands.cpp");
 }
 
-main();
+if (import.meta.main) {
+    main();
+}

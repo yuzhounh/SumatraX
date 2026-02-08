@@ -12,6 +12,7 @@ import {
   copyFileSync,
 } from "node:fs";
 import { join, resolve, extname } from "node:path";
+import { commands as commandsDef } from "./gen-commands";
 
 const docsDir = "docs";
 const mdDir = join(docsDir, "md");
@@ -316,26 +317,18 @@ function extractCommandsFromMarkdown(): string[] {
   return cmds;
 }
 
-function extractCommandsFromSource(): string[] {
-  const lines = readFileSync(join("src", "Commands.h"), "utf-8").split("\n");
-  const cmds: string[] = [];
-  for (const line of lines) {
-    const commentIdx = line.indexOf("//");
-    const idx = line.indexOf("V(Cmd");
-    if (idx < 0) continue;
-    if (commentIdx >= 0 && commentIdx < idx) continue;
-    const rest = line.slice(idx + 2);
-    const commaIdx = rest.indexOf(",");
-    if (commaIdx >= 0) cmds.push(rest.slice(0, commaIdx));
+function getCommandNames(): string[] {
+  const names: string[] = [];
+  for (let i = 0; i < commandsDef.length; i += 2) {
+    names.push(commandsDef[i]);
   }
-  if (cmds.length < 20) throw new Error(`too few commands in Commands.h: ${cmds.length}`);
-  return cmds;
+  return names;
 }
 
 function checkCommandsAreDocumented(): void {
   console.log("checkCommandsAreDocumented");
-  const srcCmds = extractCommandsFromSource();
-  console.log(`${srcCmds.length} commands in Commands.h`);
+  const srcCmds = getCommandNames();
+  console.log(`${srcCmds.length} commands in gen-commands.ts`);
   const docCmds = extractCommandsFromMarkdown();
   console.log(`${docCmds.length} commands in Commands.md`);
 
@@ -349,11 +342,11 @@ function checkCommandsAreDocumented(): void {
     }
   }
   if (onlyInSrc.length > 0) {
-    console.log(`${onlyInSrc.length} in Commands.h but not Commands.md:`);
+    console.log(`${onlyInSrc.length} in gen-commands.ts but not Commands.md:`);
     for (const c of onlyInSrc) console.log(`  ${c}`);
   }
   if (docSet.size > 0) {
-    console.log(`${docSet.size} in Commands.md but not in Commands.h:`);
+    console.log(`${docSet.size} in Commands.md but not in gen-commands.ts:`);
     for (const c of docSet) console.log(`  ${c}`);
   }
 }

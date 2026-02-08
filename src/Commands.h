@@ -73,7 +73,7 @@ enum {
     CmdDebugTogglePredictiveRender = 384, CmdDebugToggleRtl = 385, CmdNone = 386,
 
     /* range for file history */
-    CmdFileHistoryFirst = CmdNone + 1,
+    CmdFileHistoryFirst,
     CmdFileHistoryLast = CmdFileHistoryFirst + 32,
 
     /* range for favorites */
