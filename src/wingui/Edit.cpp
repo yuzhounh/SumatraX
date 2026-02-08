@@ -52,6 +52,12 @@ void Edit::SetSelection(int start, int end) {
     Edit_SetSel(hwnd, start, end);
 }
 
+void Edit::SelectAll() {
+    WCHAR* s = HwndGetTextWTemp(hwnd);
+    int pos = str::Len(s);
+    Edit_SetSel(hwnd, 0, pos);
+}
+
 void Edit::SetCursorPosition(int pos) {
     SetSelection(pos, pos);
 }

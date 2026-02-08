@@ -853,6 +853,7 @@ static void UpdateUIForSelectedAnnotation(EditAnnotationsWindow* ew, Annotation*
         if (setEditFocus && ew->editContents->IsVisible()) {
             HwndSetFocus(ew->editContents->hwnd);
             ew->editContents->SetCursorPositionAtEnd();
+            ew->editContents->SelectAll();
         }
     } else {
         HwndSetFocus(ew->listBox->hwnd);
