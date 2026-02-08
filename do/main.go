@@ -163,7 +163,6 @@ func Main() {
 		flgTriggerCodeQL   bool
 		flgUpdateVer       string
 		flgUpload          bool
-		flgWc              bool
 		flgVerbose         bool
 	)
 
@@ -175,7 +174,6 @@ func Main() {
 		flag.BoolVar(&flgBuildCodeQL, "build-codeql", false, "build for codeql")
 		//flag.BoolVar(&flgBuildLzsa, "build-lzsa", false, "build MakeLZSA.exe")
 		flag.BoolVar(&flgUpload, "upload", false, "upload the build to s3 and do spaces")
-		flag.BoolVar(&flgWc, "wc", false, "show loc stats (like wc -l)")
 		flag.BoolVar(&flgTransDownload, "trans-dl", false, "download latest translations to translations/translations.txt")
 		//flag.BoolVar(&flgGenTranslationsInfoCpp, "trans-gen-info", false, "generate src/TranslationLangs.cpp")
 		flag.BoolVar(&flgClean, "clean", false, "clean the build (remove out/ files except for settings)")
@@ -297,11 +295,6 @@ func Main() {
 
 	if flgGenSettings {
 		genAndSaveSettingsStructs()
-		return
-	}
-
-	if flgWc {
-		doLineCount()
 		return
 	}
 
