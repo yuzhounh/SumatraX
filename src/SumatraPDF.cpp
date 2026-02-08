@@ -2791,6 +2791,7 @@ void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose) {
     // when used as an embedded plugin, closing should happen automatically
     // when the parent window is destroyed (cf. WM_DESTROY)
     if (gPluginMode && !gWindows.Contains(win) && !forceClose) {
+        win->isBeingClosed = false;
         return;
     }
 
@@ -2826,6 +2827,7 @@ void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose) {
     // would have to remember a list of tabs to not close above
     // if list not empty, only close the tabs not on the list
     if (!canCloseWindow) {
+        win->isBeingClosed = false;
         return;
     }
 
@@ -2845,6 +2847,7 @@ void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose) {
     } else if (lastWindow && !quitIfLast) {
         /* last window - don't delete it */
         CloseDocumentInCurrentTab(win, false, false);
+        win->isBeingClosed = false;
         HwndSetFocus(win->hwndFrame);
         ReportIf(!gWindows.Contains(win));
     } else {
