@@ -2,24 +2,15 @@ import { $, Glob } from "bun";
 import { existsSync } from "node:fs";
 import { join, basename } from "node:path";
 import { cpus } from "node:os";
-
-const vsBasePaths = [
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Enterprise`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Preview`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Community`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Professional`,
-];
+import { detectMsBuild } from "./util.ts";
 
 function detectClangFormat(): string {
-  // check VS installations
   const relPath = String.raw`VC\Tools\Llvm\bin\clang-format.exe`;
-  for (const base of vsBasePaths) {
-    const p = join(base, relPath);
-    if (existsSync(p)) {
-      return p;
-    }
+  const { vsRoot } = detectMsBuild();
+  const p = join(vsRoot, relPath);
+  if (existsSync(p)) {
+    return p;
   }
-  // fall back to PATH
   return "clang-format.exe";
 }
 

@@ -2,38 +2,43 @@ import { Glob } from "bun";
 import { existsSync } from "node:fs";
 import { unlink, appendFile, writeFile } from "node:fs/promises";
 import { join, basename } from "node:path";
-
-const vsBasePaths = [
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Enterprise`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Preview`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Community`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Professional`,
-];
+import { detectMsBuild } from "./util.ts";
 
 function detectClangTidy(): string {
   const relPath = String.raw`VC\Tools\Llvm\bin\clang-tidy.exe`;
-  for (const base of vsBasePaths) {
-    const p = join(base, relPath);
-    if (existsSync(p)) {
-      return p;
-    }
+  const { vsRoot } = detectMsBuild();
+  const p = join(vsRoot, relPath);
+  if (existsSync(p)) {
+    return p;
   }
   return "clang-tidy.exe";
 }
 
 const includes = [
-  "-I", "mupdf/include",
-  "-I", "src",
-  "-I", "src/utils",
-  "-I", "src/wingui",
-  "-I", "ext/CHMLib/src",
-  "-I", "ext/libdjvu",
-  "-I", "ext/zlib",
-  "-I", "ext/synctex",
-  "-I", "ext/unarr",
-  "-I", "ext/lzma/C",
-  "-I", "ext/libwebp/src",
-  "-I", "ext/freetype/include",
+  "-I",
+  "mupdf/include",
+  "-I",
+  "src",
+  "-I",
+  "src/utils",
+  "-I",
+  "src/wingui",
+  "-I",
+  "ext/CHMLib/src",
+  "-I",
+  "ext/libdjvu",
+  "-I",
+  "ext/zlib",
+  "-I",
+  "ext/synctex",
+  "-I",
+  "ext/unarr",
+  "-I",
+  "ext/lzma/C",
+  "-I",
+  "ext/libwebp/src",
+  "-I",
+  "ext/freetype/include",
 ];
 
 const defines = [
@@ -65,10 +70,7 @@ async function runAndLog(exePath: string, args: string[]): Promise<void> {
   }
 
   console.log(`> ${basename(exePath)} ${args.join(" ")}`);
-  await Promise.all([
-    pipeStream(proc.stdout, process.stdout),
-    pipeStream(proc.stderr, process.stderr),
-  ]);
+  await Promise.all([pipeStream(proc.stdout, process.stdout), pipeStream(proc.stderr, process.stderr)]);
 
   const exitCode = await proc.exited;
   if (exitCode !== 0) {
@@ -78,20 +80,14 @@ async function runAndLog(exePath: string, args: string[]): Promise<void> {
 }
 
 function clangTidyFileArgs(path: string): string[] {
-  return [
-    "--header-filter=.*",
-    "-extra-arg=-std=c++20",
-    path,
-    "--",
-    ...includes,
-    ...defines,
-  ];
+  return ["--header-filter=.*", "-extra-arg=-std=c++20", path, "--", ...includes, ...defines];
 }
 
 function clangTidyFixArgs(path: string): string[] {
   return [
     "--checks=-*,modernize-raw-string-literal",
-    "-p", ".",
+    "-p",
+    ".",
     "--header-filter=src/",
     "--fix",
     "-extra-arg=-std=c++20",
@@ -106,7 +102,6 @@ const whitelisted = [
   "resource.h",
   "version.h",
   "translationlangs.cpp",
-  "signfile.cpp",
   "doc.cpp",
   "ebookcontroller.cpp",
   "ebookcontrols.cpp",

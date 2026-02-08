@@ -3,6 +3,7 @@
 
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname, resolve, basename } from "node:path";
+import { detectMsBuild } from "./util.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -1329,21 +1330,13 @@ const gLangs: string[][] = [
 // Path detection
 // ---------------------------------------------------------------------------
 
-const vsBasePaths = [
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Enterprise`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Preview`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Community`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Professional`,
-];
-
 function detectClangFormat(): string {
+  const { vsRoot } = detectMsBuild();
   const name = String.raw`VC\Tools\Llvm\bin\clang-format.exe`;
-  for (const base of vsBasePaths) {
-    const p = join(base, name);
-    if (existsSync(p)) {
-      console.log(`clang-format: ${p}`);
-      return p;
-    }
+  const p = join(vsRoot, name);
+  if (existsSync(p)) {
+    console.log(`clang-format: ${p}`);
+    return p;
   }
   throw new Error(`didn't find clang-format.exe`);
 }

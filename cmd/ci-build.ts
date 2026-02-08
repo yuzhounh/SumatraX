@@ -3,15 +3,7 @@
 import { existsSync, readFileSync, writeFileSync, statSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createHmac, createHash } from "node:crypto";
-
-// === Constants ===
-
-const vsBasePaths = [
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Enterprise`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Preview`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Community`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Professional`,
-];
+import { detectMsBuild } from "./util.ts";
 
 const sdkVersions = [
   "10.0.26100.0",
@@ -115,38 +107,13 @@ function extractSumatraVersion(): string {
 
 // === Path Detection ===
 
-function detectMsbuildPath(): string {
-  const msBuildName = String.raw`MSBuild\Current\Bin\MSBuild.exe`;
-  for (const base of vsBasePaths) {
-    const p = join(base, msBuildName);
-    if (existsSync(p)) {
-      console.log(`msbuild.exe: ${p}`);
-      return p;
-    }
-  }
-  throw new Error(`didn't find ${msBuildName}`);
-}
-
-function detectLlvmPdbutil(): string {
+function detectLlvmPdbutil(vsRoot: string): string {
   const name = String.raw`VC\Tools\Llvm\bin\llvm-pdbutil.exe`;
-  for (const base of vsBasePaths) {
-    const p = join(base, name);
-    if (existsSync(p)) {
-      return p;
-    }
+  const p = join(vsRoot, name);
+  if (existsSync(p)) {
+    return p;
   }
-  throw new Error(`didn't find ${name}`);
-}
-
-function detectSigntoolPath(): string {
-  const name = String.raw`x64\signtool.exe`;
-  for (const sdkVer of sdkVersions) {
-    const p = join(String.raw`C:\Program Files (x86)\Windows Kits\10\bin`, sdkVer, name);
-    if (existsSync(p)) {
-      return p;
-    }
-  }
-  throw new Error(`didn't find ${name}`);
+  throw new Error(`didn't find ${name} in ${vsRoot}`);
 }
 
 // === Build Config ===
@@ -368,16 +335,7 @@ async function buildPreRelease(
     }
 
     // build all targets
-    const targets = [
-      "signfile",
-      "sizer",
-      "PdfFilter",
-      "plugin-test",
-      "PdfPreview",
-      "PdfPreviewTest",
-      "SumatraPDF",
-      "SumatraPDF-dll",
-    ];
+    const targets = ["PdfFilter", "plugin-test", "PdfPreview", "PdfPreviewTest", "SumatraPDF", "SumatraPDF-dll"];
     const t = `/t:${targets.map((t) => t + ":Rebuild").join(";")}`;
     await runLogged(msbuildPath, [slnPath, t, p, `/m`]);
 
@@ -393,7 +351,6 @@ async function buildPreRelease(
 }
 
 async function buildSmoke(msbuildPath: string): Promise<void> {
-  detectSigntoolPath(); // early check
   const buildStart = performance.now();
   console.log("smoke build");
 
@@ -443,14 +400,14 @@ async function runLlvmPdbutilGzipped(exePath: string, pdbPath: string, outPath: 
   console.log(`wrote ${outPath} (${formatSize(output.length)})`);
 }
 
-async function uploadPdbBuildArtifacts(preRelVer: string, sha1: string): Promise<void> {
+async function uploadPdbBuildArtifacts(vsRoot: string, preRelVer: string, sha1: string): Promise<void> {
   const pdbPath = join("out", "rel64", "SumatraPDF.pdb");
   if (!existsSync(pdbPath)) {
     console.log(`uploadPdbBuildArtifacts: '${pdbPath}' doesn't exist, skipping`);
     return;
   }
 
-  const llvmPdbutil = detectLlvmPdbutil();
+  const llvmPdbutil = detectLlvmPdbutil(vsRoot);
   const globalsPath = "SumatraPDF-globals.txt.gz";
   const classesPath = "SumatraPDF-classes.txt.gz";
 
@@ -492,9 +449,8 @@ async function main() {
   console.log(`gitSha1: '${sha1}'`);
   console.log(`sumatraVersion: '${sumatraVer}'`);
 
-  detectLlvmPdbutil(); // early check
-
-  const msbuildPath = detectMsbuildPath();
+  const { vsRoot, msbuildPath } = detectMsBuild();
+  detectLlvmPdbutil(vsRoot); // early check
 
   const eventType = getGitHubEventType();
   console.log(`GitHub event type: ${eventType}`);
@@ -516,8 +472,8 @@ async function main() {
       throw new Error(`unknown GitHub event type: '${eventType}'`);
   }
 
-  ensureAllUploadCreds();
-  await uploadPdbBuildArtifacts(preRelVer, sha1);
+  //ensureAllUploadCreds();
+  //await uploadPdbBuildArtifacts(vsRoot, preRelVer, sha1);
 
   const elapsed = ((performance.now() - timeStart) / 1000).toFixed(1);
   console.log(`Finished in ${elapsed}s`);

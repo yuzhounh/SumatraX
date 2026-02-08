@@ -1,24 +1,6 @@
 import { existsSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
-
-const vsBasePaths = [
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Enterprise`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Preview`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Community`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Professional`,
-];
-
-function detectMsbuildPath(): string {
-  const msBuildName = String.raw`MSBuild\Current\Bin\MSBuild.exe`;
-  for (const base of vsBasePaths) {
-    const p = join(base, msBuildName);
-    if (existsSync(p)) {
-      console.log(`msbuild.exe: ${p}`);
-      return p;
-    }
-  }
-  throw new Error(`didn't find ${msBuildName}`);
-}
+import { detectMsBuild } from "./util.ts";
 
 function removeReleaseBuilds(): void {
   const dirs = [join("out", "arm64"), join("out", "rel32"), join("out", "rel64")];
@@ -53,7 +35,7 @@ async function main() {
     throw new Error(`file '${lzsa}' doesn't exist`);
   }
 
-  const msbuildPath = detectMsbuildPath();
+  const { msbuildPath } = detectMsBuild();
   const sln = String.raw`vs2022\SumatraPDF.sln`;
   const t = `/t:SumatraPDF-dll:Rebuild;test_util:Rebuild`;
   const p = `/p:Configuration=Release;Platform=x64`;

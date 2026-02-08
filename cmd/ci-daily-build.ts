@@ -1,31 +1,13 @@
 import { existsSync, readFileSync, writeFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
-
-const vsBasePaths = [
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Enterprise`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Preview`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Community`,
-  String.raw`C:\Program Files\Microsoft Visual Studio\2022\Professional`,
-];
+import { detectMsBuild } from "./util.ts";
 
 const platforms = [
   { vsplatform: "ARM64", suffix: "arm64", outDir: join("out", "arm64") },
   { vsplatform: "Win32", suffix: "32", outDir: join("out", "rel32") },
   { vsplatform: "x64", suffix: "64", outDir: join("out", "rel64") },
 ];
-
-function detectMsbuildPath(): string {
-  const msBuildName = String.raw`MSBuild\Current\Bin\MSBuild.exe`;
-  for (const base of vsBasePaths) {
-    const p = join(base, msBuildName);
-    if (existsSync(p)) {
-      console.log(`msbuild.exe: ${p}`);
-      return p;
-    }
-  }
-  throw new Error(`didn't find ${msBuildName}`);
-}
 
 async function isGithubMyMasterBranch(): Promise<boolean> {
   const repo = process.env["GITHUB_REPOSITORY"] ?? "";
@@ -136,7 +118,7 @@ async function main() {
     return;
   }
 
-  const msbuildPath = detectMsbuildPath();
+  const { msbuildPath } = detectMsBuild();
 
   const preRelVer = String(await getGitLinearVersion());
   const sha1 = await getGitSha1();
