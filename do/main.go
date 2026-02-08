@@ -108,7 +108,6 @@ func Main() {
 	)
 
 	var (
-		flgGenDocs     bool
 		flgGenSettings bool
 		flgUpload      bool
 		flgVerbose     bool
@@ -120,7 +119,6 @@ func Main() {
 		//flag.BoolVar(&flgGenTranslationsInfoCpp, "trans-gen-info", false, "generate src/TranslationLangs.cpp")
 		//flag.BoolVar(&flgPrintBuildNo, "build-no", false, "print build number")
 		flag.BoolVar(&flgGenSettings, "gen-settings", false, "re-generate src/Settings.h")
-		flag.BoolVar(&flgGenDocs, "gen-docs", false, "generate html docs in docs/www from markdown in docs/md")
 		flag.BoolVar(&flgVerbose, "verbose", false, "if true, verbose logging")
 		flag.Parse()
 	}
@@ -128,17 +126,6 @@ func Main() {
 	if false {
 		// for ad-hoc testing
 		detectVersions()
-		return
-	}
-
-	if false {
-		genHTMLDocsForApp()
-		// genTranslationInfoCpp()
-		return
-	}
-
-	if flgGenDocs {
-		genHTMLDocsForApp()
 		return
 	}
 

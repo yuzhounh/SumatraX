@@ -20,8 +20,8 @@ const wwwOutDir = join(docsDir, "www");
 const mdProcessed = new Map<string, string>();
 const mdToProcess: string[] = [];
 
-const searchJS = `<script>${readFileSync(join("do", "gen_docs.search.js"), "utf-8")}</script>`;
-const searchHTML = readFileSync(join("do", "gen_docs.search.html"), "utf-8");
+const searchJS = `<script>${readFileSync(join("cmd", "gen_docs.search.js"), "utf-8")}</script>`;
+const searchHTML = readFileSync(join("cmd", "gen_docs.search.html"), "utf-8");
 const tmplManual = readFileSync(join(docsDir, "manual.tmpl.html"), "utf-8");
 
 const h1BreadcrumbsStart = `

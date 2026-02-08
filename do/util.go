@@ -30,20 +30,9 @@ var (
 	readLinesFromFile = u.ReadLines
 	toTrimmedLines    = u.ToTrimmedLines
 
-	verbose = false
 )
 
 func logf(s string, args ...any) {
-	if len(args) > 0 {
-		s = fmt.Sprintf(s, args...)
-	}
-	fmt.Print(s)
-}
-
-func logvf(s string, args ...any) {
-	if !verbose {
-		return
-	}
 	if len(args) > 0 {
 		s = fmt.Sprintf(s, args...)
 	}
@@ -214,84 +203,11 @@ func execTextTemplate(tmplText string, data any) string {
 	return buf.String()
 }
 
-func push[S ~[]E, E any](s *S, els ...E) {
-	*s = append(*s, els...)
-}
-
 func measureDuration() func() {
 	timeStart := time.Now()
 	return func() {
 		logf("took %s\n", time.Since(timeStart))
 	}
-}
-
-func shouldCopyFile(de fs.DirEntry) bool {
-	name := de.Name()
-
-	bannedSuffixes := []string{".go", ".bat"}
-	for _, s := range bannedSuffixes {
-		if strings.HasSuffix(name, s) {
-			return false
-		}
-	}
-
-	bannedPrefixes := []string{"yarn", "go."}
-	for _, s := range bannedPrefixes {
-		if strings.HasPrefix(name, s) {
-			return false
-		}
-	}
-
-	doNotCopy := []string{"tests"}
-	return !slices.Contains(doNotCopy, name)
-}
-
-func copyFilesRecurMust(dstDir, srcDir string) {
-	files, err := os.ReadDir(srcDir)
-	must(err)
-
-	for _, de := range files {
-		if !shouldCopyFile(de) {
-			continue
-		}
-		dstPath := filepath.Join(dstDir, de.Name())
-		srcPath := filepath.Join(srcDir, de.Name())
-		if de.IsDir() {
-			copyFilesRecurMust(dstPath, srcPath)
-			continue
-		}
-		copyFileMust(dstPath, srcPath)
-	}
-}
-
-var copyFileMustOverwrite = false
-var copyFilesExtsToNormalizeNL = []string{}
-
-func copyFileMust(dst, src string) {
-	copyFile2Must(dst, src, copyFileMustOverwrite)
-}
-
-func copyFile2Must(dst, src string, overwrite bool) {
-	if !overwrite {
-		_, err := os.Stat(dst)
-		if err == nil {
-			logf("destination '%s' already exists, skipping\n", dst)
-			return
-		}
-	}
-	logvf("copy %s => %s\n", src, dst)
-	dstDir := filepath.Dir(dst)
-	err := os.MkdirAll(dstDir, 0755)
-	must(err)
-	d, err := os.ReadFile(src)
-	must(err)
-	ext := filepath.Ext(dst)
-	ext = strings.ToLower(ext)
-	if slices.Contains(copyFilesExtsToNormalizeNL, ext) {
-		d = u.NormalizeNewlines(d)
-	}
-	err = os.WriteFile(dst, d, 0644)
-	must(err)
 }
 
 func recreateDirMust(dir string) {

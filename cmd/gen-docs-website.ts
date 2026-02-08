@@ -149,7 +149,7 @@ async function main() {
   // copy search files
   const searchFiles = ["gen_docs.search.js", "gen_docs.search.html"];
   for (const name of searchFiles) {
-    const srcPath = join("do", name);
+    const srcPath = join("cmd", name);
     const dstPath = join(websiteDir, "www", name);
     copyFileNormalized(dstPath, srcPath);
   }
