@@ -328,7 +328,7 @@ static void ReadHuffReader(HuffHeader& huffHdr, ByteOrderDecoder& d) {
 bool HuffDicDecompressor::SetHuffData(u8* huffData, size_t huffDataLen) {
     // for now catch cases where we don't have both big endian and little endian
     // versions of the data
-    ReportIf(kHuffRecordLen != huffDataLen);
+    // ReportIf(kHuffRecordLen != huffDataLen);
     // but conservatively assume we only need big endian version
     if (huffDataLen < kHuffRecordMinLen) {
         return false;
@@ -387,7 +387,7 @@ bool HuffDicDecompressor::AddCdicData(u8* cdicData, u32 cdicDataLen) {
     }
     u32 size = cdicDataLen - hdrLen;
 
-    u32 maxSize = 1 << codeLength;
+    u32 maxSize = 2u * (1u << codeLength);
     if (maxSize >= size) {
         return false;
     }
