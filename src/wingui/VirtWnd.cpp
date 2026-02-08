@@ -38,8 +38,7 @@ Size VirtWnd::GetIdealSize() {
     return {};
 }
 
-void VirtWnd::Paint(HDC) {
-}
+void VirtWnd::Paint(HDC) {}
 
 Kind kindVirWndText = "virtWndText";
 

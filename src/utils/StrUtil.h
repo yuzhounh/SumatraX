@@ -19,29 +19,18 @@ struct Span {
 
     Span() = default;
     ~Span() = default;
-    Span(const T* d, int size) : d((T*)d), size(size) {
-    }
-    T* Data() const {
-        return d;
-    }
-    int Size() const {
-        return size;
-    }
+    Span(const T* d, int size) : d((T*)d), size(size) {}
+    T* Data() const { return d; }
+    int Size() const { return size; }
 };
 
 struct StrSpan : Span<char> {
     StrSpan() = default;
     StrSpan(const char* s);
     StrSpan(const char* s, int sLen);
-    char* CStr() const {
-        return d;
-    }
-    int Len() const {
-        return size;
-    }
-    bool IsEmpty() const {
-        return !d || size == 0;
-    }
+    char* CStr() const { return d; }
+    int Len() const { return size; }
+    bool IsEmpty() const { return !d || size == 0; }
 };
 
 struct Str {
@@ -90,24 +79,12 @@ struct ByteSlice {
         d = (u8*)data;
         sz = size;
     }
-    u8* data() const {
-        return d;
-    }
-    u8* Get() const {
-        return d;
-    }
-    size_t size() const {
-        return sz;
-    }
-    int Size() const {
-        return (int)sz;
-    }
-    bool empty() const {
-        return !d;
-    }
-    bool IsEmpty() const {
-        return !d;
-    }
+    u8* data() const { return d; }
+    u8* Get() const { return d; }
+    size_t size() const { return sz; }
+    int Size() const { return (int)sz; }
+    bool empty() const { return !d; }
+    bool IsEmpty() const { return !d; }
     ByteSlice Clone() const {
         if (empty()) {
             return {};
@@ -120,9 +97,7 @@ struct ByteSlice {
         d = nullptr;
         sz = 0;
     }
-    operator const char*() {
-        return (const char*)d;
-    }
+    operator const char*() { return (const char*)d; }
 };
 
 bool IsEqual(const ByteSlice&, const ByteSlice&);
@@ -356,12 +331,8 @@ struct Str {
     // https://stackoverflow.com/questions/16504062/how-to-make-the-for-each-loop-function-in-c-work-with-a-custom-class
     using iterator = char*;
 
-    iterator begin() const {
-        return &(els[0]);
-    }
-    iterator end() const {
-        return &(els[len]);
-    }
+    iterator begin() const { return &(els[0]); }
+    iterator end() const { return &(els[len]); }
 };
 
 // bool Replace(Str& s, const char* toReplace, const char* replaceWith);
@@ -415,12 +386,8 @@ struct WStr {
     // https://stackoverflow.com/questions/16504062/how-to-make-the-for-each-loop-function-in-c-work-with-a-custom-class
     using iterator = WCHAR*;
 
-    iterator begin() const {
-        return &(els[0]);
-    }
-    iterator end() const {
-        return &(els[len]);
-    }
+    iterator begin() const { return &(els[0]); }
+    iterator end() const { return &(els[len]); }
 };
 
 bool Replace(WStr& s, const WCHAR* toReplace, const WCHAR* replaceWith);

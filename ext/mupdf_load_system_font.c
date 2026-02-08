@@ -151,8 +151,7 @@ static int cmp_font_name(const char* name1, const char* name2) {
 
     if (len1 != len2) {
         const char* rest = len1 > len2 ? name1 + len2 : name2 + len1;
-        if (',' == *rest || streqi(rest, "-roman"))
-            return _strnicmp(name1, name2, fz_mini(len1, len2));
+        if (',' == *rest || streqi(rest, "-roman")) return _strnicmp(name1, name2, fz_mini(len1, len2));
     }
 
     return _stricmp(name1, name2);
@@ -184,18 +183,15 @@ static void decode_unicode_BE(fz_context* ctx, char* source, int sourcelen, char
     WCHAR* tmp;
     int converted, i;
 
-    if (sourcelen % 2 != 0)
-        fz_throw(ctx, FZ_ERROR_GENERIC, "fonterror : invalid unicode string");
+    if (sourcelen % 2 != 0) fz_throw(ctx, FZ_ERROR_GENERIC, "fonterror : invalid unicode string");
 
     tmp = fz_malloc_array(ctx, sourcelen / 2 + 1, WCHAR);
-    for (i = 0; i < sourcelen / 2; i++)
-        tmp[i] = BEtoHs(((WCHAR*)source)[i]);
+    for (i = 0; i < sourcelen / 2; i++) tmp[i] = BEtoHs(((WCHAR*)source)[i]);
     tmp[sourcelen / 2] = '\0';
 
     converted = WideCharToMultiByte(CP_UTF8, 0, tmp, -1, dest, destlen, NULL, NULL);
     fz_free(ctx, tmp);
-    if (!converted)
-        fz_throw(ctx, FZ_ERROR_GENERIC, "fonterror : invalid unicode string");
+    if (!converted) fz_throw(ctx, FZ_ERROR_GENERIC, "fonterror : invalid unicode string");
 }
 
 static void decode_platform_string(fz_context* ctx, int platform, int enctype, char* source, int sourcelen, char* dest,
@@ -291,8 +287,7 @@ static void safe_read(fz_context* ctx, fz_stream* file, int offset, char* buf, i
     int n;
     fz_seek(ctx, file, offset, SEEK_SET);
     n = fz_read(ctx, file, (unsigned char*)buf, size);
-    if (n != size)
-        fz_throw(ctx, FZ_ERROR_GENERIC, "safe_read: read %d, expected %d", n, size);
+    if (n != size) fz_throw(ctx, FZ_ERROR_GENERIC, "safe_read: read %d, expected %d", n, size);
 }
 
 static void read_ttf_string(fz_context* ctx, fz_stream* file, int offset, TT_NAME_RECORD* ttRecordBE, char* buf,
@@ -300,8 +295,7 @@ static void read_ttf_string(fz_context* ctx, fz_stream* file, int offset, TT_NAM
     char szTemp[MAX_FACENAME * 2];
     // ignore empty and overlong strings
     int stringLength = BEtoHs(ttRecordBE->uStringLength);
-    if (stringLength == 0 || stringLength >= sizeof(szTemp))
-        return;
+    if (stringLength == 0 || stringLength >= sizeof(szTemp)) return;
 
     safe_read(ctx, file, offset + BEtoHs(ttRecordBE->uStringOffset), szTemp, stringLength);
     decode_platform_string(ctx, BEtoHs(ttRecordBE->uPlatformID), BEtoHs(ttRecordBE->uEncodingID), szTemp, stringLength,
@@ -594,8 +588,7 @@ static void create_system_font_list(fz_context* ctx) {
 // TODO(port): replace the caller
 static void* fz_resize_array(fz_context* ctx, void* p, unsigned int count, unsigned int size) {
     void* np = fz_realloc(ctx, p, count * size);
-    if (!np)
-        fz_throw(ctx, FZ_ERROR_GENERIC, "resize array (%d x %d bytes) failed", count, size);
+    if (!np) fz_throw(ctx, FZ_ERROR_GENERIC, "resize array (%d x %d bytes) failed", count, size);
     return np;
 }
 
@@ -762,17 +755,14 @@ static fz_font* load_windows_font(fz_context* ctx, const char* fontname, int bol
 
     if (needs_exact_metrics) {
         int len;
-        if (fz_lookup_base14_font(ctx, fontname, &len))
-            return NULL;
+        if (fz_lookup_base14_font(ctx, fontname, &len)) return NULL;
 
-        if (clean_name != fontname && !strncmp(clean_name, "Times-", 6))
-            return NULL;
+        if (clean_name != fontname && !strncmp(clean_name, "Times-", 6)) return NULL;
     }
 
     font = load_windows_font_by_name(ctx, fontname);
     /* use the font's own metrics for base 14 fonts */
-    if (is_base_14)
-        font->flags.ft_substitute = 0;
+    if (is_base_14) font->flags.ft_substitute = 0;
     return font;
 }
 
@@ -786,8 +776,7 @@ static fz_font* load_windows_cjk_font(fz_context* ctx, const char* fontname, int
     fz_catch(ctx) {
         fz_report_error(ctx);
     }
-    if (font)
-        return font;
+    if (font) return font;
 
     /* try to fall back to a reasonable system font */
     fz_try(ctx) {

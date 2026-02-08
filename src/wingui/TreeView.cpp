@@ -40,8 +40,7 @@ TreeView::TreeView() {
     kind = kindTreeView;
 }
 
-TreeView::~TreeView() {
-}
+TreeView::~TreeView() {}
 
 HWND TreeView::Create(const CreateArgs& argsIn) {
     idealSize = {48, 120}; // arbitrary

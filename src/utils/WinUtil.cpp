@@ -1717,8 +1717,7 @@ void DoubleBuffer::Flush(HDC hdc) const {
     }
 }
 
-DeferWinPosHelper::DeferWinPosHelper() : hdwp(::BeginDeferWindowPos(32)) {
-}
+DeferWinPosHelper::DeferWinPosHelper() : hdwp(::BeginDeferWindowPos(32)) {}
 
 DeferWinPosHelper::~DeferWinPosHelper() {
     End();

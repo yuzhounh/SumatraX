@@ -311,9 +311,7 @@ struct DownloadUpdateAsyncData {
     HttpProgress httpProgress = {};
 
     DownloadUpdateAsyncData() = default;
-    ~DownloadUpdateAsyncData() {
-        delete updateInfo;
-    }
+    ~DownloadUpdateAsyncData() { delete updateInfo; }
 };
 
 static void DownloadUpdateFinish(DownloadUpdateAsyncData* data) {
@@ -498,9 +496,7 @@ struct UpdateCheckAsyncData {
     UpdateCheck updateCheckType = UpdateCheck::Automatic;
     HttpRsp* rsp = nullptr;
     UpdateCheckAsyncData() = default;
-    ~UpdateCheckAsyncData() {
-        delete rsp;
-    }
+    ~UpdateCheckAsyncData() { delete rsp; }
 };
 
 static void UpdateCheckFinish(UpdateCheckAsyncData* data) {

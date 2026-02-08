@@ -48,13 +48,9 @@ static bool gBuildTgaPreview = true;
 
 class PreviewClassFactory : public IClassFactory {
   public:
-    explicit PreviewClassFactory(REFCLSID rclsid) : m_lRef(1), m_clsid(rclsid) {
-        InterlockedIncrement(&g_lRefCount);
-    }
+    explicit PreviewClassFactory(REFCLSID rclsid) : m_lRef(1), m_clsid(rclsid) { InterlockedIncrement(&g_lRefCount); }
 
-    ~PreviewClassFactory() {
-        InterlockedDecrement(&g_lRefCount);
-    }
+    ~PreviewClassFactory() { InterlockedDecrement(&g_lRefCount); }
 
     // IUnknown
     IFACEMETHODIMP QueryInterface(REFIID riid, void** ppv) {
@@ -63,9 +59,7 @@ class PreviewClassFactory : public IClassFactory {
         return QISearch(this, qit, riid, ppv);
     }
 
-    IFACEMETHODIMP_(ULONG) AddRef() {
-        return InterlockedIncrement(&m_lRef);
-    }
+    IFACEMETHODIMP_(ULONG) AddRef() { return InterlockedIncrement(&m_lRef); }
 
     IFACEMETHODIMP_(ULONG) Release() {
         long cRef = InterlockedDecrement(&m_lRef);

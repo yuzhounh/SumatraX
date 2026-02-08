@@ -65,13 +65,9 @@ static void LeaveMuiCriticalSection() {
 
 class ScopedMuiCritSec {
   public:
-    ScopedMuiCritSec() {
-        EnterMuiCriticalSection();
-    }
+    ScopedMuiCritSec() { EnterMuiCriticalSection(); }
 
-    ~ScopedMuiCritSec() {
-        LeaveMuiCriticalSection();
-    }
+    ~ScopedMuiCritSec() { LeaveMuiCriticalSection(); }
 };
 
 class FontListItem {

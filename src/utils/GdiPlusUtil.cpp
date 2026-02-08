@@ -270,9 +270,8 @@ static Bitmap* WICDecodeImageFromStream(IStream* stream) {
     HRESULT hr;
     int iRot = -1;
 
-#define HR(hr)      \
-    if (FAILED(hr)) \
-        return nullptr;
+#define HR(hr) \
+    if (FAILED(hr)) return nullptr;
     ScopedComPtr<IWICImagingFactory> pFactory;
     if (!pFactory.Create(CLSID_WICImagingFactory)) {
         return nullptr;

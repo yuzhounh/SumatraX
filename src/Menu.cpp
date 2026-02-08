@@ -59,8 +59,7 @@ struct BuildMenuCtx {
     ~BuildMenuCtx();
 };
 
-BuildMenuCtx::~BuildMenuCtx() {
-}
+BuildMenuCtx::~BuildMenuCtx() {}
 
 // value associated with menu item for owner-drawn purposes
 struct MenuOwnerDrawInfo {

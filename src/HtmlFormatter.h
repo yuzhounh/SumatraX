@@ -62,8 +62,7 @@ struct DrawInstr {
 
     DrawInstr() = default;
 
-    explicit DrawInstr(DrawInstrType t, RectF bbox = {}) : type(t), bbox(bbox) {
-    }
+    explicit DrawInstr(DrawInstrType t, RectF bbox = {}) : type(t), bbox(bbox) {}
     ByteSlice GetImage() {
         ReportIf(type != DrawInstrType::Image);
         return {(u8*)str.s, str.len};
@@ -112,8 +111,7 @@ struct DrawStyle {
 struct IPageElement;
 
 struct HtmlPage {
-    explicit HtmlPage(int reparseIdx = 0) : reparseIdx(reparseIdx) {
-    }
+    explicit HtmlPage(int reparseIdx = 0) : reparseIdx(reparseIdx) {}
 
     Vec<DrawInstr> instructions;
     // if we start parsing html again from reparseIdx, we should
@@ -134,13 +132,9 @@ struct HtmlFormatterArgs {
     float pageDx = 0;
     float pageDy = 0;
 
-    void SetFontName(const WCHAR* s) {
-        fontName.SetCopy(s);
-    }
+    void SetFontName(const WCHAR* s) { fontName.SetCopy(s); }
 
-    const WCHAR* GetFontName() const {
-        return fontName;
-    }
+    const WCHAR* GetFontName() const { return fontName; }
 
     float fontSize = 0;
 
@@ -184,12 +178,9 @@ class HtmlFormatter {
     void HandleText(HtmlToken* t);
     void HandleText(const char* s, size_t sLen);
     // blank convenience methods to override
-    virtual void HandleTagImg(HtmlToken* t) {
-    }
-    virtual void HandleTagPagebreak(HtmlToken*) {
-    }
-    virtual void HandleTagLink(HtmlToken*) {
-    }
+    virtual void HandleTagImg(HtmlToken* t) {}
+    virtual void HandleTagPagebreak(HtmlToken*) {}
+    virtual void HandleTagLink(HtmlToken*) {}
 
     float CurrLineDx();
     float CurrLineDy();
@@ -210,12 +201,8 @@ class HtmlFormatter {
     void ForceNewPage();
     bool EnsureDx(float dx);
 
-    DrawStyle* CurrStyle() {
-        return &styleStack.Last();
-    }
-    mui::CachedFont* CurrFont() {
-        return CurrStyle()->font;
-    }
+    DrawStyle* CurrStyle() { return &styleStack.Last(); }
+    mui::CachedFont* CurrFont() { return CurrStyle()->font; }
     void SetFont(const WCHAR* fontName, FontStyle fs, float fontSize = -1);
     void SetFontBasedOn(mui::CachedFont* origFont, FontStyle fs, float fontSize = -1);
     void ChangeFontStyle(FontStyle fs, bool addStyle);

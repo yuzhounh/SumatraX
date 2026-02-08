@@ -7,9 +7,7 @@ struct FitzPageImageInfo {
     fz_rect rect = fz_unit_rect;
     fz_matrix transform;
     IPageElement* imageElement = nullptr;
-    ~FitzPageImageInfo() {
-        delete imageElement;
-    }
+    ~FitzPageImageInfo() { delete imageElement; }
 };
 
 struct FzPageInfo {

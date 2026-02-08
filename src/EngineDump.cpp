@@ -503,11 +503,8 @@ class PasswordHolder : public PasswordUI {
     const char* password;
 
   public:
-    explicit PasswordHolder(const char* password) : password(password) {
-    }
-    char* GetPassword(const char*, u8*, __unused u8 decryptionKeyOut[32], bool*) override {
-        return str::Dup(password);
-    }
+    explicit PasswordHolder(const char* password) : password(password) {}
+    char* GetPassword(const char*, u8*, __unused u8 decryptionKeyOut[32], bool*) override { return str::Dup(password); }
 };
 
 void EngineDump(const Flags& flags) {

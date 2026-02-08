@@ -234,9 +234,7 @@ struct FindThreadData {
         this->text = ToWStr(text);
         this->wasModified = wasModified;
     }
-    ~FindThreadData() {
-        CloseHandle(thread);
-    }
+    ~FindThreadData() { CloseHandle(thread); }
 
     void ShowUI(bool showProgress) {
         const LPARAM disable = (LPARAM)MAKELONG(0, 0);

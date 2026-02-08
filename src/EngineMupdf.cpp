@@ -66,15 +66,9 @@ EngineMupdf* AsEngineMupdf(EngineBase* engine) {
 class FitzAbortCookie : public AbortCookie {
   public:
     fz_cookie cookie;
-    FitzAbortCookie() {
-        memset(&cookie, 0, sizeof(cookie));
-    }
-    void Abort() override {
-        cookie.abort = 1;
-    }
-    void* GetData() override {
-        return (void*)&cookie;
-    }
+    FitzAbortCookie() { memset(&cookie, 0, sizeof(cookie)); }
+    void Abort() override { cookie.abort = 1; }
+    void* GetData() override { return (void*)&cookie; }
 };
 
 // copy of fz_is_external_link without ctx
@@ -1713,9 +1707,7 @@ class PasswordCloner : public PasswordUI {
     u8* cryptKey = nullptr;
 
   public:
-    explicit PasswordCloner(u8* cryptKey) {
-        this->cryptKey = cryptKey;
-    }
+    explicit PasswordCloner(u8* cryptKey) { this->cryptKey = cryptKey; }
 
     char* GetPassword(const char*, u8*, u8 decryptionKeyOut[32], bool* saveKey) override {
         memcpy(decryptionKeyOut, cryptKey, 32);
@@ -2751,8 +2743,7 @@ fz_stext_page* fz_new_stext_page_from_page2(fz_context* ctx, fz_page* page, cons
 
     fz_var(dev);
 
-    if (page == NULL)
-        return NULL;
+    if (page == NULL) return NULL;
 
     text = fz_new_stext_page(ctx, fz_bound_page(ctx, page));
     fz_try(ctx) {

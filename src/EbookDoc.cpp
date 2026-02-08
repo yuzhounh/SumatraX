@@ -766,8 +766,7 @@ EpubDoc* EpubDoc::CreateFromStream(IStream* stream) {
 const char* FB2_MAIN_NS = "http://www.gribuser.ru/xml/fictionbook/2.0";
 const char* FB2_XLINK_NS = "http://www.w3.org/1999/xlink";
 
-Fb2Doc::Fb2Doc(const char* fileName) : fileName(str::Dup(fileName)) {
-}
+Fb2Doc::Fb2Doc(const char* fileName) : fileName(str::Dup(fileName)) {}
 
 Fb2Doc::Fb2Doc(IStream* stream) : stream(stream) {
     stream->AddRef();
@@ -1085,8 +1084,7 @@ PalmDoc::PalmDoc(const char* path) {
     this->fileName = str::Dup(path);
 }
 
-PalmDoc::~PalmDoc() {
-}
+PalmDoc::~PalmDoc() {}
 
 #define PDB_TOC_ENTRY_MARK "ToC!Entry!"
 
@@ -1252,8 +1250,7 @@ PalmDoc* PalmDoc::CreateFromFile(const char* path) {
 
 /* ********** Plain HTML ********** */
 
-HtmlDoc::HtmlDoc(const char* path) : fileName(str::Dup(path)) {
-}
+HtmlDoc::HtmlDoc(const char* path) : fileName(str::Dup(path)) {}
 
 HtmlDoc::~HtmlDoc() {
     for (auto&& img : images) {

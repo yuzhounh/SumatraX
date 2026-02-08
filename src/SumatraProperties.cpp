@@ -78,9 +78,7 @@ struct PropertiesLayout {
         return strings.At(idx);
     }
 
-    int PropCount() const {
-        return strings.Size() / 2;
-    }
+    int PropCount() const { return strings.Size() / 2; }
 
     bool HasProperty(const char* key) {
         int n = PropCount();
@@ -93,9 +91,7 @@ struct PropertiesLayout {
         return false;
     }
 
-    Pos& GetPos(int i) {
-        return positions.At(i);
-    }
+    Pos& GetPos(int i) { return positions.At(i); }
 
     HWND hwnd = nullptr;
     HWND hwndParent = nullptr;

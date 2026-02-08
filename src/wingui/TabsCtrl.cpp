@@ -342,8 +342,7 @@ static void TabsCtrlUpdateAfterChangingTabsCount(TabsCtrl* tabs) {
     }
 }
 
-TabsCtrl::~TabsCtrl() {
-}
+TabsCtrl::~TabsCtrl() {}
 
 static void TriggerSelectionChanged(TabsCtrl* tabs) {
     if (!tabs->onSelectionChanged.IsValid()) {

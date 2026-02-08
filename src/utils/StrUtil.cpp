@@ -2683,8 +2683,7 @@ TempStr ShortenStringUtf8InTheMiddleTemp(const char* s, int maxRunes) {
 // IsTextRtl is optimized version of checking if a string is rtl
 // we look at max first 40 chars and
 bool IsTextRtl(const WCHAR* s) {
-    if (!s || !*s)
-        return false;
+    if (!s || !*s) return false;
     int len = str::Leni(s);
     len = len > 40 ? 40 : len;
     int nRtl = 0;

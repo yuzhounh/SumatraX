@@ -478,13 +478,9 @@ struct PoolAllocator : Allocator {
             idx = startIdx;
         }
 
-        bool operator!=(const Iter& other) const {
-            return idx != other.idx;
-        }
+        bool operator!=(const Iter& other) const { return idx != other.idx; }
 
-        T* operator*() const {
-            return (T*)self->At(idx);
-        }
+        T* operator*() const { return (T*)self->At(idx); }
 
         Iter& operator++() {
             idx += 1;
@@ -505,20 +501,11 @@ struct PoolAllocator : Allocator {
 struct HeapAllocator : Allocator {
     HANDLE allocHeap = nullptr;
 
-    explicit HeapAllocator(size_t initialSize = 128 * 1024) : allocHeap(HeapCreate(0, initialSize, 0)) {
-    }
-    ~HeapAllocator() override {
-        HeapDestroy(allocHeap);
-    }
-    void* Alloc(size_t size) override {
-        return HeapAlloc(allocHeap, 0, size);
-    }
-    void* Realloc(void* mem, size_t size) override {
-        return HeapReAlloc(allocHeap, 0, mem, size);
-    }
-    void Free(const void* mem) override {
-        HeapFree(allocHeap, 0, (void*)mem);
-    }
+    explicit HeapAllocator(size_t initialSize = 128 * 1024) : allocHeap(HeapCreate(0, initialSize, 0)) {}
+    ~HeapAllocator() override { HeapDestroy(allocHeap); }
+    void* Alloc(size_t size) override { return HeapAlloc(allocHeap, 0, size); }
+    void* Realloc(void* mem, size_t size) override { return HeapReAlloc(allocHeap, 0, mem, size); }
+    void Free(const void* mem) override { HeapFree(allocHeap, 0, (void*)mem); }
 
     HeapAllocator(const HeapAllocator&) = delete;
     HeapAllocator& operator=(const HeapAllocator&) = delete;
@@ -542,9 +529,7 @@ class FixedArray {
         }
     }
 
-    ~FixedArray() {
-        free(memBuf);
-    }
+    ~FixedArray() { free(memBuf); }
 
     T* Get() {
         if (memBuf) {
@@ -582,9 +567,7 @@ using Kind = const char*;
 struct KindBase {
     Kind kind = nullptr;
 
-    Kind GetKind() const {
-        return kind;
-    }
+    Kind GetKind() const { return kind; }
 };
 
 inline bool isOfKindHelper(Kind k1, Kind k2) {
@@ -606,9 +589,7 @@ struct ExitScope {
     T lambda;
     ExitScope(T lambda) : lambda(lambda) { // NOLINT
     }
-    ~ExitScope() {
-        lambda();
-    }
+    ~ExitScope() { lambda(); }
     ExitScope(const ExitScope&);
 
   private:
@@ -650,12 +631,8 @@ struct Func0 {
     }
     ~Func0() = default;
 
-    bool IsEmpty() const {
-        return fn == nullptr;
-    }
-    bool IsValid() const {
-        return fn != nullptr;
-    }
+    bool IsEmpty() const { return fn == nullptr; }
+    bool IsValid() const { return fn != nullptr; }
     void Call() const {
         if (!fn) {
             return;
@@ -700,12 +677,8 @@ struct Func1 {
     }
     ~Func1() = default;
 
-    bool IsValid() const {
-        return fn != nullptr;
-    }
-    bool IsEmpty() const {
-        return fn == nullptr;
-    }
+    bool IsValid() const { return fn != nullptr; }
+    bool IsEmpty() const { return fn == nullptr; }
     void Call(T arg) const {
         if (!fn) {
             return;

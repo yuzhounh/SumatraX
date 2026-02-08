@@ -296,8 +296,7 @@ static void MakeRandomSelection(MainWindow* win, int pageNo) {
 // encapsulates the logic of getting the next file to test, so
 // that we can implement different strategies
 struct TestFileProvider {
-    virtual ~TestFileProvider() {
-    }
+    virtual ~TestFileProvider() {}
     // returns path of the next file to test or nullptr if done (caller needs to free() the result)
     virtual TempStr NextFile() = 0;
     virtual void Restart() = 0;
@@ -321,12 +320,9 @@ struct FilesProvider : TestFileProvider {
         provided = 0;
     }
 
-    int GetFilesCount() override {
-        return files.Size();
-    }
+    int GetFilesCount() override { return files.Size(); }
 
-    ~FilesProvider() override {
-    }
+    ~FilesProvider() override {}
 
     TempStr NextFile() override {
         if (provided >= files.Size()) {
@@ -336,9 +332,7 @@ struct FilesProvider : TestFileProvider {
         return res;
     }
 
-    void Restart() override {
-        provided = 0;
-    }
+    void Restart() override { provided = 0; }
 };
 
 struct DirFileProviderAsync : TestFileProvider {
@@ -363,9 +357,7 @@ struct DirFileProviderAsync : TestFileProvider {
     }
     ~DirFileProviderAsync() override = default;
     TempStr NextFile() override;
-    int GetFilesCount() override {
-        return queue.Size();
-    }
+    int GetFilesCount() override { return queue.Size(); }
 
     void Restart() override {
         AtomicIntSet(&nFiles, 0);

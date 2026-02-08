@@ -38,9 +38,7 @@ class AbortCookieManager {
   public:
     AbortCookie* cookie = nullptr;
 
-    AbortCookieManager() {
-        InitializeCriticalSection(&cookieAccess);
-    }
+    AbortCookieManager() { InitializeCriticalSection(&cookieAccess); }
     ~AbortCookieManager() {
         Clear();
         DeleteCriticalSection(&cookieAccess);
@@ -643,9 +641,7 @@ class PrintThreadData {
         uitask::Post(fn, nullptr);
     }
 
-    bool WasCanceled() {
-        return isCanceled || !IsMainWindowValid(win) || win->printCanceled;
-    }
+    bool WasCanceled() { return isCanceled || !IsMainWindowValid(win) || win->printCanceled; }
 };
 
 void RemovePrintNotif(PrintThreadData* self, NotificationWnd*) {

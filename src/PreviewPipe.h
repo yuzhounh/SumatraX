@@ -39,13 +39,9 @@ class PreviewPipeSession {
     HANDLE hProcess = nullptr;
     int pageCount = 0;
 
-    ~PreviewPipeSession() {
-        Close();
-    }
+    ~PreviewPipeSession() { Close(); }
 
-    bool IsConnected() const {
-        return hPipe != INVALID_HANDLE_VALUE;
-    }
+    bool IsConnected() const { return hPipe != INVALID_HANDLE_VALUE; }
 
     void Close() {
         if (hPipe != INVALID_HANDLE_VALUE) {

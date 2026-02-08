@@ -71,9 +71,7 @@ class SyncTex : public Synchronizer {
         ReportIf(!str::EndsWithI(syncfilename, ".synctex"));
     }
 
-    ~SyncTex() override {
-        synctex_scanner_free(scanner);
-    }
+    ~SyncTex() override { synctex_scanner_free(scanner); }
 
     int DocToSource(int pageNo, Point pt, AutoFreeStr& filename, int* line, int* col) override;
     int SourceToDoc(const char* srcfilename, int line, int col, int* page, Vec<Rect>& rects) override;

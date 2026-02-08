@@ -55,9 +55,7 @@ struct LinkHandler : ILinkHandler {
     }
     ~LinkHandler() override;
 
-    DocController* GetDocController() override {
-        return win->ctrl;
-    }
+    DocController* GetDocController() override { return win->ctrl; }
     void GotoLink(IPageDestination*) override;
     void GotoNamedDest(const char*) override;
     void ScrollTo(IPageDestination*) override;

@@ -86,12 +86,8 @@ class EngineImages : public EngineBase {
 
     ByteSlice GetFileData() override;
     bool SaveFileAs(const char* copyFileName) override;
-    PageText ExtractPageText(int) override {
-        return {};
-    }
-    bool HasClipOptimizations(int) override {
-        return false;
-    }
+    PageText ExtractPageText(int) override { return {}; }
+    bool HasClipOptimizations(int) override { return false; }
 
     Vec<IPageElement*> GetElements(int pageNo) override;
     IPageElement* GetElementAtPos(int pageNo, PointF pt) override;
@@ -383,15 +379,13 @@ void EngineImages::DropPage(ImagePage* page, bool forceRemove) {
 RectF EngineImages::PageContentBox(int pageNo, RenderTarget target) {
     // try to load bitmap for the image
     auto page = GetPage(pageNo, true);
-    if (!page)
-        return RectF{};
+    if (!page) return RectF{};
     defer {
         DropPage(page, false);
     };
 
     auto bmp = page->bmp;
-    if (!bmp)
-        return RectF{};
+    if (!bmp) return RectF{};
 
     const int w = bmp->GetWidth(), h = bmp->GetHeight();
     // don't need pixel-perfect margin, so scan 200 points at most
@@ -417,8 +411,7 @@ RectF EngineImages::PageContentBox(int pageNo, RenderTarget target) {
     {
         Gdiplus::Rect bmpRect(0, 0, w, h);
         Gdiplus::Status lock = bmp->LockBits(&bmpRect, Gdiplus::ImageLockModeRead, fmt, &bmpData);
-        if (lock != Gdiplus::Ok)
-            return RectF{};
+        if (lock != Gdiplus::Ok) return RectF{};
     }
 
     auto getPixel = [&bmpData, bytesPerPixel](int x, int y) -> uint32_t {
@@ -439,11 +432,9 @@ RectF EngineImages::PageContentBox(int pageNo, RenderTarget target) {
         bool ok = true;
         for (int y = 0; y <= h - deltaY; y += deltaY) {
             ok = getPixel(r.x + deltaX, y) == marginColor;
-            if (!ok)
-                break;
+            if (!ok) break;
         }
-        if (!ok)
-            break;
+        if (!ok) break;
     }
 
     // right margin
@@ -452,11 +443,9 @@ RectF EngineImages::PageContentBox(int pageNo, RenderTarget target) {
         bool ok = true;
         for (int y = 0; y <= h - deltaY; y += deltaY) {
             ok = getPixel((r.x + r.dx) - 1 - deltaX, y) == marginColor;
-            if (!ok)
-                break;
+            if (!ok) break;
         }
-        if (!ok)
-            break;
+        if (!ok) break;
     }
 
     // top margin
@@ -465,11 +454,9 @@ RectF EngineImages::PageContentBox(int pageNo, RenderTarget target) {
         bool ok = true;
         for (int x = r.x; x <= r.x + r.dx - deltaX; x += deltaX) {
             ok = getPixel(x, r.y + deltaY) == marginColor;
-            if (!ok)
-                break;
+            if (!ok) break;
         }
-        if (!ok)
-            break;
+        if (!ok) break;
     }
 
     // bottom margin
@@ -478,11 +465,9 @@ RectF EngineImages::PageContentBox(int pageNo, RenderTarget target) {
         bool ok = true;
         for (int x = r.x; x <= r.x + r.dx - deltaX; x += deltaX) {
             ok = getPixel(x, (r.y + r.dy) - 1 - deltaY) == marginColor;
-            if (!ok)
-                break;
+            if (!ok) break;
         }
-        if (!ok)
-            break;
+        if (!ok) break;
     }
     bmp->UnlockBits(&bmpData);
 
@@ -805,9 +790,7 @@ class EngineImageDir : public EngineImages {
         hasPageLabels = true;
     }
 
-    ~EngineImageDir() override {
-        delete tocTree;
-    }
+    ~EngineImageDir() override { delete tocTree; }
 
     EngineBase* Clone() override {
         const char* path = FilePath();
@@ -817,14 +800,10 @@ class EngineImageDir : public EngineImages {
         return nullptr;
     }
 
-    ByteSlice GetFileData() override {
-        return {};
-    }
+    ByteSlice GetFileData() override { return {}; }
     bool SaveFileAs(const char* copyFileName) override;
 
-    TempStr GetPropertyTemp(const char*) override {
-        return nullptr;
-    }
+    TempStr GetPropertyTemp(const char*) override { return nullptr; }
 
     TempStr GetPageLabeTemp(int pageNo) const override;
     int GetPageByLabel(const char* label) const override;

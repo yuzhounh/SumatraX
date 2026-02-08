@@ -63,9 +63,7 @@ class MultiFormatArchive {
 
     bool OpenUnrarFallback(const char* rarPathUtf);
     ByteSlice GetFileDataByIdUnarrDll(size_t fileId);
-    bool LoadedUsingUnrarDll() const {
-        return rarFilePath_ != nullptr;
-    }
+    bool LoadedUsingUnrarDll() const { return rarFilePath_ != nullptr; }
 };
 
 MultiFormatArchive* OpenZipArchive(const char* path, bool deflatedOnly);

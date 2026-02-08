@@ -113,12 +113,9 @@ static void RelayoutTocItem(LPNMTVCUSTOMDRAW ntvcd) {
     HWND hTV = ncd->hdr.hwndFrom;
     HTREEITEM hItem = (HTREEITEM)ncd->dwItemSpec;
     RECT rcItem;
-    if (0 == ncd->rc.right - ncd->rc.left || 0 == ncd->rc.bottom - ncd->rc.top)
-        return;
-    if (!TreeView_GetItemRect(hTV, hItem, &rcItem, TRUE))
-        return;
-    if (rcItem.right > ncd->rc.right)
-        rcItem.right = ncd->rc.right;
+    if (0 == ncd->rc.right - ncd->rc.left || 0 == ncd->rc.bottom - ncd->rc.top) return;
+    if (!TreeView_GetItemRect(hTV, hItem, &rcItem, TRUE)) return;
+    if (rcItem.right > ncd->rc.right) rcItem.right = ncd->rc.right;
 
     // Clear the label
     RECT rcFullWidth = rcItem;
@@ -166,8 +163,7 @@ static void RelayoutTocItem(LPNMTVCUSTOMDRAW ntvcd) {
     HBRUSH brushBg = CreateSolidBrush(ntvcd->clrTextBk);
     FillRect(ncd->hdc, &rcItem, brushBg);
     DeleteObject(brushBg);
-    if ((ncd->uItemState & CDIS_FOCUS))
-        DrawFocusRect(ncd->hdc, &rcItem);
+    if ((ncd->uItemState & CDIS_FOCUS)) DrawFocusRect(ncd->hdc, &rcItem);
 
     InflateRect(&rcItem, -2, -1);
     DrawTextW(ncd->hdc, szText, -1, &rcItem, DT_SINGLELINE | DT_VCENTER | DT_NOPREFIX | DT_WORD_ELLIPSIS);
@@ -760,8 +756,7 @@ static void UpdateFont(HDC hdc, int fontFlags) {
 // https://docs.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvcustomdraw
 void OnTocCustomDraw(TreeView::CustomDrawEvent* ev) {
 #if defined(DISPLAY_TOC_PAGE_NUMBERS)
-    if (false)
-        return CDRF_DODEFAULT;
+    if (false) return CDRF_DODEFAULT;
     switch (((LPNMCUSTOMDRAW)pnmtv)->dwDrawStage) {
         case CDDS_PREPAINT:
             return CDRF_NOTIFYITEMDRAW;

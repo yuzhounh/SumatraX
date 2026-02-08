@@ -32,9 +32,7 @@ class PreviewBase : public IThumbnailProvider,
                                     {0}};
         return QISearch(this, qit, riid, ppv);
     }
-    IFACEMETHODIMP_(ULONG) AddRef() {
-        return InterlockedIncrement(&m_lRef);
-    }
+    IFACEMETHODIMP_(ULONG) AddRef() { return InterlockedIncrement(&m_lRef); }
     IFACEMETHODIMP_(ULONG) Release() {
         long cRef = InterlockedDecrement(&m_lRef);
         if (cRef == 0) {
@@ -149,9 +147,7 @@ class PreviewBase : public IThumbnailProvider,
         *phwnd = m_hwndParent;
         return S_OK;
     }
-    IFACEMETHODIMP ContextSensitiveHelp(__unused BOOL fEnterMode) {
-        return E_NOTIMPL;
-    }
+    IFACEMETHODIMP ContextSensitiveHelp(__unused BOOL fEnterMode) { return E_NOTIMPL; }
 
     EngineBase* GetEngine() {
         if (!m_engine && m_pStream) {
@@ -180,8 +176,7 @@ class PreviewBase : public IThumbnailProvider,
 
 class PdfPreview : public PreviewBase {
   public:
-    PdfPreview(long* plRefCount) : PreviewBase(plRefCount, kPdfPreviewClsid) {
-    }
+    PdfPreview(long* plRefCount) : PreviewBase(plRefCount, kPdfPreviewClsid) {}
 
   protected:
     EngineBase* LoadEngine(IStream* stream) override;
@@ -200,9 +195,7 @@ class XpsPreview : public PreviewBase {
 
 class DjVuPreview : public PreviewBase {
   public:
-    DjVuPreview(long* plRefCount) : PreviewBase(plRefCount, kDjVuPreviewClsid) {
-        m_gdiScope = new ScopedGdiPlus();
-    }
+    DjVuPreview(long* plRefCount) : PreviewBase(plRefCount, kDjVuPreviewClsid) { m_gdiScope = new ScopedGdiPlus(); }
 
   protected:
     EngineBase* LoadEngine(IStream* stream) override;
@@ -237,9 +230,7 @@ class MobiPreview : public PreviewBase {
 
 class CbxPreview : public PreviewBase {
   public:
-    CbxPreview(long* plRefCount) : PreviewBase(plRefCount, kCbxPreviewClsid) {
-        m_gdiScope = new ScopedGdiPlus();
-    }
+    CbxPreview(long* plRefCount) : PreviewBase(plRefCount, kCbxPreviewClsid) { m_gdiScope = new ScopedGdiPlus(); }
 
   protected:
     EngineBase* LoadEngine(IStream* stream) override;
@@ -247,9 +238,7 @@ class CbxPreview : public PreviewBase {
 
 class TgaPreview : public PreviewBase {
   public:
-    TgaPreview(long* plRefCount) : PreviewBase(plRefCount, kTgaPreviewClsid) {
-        m_gdiScope = new ScopedGdiPlus();
-    }
+    TgaPreview(long* plRefCount) : PreviewBase(plRefCount, kTgaPreviewClsid) { m_gdiScope = new ScopedGdiPlus(); }
 
   protected:
     EngineBase* LoadEngine(IStream* stream) override;

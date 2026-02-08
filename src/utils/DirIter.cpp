@@ -174,9 +174,7 @@ struct DirTraverseThreadData {
     StrQueue* queue = nullptr; // we don't own it
     const char* dir = nullptr;
     bool recurse = false;
-    ~DirTraverseThreadData() {
-        str::FreePtr(&dir);
-    }
+    ~DirTraverseThreadData() { str::FreePtr(&dir); }
 };
 
 static void DirTraverseThread(DirTraverseThreadData* td) {

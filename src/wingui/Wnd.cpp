@@ -317,11 +317,9 @@ LRESULT Wnd::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 // This function is called when a window is attached to Wnd.
 // Override it to automatically perform tasks when the window is attached.
 // Note:  Window controls are attached.
-void Wnd::OnAttach() {
-}
+void Wnd::OnAttach() {}
 
-void Wnd::OnFocus() {
-}
+void Wnd::OnFocus() {}
 
 // Override this to handle WM_COMMAND messages
 bool Wnd::OnCommand(WPARAM wparam, LPARAM lparam) {
@@ -377,18 +375,15 @@ void Wnd::OnContextMenu(Point ptScreen) {
     onContextMenu.Call(&ev);
 }
 
-void Wnd::OnDropFiles(HDROP drop_info) {
-}
+void Wnd::OnDropFiles(HDROP drop_info) {}
 
-void Wnd::OnGetMinMaxInfo(MINMAXINFO* mmi) {
-}
+void Wnd::OnGetMinMaxInfo(MINMAXINFO* mmi) {}
 
 LRESULT Wnd::OnMouseEvent(UINT msg, WPARAM wparam, LPARAM lparam) {
     return -1;
 }
 
-void Wnd::OnMove(POINTS*) {
-}
+void Wnd::OnMove(POINTS*) {}
 
 // Processes notification (WM_NOTIFY) messages from a child window.
 LRESULT Wnd::OnNotify(int controlId, NMHDR* nmh) {
@@ -439,17 +434,13 @@ void Wnd::OnPaint(HDC hdc, PAINTSTRUCT* ps) {
     }
 }
 
-void Wnd::OnSize(UINT msg, UINT type, SIZE size) {
-}
+void Wnd::OnSize(UINT msg, UINT type, SIZE size) {}
 
-void Wnd::OnTaskbarCallback(UINT msg, LPARAM lparam) {
-}
+void Wnd::OnTaskbarCallback(UINT msg, LPARAM lparam) {}
 
-void Wnd::OnTimer(UINT_PTR event_id) {
-}
+void Wnd::OnTimer(UINT_PTR event_id) {}
 
-void Wnd::OnWindowPosChanging(WINDOWPOS* window_pos) {
-}
+void Wnd::OnWindowPosChanging(WINDOWPOS* window_pos) {}
 
 // This function processes those special messages sent by some older controls,
 // and reflects them back to the originating CWnd object.
@@ -797,9 +788,8 @@ LRESULT Wnd::WndProcDefault(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         case WM_VSCROLL:
         case WM_PARENTNOTIFY: {
             result = MessageReflect(msg, wparam, lparam);
-            if (result != 0)
-                return result; // Message processed so return.
-        } break;               // Do default processing when message not already processed.
+            if (result != 0) return result; // Message processed so return.
+        } break;                            // Do default processing when message not already processed.
 
         case WM_DROPFILES: {
             OnDropFiles(reinterpret_cast<HDROP>(wparam));
@@ -829,8 +819,7 @@ LRESULT Wnd::WndProcDefault(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         case WM_MOUSEMOVE:
         case WM_MOUSEWHEEL: {
             LRESULT lResult = OnMouseEvent(msg, wparam, lparam);
-            if (lResult != -1)
-                return lResult;
+            if (lResult != -1) return lResult;
             break;
         }
         case WM_MOVE: {

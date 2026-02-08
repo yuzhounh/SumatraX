@@ -1587,8 +1587,7 @@ static void RunTestPreviewPipe(const char* filePath) {
         while (totalWritten < dataSize) {
             DWORD toWrite = dataSize - totalWritten;
             WriteFile(hPipe, fileData.data() + totalWritten, toWrite, &bytesWritten, nullptr);
-            if (bytesWritten == 0)
-                break;
+            if (bytesWritten == 0) break;
             totalWritten += bytesWritten;
         }
         FlushFileBuffers(hPipe);

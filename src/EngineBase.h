@@ -35,9 +35,7 @@ struct PageLayout {
         Book,
     };
     PageLayout() = default;
-    explicit PageLayout(Type t) {
-        type = t;
-    }
+    explicit PageLayout(Type t) { type = t; }
     Type type{Type::Single};
     bool r2l = false;
     bool nonContinuous = false;
@@ -73,23 +71,15 @@ struct IPageDestination : KindBase {
     virtual ~IPageDestination() {};
 
     // rectangle of the destination on the above returned page
-    virtual RectF GetRect2() {
-        return rect;
-    }
+    virtual RectF GetRect2() { return rect; }
     // optional zoom level on the above returned page
-    virtual float GetZoom2() {
-        return zoom;
-    }
+    virtual float GetZoom2() { return zoom; }
 
     // string value associated with the destination (e.g. a path or a URL)
-    virtual char* GetValue2() {
-        return nullptr;
-    }
+    virtual char* GetValue2() { return nullptr; }
     // the name of this destination (reverses EngineBase::GetNamedDest) or nullptr
     // (mainly applicable for links of type "LaunchFile" to PDF documents)
-    virtual char* GetName2() {
-        return nullptr;
-    }
+    virtual char* GetName2() { return nullptr; }
 };
 
 static inline char* PageDestGetName(IPageDestination* dest) {
@@ -128,13 +118,9 @@ struct PageDestinationURL : IPageDestination {
         url = str::Dup(u);
     }
 
-    ~PageDestinationURL() override {
-        str::Free(url);
-    }
+    ~PageDestinationURL() override { str::Free(url); }
 
-    char* GetValue2() override {
-        return url;
-    }
+    char* GetValue2() override { return url; }
 };
 
 struct PageDestinationFile : IPageDestination {
@@ -155,13 +141,9 @@ struct PageDestinationFile : IPageDestination {
         str::Free(dest);
     }
 
-    char* GetValue2() override {
-        return path;
-    }
+    char* GetValue2() override { return path; }
 
-    char* GetName2() override {
-        return dest;
-    }
+    char* GetName2() override { return dest; }
 };
 
 struct PageDestination : IPageDestination {
@@ -197,39 +179,25 @@ struct IPageElement {
     // the type of this page element
     bool Is(Kind expectedKind);
 
-    Kind GetKind() {
-        return kind;
-    }
+    Kind GetKind() { return kind; }
     // page this element lives on (-1 for elements in a ToC)
-    int GetPageNo() {
-        return pageNo;
-    }
+    int GetPageNo() { return pageNo; }
 
     // position of the element on page, in page coordinates
-    RectF GetRect() {
-        return rect;
-    }
+    RectF GetRect() { return rect; }
 
     // string value associated with this element (e.g. displayed in an infotip)
-    virtual char* GetValue() {
-        return nullptr;
-    }
+    virtual char* GetValue() { return nullptr; }
     // if this element is a link, this returns information about the link's destination
     // (the result is owned by the PageElement and MUST NOT be deleted)
-    virtual IPageDestination* AsLink() {
-        return nullptr;
-    }
-    bool IsLink() {
-        return AsLink() != nullptr;
-    }
+    virtual IPageDestination* AsLink() { return nullptr; }
+    bool IsLink() { return AsLink() != nullptr; }
 };
 
 struct PageElementImage : IPageElement {
     int imageID = -1;
 
-    PageElementImage() {
-        kind = kindPageElementImage;
-    }
+    PageElementImage() { kind = kindPageElementImage; }
 };
 
 struct PageElementComment : IPageElement {
@@ -240,13 +208,9 @@ struct PageElementComment : IPageElement {
         comment = str::Dup(c);
     }
 
-    ~PageElementComment() override {
-        str::Free(comment);
-    }
+    ~PageElementComment() override { str::Free(comment); }
 
-    char* GetValue() override {
-        return comment;
-    }
+    char* GetValue() override { return comment; }
 };
 
 struct PageElementDestination : IPageElement {
@@ -257,9 +221,7 @@ struct PageElementDestination : IPageElement {
         dest = d;
     }
 
-    ~PageElementDestination() override {
-        delete dest;
-    }
+    ~PageElementDestination() override { delete dest; }
 
     char* GetValue() override {
         if (dest) {
@@ -267,9 +229,7 @@ struct PageElementDestination : IPageElement {
         }
         return nullptr;
     }
-    IPageDestination* AsLink() override {
-        return dest;
-    }
+    IPageDestination* AsLink() override { return dest; }
 };
 
 // those are the same as F font bitmask in PDF docs

@@ -50,25 +50,14 @@ class HtmlWindowHandler : public HtmlWindowCallback {
     ChmModel* cm;
 
   public:
-    explicit HtmlWindowHandler(ChmModel* cm) : cm(cm) {
-    }
+    explicit HtmlWindowHandler(ChmModel* cm) : cm(cm) {}
     ~HtmlWindowHandler() override = default;
 
-    bool OnBeforeNavigate(const char* url, bool newWindow) override {
-        return cm->OnBeforeNavigate(url, newWindow);
-    }
-    void OnDocumentComplete(const char* url) override {
-        cm->OnDocumentComplete(url);
-    }
-    void OnLButtonDown() override {
-        cm->OnLButtonDown();
-    }
-    ByteSlice GetDataForUrl(const char* url) override {
-        return cm->GetDataForUrl(url);
-    }
-    void DownloadData(const char* url, const ByteSlice& data) override {
-        cm->DownloadData(url, data);
-    }
+    bool OnBeforeNavigate(const char* url, bool newWindow) override { return cm->OnBeforeNavigate(url, newWindow); }
+    void OnDocumentComplete(const char* url) override { cm->OnDocumentComplete(url); }
+    void OnLButtonDown() override { cm->OnLButtonDown(); }
+    ByteSlice GetDataForUrl(const char* url) override { return cm->GetDataForUrl(url); }
+    void DownloadData(const char* url, const ByteSlice& data) override { cm->DownloadData(url, data); }
 };
 
 struct ChmTocTraceItem {
@@ -387,9 +376,7 @@ struct ChmCacheEntry {
     ByteSlice data;
 
     explicit ChmCacheEntry(const char* url);
-    ~ChmCacheEntry() {
-        data.Free();
-    };
+    ~ChmCacheEntry() { data.Free(); };
 };
 
 ChmCacheEntry::ChmCacheEntry(const char* url) {
@@ -717,11 +704,9 @@ void ChmThumbnailTask::OnDocumentComplete(const char* url) {
     uitask::Post(fn, "SafeDeleteChmThumbnailTask");
 }
 
-void ChmThumbnailTask::OnLButtonDown() {
-}
+void ChmThumbnailTask::OnLButtonDown() {}
 
-void ChmThumbnailTask::DownloadData(const char*, const ByteSlice&) {
-}
+void ChmThumbnailTask::DownloadData(const char*, const ByteSlice&) {}
 
 static void CreateChmThumbnail(const char* path, const Size& size, const OnBitmapRendered* saveThumbnail) {
     // doc and window will be destroyed by the callback once it's invoked

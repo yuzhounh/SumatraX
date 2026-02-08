@@ -75,8 +75,7 @@ const WCHAR* DocumentTextCache::GetTextForPage(int pageNo, int* lenOut, Rect** c
     return pageText->text;
 }
 
-TextSelection::TextSelection(EngineBase* engine, DocumentTextCache* textCache) : engine(engine), textCache(textCache) {
-}
+TextSelection::TextSelection(EngineBase* engine, DocumentTextCache* textCache) : engine(engine), textCache(textCache) {}
 
 TextSelection::~TextSelection() {
     Reset();

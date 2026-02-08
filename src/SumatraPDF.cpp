@@ -140,8 +140,7 @@ static void OnSidebarSplitterMove(Splitter::MoveEvent*);
 static void OnFavSplitterMove(Splitter::MoveEvent*);
 
 EBookUI* GetEBookUI() {
-    if (!gGlobalPrefs)
-        return nullptr;
+    if (!gGlobalPrefs) return nullptr;
     return &gGlobalPrefs->eBookUI;
 }
 
@@ -452,8 +451,7 @@ class HwndPasswordUI : public PasswordUI {
     size_t pwdIdx;
 
   public:
-    explicit HwndPasswordUI(HWND hwnd) : hwnd(hwnd), pwdIdx(0) {
-    }
+    explicit HwndPasswordUI(HWND hwnd) : hwnd(hwnd), pwdIdx(0) {}
 
     char* GetPassword(const char* fileName, u8* fileDigest, u8 decryptionKeyOut[32], bool* saveKey) override;
 };
@@ -687,22 +685,17 @@ struct ControllerCallbackHandler : DocControllerCallback {
     MainWindow* win{nullptr};
 
   public:
-    explicit ControllerCallbackHandler(MainWindow* win) : win(win) {
-    }
+    explicit ControllerCallbackHandler(MainWindow* win) : win(win) {}
     ~ControllerCallbackHandler() override = default;
 
-    void Repaint() override {
-        ScheduleRepaint(win, 0);
-    }
+    void Repaint() override { ScheduleRepaint(win, 0); }
     void PageNoChanged(DocController* ctrl, int pageNo) override;
     void ZoomChanged(DocController* ctrl, float zoomVirtual) override;
     void UpdateScrollbars(Size canvas) override;
     void RequestRendering(int pageNo) override;
     void CleanUp(DisplayModel* dm) override;
     void RenderThumbnail(DisplayModel* dm, Size size, const OnBitmapRendered*) override;
-    void GotoLink(IPageDestination* dest) override {
-        win->linkHandler->GotoLink(dest);
-    }
+    void GotoLink(IPageDestination* dest) override { win->linkHandler->GotoLink(dest); }
     void FocusFrame(bool always) override;
     void SaveDownload(const char* url, const ByteSlice&) override;
 };
@@ -730,9 +723,7 @@ struct CreateThumbnailData {
     char* filePath = nullptr;
     RenderedBitmap* bmp = nullptr;
 
-    ~CreateThumbnailData() {
-        str::Free(filePath);
-    }
+    ~CreateThumbnailData() { str::Free(filePath); }
 };
 
 static void CreateThumbnailFinish(CreateThumbnailData* d) {
@@ -1931,9 +1922,7 @@ struct LoadDocumentAsyncData {
     NotificationWnd* wndNotif = nullptr;
     LoadArgs* args = nullptr;
     LoadDocumentAsyncData() = default;
-    ~LoadDocumentAsyncData() {
-        delete args;
-    }
+    ~LoadDocumentAsyncData() { delete args; }
 };
 
 static void LoadDocumentAsyncFinish(LoadDocumentAsyncData* d) {

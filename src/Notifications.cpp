@@ -50,9 +50,7 @@ struct NotificationWnd : Wnd {
 
     void UpdateMessage(const char* msg, int timeoutMs = 0, bool highlight = false);
 
-    bool HasProgress() const {
-        return progressPerc >= 0;
-    }
+    bool HasProgress() const { return progressPerc >= 0; }
     void Layout(const char* message);
 
     int timeoutMs = kNotifDefaultTimeOut; // 0 means no timeout
@@ -141,8 +139,7 @@ int GetWndX(NotificationWnd* wnd) {
     return rect.x;
 }
 
-NotificationWnd::~NotificationWnd() {
-}
+NotificationWnd::~NotificationWnd() {}
 
 HWND NotificationWnd::Create(const NotificationCreateArgs& args) {
     highlight = args.warning;

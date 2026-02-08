@@ -363,8 +363,7 @@ void HtmlFormatter::DumpLineDebugInfo() {
 void HtmlFormatter::JustifyLineBoth() {
     float extraSpaceDxTotal = pageDx - currX;
 #ifdef DEBUG
-    if (extraSpaceDxTotal < 0.f)
-        DumpLineDebugInfo();
+    if (extraSpaceDxTotal < 0.f) DumpLineDebugInfo();
 #endif
     ReportIf(extraSpaceDxTotal < 0.f);
 

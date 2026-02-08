@@ -77,21 +77,15 @@ struct PageAnchor {
     DrawInstr* instr;
     int pageNo;
 
-    explicit PageAnchor(DrawInstr* instr = nullptr, int pageNo = -1) : instr(instr), pageNo(pageNo) {
-    }
+    explicit PageAnchor(DrawInstr* instr = nullptr, int pageNo = -1) : instr(instr), pageNo(pageNo) {}
 };
 
 class EbookAbortCookie : public AbortCookie {
   public:
     bool abort = false;
-    EbookAbortCookie() {
-    }
-    void Abort() override {
-        abort = true;
-    }
-    void* GetData() override {
-        return nullptr;
-    }
+    EbookAbortCookie() {}
+    void Abort() override { abort = true; }
+    void* GetData() override { return nullptr; }
 };
 
 class EngineEbook : public EngineBase {
@@ -663,18 +657,12 @@ class EbookTocBuilder : public EbookTocVisitor {
     bool isIndex = false;
 
   public:
-    explicit EbookTocBuilder(EngineBase* engine) {
-        this->engine = engine;
-    }
+    explicit EbookTocBuilder(EngineBase* engine) { this->engine = engine; }
 
     void Visit(const char* name, const char* url, int level) override;
 
-    TocItem* GetRoot() {
-        return root;
-    }
-    void SetIsIndex(bool value) {
-        isIndex = value;
-    }
+    TocItem* GetRoot() { return root; }
+    void SetIsIndex(bool value) { isIndex = value; }
 };
 
 void EbookTocBuilder::Visit(const char* name, const char* url, int level) {
@@ -1255,8 +1243,7 @@ class ChmDataCache {
     Vec<ImageData> images;
 
   public:
-    ChmDataCache(ChmFile* doc, char* html) : doc(doc), html(html) {
-    }
+    ChmDataCache(ChmFile* doc, char* html) : doc(doc), html(html) {}
 
     ~ChmDataCache() {
         for (auto&& img : images) {
@@ -1266,9 +1253,7 @@ class ChmDataCache {
         html.Free();
     }
 
-    ByteSlice GetHtmlData() {
-        return html;
-    }
+    ByteSlice GetHtmlData() { return html; }
 
     ByteSlice* GetImageData(const char* id, const char* pagePath) {
         AutoFreeStr url = NormalizeURL(id, pagePath);
@@ -1307,8 +1292,7 @@ class ChmFormatter : public HtmlFormatter {
     AutoFreeStr pagePath;
 
   public:
-    ChmFormatter(HtmlFormatterArgs* args, ChmDataCache* doc) : HtmlFormatter(args), chmDoc(doc) {
-    }
+    ChmFormatter(HtmlFormatterArgs* args, ChmDataCache* doc) : HtmlFormatter(args), chmDoc(doc) {}
 };
 
 void ChmFormatter::HandleTagImg(HtmlToken* t) {
@@ -1636,9 +1620,7 @@ class EngineHtml : public EngineEbook {
         pageRect = RectF(0, 0, 8.27f * GetFileDPI(), 11.693f * GetFileDPI());
         str::ReplaceWithCopy(&defaultExt, ".html");
     }
-    ~EngineHtml() override {
-        delete doc;
-    }
+    ~EngineHtml() override { delete doc; }
     EngineBase* Clone() override {
         const char* fileName = FilePath();
         if (!fileName) {

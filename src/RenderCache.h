@@ -60,9 +60,7 @@ struct BitmapCacheEntry {
         this->tile = tile;
         this->bitmap = bitmap;
     }
-    ~BitmapCacheEntry() {
-        delete bitmap;
-    }
+    ~BitmapCacheEntry() { delete bitmap; }
 };
 
 /* Even though this looks a lot like a BitmapCacheEntry, we keep it
@@ -132,9 +130,7 @@ struct RenderCache {
     USHORT GetMaxTileRes(DisplayModel* dm, int pageNo, int rotation);
     bool ReduceTileSize();
 
-    bool IsRenderQueueFull() const {
-        return requestCount == MAX_PAGE_REQUESTS;
-    }
+    bool IsRenderQueueFull() const { return requestCount == MAX_PAGE_REQUESTS; }
     int GetRenderDelay(DisplayModel* dm, int pageNo, TilePosition tile);
     void RequestRendering(DisplayModel* dm, int pageNo, TilePosition tile, bool clearQueueForPage = true);
     bool Render(DisplayModel* dm, int pageNo, int rotation, float zoom, TilePosition* tile = nullptr,
