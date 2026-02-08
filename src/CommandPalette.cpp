@@ -17,6 +17,7 @@
 #include "EngineBase.h"
 #include "EngineAll.h"
 #include "GlobalPrefs.h"
+#include "DisplayMode.h"
 #include "DisplayModel.h"
 #include "MainWindow.h"
 #include "Theme.h"
@@ -412,6 +413,46 @@ static const char* UpdateCommandNameTemp(MainWindow* win, int cmdId, const char*
         case CmdToggleFullscreen: {
             isToggle = true;
             newToggleValue = !(win->isFullScreen || win->presentation);
+        } break;
+        case CmdToggleToolbar: {
+            isToggle = true;
+            newToggleValue = !gGlobalPrefs->showToolbar;
+        } break;
+        case CmdToggleScrollbars: {
+            isToggle = true;
+            // hideScrollbars is inverted: true means hidden, toggling will show them
+            newToggleValue = gGlobalPrefs->fixedPageUI.hideScrollbars;
+        } break;
+        case CmdToggleMenuBar: {
+            isToggle = true;
+            // isMenuHidden: true means hidden, toggling will show it
+            newToggleValue = win->isMenuHidden;
+        } break;
+        case CmdToggleBookmarks:
+        case CmdToggleTableOfContents: {
+            isToggle = true;
+            newToggleValue = !win->tocVisible;
+        } break;
+        case CmdTogglePresentationMode: {
+            isToggle = true;
+            newToggleValue = !win->presentation;
+        } break;
+        case CmdToggleLinks: {
+            isToggle = true;
+            newToggleValue = !gGlobalPrefs->showLinks;
+        } break;
+        case CmdToggleContinuousView: {
+            if (win->ctrl) {
+                isToggle = true;
+                newToggleValue = !IsContinuous(win->ctrl->GetDisplayMode());
+            }
+        } break;
+        case CmdToggleMangaMode: {
+            DisplayModel* dm = win->AsFixed();
+            if (dm) {
+                isToggle = true;
+                newToggleValue = !dm->GetDisplayR2L();
+            }
         } break;
     }
     if (isToggle) {
