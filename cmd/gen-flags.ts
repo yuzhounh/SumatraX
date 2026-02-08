@@ -97,8 +97,9 @@ function generateCode(): string {
     lines.push("enum class Arg {");
     lines.push("    Unknown = -1,");
     for (let i = 0; i < enumNames.length; i += 4) {
-        const chunk = enumNames.slice(i, i + 4).join(", ");
-        lines.push(`    ${chunk},`);
+        const chunk = enumNames.slice(i, i + 4);
+        const parts = chunk.map((name, j) => `${name} = ${i + j}`);
+        lines.push(`    ${parts.join(", ")},`);
     }
     lines.push("};");
     lines.push("");
