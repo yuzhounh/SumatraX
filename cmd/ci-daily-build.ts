@@ -147,7 +147,7 @@ async function main() {
   console.log(`building unsigned pre-release version ${preRelVer}`);
 
   // generate HTML docs
-  await $`go run ./cmd/doit -gen-docs`;
+  await $`go run . -gen-docs`;
   ensureManualIsBuilt();
 
   setBuildConfigPreRelease(sha1, preRelVer);
