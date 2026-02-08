@@ -10,9 +10,6 @@
     <Filter Include="cmd">
       <UniqueIdentifier>{7966880B-E56F-887C-6EEB-9E7CDAF3937C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="do">
-      <UniqueIdentifier>{98775900-8403-880B-EDB1-880BD95C880B}</UniqueIdentifier>
-    </Filter>
     <Filter Include="docs">
       <UniqueIdentifier>{CECA957C-BA01-970D-63EE-7C104F04130F}</UniqueIdentifier>
     </Filter>
@@ -870,45 +867,11 @@
     <None Include="..\cmd\update-auto-update-ver.ts">
       <Filter>cmd</Filter>
     </None>
-    <None Include="..\cmd\wc.ts">
+    <None Include="..\cmd\util.ts">
       <Filter>cmd</Filter>
     </None>
-    <None Include="..\cppcheck.out.txt" />
-    <None Include="..\do\build.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\compress.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\git.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\main.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\sign.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\trans_download.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\trans_gen.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\trans_langs.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\translations.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\upload_storage.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\util.go">
-      <Filter>do</Filter>
-    </None>
-    <None Include="..\do\vs.go">
-      <Filter>do</Filter>
+    <None Include="..\cmd\wc.ts">
+      <Filter>cmd</Filter>
     </None>
     <None Include="..\docs\manual.tmpl.html">
       <Filter>docs</Filter>
