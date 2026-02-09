@@ -391,20 +391,52 @@ bool HasVariableDriveLetter(const char* path) {
     return false;
 }
 
-bool IsOnFixedDrive(const char* pathA) {
-    WCHAR* path = ToWStrTemp(pathA);
-    if (PathIsNetworkPathW(path)) {
+bool IsOnNetworkDrive(const char* path) {
+    WCHAR* ws = ToWStrTemp(path);
+    return PathIsNetworkPathW(ws);
+}
+
+bool IsOnFixedDrive(const char* path) {
+    WCHAR* ws = ToWStrTemp(path);
+    if (PathIsNetworkPathW(ws)) {
         return false;
     }
 
     uint type;
     WCHAR root[MAX_PATH];
-    if (GetVolumePathNameW(path, root, dimof(root))) {
+    if (GetVolumePathNameW(ws, root, dimof(root))) {
         type = GetDriveType(root);
     } else {
-        type = GetDriveType(path);
+        type = GetDriveType(ws);
     }
     return DRIVE_FIXED == type;
+}
+
+// ReadDirectoryChangesW() only works reliably on NTFS and ReFS.
+// Network paths don't support it either (SMB doesn't relay notifications).
+// For other file systems (FAT32, exFAT etc.) we need manual polling.
+bool SupportsChangeNotifications(const char* pathA) {
+    WCHAR* path = ToWStrTemp(pathA);
+    if (PathIsNetworkPathW(path)) {
+        return false;
+    }
+
+    WCHAR root[MAX_PATH];
+    if (!GetVolumePathNameW(path, root, dimof(root))) {
+        return false;
+    }
+
+    WCHAR fsName[MAX_PATH];
+    if (!GetVolumeInformationW(root, nullptr, 0, nullptr, nullptr, nullptr, fsName, dimof(fsName))) {
+        return false;
+    }
+    if (str::EqI(fsName, L"NTFS")) {
+        return true;
+    }
+    if (str::EqI(fsName, L"ReFS")) {
+        return true;
+    }
+    return false;
 }
 
 static bool MatchWildcardsRec(const WCHAR* fileName, const WCHAR* filter) {

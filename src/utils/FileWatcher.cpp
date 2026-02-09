@@ -399,16 +399,20 @@ static WatchedDir* NewWatchedDir(const char* dirPath) {
     return wd;
 }
 
-static WatchedFile* NewWatchedFile(const char* filePath, const Func0& onFileChangedCb, bool enableManualCheck) {
-    bool isManualCheck = !path::IsOnFixedDrive(filePath);
-    // https://github.com/sumatrapdfreader/sumatrapdf/issues/5297#issuecomment-3810653582
-    // on network drives we don't want to do manually check if file changed
-    // because that generates network traffic
-    // unless tex has been explicitly enabled in which case we do want that
-    // for auto-reload of changed files
-    // but most people do not enable tex
-    if (isManualCheck && !enableManualCheck) {
-        return nullptr;
+static WatchedFile* NewWatchedFile(const char* filePath, const Func0& onFileChangedCb,
+                                   bool enableManualCheckOnNetworkDrives) {
+    bool isManualCheck = !path::SupportsChangeNotifications(filePath);
+    bool isNetworkDrive = path::IsOnNetworkDrive(filePath);
+    if (isManualCheck) {
+        // https://github.com/sumatrapdfreader/sumatrapdf/issues/5297#issuecomment-3810653582
+        // on network drives we don't want to do manually check if file changed
+        // because that generates network traffic
+        // unless tex has been explicitly enabled in which case we do want that
+        // for auto-reload of changed files
+        // but most people do not enable tex
+        if (isNetworkDrive && !enableManualCheckOnNetworkDrives) {
+            return nullptr;
+        }
     }
     TempStr dirPath = path::GetDirTemp(filePath);
     WatchedDir* wd = nullptr;

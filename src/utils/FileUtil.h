@@ -28,6 +28,8 @@ TempStr ShortPathTemp(const char* pathA);
 bool IsSame(const char* path1, const char* path2);
 bool HasVariableDriveLetter(const char* path);
 bool IsOnFixedDrive(const char* path);
+bool IsOnNetworkDrive(const char* path);
+bool SupportsChangeNotifications(const char* path);
 bool IsAbsolute(const char* path);
 
 bool Match(const char* path, const char* filter);
