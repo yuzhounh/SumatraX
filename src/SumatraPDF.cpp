@@ -5746,7 +5746,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             FindPrev(win);
             break;
 
-        case CmdFindMatch:
+        case CmdFindToggleMatchCase:
             FindToggleMatchCase(win);
             break;
 

@@ -55,7 +55,7 @@ CmdDeleteFile,,Delete Currently Opened File, ver 3.6+
 ```commands
 Command IDs,Keyboard shortcuts,Command Palette
 CmdFindFirst,Ctrl + F,Find
-CmdFindMatch,,Find: Match Case
+CmdFindToggleMatchCase,,Find: Toggle Match Case
 CmdFindNext,F3,Find Next
 CmdFindNextSel,Ctrl + F3,Find Next Selection
 CmdFindPrev,Shift + F3,Find Previous
@@ -283,6 +283,7 @@ CmdViewWithExternalViewer,,don't use
 CmdSaveAttachment,,don't use
 CmdOpenAttachment,,don't use
 CmdExec,,don't use
+CmdFindMatch,,since 3.6 it's called CmdFindToggleMatchCase
 ```
 
 # Commands with arguments

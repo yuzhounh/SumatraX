@@ -35,7 +35,7 @@ static SeqStrings gCommandNames =
     "CmdScrollUpHalfPage\0" "CmdGoToNextPage\0" "CmdGoToPrevPage\0"
     "CmdGoToFirstPage\0" "CmdGoToLastPage\0" "CmdGoToPage\0"
     "CmdFindFirst\0" "CmdFindNext\0" "CmdFindPrev\0"
-    "CmdFindNextSel\0" "CmdFindPrevSel\0" "CmdFindMatch\0"
+    "CmdFindNextSel\0" "CmdFindPrevSel\0" "CmdFindToggleMatchCase\0"
     "CmdSaveAnnotations\0" "CmdSaveAnnotationsNewFile\0" "CmdEditAnnotations\0"
     "CmdDeleteAnnotation\0" "CmdZoomFitPage\0" "CmdZoomActualSize\0"
     "CmdZoomFitWidth\0" "CmdZoom6400\0" "CmdZoom3200\0"
@@ -99,7 +99,7 @@ static i32 gCommandIds[] = {
     CmdScrollUpHalfPage, CmdGoToNextPage, CmdGoToPrevPage,
     CmdGoToFirstPage, CmdGoToLastPage, CmdGoToPage,
     CmdFindFirst, CmdFindNext, CmdFindPrev,
-    CmdFindNextSel, CmdFindPrevSel, CmdFindMatch,
+    CmdFindNextSel, CmdFindPrevSel, CmdFindToggleMatchCase,
     CmdSaveAnnotations, CmdSaveAnnotationsNewFile, CmdEditAnnotations,
     CmdDeleteAnnotation, CmdZoomFitPage, CmdZoomActualSize,
     CmdZoomFitWidth, CmdZoom6400, CmdZoom3200,
@@ -263,6 +263,10 @@ int GetCommandIdByName(const char* cmdName) {
     int cmdId = GetCommandIdByNameOrDesc(gCommandNames, cmdName);
     if (cmdId >= 0) {
         return cmdId;
+    }
+    // backwards compatibility for old names
+    if (str::EqI(cmdName, "CmdFindMatch")) {
+        return CmdFindToggleMatchCase;
     }
     auto curr = gFirstCustomCommand;
     while (curr) {

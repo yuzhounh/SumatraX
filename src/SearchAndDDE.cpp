@@ -108,7 +108,7 @@ void FindFirst(MainWindow* win) {
     if (newMatchCase != win->findMatchCase) {
         win->findMatchCase = newMatchCase;
         dm->textSearch->SetMatchCase(newMatchCase);
-        SetToolbarButtonCheckedState(win, CmdFindMatch, win->findMatchCase);
+        SetToolbarButtonCheckedState(win, CmdFindToggleMatchCase, win->findMatchCase);
     }
 
     FindTextOnThread(win, TextSearch::Direction::Forward, true);
@@ -138,7 +138,7 @@ void FindToggleMatchCase(MainWindow* win) {
     }
     win->findMatchCase = !win->findMatchCase;
     win->AsFixed()->textSearch->SetMatchCase(win->findMatchCase);
-    SetToolbarButtonCheckedState(win, CmdFindMatch, win->findMatchCase);
+    SetToolbarButtonCheckedState(win, CmdFindToggleMatchCase, win->findMatchCase);
     Edit_SetModify(win->hwndFindEdit, TRUE);
 }
 
@@ -248,13 +248,13 @@ struct FindThreadData {
 
         SetToolbarButtonEnableState(win, CmdFindPrev, false);
         SetToolbarButtonEnableState(win, CmdFindNext, false);
-        SetToolbarButtonEnableState(win, CmdFindMatch, false);
+        SetToolbarButtonEnableState(win, CmdFindToggleMatchCase, false);
     }
 
     void HideUI(bool success, bool loopedAround) const {
         SetToolbarButtonEnableState(win, CmdFindPrev, true);
         SetToolbarButtonEnableState(win, CmdFindNext, true);
-        SetToolbarButtonEnableState(win, CmdFindMatch, true);
+        SetToolbarButtonEnableState(win, CmdFindToggleMatchCase, true);
 
         auto wnd = GetNotificationForGroup(win->hwndCanvas, kNotifFindProgress);
 

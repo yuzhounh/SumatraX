@@ -71,7 +71,7 @@ export const commands = [
     "CmdFindPrev", "Find Previous",
     "CmdFindNextSel", "Find Next Selection",
     "CmdFindPrevSel", "Find Previous Selection",
-    "CmdFindMatch", "Find: Match Case",
+    "CmdFindToggleMatchCase", "Find: Toggle Match Case",
     "CmdSaveAnnotations", "Save Annotations to existing PDF",
     "CmdSaveAnnotationsNewFile", "Save Annotations to a new PDF",
     "CmdEditAnnotations", "Edit Annotations",

@@ -86,7 +86,7 @@ static ToolbarButtonInfo gToolbarButtons[] = {
     {TbIcon::None, CmdFindFirst, nullptr},
     {TbIcon::SearchPrev, CmdFindPrev, _TRN("Find Previous")},
     {TbIcon::SearchNext, CmdFindNext, _TRN("Find Next")},
-    {TbIcon::MatchCase, CmdFindMatch, _TRN("Match Case")},
+    {TbIcon::MatchCase, CmdFindToggleMatchCase, _TRN("Toggle Match Case")},
 };
 // unicode chars: https://www.compart.com/en/unicode/U+25BC
 
@@ -131,7 +131,7 @@ static bool IsToolbarButtonVisible(MainWindow* win, int cmdId) {
         case CmdFindFirst:
         case CmdFindNext:
         case CmdFindPrev:
-        case CmdFindMatch:
+        case CmdFindToggleMatchCase:
             return NeedsFindUI(win);
         case CmdInfoText:
             return NeedsInfo(win);
@@ -209,7 +209,7 @@ static TBBUTTON TbButtonFromButtonInfo(const ToolbarButtonInfo& bi) {
     b.iBitmap = (int)bi.bmpIndex;
     b.fsState = TBSTATE_ENABLED;
     b.fsStyle = BTNS_BUTTON;
-    if (bi.cmdId == CmdFindMatch) {
+    if (bi.cmdId == CmdFindToggleMatchCase) {
         b.fsStyle = BTNS_CHECK;
     }
     if (bi.bmpIndex == TbIcon::Text) {
@@ -282,7 +282,7 @@ static void SetToolbarInfoText(MainWindow* win, const char* s) {
         return;
     }
     TbSetButtonDx(win->hwndToolbar, CmdInfoText, size.dx);
-    int lastButtonCmdId = (int)CmdFindMatch;
+    int lastButtonCmdId = (int)CmdFindToggleMatchCase;
     if (gCustomToolbarButtons) {
         int n = gCustomToolbarButtons->Size();
         ToolbarButtonInfo& last = gCustomToolbarButtons->At(n - 1);

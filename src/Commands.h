@@ -31,7 +31,7 @@ enum {
     CmdScrollUpHalfPage = 258, CmdGoToNextPage = 259, CmdGoToPrevPage = 260,
     CmdGoToFirstPage = 261, CmdGoToLastPage = 262, CmdGoToPage = 263,
     CmdFindFirst = 264, CmdFindNext = 265, CmdFindPrev = 266,
-    CmdFindNextSel = 267, CmdFindPrevSel = 268, CmdFindMatch = 269,
+    CmdFindNextSel = 267, CmdFindPrevSel = 268, CmdFindToggleMatchCase = 269,
     CmdSaveAnnotations = 270, CmdSaveAnnotationsNewFile = 271, CmdEditAnnotations = 272,
     CmdDeleteAnnotation = 273, CmdZoomFitPage = 274, CmdZoomActualSize = 275,
     CmdZoomFitWidth = 276, CmdZoom6400 = 277, CmdZoom3200 = 278,
