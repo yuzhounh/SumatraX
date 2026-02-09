@@ -167,6 +167,9 @@ CmdDeleteAnnotation,Delete,Delete Annotation,
 CmdEditAnnotations,,Edit Annotations,
 CmdSaveAnnotations,Shift + Ctrl + S,Save Annotations to existing PDF,
 CmdSaveAnnotationsNewFile,,Save Annotations to new PDF,ver 3.6+
+CmdShowAnnotations,,Show Annotations,"ver 3.6+, for current document"
+CmdHideAnnotations,,Hide Annotations,"ver 3.6+, for current document"
+CmdToggleShowAnnotations,,Toggle Showing Annotations,"ver 3.6+, for current document"
 ```
 
 ## Zoom
