@@ -11,8 +11,8 @@ function buildNoForIndex(i: number): number {
 
 const buildNo = parseInt(process.argv[2], 10);
 if (!buildNo || buildNo <= 0) {
-  // no args: print last 10 checkins
-  const count = Math.min(10, lines.length);
+  // no args: print last 32 checkins
+  const count = Math.min(32, lines.length);
   for (let i = 0; i < count; i++) {
     console.log(`${buildNoForIndex(i)} ${lines[i]}`);
   }
