@@ -418,6 +418,10 @@ bool EditAnnotationsWindow::PreTranslateMessage(MSG& msg) {
     if (msg.message == WM_KEYDOWN) {
         int key = (int)msg.wParam;
         if (key == VK_DELETE) {
+            if (IsCtrlPressed()) {
+                DeleteSelectedAnnotation(this);
+                return true;
+            }
             // we don't want this to trigger in edit control
             HWND focused = ::GetFocus();
             TempStr cls = HwndGetClassName(focused);
@@ -952,6 +956,10 @@ static void ListBoxSelectionChanged(EditAnnotationsWindow* ew) {
 
 void EditAnnotationsWindow::ListBoxSelectionChanged() {
     int itemNo = listBox->GetCurrentSelection();
+    if (itemNo < 0) {
+        // an item has been deselected because e.g. selected annotation was deleted
+        return;
+    }
     if (!annotations.isValidIndex(itemNo)) {
         logfa("EditAnnotationsWindow::ListBoxSelectionChanged: invalid itemNo=%d, annotations.size()=%d\n", itemNo,
               annotations.Size());

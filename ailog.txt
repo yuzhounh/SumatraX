@@ -372,9 +372,7 @@ after changing the state call SetToolbarButtonEnableState() to update the toolba
 ---
 in src/FileWatcher.cpp if the file is not on a fixed drive only do manual check if tex enhancements are enabled
 ---
-
-
-
+changing interior color for line annotations in src/EditAnnotations.cpp doesn't work
 
 
 --- maybe fix tooltip font when using themes
