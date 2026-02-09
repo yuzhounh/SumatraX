@@ -329,7 +329,8 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
 // so 4 should be more than enough
 static int GetToolbarButtonsByID(int cmdId, int (&buttons)[4]) {
     int nFound = 0;
-    int n = kButtonsCount + gCustomToolbarButtons->Size();
+    int nCustom = gCustomToolbarButtons ? gCustomToolbarButtons->Size() : 0;
+    int n = kButtonsCount + nCustom;
     ToolbarButtonInfo* tb;
     for (int idx = 0; idx < n; idx++) {
         if (idx < kButtonsCount) {
