@@ -131,6 +131,14 @@ export async function isGitClean(dir: string): Promise<boolean> {
   return out.length === 0;
 }
 
+export async function getGitSha1(): Promise<string> {
+  const proc = Bun.spawn(["git", "rev-parse", "HEAD"], { stdout: "pipe", stderr: "inherit" });
+  const s = (await new Response(proc.stdout).text()).trim();
+  await proc.exited;
+  if (s.length !== 40) throw new Error(`getGitSha1: '${s}' doesn't look like sha1`);
+  return s;
+}
+
 export async function getGitLinearVersion(): Promise<number> {
   const proc = Bun.spawn(["git", "log", "--oneline"], { stdout: "pipe", stderr: "inherit" });
   const out = await new Response(proc.stdout).text();

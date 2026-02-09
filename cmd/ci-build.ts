@@ -3,7 +3,7 @@
 import { existsSync, readFileSync, writeFileSync, statSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createHmac, createHash } from "node:crypto";
-import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion, runLogged } from "./util.ts";
+import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion, runLogged, getGitSha1 } from "./util.ts";
 
 const sdkVersions = [
   "10.0.26100.0",
@@ -72,13 +72,6 @@ function ensureAllUploadCreds(): void {
 
 // === Version Detection ===
 
-async function getGitSha1(): Promise<string> {
-  const proc = Bun.spawn(["git", "rev-parse", "HEAD"], { stdout: "pipe", stderr: "inherit" });
-  const s = (await new Response(proc.stdout).text()).trim();
-  await proc.exited;
-  if (s.length !== 40) throw new Error(`getGitSha1: '${s}' doesn't look like sha1`);
-  return s;
-}
 
 // === Build Config ===
 

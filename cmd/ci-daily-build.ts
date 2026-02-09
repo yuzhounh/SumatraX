@@ -1,7 +1,7 @@
 import { existsSync, writeFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
-import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion, runLogged, isGitClean } from "./util.ts";
+import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion, runLogged, isGitClean, getGitSha1 } from "./util.ts";
 
 const platforms = [
   { vsplatform: "ARM64", suffix: "arm64", outDir: join("out", "arm64") },
@@ -26,11 +26,6 @@ async function isGithubMyMasterBranch(): Promise<boolean> {
 }
 
 
-async function getGitSha1(): Promise<string> {
-  const s = (await $`git rev-parse HEAD`.text()).trim();
-  if (s.length !== 40) throw new Error(`getGitSha1: '${s}' doesn't look like sha1`);
-  return s;
-}
 
 function buildConfigPath(): string {
   return join("src", "utils", "BuildConfig.h");
