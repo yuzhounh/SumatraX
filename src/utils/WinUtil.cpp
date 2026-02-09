@@ -989,21 +989,14 @@ void OpenPathInExplorer(const char* path) {
         return;
     }
 
-    WCHAR winDir[MAX_PATH] = {};
-    UINT len = GetWindowsDirectoryW(winDir, MAX_PATH);
-    if (len == 0 || len >= MAX_PATH) {
-        return;
+    // Use SHOpenFolderAndSelectItems which respects the default file manager
+    // (e.g. Directory Opus) instead of hardcoding explorer.exe
+    TempWStr pathW = ToWStrTemp(path);
+    PIDLIST_ABSOLUTE pidl = ILCreateFromPathW(pathW);
+    if (pidl) {
+        SHOpenFolderAndSelectItems(pidl, 0, nullptr, 0);
+        ILFree(pidl);
     }
-
-    char* explorer = ToUtf8Temp(winDir);
-    explorer = path::JoinTemp(explorer, "explorer.exe");
-
-    if (!file::Exists(explorer)) {
-        return;
-    }
-
-    TempStr args = str::FormatTemp("/select,\"%s\"", path);
-    CreateProcessHelper(explorer, args);
 }
 
 HANDLE LaunchProcessWithCmdLine(const char* exe, const char* cmdLine) {
