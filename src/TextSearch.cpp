@@ -103,11 +103,11 @@ void TextSearch::SetText(const WCHAR* text) {
     markAllPagesNonSkip(pagesToSkip);
 }
 
-void TextSearch::SetSensitive(bool sensitive) {
-    if (caseSensitive == sensitive) {
+void TextSearch::SetMatchCase(bool newMatchCase) {
+    if (matchCase == newMatchCase) {
         return;
     }
-    this->caseSensitive = sensitive;
+    this->matchCase = newMatchCase;
 
     markAllPagesNonSkip(pagesToSkip);
 }
@@ -185,7 +185,7 @@ TextSearch::PageAndOffset TextSearch::MatchEnd(const WCHAR* start) const {
         /* Going from page n to page n+1 is a space, too.*/
         lookingAtWs = (!*end && (currentPage < nPages)) || str::IsWs(*end);
         bool isMatch = false;
-        if (caseSensitive) {
+        if (matchCase) {
             isMatch = *match == *end;
         } else {
             WCHAR matchLower = CharToLower(*match);
@@ -272,7 +272,7 @@ bool TextSearch::FindTextInPage(int pageNo, TextSearch::PageAndOffset* finalGlyp
             found = GetNextIndex(pageText, findIndex, forward);
         } else if (forward) {
             const WCHAR* s = pageText + findIndex;
-            if (caseSensitive) {
+            if (matchCase) {
                 found = StrStr(s, anchor);
             } else {
                 found = StrStrI(s, anchor);

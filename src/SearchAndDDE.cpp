@@ -95,10 +95,9 @@ void FindFirst(MainWindow* win) {
     }
 
     TempStr previousFind = HwndGetTextTemp(win->hwndFindEdit);
-    WORD state = (WORD)SendMessageW(win->hwndToolbar, TB_GETSTATE, CmdFindMatch, 0);
-    bool matchCase = (state & TBSTATE_CHECKED) != 0;
+    bool newMatchCase = win->findMatchCase;
 
-    AutoFreeStr findString(Dialog_Find(win->hwndFrame, previousFind, &matchCase));
+    AutoFreeStr findString(Dialog_Find(win->hwndFrame, previousFind, &newMatchCase));
     if (!findString) {
         return;
     }
@@ -106,15 +105,10 @@ void FindFirst(MainWindow* win) {
     HwndSetText(win->hwndFindEdit, findString);
     Edit_SetModify(win->hwndFindEdit, TRUE);
 
-    bool matchCaseChanged = matchCase != (0 != (state & TBSTATE_CHECKED));
-    if (matchCaseChanged) {
-        if (matchCase) {
-            state |= TBSTATE_CHECKED;
-        } else {
-            state &= ~TBSTATE_CHECKED;
-        }
-        SendMessageW(win->hwndToolbar, TB_SETSTATE, CmdFindMatch, state);
-        dm->textSearch->SetSensitive(matchCase);
+    if (newMatchCase != win->findMatchCase) {
+        win->findMatchCase = newMatchCase;
+        dm->textSearch->SetMatchCase(newMatchCase);
+        SetToolbarButtonCheckedState(win, CmdFindMatch, win->findMatchCase);
     }
 
     FindTextOnThread(win, TextSearch::Direction::Forward, true);
@@ -142,8 +136,9 @@ void FindToggleMatchCase(MainWindow* win) {
     if (!win->IsDocLoaded() || !NeedsFindUI(win)) {
         return;
     }
-    WORD state = (WORD)SendMessageW(win->hwndToolbar, TB_GETSTATE, CmdFindMatch, 0);
-    win->AsFixed()->textSearch->SetSensitive((state & TBSTATE_CHECKED) != 0);
+    win->findMatchCase = !win->findMatchCase;
+    win->AsFixed()->textSearch->SetMatchCase(win->findMatchCase);
+    SetToolbarButtonCheckedState(win, CmdFindMatch, win->findMatchCase);
     Edit_SetModify(win->hwndFindEdit, TRUE);
 }
 

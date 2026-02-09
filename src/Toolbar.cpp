@@ -94,8 +94,8 @@ constexpr int kButtonsCount = dimof(gToolbarButtons);
 
 static Vec<ToolbarButtonInfo>* gCustomToolbarButtons = nullptr;
 
-static bool TbIsSeparator(const ToolbarButtonInfo& tbi) {
-    return (int)tbi.bmpIndex == (int)TbIcon::None;
+static bool SkipBuiltInButton(const ToolbarButtonInfo& tbi) {
+    return tbi.bmpIndex == TbIcon::None;
 }
 
 static void TbSetButtonDx(HWND hwndToolbar, int cmd, int dx) {
@@ -120,7 +120,7 @@ static bool NeedsInfo(MainWindow* win) {
     return show;
 }
 
-static bool IsVisibleToolbarButton(MainWindow* win, int cmdId) {
+static bool IsToolbarButtonVisible(MainWindow* win, int cmdId) {
     switch (cmdId) {
         case CmdZoomFitWidthAndContinuous:
         case CmdZoomFitPageAndSinglePage:
@@ -202,7 +202,7 @@ static bool IsToolbarButtonEnabled(MainWindow* win, int cmdId) {
 static TBBUTTON TbButtonFromButtonInfo(const ToolbarButtonInfo& bi) {
     TBBUTTON b{};
     b.idCommand = bi.cmdId;
-    if (TbIsSeparator(bi)) {
+    if (SkipBuiltInButton(bi)) {
         b.fsStyle = BTNS_SEP;
         return b;
     }
@@ -295,9 +295,6 @@ static void SetToolbarInfoText(MainWindow* win, const char* s) {
     MoveWindow(hwnd, x, y, size.dx, size.dy, TRUE);
 }
 
-constexpr LPARAM kStateEnabled = (LPARAM)MAKELONG(1, 0);
-constexpr LPARAM kStateDisabled = (LPARAM)MAKELONG(0, 0);
-
 // TODO: this is called too often
 void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
     HWND hwnd = win->hwndToolbar;
@@ -305,10 +302,10 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
         auto& tb = gToolbarButtons[i];
         int cmdId = tb.cmdId;
         if (setButtonsVisibility) {
-            bool hide = !IsVisibleToolbarButton(win, cmdId);
+            bool hide = !IsToolbarButtonVisible(win, cmdId);
             SendMessageW(hwnd, TB_HIDEBUTTON, cmdId, hide);
         }
-        if (TbIsSeparator(tb)) {
+        if (SkipBuiltInButton(tb)) {
             continue;
         }
         bool isEnabled = IsToolbarButtonEnabled(win, cmdId);
@@ -328,34 +325,58 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
     SetToolbarInfoText(win, msg);
 }
 
-void SetToolbarButtonEnableState(MainWindow* win, int cmdId, bool enabled) {
-    HWND hwnd = win->hwndToolbar;
-    LPARAM buttonState = enabled ? kStateEnabled : kStateDisabled;
-    SendMessageW(hwnd, TB_ENABLEBUTTON, cmdId, buttonState);
-
-    if (!gCustomToolbarButtons) {
-        return;
-    }
-    int n = gCustomToolbarButtons->Size();
-    for (int i = 0; i < n; i++) {
-        auto& tb = gCustomToolbarButtons->At(i);
-        int tbCmdId = tb.cmdId;
-        int origCmdId = tbCmdId;
+// at most there should be 2 buttons with same id (one built-in, one custom)
+// so 4 should be more than enough
+static int GetToolbarButtonsByID(int cmdId, int (&buttons)[4]) {
+    int nFound = 0;
+    int n = kButtonsCount + gCustomToolbarButtons->Size();
+    ToolbarButtonInfo* tb;
+    for (int idx = 0; idx < n; idx++) {
+        if (idx < kButtonsCount) {
+            tb = &gToolbarButtons[idx];
+        } else {
+            tb = &gCustomToolbarButtons->At(idx - kButtonsCount);
+        }
+        int tbCmdId = tb->cmdId;
         auto cmd = FindCustomCommand(tbCmdId);
-        if (cmd) {
-            origCmdId = cmd->origId;
+        if (cmd) tbCmdId = cmd->origId;
+        cmd = FindCustomCommand(cmdId);
+        if (cmd) cmdId = cmd->origId;
+        if (cmdId != tbCmdId) continue;
+        buttons[nFound++] = idx;
+        if (nFound >= 4) {
+            return nFound;
         }
-        if (origCmdId != cmdId) {
-            continue;
-        }
-        // use button index instead of command ID because custom buttons
-        // can share a command ID with built-in buttons
-        TBBUTTONINFOW bi{};
-        bi.cbSize = sizeof(bi);
-        bi.dwMask = TBIF_BYINDEX | TBIF_STATE;
-        bi.fsState = enabled ? TBSTATE_ENABLED : 0;
-        int btnIdx = kButtonsCount + i;
-        SendMessageW(hwnd, TB_SETBUTTONINFOW, btnIdx, (LPARAM)&bi);
+    }
+    return nFound;
+}
+
+void UpdateToolbarButtonStateByIdx(HWND hwnd, int idx, bool set, BYTE flag) {
+    TBBUTTONINFOW bi{};
+    bi.cbSize = sizeof(bi);
+    bi.dwMask = TBIF_BYINDEX | TBIF_STATE;
+    SendMessageW(hwnd, TB_GETBUTTONINFOW, idx, (LPARAM)&bi);
+    bi.fsState = set ? bi.fsState | flag : bi.fsState & ~flag;
+    SendMessageW(hwnd, TB_SETBUTTONINFOW, idx, (LPARAM)&bi);
+}
+
+void SetToolbarButtonEnableState(MainWindow* win, int cmdId, bool isEnabled) {
+    int buttons[4];
+    int n = GetToolbarButtonsByID(cmdId, buttons);
+    if (n == 0) return;
+    for (int i = 0; i < n; i++) {
+        int idx = buttons[i];
+        UpdateToolbarButtonStateByIdx(win->hwndToolbar, idx, isEnabled, TBSTATE_ENABLED);
+    }
+}
+
+void SetToolbarButtonCheckedState(MainWindow* win, int cmdId, bool isChecked) {
+    int buttons[4];
+    int n = GetToolbarButtonsByID(cmdId, buttons);
+    if (n == 0) return;
+    for (int i = 0; i < n; i++) {
+        int idx = buttons[i];
+        UpdateToolbarButtonStateByIdx(win->hwndToolbar, idx, isChecked, TBSTATE_CHECKED);
     }
 }
 
@@ -552,6 +573,7 @@ static LRESULT CALLBACK WndProcEditSearch(HWND hwnd, UINT msg, WPARAM wp, LPARAM
     // TOOD: why do we do it? re-eneable when we notice what breaks
     // the intent seems to be "after content of edit box changed"
     // but how does that afect state of the toolbar?
+
 #if 0
     switch (msg) {
         case WM_CHAR:
@@ -612,29 +634,18 @@ void UpdateToolbarState(MainWindow* win) {
         return;
     }
     HWND hwnd = win->hwndToolbar;
-    WORD state = (WORD)SendMessageW(hwnd, TB_GETSTATE, CmdZoomFitWidthAndContinuous, 0);
     DisplayMode dm = win->ctrl->GetDisplayMode();
     float zoomVirtual = win->ctrl->GetZoomVirtual();
-    if (dm == DisplayMode::Continuous && zoomVirtual == kZoomFitWidth) {
-        state |= TBSTATE_CHECKED;
-    } else {
-        state &= ~TBSTATE_CHECKED;
+    {
+        bool isChecked = dm == DisplayMode::Continuous && zoomVirtual == kZoomFitWidth;
+        SetToolbarButtonCheckedState(win, CmdZoomFitWidthAndContinuous, isChecked);
     }
-    SendMessageW(hwnd, TB_SETSTATE, CmdZoomFitWidthAndContinuous, state);
-
-    bool isChecked = (state & TBSTATE_CHECKED);
-
-    state = (WORD)SendMessageW(hwnd, TB_GETSTATE, CmdZoomFitPageAndSinglePage, 0);
-    if (dm == DisplayMode::SinglePage && zoomVirtual == kZoomFitPage) {
-        state |= TBSTATE_CHECKED;
-    } else {
-        state &= ~TBSTATE_CHECKED;
-    }
-    SendMessageW(hwnd, TB_SETSTATE, CmdZoomFitPageAndSinglePage, state);
-
-    isChecked |= (state & TBSTATE_CHECKED);
-    if (!isChecked) {
-        win->CurrentTab()->prevZoomVirtual = kInvalidZoom;
+    {
+        bool isChecked = dm == DisplayMode::SinglePage && zoomVirtual == kZoomFitPage;
+        SetToolbarButtonCheckedState(win, CmdZoomFitPageAndSinglePage, isChecked);
+        if (!isChecked) {
+            win->CurrentTab()->prevZoomVirtual = kInvalidZoom;
+        }
     }
 }
 

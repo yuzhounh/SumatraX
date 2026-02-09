@@ -1100,7 +1100,6 @@ static void UpdateUiForCurrentTab(MainWindow* win) {
     UpdateToolbarPageText(win, pageCount);
     UpdateToolbarFindText(win);
 
-    FindToggleMatchCase(win);
     UpdateFindbox(win);
 
     HwndSetText(win->hwndFrame, win->CurrentTab()->frameTitle);
