@@ -2678,7 +2678,6 @@ void CloseTab(WindowTab* tab, bool quitIfLast) {
     logf("CloseTab: tab: 0x%p win: 0x%p, hwndFrame: 0x%x, quitIfLast: %d\n", tab, win, win->hwndFrame, (int)quitIfLast);
 
     AbortFinding(win, true);
-    ClearFindBox(win);
     RemoveNotificationsForGroup(win->hwndCanvas, kNotifPageInfo);
     RemoveNotificationsForGroup(win->hwndCanvas, kNotifAnnotation);
     RemoveNotificationsForGroup(win->hwndCanvas, kNotifZoom);
