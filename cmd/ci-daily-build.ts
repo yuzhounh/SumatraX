@@ -1,7 +1,7 @@
 import { existsSync, writeFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
-import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion, runLogged } from "./util.ts";
+import { detectVisualStudio, getGitLinearVersion, extractSumatraVersion, runLogged, isGitClean } from "./util.ts";
 
 const platforms = [
   { vsplatform: "ARM64", suffix: "arm64", outDir: join("out", "arm64") },
@@ -25,13 +25,6 @@ async function isGithubMyMasterBranch(): Promise<boolean> {
   return event === "push" || event === "repository_dispatch";
 }
 
-async function isGitClean(dir: string): Promise<boolean> {
-  const out = (await $`git status --porcelain`.cwd(dir || ".").text()).trim();
-  if (out.length > 0) {
-    console.log(`git status --porcelain returned:\n'${out}'`);
-  }
-  return out.length === 0;
-}
 
 async function getGitSha1(): Promise<string> {
   const s = (await $`git rev-parse HEAD`.text()).trim();

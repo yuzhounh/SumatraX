@@ -1,6 +1,7 @@
 import { existsSync, rmSync, readdirSync, statSync, readFileSync, writeFileSync, mkdirSync, copyFileSync } from "node:fs";
 import { join, resolve, extname } from "node:path";
 import { $ } from "bun";
+import { isGitClean } from "./util.ts";
 
 function getWebsiteDir(): string {
   return resolve(join("..", "hack", "webapps", "sumatra-website"));
@@ -20,18 +21,6 @@ async function runGitInDir(dir: string, ...args: string[]): Promise<string> {
   return out;
 }
 
-function isGitClean(dir: string): boolean {
-  const proc = Bun.spawnSync(["git", "status", "--porcelain"], {
-    cwd: dir,
-    stdout: "pipe",
-    stderr: "inherit",
-  });
-  const s = new TextDecoder().decode(proc.stdout).trim();
-  if (s.length > 0) {
-    console.log(`git status --porcelain returned:\n'${s}'`);
-  }
-  return s.length === 0;
-}
 
 function getCurrentBranch(dir: string): string {
   const proc = Bun.spawnSync(["git", "branch"], {
@@ -58,7 +47,7 @@ async function updateSumatraWebsite(): Promise<string> {
   if (!existsSync(dir)) {
     throw new Error(`directory for sumatra website '${dir}' doesn't exist`);
   }
-  if (!isGitClean(dir)) {
+  if (!(await isGitClean(dir))) {
     throw new Error(`github repository '${dir}' must be clean`);
   }
   if (getCurrentBranch(dir) !== "master") {

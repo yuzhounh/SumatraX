@@ -117,6 +117,20 @@ export async function runLogged(cmd: string, args: string[], cwd?: string): Prom
   }
 }
 
+export async function isGitClean(dir: string): Promise<boolean> {
+  const proc = Bun.spawn(["git", "status", "--porcelain"], {
+    cwd: dir || ".",
+    stdout: "pipe",
+    stderr: "inherit",
+  });
+  const out = (await new Response(proc.stdout).text()).trim();
+  await proc.exited;
+  if (out.length > 0) {
+    console.log(`git status --porcelain returned:\n'${out}'`);
+  }
+  return out.length === 0;
+}
+
 export async function getGitLinearVersion(): Promise<number> {
   const proc = Bun.spawn(["git", "log", "--oneline"], { stdout: "pipe", stderr: "inherit" });
   const out = await new Response(proc.stdout).text();

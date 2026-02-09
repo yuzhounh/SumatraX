@@ -3,7 +3,7 @@
 
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname, resolve, basename } from "node:path";
-import { extractSumatraVersion, detectVisualStudio, runLogged } from "./util.ts";
+import { extractSumatraVersion, detectVisualStudio, runLogged, isGitClean } from "./util.ts";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -1595,14 +1595,6 @@ function getWebsiteDir(): string {
   return join("..", "hack", "webapps", "sumatra-website");
 }
 
-async function isGitClean(dir: string): Promise<boolean> {
-  const out = await runCapture("git", ["status", "--porcelain"], dir);
-  const s = out.trim();
-  if (s.length > 0) {
-    console.log(`git status --porcelain returned:\n'${s}'`);
-  }
-  return s.length === 0;
-}
 
 async function getCurrentBranch(dir: string): Promise<string> {
   const out = await runCapture("git", ["branch"], dir);
