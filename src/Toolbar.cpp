@@ -327,8 +327,14 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
                 origCmdId = cmd->origId;
             }
             bool isEnabled = IsToolbarButtonEnabled(win, origCmdId);
-            LPARAM buttonState = isEnabled ? kStateEnabled : kStateDisabled;
-            SendMessageW(hwnd, TB_ENABLEBUTTON, cmdId, buttonState);
+            // use button index instead of command ID because custom buttons
+            // can share a command ID with built-in buttons
+            TBBUTTONINFOW bi{};
+            bi.cbSize = sizeof(bi);
+            bi.dwMask = TBIF_BYINDEX | TBIF_STATE;
+            bi.fsState = isEnabled ? TBSTATE_ENABLED : 0;
+            int btnIdx = kButtonsCount + i;
+            SendMessageW(hwnd, TB_SETBUTTONINFOW, btnIdx, (LPARAM)&bi);
         }
     }
 
@@ -343,6 +349,32 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
         msg = _TRA("You have unsaved annotations");
     }
     SetToolbarInfoText(win, msg);
+}
+
+void EnableCustomToolbarButton(MainWindow* win, int origCmdId, bool enabled) {
+    if (!gCustomToolbarButtons) {
+        return;
+    }
+    HWND hwnd = win->hwndToolbar;
+    int n = gCustomToolbarButtons->Size();
+    for (int i = 0; i < n; i++) {
+        auto& tb = gCustomToolbarButtons->At(i);
+        int cmdId = tb.cmdId;
+        int oCmdId = cmdId;
+        auto cmd = FindCustomCommand(cmdId);
+        if (cmd) {
+            oCmdId = cmd->origId;
+        }
+        if (oCmdId != origCmdId) {
+            continue;
+        }
+        TBBUTTONINFOW bi{};
+        bi.cbSize = sizeof(bi);
+        bi.dwMask = TBIF_BYINDEX | TBIF_STATE;
+        bi.fsState = enabled ? TBSTATE_ENABLED : 0;
+        int btnIdx = kButtonsCount + i;
+        SendMessageW(hwnd, TB_SETBUTTONINFOW, btnIdx, (LPARAM)&bi);
+    }
 }
 
 void ShowOrHideToolbar(MainWindow* win) {

@@ -31,6 +31,7 @@
 #include "AppTools.h"
 #include "SearchAndDDE.h"
 #include "Selection.h"
+#include "Toolbar.h"
 #include "SumatraDialogs.h"
 #include "Translations.h"
 
@@ -253,6 +254,9 @@ struct FindThreadData {
         SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindPrev, disable);
         SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindNext, disable);
         SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindMatch, disable);
+        EnableCustomToolbarButton(win, CmdFindPrev, false);
+        EnableCustomToolbarButton(win, CmdFindNext, false);
+        EnableCustomToolbarButton(win, CmdFindMatch, false);
     }
 
     void HideUI(bool success, bool loopedAround) const {
@@ -261,6 +265,9 @@ struct FindThreadData {
         SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindPrev, enable);
         SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindNext, enable);
         SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindMatch, enable);
+        EnableCustomToolbarButton(win, CmdFindPrev, true);
+        EnableCustomToolbarButton(win, CmdFindNext, true);
+        EnableCustomToolbarButton(win, CmdFindMatch, true);
 
         auto wnd = GetNotificationForGroup(win->hwndCanvas, kNotifFindProgress);
 

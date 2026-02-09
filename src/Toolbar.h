@@ -10,6 +10,7 @@ void UpdateToolbarButtonsToolTipsForWindow(MainWindow*);
 void UpdateToolbarFindText(MainWindow*);
 void UpdateToolbarPageText(MainWindow*, int pageCount, bool updateOnly = false);
 void UpdateFindbox(MainWindow*);
+void EnableCustomToolbarButton(MainWindow*, int origCmdId, bool enabled);
 void ShowOrHideToolbar(MainWindow*);
 void UpdateToolbarState(MainWindow*);
 void UpdateToolbarAfterThemeChange(MainWindow*);
