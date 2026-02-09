@@ -375,6 +375,7 @@ class EngineBase {
     bool isPasswordProtected = false;
     char* decryptionKey = nullptr;
     bool hasPageLabels = false;
+    bool hideAnnotations = false;
     int pageCount = -1;
 
     // TODO: migrate other engines to use this

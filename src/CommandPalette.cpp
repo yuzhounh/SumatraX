@@ -444,6 +444,13 @@ static const char* UpdateCommandNameTemp(MainWindow* win, int cmdId, const char*
             isToggle = true;
             newIsOn = !gGlobalPrefs->showLinks;
         } break;
+        case CmdToggleShowAnnotations: {
+            WindowTab* tab = win->CurrentTab();
+            if (tab) {
+                isToggle = true;
+                newIsOn = tab->hideAnnotations;
+            }
+        } break;
         case CmdToggleContinuousView: {
             if (win->ctrl) {
                 isToggle = true;

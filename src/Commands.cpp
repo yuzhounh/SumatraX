@@ -57,7 +57,8 @@ static SeqStrings gCommandNames =
     "CmdHelpOpenManual\0" "CmdHelpOpenManualOnWebsite\0" "CmdHelpOpenKeyboardShortcuts\0"
     "CmdHelpVisitWebsite\0" "CmdHelpAbout\0" "CmdMoveFrameFocus\0"
     "CmdFavoriteAdd\0" "CmdFavoriteDel\0" "CmdFavoriteToggle\0"
-    "CmdToggleLinks\0" "CmdCreateAnnotText\0" "CmdCreateAnnotLink\0"
+    "CmdToggleLinks\0" "CmdToggleShowAnnotations\0" "CmdShowAnnotations\0"
+    "CmdHideAnnotations\0" "CmdCreateAnnotText\0" "CmdCreateAnnotLink\0"
     "CmdCreateAnnotFreeText\0" "CmdCreateAnnotLine\0" "CmdCreateAnnotSquare\0"
     "CmdCreateAnnotCircle\0" "CmdCreateAnnotPolygon\0" "CmdCreateAnnotPolyLine\0"
     "CmdCreateAnnotHighlight\0" "CmdCreateAnnotUnderline\0" "CmdCreateAnnotSquiggly\0"
@@ -121,7 +122,8 @@ static i32 gCommandIds[] = {
     CmdHelpOpenManual, CmdHelpOpenManualOnWebsite, CmdHelpOpenKeyboardShortcuts,
     CmdHelpVisitWebsite, CmdHelpAbout, CmdMoveFrameFocus,
     CmdFavoriteAdd, CmdFavoriteDel, CmdFavoriteToggle,
-    CmdToggleLinks, CmdCreateAnnotText, CmdCreateAnnotLink,
+    CmdToggleLinks, CmdToggleShowAnnotations, CmdShowAnnotations,
+    CmdHideAnnotations, CmdCreateAnnotText, CmdCreateAnnotLink,
     CmdCreateAnnotFreeText, CmdCreateAnnotLine, CmdCreateAnnotSquare,
     CmdCreateAnnotCircle, CmdCreateAnnotPolygon, CmdCreateAnnotPolyLine,
     CmdCreateAnnotHighlight, CmdCreateAnnotUnderline, CmdCreateAnnotSquiggly,
@@ -186,7 +188,8 @@ SeqStrings gCommandDescriptions =
     "Help: Manual\0" "Help: Manual On Website\0" "Help: Keyboard Shortcuts\0"
     "Help: SumatraPDF Website\0" "Help: About SumatraPDF\0" "Move Frame Focus\0"
     "Add Favorite\0" "Delete Favorite\0" "Toggle Favorites\0"
-    "Toggle Show Links\0" "Create Text Annotation\0" "Create Link Annotation\0"
+    "Toggle Show Links\0" "Toggle Show Annotations\0" "Show Annotations\0"
+    "Hide Annotations\0" "Create Text Annotation\0" "Create Link Annotation\0"
     "Create Free Text Annotation\0" "Create Line Annotation\0" "Create Square Annotation\0"
     "Create Circle Annotation\0" "Create Polygon Annotation\0" "Create Poly Line Annotation\0"
     "Create Highlight Annotation\0" "Create Underline Annotation\0" "Create Squiggly Annotation\0"

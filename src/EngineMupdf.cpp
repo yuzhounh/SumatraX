@@ -2990,7 +2990,12 @@ RenderedBitmap* EngineMupdf::RenderPage(RenderPageArgs& args) {
             // TODO: in printing different style. old code use pdf_run_page_with_usage(), with usage ="View"
             // or "Print". "Export" is not used
             dev = fz_new_draw_device(ctx, ctm, pix);
-            pdf_run_page_with_usage(ctx, pdfpage, dev, fz_identity, usage, fzcookie);
+            if (hideAnnotations) {
+                pdf_run_page_contents_with_usage(ctx, pdfpage, dev, fz_identity, usage, fzcookie);
+                pdf_run_page_widgets_with_usage(ctx, pdfpage, dev, fz_identity, usage, fzcookie);
+            } else {
+                pdf_run_page_with_usage(ctx, pdfpage, dev, fz_identity, usage, fzcookie);
+            }
             bitmap = NewRenderedFzPixmap(ctx, pix);
             fz_close_device(ctx, dev);
         }

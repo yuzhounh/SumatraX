@@ -1189,6 +1189,11 @@ static void ReplaceDocumentInCurrentTab(LoadArgs* args, DocController* ctrl, Fil
     tab->ctrl = ctrl;
     win->ctrl = tab->ctrl;
 
+    EngineBase* engine = tab->GetEngine();
+    if (engine) {
+        engine->hideAnnotations = tab->hideAnnotations;
+    }
+
     // ToC items might hold a reference to an Engine, so make sure to
     // delete them before destroying the whole DisplayModel
     // (same for linkOnLastButtonDown)
@@ -5873,6 +5878,39 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             gGlobalPrefs->showLinks = !gGlobalPrefs->showLinks;
             for (auto& w : gWindows) {
                 w->RedrawAll(true);
+            }
+            break;
+
+        case CmdToggleShowAnnotations:
+            if (tab) {
+                tab->hideAnnotations = !tab->hideAnnotations;
+                EngineBase* engine = tab->GetEngine();
+                if (engine) {
+                    engine->hideAnnotations = tab->hideAnnotations;
+                }
+                MainWindowRerender(win);
+            }
+            break;
+
+        case CmdShowAnnotations:
+            if (tab && tab->hideAnnotations) {
+                tab->hideAnnotations = false;
+                EngineBase* engine = tab->GetEngine();
+                if (engine) {
+                    engine->hideAnnotations = false;
+                }
+                MainWindowRerender(win);
+            }
+            break;
+
+        case CmdHideAnnotations:
+            if (tab && !tab->hideAnnotations) {
+                tab->hideAnnotations = true;
+                EngineBase* engine = tab->GetEngine();
+                if (engine) {
+                    engine->hideAnnotations = true;
+                }
+                MainWindowRerender(win);
             }
             break;
 
