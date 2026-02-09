@@ -369,8 +369,11 @@ Control is enabled if findMatchCase is true
 in FindToggleMatchCase, invert findMatchCase
 instead of reading the state from toolbar button CmdFindMath via TB_GETSTATE, use findMatchCase
 after changing the state call SetToolbarButtonEnableState() to update the toolbar
+---
+in src/FileWatcher.cpp if the file is not on a fixed drive only do manual check if tex enhancements are enabled
+---
 
-
+add 
 
 
 

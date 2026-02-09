@@ -740,12 +740,27 @@ static MenuDef menuDefCreateAnnotUnderCursor[] = {
         _TRN("&Caret"),
         CmdCreateAnnotCaret,
     },
+    {
+        _TRN("&Line"),
+        CmdCreateAnnotLine,
+    },
+    {
+        _TRN("&Square"),
+        CmdCreateAnnotSquare,
+    },
+    {
+        _TRN("&Circle"),
+        CmdCreateAnnotCircle,
+    },
+    //{
+    //    _TRN("&Polygon"),
+    //    CmdCreateAnnotPolygon,
+    //},
+    //{
+    //    _TRN("P&oly Line"),
+    //    CmdCreateAnnotPolyLine,
+    //},
     //{ _TRN("Ink"), CmdCreateAnnotInk, },
-    //{ _TRN("Square"), CmdCreateAnnotSquare, },
-    //{ _TRN("Circle"), CmdCreateAnnotCircle, },
-    //{ _TRN("Line"), CmdCreateAnnotLine, },
-    //{ _TRN("Polygon"), CmdCreateAnnotPolygon, },
-    //{ _TRN("Poly Line"), CmdCreateAnnotPolyLine, },
     //{ _TRN("File Attachment"), CmdCreateAnnotFileAttachment, },
     {
         nullptr,
