@@ -1843,9 +1843,8 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
     AnnotationType annotType = CmdIdToAnnotationType(cmdId);
     if (annotType != AnnotationType::Unknown) {
         // handle in FrameOnCommand() in SumatraPDF.cpp
-        // 1 means it comes from here in case we need to do slightly
-        // different processing
-        HwndSendCommand(win->hwndFrame, cmdId, 1);
+        LPARAM lpArg = MAKELPARAM(x, y);
+        HwndSendCommand(win->hwndFrame, cmdId, lpArg);
         return;
     }
     switch (cmdId) {

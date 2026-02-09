@@ -5293,8 +5293,6 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
     }
 
     AnnotationType annotType = CmdIdToAnnotationType(cmdId);
-    // if true, we're here from Menu.cpp
-    bool annotCreateFromContextMenu = (lp == 1);
 
     // most of them require a win, the few exceptions are no-ops
     switch (cmdId) {
@@ -6108,6 +6106,11 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
                 return 0;
             }
             Point pt = HwndGetCursorPos(hwnd);
+            if (lp != 0) {
+                // when sending from Menu.cpp mouse position is encoded as LPARAM
+                pt.x = GET_X_LPARAM(lp);
+                pt.y = GET_Y_LPARAM(lp);
+            }
             int pageNoUnderCursor = dm->GetPageNoByPoint(pt);
             if (pageNoUnderCursor < 0) {
                 return 0;
