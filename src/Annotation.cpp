@@ -669,18 +669,16 @@ bool SetInteriorColor(Annotation* annot, PdfColor c) {
     float color[4]{};
     int n = -1;
     fz_try(ctx) {
-        pdf_annot_color(ctx, a, &n, color);
+        pdf_annot_interior_color(ctx, a, &n, color);
     }
     fz_catch(ctx) {
         fz_report_error(ctx);
         n = -1;
     }
-    if (n == -1) {
-        return false;
-    }
     float newColor[3]{};
     PdfColorToFloat(c, newColor);
-    didChange = (n != 3);
+    int newN = (c == 0) ? 0 : 3;
+    didChange = (n != newN);
     if (!didChange) {
         for (int i = 0; i < n; i++) {
             if (color[i] != newColor[i]) {
@@ -692,11 +690,7 @@ bool SetInteriorColor(Annotation* annot, PdfColor c) {
         return false;
     }
     fz_try(ctx) {
-        if (c == 0) {
-            pdf_set_annot_interior_color(ctx, a, 0, newColor);
-        } else {
-            pdf_set_annot_interior_color(ctx, a, 3, newColor);
-        }
+        pdf_set_annot_interior_color(ctx, a, newN, newColor);
         pdf_update_annot(ctx, a);
     }
     fz_catch(ctx) {
