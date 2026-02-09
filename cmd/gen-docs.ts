@@ -299,7 +299,7 @@ function writeDocsHtmlFiles(): void {
     const htmlName = name.replace(".md", ".html");
     const path = join(wwwOutDir, htmlName);
     writeFileSync(path, html);
-    console.log(`wrote '${path}'`);
+    //console.log(`wrote '${path}'`);
   }
 
   copyDirRecursive(join(wwwOutDir, "img"), join(mdDir, "img"));
