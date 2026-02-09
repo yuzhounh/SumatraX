@@ -266,7 +266,7 @@ async function buildPreRelease(preRelVer: string, sha1: string, vsplatform: stri
     const p = `/p:Configuration=Release;Platform=${vsplatform}`;
 
     // build and run tests (skip for ARM64)
-    await runLogged([slnPath, `/t:test_util:Rebuild`, p, `/m`]);
+    await runLogged(msbuildPath, [slnPath, `/t:test_util:Rebuild`, p, `/m`]);
     if (vsplatform !== "ARM64") {
       const testUtil = resolve(join(outDir, "test_util.exe"));
       await runLogged(testUtil, [], outDir);
@@ -275,7 +275,7 @@ async function buildPreRelease(preRelVer: string, sha1: string, vsplatform: stri
     // build all targets
     const targets = ["PdfFilter", "plugin-test", "PdfPreview", "PdfPreviewTest", "SumatraPDF", "SumatraPDF-dll"];
     const t = `/t:${targets.map((t) => t + ":Rebuild").join(";")}`;
-    await runLogged([slnPath, t, p, `/m`]);
+    await runLogged(msbuildPath, [slnPath, t, p, `/m`]);
 
     // create PDB archives
     await createPdbZip(outDir);
@@ -305,7 +305,7 @@ async function buildSmoke(): Promise<void> {
   const slnPath = join("vs2022", "SumatraPDF.sln");
   const t = `/t:SumatraPDF-dll:Rebuild;test_util:Rebuild`;
   const p = `/p:Configuration=Release;Platform=x64`;
-  await runLogged([slnPath, t, p, `/m`]);
+  await runLogged(msbuildPath, [slnPath, t, p, `/m`]);
 
   const outDir = join("out", "rel64");
   const testUtil = resolve(join(outDir, "test_util.exe"));
