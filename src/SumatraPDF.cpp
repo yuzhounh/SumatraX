@@ -6356,6 +6356,10 @@ LRESULT CALLBACK WndProcSumatraFrame(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) 
                or if we explicitly call DestroyWindow()
                It might be sent as a result of File\Close, in which
                case CloseWindow() has already been called. */
+
+            // TODO: not sure this 100% correct but it fixes regression
+            // when closing window via Alt-F4 or close button
+            gDontSaveSettings = true;
             FreeMenuOwnerDrawInfoData(GetMenu(hwnd));
             CloseWindow(win, true, true);
         } break;
