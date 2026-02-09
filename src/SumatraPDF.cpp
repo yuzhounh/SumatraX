@@ -1653,7 +1653,7 @@ void UpdateAfterThemeChange() {
             DarkMode::setDarkTitleBar(win->hwndFrame);
             DarkMode::setChildCtrlsTheme(win->hwndFrame);
             DarkMode::setDarkScrollBar(win->hwndCanvas);
-            DarkMode::setDarkTooltips(win->infotip->hwnd, (int)DarkMode::ToolTipsType::tooltip);
+            // DarkMode::setDarkTooltips(win->infotip->hwnd, (int)DarkMode::ToolTipsType::tooltip);
         }
         // TODO: this only rerenders canvas, not frame, even with
         // includingNonClientArea == true.

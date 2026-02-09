@@ -25,7 +25,7 @@ bool gUseDarkModeLib = false;
 #endif
 
 bool UseDarkModeLib() {
-    return gUseDarkModeLib && !IsCurrentThemeDefault();
+    return gUseDarkModeLib;
 }
 
 /*

@@ -2257,10 +2257,13 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR, _
     DetectExternalViewers();
 
     gRenderCache = new RenderCache();
+
+    // TODO: for reasons I don't understand, this must be called before LoadSettings()
     if (UseDarkModeLib()) {
         DarkMode::initDarkMode();
         DarkMode::setColorizeTitleBarConfig(true);
     }
+
     LoadSettings();
     UpdateGlobalPrefs(flags);
     SetCurrentLang(flags.lang ? flags.lang : gGlobalPrefs->uiLanguage);
