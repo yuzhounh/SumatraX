@@ -516,7 +516,7 @@ bool SendAsEmailAttachmentWithMapi(HWND hwndParent, const char* filePath) {
     TempWStr filePathW = ToWStrTemp(filePath);
     TempStr fileName = path::GetBaseNameTemp(filePath);
     TempWStr fileNameW = ToWStrTemp(fileName);
- 
+
     MapiFileDescW fileDesc{};
     fileDesc.nPosition = (ULONG)-1;
     fileDesc.lpszPathName = filePathW;
@@ -568,4 +568,3 @@ bool SendAsEmailAttachment(WindowTab* tab, HWND hwndParent) {
     return false;
 #endif
 }
-

@@ -33,7 +33,6 @@
 #include "AppSettings.h"
 #include "DarkModeSubclass.h"
 
-
 #ifndef ABOUT_USE_LESS_COLORS
 #define ABOUT_LINE_OUTER_SIZE 2
 #else

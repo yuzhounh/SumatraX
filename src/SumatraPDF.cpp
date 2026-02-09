@@ -1577,7 +1577,7 @@ static MainWindow* CreateMainWindow() {
         // TODO: this over-rides the font in the control
         // this will only happen with themes
         // could custom paint instead of using DarkMode
-        //DarkMode::setDarkTooltips(win->infotip->hwnd, (int)DarkMode::ToolTipsType::tooltip);
+        // DarkMode::setDarkTooltips(win->infotip->hwnd, (int)DarkMode::ToolTipsType::tooltip);
     }
     return win;
 }
