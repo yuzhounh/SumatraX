@@ -164,7 +164,7 @@ SeqStrings gCommandDescriptions =
     "Scroll Up By Half Page\0" "Next Page\0" "Previous Page\0"
     "First Page\0" "Last Page\0" "Go to Page...\0"
     "Find\0" "Find Next\0" "Find Previous\0"
-    "Find Next Selection\0" "Find Previous Selection\0" "Find: Match Case\0"
+    "Find Next Selection\0" "Find Previous Selection\0" "Find: Toggle Match Case\0"
     "Save Annotations to existing PDF\0" "Save Annotations to a new PDF\0" "Edit Annotations\0"
     "Delete Annotation\0" "Zoom: Fit Page\0" "Zoom: Actual Size\0"
     "Zoom: Fit Width\0" "Zoom: 6400%\0" "Zoom: 3200%\0"

@@ -32,6 +32,7 @@
 #include "Annotation.h"
 #include "FileHistory.h"
 #include "DarkModeSubclass.h"
+#include "Notifications.h"
 
 #include "utils/Log.h"
 
@@ -401,64 +402,86 @@ static TempStr RemovePrefixFromString(const char* s) {
 
 static const char* UpdateCommandNameTemp(MainWindow* win, int cmdId, const char* s) {
     bool isToggle = false;
-    bool newToggleValue = false;
+    bool newIsOn = false;
     switch (cmdId) {
         case CmdToggleInverseSearch: {
             extern bool gDisableInteractiveInverseSearch;
             isToggle = true;
-            newToggleValue = !gDisableInteractiveInverseSearch;
+            newIsOn = !gDisableInteractiveInverseSearch;
         } break;
         case CmdToggleFrequentlyRead: {
             isToggle = true;
-            newToggleValue = !gGlobalPrefs->showStartPage;
+            newIsOn = !gGlobalPrefs->showStartPage;
         } break;
         case CmdToggleFullscreen: {
             isToggle = true;
-            newToggleValue = !(win->isFullScreen || win->presentation);
+            newIsOn = !(win->isFullScreen || win->presentation);
         } break;
         case CmdToggleToolbar: {
             isToggle = true;
-            newToggleValue = !gGlobalPrefs->showToolbar;
+            newIsOn = !gGlobalPrefs->showToolbar;
         } break;
         case CmdToggleScrollbars: {
             isToggle = true;
             // hideScrollbars is inverted: true means hidden, toggling will show them
-            newToggleValue = gGlobalPrefs->fixedPageUI.hideScrollbars;
+            newIsOn = gGlobalPrefs->fixedPageUI.hideScrollbars;
         } break;
         case CmdToggleMenuBar: {
             isToggle = true;
             // isMenuHidden: true means hidden, toggling will show it
-            newToggleValue = win->isMenuHidden;
+            newIsOn = win->isMenuHidden;
         } break;
         case CmdToggleBookmarks:
         case CmdToggleTableOfContents: {
             isToggle = true;
-            newToggleValue = !win->tocVisible;
+            newIsOn = !win->tocVisible;
         } break;
         case CmdTogglePresentationMode: {
             isToggle = true;
-            newToggleValue = !win->presentation;
+            newIsOn = !win->presentation;
         } break;
         case CmdToggleLinks: {
             isToggle = true;
-            newToggleValue = !gGlobalPrefs->showLinks;
+            newIsOn = !gGlobalPrefs->showLinks;
         } break;
         case CmdToggleContinuousView: {
             if (win->ctrl) {
                 isToggle = true;
-                newToggleValue = !IsContinuous(win->ctrl->GetDisplayMode());
+                newIsOn = !IsContinuous(win->ctrl->GetDisplayMode());
             }
         } break;
         case CmdToggleMangaMode: {
             DisplayModel* dm = win->AsFixed();
             if (dm) {
                 isToggle = true;
-                newToggleValue = !dm->GetDisplayR2L();
+                newIsOn = !dm->GetDisplayR2L();
             }
+        } break;
+        case CmdFindToggleMatchCase: {
+            isToggle = true;
+            newIsOn = !win->findMatchCase;
+        } break;
+        case CmdFavoriteToggle: {
+            isToggle = true;
+            newIsOn = !gGlobalPrefs->showFavorites;
+        } break;
+        case CmdToggleZoom: {
+            // TODO: this toggles via different values
+        } break;
+        case CmdToggleCursorPosition: {
+            // TODO: this toggles 3 states
+            //    isToggle = true;
+            //    auto notif = GetNotificationForGroup(win->hwndCanvas, kNotifCursorPos);
+            //    newIsOn = !notif;
+        } break;
+        case CmdTogglePageInfo: {
+            auto wnd = GetNotificationForGroup(win->hwndCanvas, kNotifPageInfo);
+            isToggle = true;
+            newIsOn = !wnd;
         } break;
     }
     if (isToggle) {
-        s = (const char*)str::JoinTemp(s, newToggleValue ? ": on" : ": off");
+        s = (const char*)str::JoinTemp(s, newIsOn ? ": on" : ": off");
     }
     return s;
 }
