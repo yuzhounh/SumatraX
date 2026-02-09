@@ -54,9 +54,11 @@ HWND ListBox::Create(const CreateArgs& args) {
 
     if (hwnd) {
         // For owner-draw, set item height manually since WM_MEASUREITEM
-        // is sent during CreateWindowEx before we're registered in WndList
+        // is sent during CreateWindowEx before we're registered in WndList.
+        // We measure using our font, not LB_GETITEMHEIGHT (which has the wrong default).
         if (onDrawItem.IsValid()) {
-            int itemHeight = GetItemHeight(0) + DpiScale(hwnd, 4);
+            Size sz = HwndMeasureText(hwnd, "Ag", font);
+            int itemHeight = sz.dy + DpiScale(hwnd, 4);
             SendMessageW(hwnd, LB_SETITEMHEIGHT, 0, itemHeight);
         }
         if (model != nullptr) {
@@ -72,10 +74,7 @@ int ListBox::GetItemHeight(int idx) {
     // idx only valid for LBS_OWNERDRAWVARIABLE, otherwise should be 0
     int res = (int)SendMessageW(hwnd, LB_GETITEMHEIGHT, idx, 0);
     if (res == LB_ERR) {
-        // if failed for some reason, fallback to measuring text in default font
-        // HFONT f = GetFont();
-        HFONT f = GetDefaultGuiFont();
-        Size sz = HwndMeasureText(hwnd, "A", f);
+        Size sz = HwndMeasureText(hwnd, "Ag", font);
         res = sz.dy;
     }
     return res;
@@ -164,8 +163,8 @@ LRESULT ListBox::OnMessageReflect(UINT msg, WPARAM wp, LPARAM lparam) {
             return 0;
         }
         MEASUREITEMSTRUCT* mis = (MEASUREITEMSTRUCT*)lparam;
-        // add vertical padding for spacing between items
-        mis->itemHeight = GetItemHeight(0) + DpiScale(hwnd, 4);
+        Size sz = HwndMeasureText(hwnd, "Ag", font);
+        mis->itemHeight = sz.dy + DpiScale(hwnd, 4);
         return TRUE;
     }
 
