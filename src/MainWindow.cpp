@@ -8,6 +8,7 @@
 #include "utils/FileUtil.h"
 #include "utils/WinUtil.h"
 #include "utils/Dpi.h"
+#include "utils/GuessFileType.h"
 
 #include "wingui/UIModels.h"
 #include "wingui/Layout.h"
@@ -499,6 +500,12 @@ void LinkHandler::LaunchURL(const char* uri) {
     }
 }
 
+// return true if we can load the file based on sniffing file type from content
+static bool IsFileSupportedByContent(const char* filePath) {
+    Kind kindSniffed = GuessFileType(filePath, true);
+    return IsSupportedFileType(kindSniffed, true);
+}
+
 // for safety, only handle relative paths and only open them in SumatraPDF
 // (unless they're of an allowed perceived type) and never launch any external
 // file in plugin mode (where documents are supposed to be self-contained)
@@ -528,6 +535,7 @@ void LinkHandler::LaunchFile(const char* pathOrig, IPageDestination* remoteLink)
     if (!isAbsPath) {
         auto dir = path::GetDirTemp(win->ctrl->GetFilePath());
         fullPath = path::JoinTemp(dir, path);
+        fullPath = path::NormalizeTemp(fullPath);
     }
     path::Type pathType = path::GetType(fullPath);
     if (pathType == path::Type::None) {
@@ -536,6 +544,12 @@ void LinkHandler::LaunchFile(const char* pathOrig, IPageDestination* remoteLink)
         return;
     }
     if (pathType == path::Type::Dir) {
+        SumatraOpenPathInExplorer(fullPath);
+        return;
+    }
+
+    bool canWeOpenIt = IsFileSupportedByContent(fullPath);
+    if (!canWeOpenIt) {
         SumatraOpenPathInExplorer(fullPath);
         return;
     }

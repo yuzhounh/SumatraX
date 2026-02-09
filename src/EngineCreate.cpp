@@ -21,6 +21,7 @@
 static bool gEnableEpubWithPdfEngine = true;
 
 bool IsSupportedFileType(Kind kind, bool enableEngineEbooks) {
+    if (!kind) return false;
     if (IsEngineMupdfSupportedFileType(kind)) {
         return true;
     } else if (IsEngineDjVuSupportedFileType(kind)) {
