@@ -312,30 +312,7 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
             continue;
         }
         bool isEnabled = IsToolbarButtonEnabled(win, cmdId);
-        LPARAM buttonState = isEnabled ? kStateEnabled : kStateDisabled;
-        SendMessageW(hwnd, TB_ENABLEBUTTON, cmdId, buttonState);
-    }
-
-    if (gCustomToolbarButtons) {
-        int n = gCustomToolbarButtons->Size();
-        for (int i = 0; i < n; i++) {
-            auto& tb = gCustomToolbarButtons->At(i);
-            int cmdId = tb.cmdId;
-            int origCmdId = cmdId;
-            auto cmd = FindCustomCommand(cmdId);
-            if (cmd) {
-                origCmdId = cmd->origId;
-            }
-            bool isEnabled = IsToolbarButtonEnabled(win, origCmdId);
-            // use button index instead of command ID because custom buttons
-            // can share a command ID with built-in buttons
-            TBBUTTONINFOW bi{};
-            bi.cbSize = sizeof(bi);
-            bi.dwMask = TBIF_BYINDEX | TBIF_STATE;
-            bi.fsState = isEnabled ? TBSTATE_ENABLED : 0;
-            int btnIdx = kButtonsCount + i;
-            SendMessageW(hwnd, TB_SETBUTTONINFOW, btnIdx, (LPARAM)&bi);
-        }
+        SetToolbarButtonEnableState(win, cmdId, isEnabled);
     }
 
     // Find labels may have to be repositioned if some
@@ -351,23 +328,28 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
     SetToolbarInfoText(win, msg);
 }
 
-void EnableCustomToolbarButton(MainWindow* win, int origCmdId, bool enabled) {
+void SetToolbarButtonEnableState(MainWindow* win, int cmdId, bool enabled) {
+    HWND hwnd = win->hwndToolbar;
+    LPARAM buttonState = enabled ? kStateEnabled : kStateDisabled;
+    SendMessageW(hwnd, TB_ENABLEBUTTON, cmdId, buttonState);
+
     if (!gCustomToolbarButtons) {
         return;
     }
-    HWND hwnd = win->hwndToolbar;
     int n = gCustomToolbarButtons->Size();
     for (int i = 0; i < n; i++) {
         auto& tb = gCustomToolbarButtons->At(i);
-        int cmdId = tb.cmdId;
-        int oCmdId = cmdId;
-        auto cmd = FindCustomCommand(cmdId);
+        int tbCmdId = tb.cmdId;
+        int origCmdId = tbCmdId;
+        auto cmd = FindCustomCommand(tbCmdId);
         if (cmd) {
-            oCmdId = cmd->origId;
+            origCmdId = cmd->origId;
         }
-        if (oCmdId != origCmdId) {
+        if (origCmdId != cmdId) {
             continue;
         }
+        // use button index instead of command ID because custom buttons
+        // can share a command ID with built-in buttons
         TBBUTTONINFOW bi{};
         bi.cbSize = sizeof(bi);
         bi.dwMask = TBIF_BYINDEX | TBIF_STATE;

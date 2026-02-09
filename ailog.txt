@@ -362,7 +362,13 @@ make enum and arrays compact by putting 3 elements per line and put // clang-for
 when running x64_asan build I got:
 LINK : warning LNK4300: ignoring '/INCREMENTAL' because input module contains ASAN metadata [C:\Users\kjk\src\sumatrapdf\vs2022\test_util.vcxproj]
 analyze premake5.lua and visual studio solution files in vs2022 to figure out why
-
+---
+add MainWindow.findMatchCase which controls enabled state of CmdFindMatch toolbar button
+use it a source of truth for the state of enabled status of CmdFindMatch toolbar button
+Control is enabled if findMatchCase is true
+in FindToggleMatchCase, invert findMatchCase
+instead of reading the state from toolbar button CmdFindMath via TB_GETSTATE, use findMatchCase
+after changing the state call SetToolbarButtonEnableState() to update the toolbar
 
 
 

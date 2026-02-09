@@ -251,23 +251,15 @@ struct FindThreadData {
             ShowNotification(args);
         }
 
-        SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindPrev, disable);
-        SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindNext, disable);
-        SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindMatch, disable);
-        EnableCustomToolbarButton(win, CmdFindPrev, false);
-        EnableCustomToolbarButton(win, CmdFindNext, false);
-        EnableCustomToolbarButton(win, CmdFindMatch, false);
+        SetToolbarButtonEnableState(win, CmdFindPrev, false);
+        SetToolbarButtonEnableState(win, CmdFindNext, false);
+        SetToolbarButtonEnableState(win, CmdFindMatch, false);
     }
 
     void HideUI(bool success, bool loopedAround) const {
-        LPARAM enable = (LPARAM)MAKELONG(1, 0);
-
-        SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindPrev, enable);
-        SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindNext, enable);
-        SendMessageW(win->hwndToolbar, TB_ENABLEBUTTON, CmdFindMatch, enable);
-        EnableCustomToolbarButton(win, CmdFindPrev, true);
-        EnableCustomToolbarButton(win, CmdFindNext, true);
-        EnableCustomToolbarButton(win, CmdFindMatch, true);
+        SetToolbarButtonEnableState(win, CmdFindPrev, true);
+        SetToolbarButtonEnableState(win, CmdFindNext, true);
+        SetToolbarButtonEnableState(win, CmdFindMatch, true);
 
         auto wnd = GetNotificationForGroup(win->hwndCanvas, kNotifFindProgress);
 
