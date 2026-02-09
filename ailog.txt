@@ -380,3 +380,49 @@ in @src/SumatraPDF.cpp in CreateMainWindow() I pass a font to win->infotip win32
 tooltip control and Wnd::CreateControl() in Wnd.cpp sets that font on the control
 hwnd after creating it; however, it doesn't seem to work i.e. I get the standard
 font
+
+My DropDown::onSelectionChanged callbacks invoked on CBN_SELCHANGE are called twice.
+below are first and second callstack.
+When handling CBN_SELCHANGE in DropDown::OnCommand() I return false because otherwise the drop-down won't close after selection.
+so Wnd:WndProcDefault calls FinalWindowProc() which triggers the second callstack
+there must be something wrong with how I subclass windows in Wnd.cpp and reflect messages
+
+callstack when it first happens:
+SumatraPDF-dll.exe;DropDown::OnCommand() Ln 43;7FF7654A25CB
+SumatraPDF-dll.exe;Wnd::WndProcDefault();7FF7654C6E25
+SumatraPDF-dll.exe;Wnd::WndProc();7FF7654C604B
+SumatraPDF-dll.exe;WndWindowProc();7FF7654C81E7
+SumatraPDF-dll.exe;WndSubclassedWindowProc();7FF7654C823F
+comctl32.dll;;7FFAA917CEC8
+comctl32.dll;;7FFAA917CDF8
+SumatraPDF-dll.exe;dmlib_subclass::ComboBoxSubclass();7FF7653127D5
+comctl32.dll;;7FFAA917CEC8
+user32.dll;;7FFAC419539D
+SumatraPDF-dll.exe;RunMessageLoop();7FF765454D73
+
+callstack when it happens for second time:
+SumatraPDF-dll.exe;DropDown::OnCommand() Ln 43;7FF7654A25CB
+SumatraPDF-dll.exe;Wnd::WndProcDefault();7FF7654C6DDF
+SumatraPDF-dll.exe;Wnd::WndProc();7FF7654C604B
+SumatraPDF-dll.exe;WndWindowProc();7FF7654C81E7
+user32.dll;;7FFAC4197846
+comctl32.dll;;7FFAA917CDF8
+SumatraPDF-dll.exe;dmlib_subclass::WindowCtlColorSubclass();7FF76531B8B9
+comctl32.dll;;7FFAA917CEC8
+comctl32.dll;;7FFAA917CDF8
+SumatraPDF-dll.exe;dmlib_subclass::WindowNotifySubclass();7FF76531B95B
+comctl32.dll;;7FFAA917CDF8
+SumatraPDF-dll.exe;dmlib_subclass::WindowEraseBgSubclass();7FF76531B761
+comctl32.dll;;7FFAA917CEC8
+comctl32.dll;;7FFAA917CDF8
+SumatraPDF-dll.exe;Wnd::FinalWindowProc();7FF7654C768F
+SumatraPDF-dll.exe;Wnd::WndProcDefault();7FF7654C7417
+SumatraPDF-dll.exe;Wnd::WndProc();7FF7654C604B
+SumatraPDF-dll.exe;WndWindowProc();7FF7654C81E7
+SumatraPDF-dll.exe;WndSubclassedWindowProc();7FF7654C823F
+comctl32.dll;;7FFAA917CEC8
+comctl32.dll;;7FFAA917CDF8
+SumatraPDF-dll.exe;dmlib_subclass::ComboBoxSubclass();7FF7653127D5
+comctl32.dll;;7FFAA917CEC8
+user32.dll;;7FFAC419539D
+SumatraPDF-dll.exe;RunMessageLoop();7FF765454D73

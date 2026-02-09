@@ -693,6 +693,12 @@ LRESULT Wnd::WndProcDefault(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         }
 
         case WM_COMMAND: {
+            // Subclassed controls (like ComboBox) receive WM_COMMAND from their
+            // internal children. Don't handle it here — let the original wndproc
+            // process it and send proper notifications to the parent window.
+            if (subclassId) {
+                break;
+            }
             // Reflect this message if it's from a control.
             Wnd* pWnd = WndListFindByHwnd(reinterpret_cast<HWND>(lparam));
             bool didHandle = false;
