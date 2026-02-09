@@ -80,7 +80,7 @@ struct WatchedFile {
     const char* filePath = nullptr;
     Func0 onFileChangedCb;
 
-    // if true, the file is on a network drive and we have
+    // if true, the file is not on a fixed drive and we have
     // to check if it changed manually, by periodically checking
     // file state for changes
     bool isManualCheck = false;
@@ -316,6 +316,7 @@ static void RunManualChecks() {
     }
 }
 
+// manual watcher thread if we can't rely on notifications
 static void FileWatcherThread() {
     HANDLE handles[1];
     // must be alertable to receive ReadDirectoryChangesW() callbacks and APCs
@@ -398,9 +399,17 @@ static WatchedDir* NewWatchedDir(const char* dirPath) {
     return wd;
 }
 
-static WatchedFile* NewWatchedFile(const char* filePath, const Func0& onFileChangedCb) {
-    WCHAR* pathW = ToWStrTemp(filePath);
-    bool isManualCheck = PathIsNetworkPathW(pathW);
+static WatchedFile* NewWatchedFile(const char* filePath, const Func0& onFileChangedCb, bool enableManualCheck) {
+    bool isManualCheck = !path::IsOnFixedDrive(filePath);
+    // https://github.com/sumatrapdfreader/sumatrapdf/issues/5297#issuecomment-3810653582
+    // on network drives we don't want to do manually check if file changed
+    // because that generates network traffic
+    // unless tex has been explicitly enabled in which case we do want that
+    // for auto-reload of changed files
+    // but most people do not enable tex
+    if (isManualCheck && !enableManualCheck) {
+        return nullptr;
+    }
     TempStr dirPath = path::GetDirTemp(filePath);
     WatchedDir* wd = nullptr;
     bool newDir = false;
@@ -449,7 +458,7 @@ We take ownership of observer object.
 Returns a cancellation token that can be used in FileWatcherUnsubscribe(). That
 way we can support multiple callers subscribing to the same file.
 */
-WatchedFile* FileWatcherSubscribe(const char* path, const Func0& onFileChangedCb) {
+WatchedFile* FileWatcherSubscribe(const char* path, const Func0& onFileChangedCb, bool enableManualCheck) {
     // logf("FileWatcherSubscribe() path: %s\n", path);
 
     if (!file::Exists(path)) {
@@ -473,7 +482,7 @@ WatchedFile* FileWatcherSubscribe(const char* path, const Func0& onFileChangedCb
     }
 
     ScopedCritSec cs(&gFileWatcherMutex);
-    return NewWatchedFile(path, onFileChangedCb);
+    return NewWatchedFile(path, onFileChangedCb, enableManualCheck);
 }
 
 static bool IsWatchedDirReferenced(WatchedDir* wd) {

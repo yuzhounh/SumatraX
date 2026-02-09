@@ -1855,7 +1855,7 @@ MainWindow* LoadDocumentFinish(LoadArgs* args) {
 
     if (gGlobalPrefs->reloadModifiedDocuments) {
         auto fn = MkFunc0(ScheduleReloadTab, currTab);
-        currTab->watcher = FileWatcherSubscribe(path, fn);
+        currTab->watcher = FileWatcherSubscribe(path, fn, gGlobalPrefs->enableTeXEnhancements);
     }
 
     if (gGlobalPrefs->rememberOpenedFiles) {
