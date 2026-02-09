@@ -5,7 +5,7 @@ let nSkipped = 0;
 let nDirsDeleted = 0;
 let nFilesDeleted = 0;
 
-function clearDirPreserveSettings(dir: string): void {
+export function clearDirPreserveSettings(dir: string): void {
   let entries;
   try {
     entries = readdirSync(dir, { withFileTypes: true });
@@ -49,4 +49,6 @@ function cleanPreserveSettings(): void {
   console.log(`clean: skipped ${nSkipped} files, deleted ${nDirsDeleted} dirs and ${nFilesDeleted} files`);
 }
 
-cleanPreserveSettings();
+if (import.meta.main) {
+  cleanPreserveSettings();
+}
