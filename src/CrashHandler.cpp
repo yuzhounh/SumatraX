@@ -318,7 +318,7 @@ bool DownloadSymbolsIfNeeded() {
 
 // like crash report, but can be triggered without a crash
 void _uploadDebugReport(const char* condStr, bool isCrash, bool captureCallstack) {
-    // in release builds ReportIf()/ReportIfQuick() will break if running under
+    // in release builds ReportIf()/ReportIfFast() will break if running under
     // the debugger. In other builds it sends a debug report
 
     bool shouldUpload = gIsDebugBuild || gIsPreReleaseBuild || gIsAsanBuild;

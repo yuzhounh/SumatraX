@@ -195,7 +195,7 @@ static bool WndListRemove(Wnd* w) {
 
 static void WndListAdd(Wnd* w) {
     bool report = WndListRemove(w);
-    ReportIfQuick(report);
+    ReportIfFast(report);
     gWndList.Append(w);
 }
 

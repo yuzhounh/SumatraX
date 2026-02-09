@@ -5028,7 +5028,7 @@ static void DownloadDebugSymbols() {
     msg = str::FormatTemp("Downloaded symbols to %s", gSymbolsDir);
     {
         bool didInitializeDbgHelp = InitializeDbgHelp(false);
-        ReportIfQuick(!didInitializeDbgHelp);
+        ReportIfFast(!didInitializeDbgHelp);
     }
 ShowMessage:
     MessageBoxWarning(nullptr, msg, "Downloading symbols");

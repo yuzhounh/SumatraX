@@ -235,7 +235,7 @@ extern void _uploadDebugReport(const char*, bool, bool);
     } while (0)
 
 #define ReportIf(cond) ReportIfCond(cond, #cond, false, true)
-#define ReportIfQuick(cond) ReportIfCond(cond, #cond, false, false)
+#define ReportIfFast(cond) ReportIfCond(cond, #cond, false, false)
 #if defined(DEBUG)
 #define ReportDebugIf(cond) ReportIfCond(cond, #cond, false, true)
 #else

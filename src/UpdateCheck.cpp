@@ -391,6 +391,59 @@ static bool ShouldDownloadUpdate(UpdateInfo* updateInfo, UpdateCheck updateCheck
     return hasUpdate;
 }
 
+static HRESULT CALLBACK TaskDialogHyperlinkCallback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam,
+                                                    LONG_PTR lpRefData) {
+    if (msg == TDN_HYPERLINK_CLICKED) {
+        WCHAR* url = (WCHAR*)lParam;
+        SumatraLaunchBrowser(ToUtf8Temp(url));
+    }
+    return S_OK;
+}
+
+constexpr const char* kExpectedDlHost = "https://www.sumatrapdfreader.org/";
+
+static void NotifySuspiciousUpdate(HWND hwndParent, const char* dlURL) {
+    logf("NotifySuspiciousUpdate: suspicious download url '%s'\n", dlURL);
+    ReportIfFast(true);
+    auto title = _TRA("SumatraPDF Update");
+    auto content = str::FormatTemp(
+        "Suspicious update.\n"
+        "\n"
+        "Download link should come from <a href=\"%s\">%s</a> but is %s.\n"
+        "\n"
+        "Visit <a href=\"%s\">%s</a> to download the latest version.",
+        kExpectedDlHost, kExpectedDlHost, dlURL, kExpectedDlHost, kExpectedDlHost);
+
+    TASKDIALOGCONFIG dialogConfig{};
+    DWORD flags =
+        TDF_ALLOW_DIALOG_CANCELLATION | TDF_SIZE_TO_CONTENT | TDF_ENABLE_HYPERLINKS | TDF_POSITION_RELATIVE_TO_WINDOW;
+    if (trans::IsCurrLangRtl()) {
+        flags |= TDF_RTL_LAYOUT;
+    }
+
+    constexpr int kBtnIdVisitWebsite = 100;
+    TASKDIALOG_BUTTON buttons[1];
+    buttons[0].nButtonID = kBtnIdVisitWebsite;
+    buttons[0].pszButtonText = ToWStrTemp(_TRA("Visit &Website"));
+
+    dialogConfig.cbSize = sizeof(TASKDIALOGCONFIG);
+    dialogConfig.pszWindowTitle = ToWStrTemp(title);
+    dialogConfig.pszContent = ToWStrTemp(content);
+    dialogConfig.dwFlags = flags;
+    dialogConfig.dwCommonButtons = TDCBF_CLOSE_BUTTON;
+    dialogConfig.cButtons = dimof(buttons);
+    dialogConfig.pButtons = buttons;
+    dialogConfig.nDefaultButton = kBtnIdVisitWebsite;
+    dialogConfig.pszMainIcon = TD_WARNING_ICON;
+    dialogConfig.hwndParent = hwndParent;
+    dialogConfig.pfCallback = TaskDialogHyperlinkCallback;
+    int buttonPressedId = 0;
+    TaskDialogIndirect(&dialogConfig, &buttonPressedId, nullptr, nullptr);
+    if (buttonPressedId == kBtnIdVisitWebsite) {
+        SumatraLaunchBrowser(kExpectedDlHost);
+    }
+}
+
 static DWORD MaybeStartUpdateDownload(HWND hwndParent, HttpRsp* rsp, UpdateCheck updateCheckType) {
     // for store builds we do update check but ignore the result
     if (gIsStoreBuild) {
@@ -449,6 +502,13 @@ static DWORD MaybeStartUpdateDownload(HWND hwndParent, HttpRsp* rsp, UpdateCheck
         logf("ShowAutoUpdateDialog: didn't find download url. Auto update data:\n%s\n", data->Get());
         RemoveNotificationsForGroup(win->hwndCanvas, kNotifUpdateCheckInProgress);
         NotifyUserOfUpdate(updateInfo);
+        return 0;
+    }
+
+    if (!str::StartsWith(updateInfo->dlURL, kExpectedDlHost)) {
+        RemoveNotificationsForGroup(win->hwndCanvas, kNotifUpdateCheckInProgress);
+        NotifySuspiciousUpdate(hwndParent, updateInfo->dlURL);
+        delete updateInfo;
         return 0;
     }
 
