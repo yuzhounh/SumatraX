@@ -984,7 +984,7 @@ bool LaunchBrowser(const char* url) {
     return LaunchFileShell(url, nullptr, "open");
 }
 
-void OpenPathInExplorer(const char* path) {
+void OpenPathInDefaultFileManager(const char* path) {
     if (!path || !*path) {
         return;
     }

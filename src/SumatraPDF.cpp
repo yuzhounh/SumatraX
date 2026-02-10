@@ -3065,11 +3065,11 @@ static void SaveCurrentFileAs(MainWindow* win) {
     }
 }
 
-void SumatraOpenPathInExplorer(const char* path) {
+void SumatraOpenPathInDefaultFileManager(const char* path) {
     if (gPluginMode || !CanAccessDisk()) {
         return;
     }
-    OpenPathInExplorer(path);
+    OpenPathInDefaultFileManager(path);
 }
 
 static void ShowCurrentFileInFolder(MainWindow* win) {
@@ -3077,7 +3077,7 @@ static void ShowCurrentFileInFolder(MainWindow* win) {
         return;
     }
     auto* ctrl = win->ctrl;
-    SumatraOpenPathInExplorer(ctrl->GetFilePath());
+    SumatraOpenPathInDefaultFileManager(ctrl->GetFilePath());
 }
 
 static void DeleteCurrentFile(MainWindow* win) {

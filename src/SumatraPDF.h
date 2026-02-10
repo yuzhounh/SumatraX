@@ -203,7 +203,7 @@ TempStr GetLogFilePathTemp();
 void ShowSavedAnnotationsNotification(HWND hwndParent, const char* path);
 void ShowSavedAnnotationsFailedNotification(HWND hwndParent, const char* path, const char* mupdfErr);
 void ShowErrorLoadingNotification(MainWindow* win, const char* path, bool noSavePrefs);
-void SumatraOpenPathInExplorer(const char* path);
+void SumatraOpenPathInDefaultFileManager(const char* path);
 void SmartZoom(MainWindow* win, float factor, Point* pt, bool smartZoom);
 TempStr GetNotImportantDataDirTemp();
 TempStr GetCrashInfoDirTemp();

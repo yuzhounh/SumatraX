@@ -1718,7 +1718,7 @@ void OnAboutContextMenu(MainWindow* win, int x, int y) {
     }
 
     if (CmdShowInFolder == cmd) {
-        SumatraOpenPathInExplorer(path);
+        SumatraOpenPathInDefaultFileManager(path);
         return;
     }
 

@@ -544,13 +544,13 @@ void LinkHandler::LaunchFile(const char* pathOrig, IPageDestination* remoteLink)
         return;
     }
     if (pathType == path::Type::Dir) {
-        SumatraOpenPathInExplorer(fullPath);
+        SumatraOpenPathInDefaultFileManager(fullPath);
         return;
     }
 
     bool canWeOpenIt = IsFileSupportedByContent(fullPath);
     if (!canWeOpenIt) {
-        SumatraOpenPathInExplorer(fullPath);
+        SumatraOpenPathInDefaultFileManager(fullPath);
         return;
     }
 

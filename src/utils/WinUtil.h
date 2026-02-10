@@ -86,7 +86,7 @@ HANDLE LaunchProcessInDir(const char* cmdLine, const char* currDir = nullptr, DW
 bool CreateProcessHelper(const char* exe, const char* args);
 bool LaunchFileShell(const char* path, const char* params = nullptr, const char* verb = nullptr, bool hidden = false);
 bool LaunchBrowser(const char* url);
-void OpenPathInExplorer(const char* path);
+void OpenPathInDefaultFileManager(const char* path);
 
 void RunNonElevated(const char* exePath);
 bool LaunchElevated(const char* path, const char* cmdline);

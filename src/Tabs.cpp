@@ -372,7 +372,7 @@ static void TabsContextMenu(ContextMenuEvent* ev) {
             break;
         }
         case CmdShowInFolder: {
-            SumatraOpenPathInExplorer(tabUnderMouse->filePath);
+            SumatraOpenPathInDefaultFileManager(tabUnderMouse->filePath);
             break;
         }
         case CmdCopyFilePath: {
