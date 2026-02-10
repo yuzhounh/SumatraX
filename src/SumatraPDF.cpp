@@ -1287,7 +1287,7 @@ static void ReplaceDocumentInCurrentTab(LoadArgs* args, DocController* ctrl, Fil
         shouldPlace = false;
     }
     if (shouldPlace) {
-        if (args->isNewWindow && fs && !fs->windowPos.IsEmpty()) {
+        if (args->isNewWindow && fs && !fs->windowPos.IsEmpty() && showType == SW_NORMAL) {
             // Make sure it doesn't have a position like outside of the screen etc.
             Rect rect = ShiftRectToWorkArea(fs->windowPos);
             // This shouldn't happen until !win.IsAboutWindow(), so that we don't
