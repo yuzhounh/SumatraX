@@ -5251,6 +5251,7 @@ static void SetAnnotCreateArgs(AnnotCreateArgs& args, CustomCommand* cmd) {
 
 static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     int cmdId = LOWORD(wp);
+    bool openAnnotationEdit = false;
 
     if (cmdId >= 0xF000) {
         // handle system menu messages for the Window menu (needed for Tabs in Titlebar)
@@ -6091,7 +6092,6 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             }
         } break;
 
-        // TODO: make it closer to handling in OnWindowContextMenu()
         case CmdCreateAnnotHighlight:
             [[fallthrough]];
         case CmdCreateAnnotSquiggly:
@@ -6104,21 +6104,13 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             }
             AnnotCreateArgs args{annotType};
             SetAnnotCreateArgs(args, cmd);
-            auto annot = MakeAnnotationsFromSelection(tab, &args);
-            if (!annot) {
-                return 0;
-            }
-            // for built-in shortcuts, Shift also opens edit window
-            // don't apply that to user shortcuts
-            // https://github.com/sumatrapdfreader/sumatrapdf/discussions/5209
-            bool defVal = IsShiftPressed();
+            lastCreatedAnnot = MakeAnnotationsFromSelection(tab, &args);
             if (cmd) {
-                defVal = false;
-            }
-            bool openEdit = GetCommandBoolArg(cmd, kCmdArgOpenEdit, defVal);
-            if (openEdit) {
-                ShowEditAnnotationsWindow(tab);
-                SetSelectedAnnotation(tab, annot);
+                // for custom commands must explicitly provide "openedit" argument
+                openAnnotationEdit = GetCommandBoolArg(cmd, kCmdArgOpenEdit, false);
+            } else {
+                // for built-in shortcuts, Shift opens edit window
+                openAnnotationEdit = IsShiftPressed();
             }
         } break;
 
@@ -6154,13 +6146,25 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             }
             int pageNoUnderCursor = dm->GetPageNoByPoint(pt);
             if (pageNoUnderCursor < 0) {
-                return 0;
+                if (!cmd) return 0;
+                // this is a case of custom command invoked by clicking toolbar button
+                // in which case we don't know where to place the annotation
+                // so we guess it as y = 20 px of hwndFrame and x being in the middle of window
+                // it's a heuristic so might not be what user expects
+                // TODO: ideally creating those annotations should be more visual
+                // i.e. we start interactive process of creating an annotation via mouse
+                auto r = WindowRect(hwnd);
+                pt.x = r.dx / 2;
+                pt.y = 20;
+                pageNoUnderCursor = dm->GetPageNoByPoint(pt);
+                if (pageNoUnderCursor < 0) return 0;
             }
             PointF ptOnPage = dm->CvtFromScreen(pt, pageNoUnderCursor);
             MapWindowPoints(win->hwndCanvas, HWND_DESKTOP, &pt, 1);
             AnnotCreateArgs args{annotType};
             SetAnnotCreateArgs(args, cmd);
             lastCreatedAnnot = EngineMupdfCreateAnnotation(engine, pageNoUnderCursor, ptOnPage, &args);
+            openAnnotationEdit = GetCommandBoolArg(cmd, kCmdArgOpenEdit, false);
         } break;
 
         case CmdSelectNextTheme:
@@ -6180,7 +6184,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
     }
     if (lastCreatedAnnot) {
         UpdateAnnotationsList(tab->editAnnotsWindow);
-        if (!win->isFullScreen) {
+        if (openAnnotationEdit && !win->isFullScreen) {
             ShowEditAnnotationsWindow(tab);
         }
         SetSelectedAnnotation(tab, lastCreatedAnnot);
