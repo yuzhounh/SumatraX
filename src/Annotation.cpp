@@ -1172,6 +1172,9 @@ Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF p
                 break;
         }
     }
+    if (args->interiorCol.parsedOk) {
+        SetInteriorColor(res, args->interiorCol.pdfCol);
+    }
 
     pdf_drop_annot(ctx, annot);
     return res;

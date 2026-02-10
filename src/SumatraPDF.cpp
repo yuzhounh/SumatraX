@@ -5189,6 +5189,11 @@ static void SetAnnotCreateArgsFromCommand(AnnotCreateArgs& args, CustomCommand* 
         args.bgCol = bgCol->colorVal;
     }
 
+    auto interiorCol = GetCommandArg(cmd, kCmdArgInteriorColor);
+    if (interiorCol && interiorCol->colorVal.parsedOk) {
+        args.interiorCol = interiorCol->colorVal;
+    }
+
     args.opacity = GetCommandIntArg(cmd, kCmdArgOpacity, 100);
     setMinMax(args.opacity, 0, 100);
 

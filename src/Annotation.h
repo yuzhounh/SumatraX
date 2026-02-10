@@ -73,6 +73,8 @@ struct AnnotCreateArgs {
     ParsedColor col;
     // bgCol for free text
     ParsedColor bgCol;
+    // interior color (fill) for shapes like Square, Circle, Line
+    ParsedColor interiorCol;
     // opacity for free text, 0-100, 0-fully transparent (invisible), 100-fully opaque
     // if 100 we don't actually set it (it's the default)
     int opacity = 100;

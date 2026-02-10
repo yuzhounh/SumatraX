@@ -197,6 +197,7 @@ constexpr const char* kCmdArgOpacity = "opacity";
 constexpr const char* kCmdArgOpenEdit = "openedit";
 constexpr const char* kCmdArgTextSize = "textsize";
 constexpr const char* kCmdArgBorderWidth = "borderwidth";
+constexpr const char* kCmdArgInteriorColor = "interiorcolor";
 
 constexpr const char* kCmdArgCopyToClipboard = "copytoclipboard";
 constexpr const char* kCmdArgSetContent = "setcontent";
