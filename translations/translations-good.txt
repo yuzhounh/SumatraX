@@ -40,7 +40,7 @@ sl:Opomba %s. Ctrl+click za urejanje.
 sr-rs:%s белешка. Ctrl+клик за уређивање.
 sv:%s kommentar. Ctrl+klick för att ändra
 ta:%s குறிப்புரைகள். திருத்த Ctrl கிளிக் செய்யவும்.
-tw:%s註解. 按 Ctrl+滑鼠左鍵進行編輯.
+tw:%s 註解。按 Ctrl+滑鼠左鍵 進行編輯。
 uz:%s izoh. Tahrirlash uchun Ctrl+bosish.
 :&About
 am:&Ծրագրի մասին
@@ -584,7 +584,7 @@ ta:&32-பிட் பதிப்பு நிறுவுதலைத் த�
 th:&กำลังติดตั้งรุ่น 32-บิต ต่อไป
 tl:&Magpatuloy sa pag-install ng 32-bit na bersyon
 tr:32 bit sürümü kurmayı &sürdür
-tw:繼續安裝32位元版本(&C)
+tw:繼續安裝 32 位元版本(&C)
 uk:&Продовжити встановлення 32-розрядної версії
 uz:&32-bit versiyasini o‘rnatishni davom ettirish
 vn:&Tiếp tục cài đặt bản 32-bit
@@ -3808,7 +3808,7 @@ ta:பிடித்தவையில்  பக்கம் %s-ஐ (விர
 th:เพิ่มหน้า %s ไปยังรายการโปรดพร้อมชื่อ (สามารถเลือกได้) :
 tl:Magdagdag ng pahina %s sa mga paborito na may (opsyonal) na pangalan:
 tr:%s. sayfayı şu (isteğe bağlı) adla sık kullanılanlara ekle:
-tw:將第 %s 頁加到我的最愛，並命名(可留白):
+tw:將第 %s 頁加到我的最愛，並命名 (可留白) :
 uk:Додати %s сторінку до закладок з іменем(необов'язково):
 uz:%s betni Tanlanganlarga (boshqa) nom bilan qo'shish:
 vn:Thêm trang %s vào Ưa thích với tên (tùy chọn):
@@ -4774,7 +4774,7 @@ ta:%s / %s பக்கத்தின் புத்தகக்குறி�
 th:ทางลัดคั่นหน้าไปยังหน้า %s ของ %s
 tl:I-Bookmark shortcut sa page %s of %s
 tr:%s / %s sayfasını yer imlerine ekle
-tw:書籤捷徑指向第 %s 頁 (%s 檔案)
+tw:書籤捷徑指向第 %s 頁 (共 %s 頁)
 uk:Закладка ярлика на сторінку %s з %s
 uz:Xatcho'p yorlig'i betga %s %s dan
 vn:Lối tắt chỉ dấu sách đến trang %s của %s
@@ -5284,7 +5284,7 @@ ta:மொழியை மாற்று (Change Language)
 th:เปลี่ยนภาษา
 tl:Ibahin ang Wika (Change Language)
 tr:Dil Değiştir
-tw:變更語言 (Change Language)
+tw:變更語言
 uk:Змінити мову (Change Language)
 uz:Tilni o'zgartirish (Change Language)
 vn:Đổi ngôn ngữ (Change Language)
@@ -6839,7 +6839,7 @@ ta:நிறுவல் கோப்புறையினை உருவா
 th:ไม่สามารถสร้างไดเรคทอรี่ติดตั้งได้
 tl:Hindi magawa ang installation directory
 tr:Kurulum dizini oluşturulamadı
-tw:無法建立安裝資料夾
+tw:無法建立安裝目錄
 uk:Не вдалося створити папку для встановлення
 uz:O'rnatish directoriyasini yaratib bo'lmadi
 vn:Không tạo được thư mục cài đặt
@@ -8333,7 +8333,7 @@ ta:64-பிட் பதிப்பைப் பதிவிறக்குக
 th:ดาวน์โหลดรุ่น 64 บิต
 tl:I-download ang 64-bit na bersyon
 tr:64 bit sürümü indir
-tw:下載64位元版本
+tw:下載 64 位元版本
 uk:Завантажити 64-bit версію
 uz:64-bit versiyasini yuklab olish
 vn:Tải phiên bản 64-bit
@@ -11723,7 +11723,7 @@ ta:32-பிட் சுமத்ராPDF 64-பிட் இயங்கு�
 th:กำลังติดตั้ง SumatraPDF รุ่น 32 บิต บนระบบปฏิบัติการ 64 บิต
 tl:Pag-install ng 32-bit SumatraPDF sa 64-bit OS
 tr:64 bit işletim sistemine 32 bit SumatraPDF kuruluyor
-tw:安裝32位元版本 SumatraPDF 於 64位元版系統
+tw:安裝 32 位元版本 SumatraPDF 於 64 位元版系統
 uk:Встановлення 32-розрядної SumatraPDF на 64-розрядну ОС
 uz:64-bit operatsion tizimga 32-bit SumatraPDF o‘rnatish
 vn:Cài đặt SumatraPDF 32-bit trên hệ điều hành 64-bit
@@ -12435,63 +12435,6 @@ sl:Priročnik na spletni strani
 sv:Manual på webbsida
 tw:線上說明
 uz:Veb-saytda qo‘llanma
-:Match Case
-am:Հաշվի առնել մեծատառ/փոքրատառը
-ar:مطابقة حالة الأحرف
-az:Registri nəzərə al
-bg:Същия текст
-br:Diferenciar Maiúsculas e Minúsculas
-by:Улічваць рэгістр
-ca:Distigeix entre majúscules i minúscules
-ca-xv:Distigeix entre majúscules i minúscules
-cn:匹配大小写
-co:Rispettà a cassa
-cy:Cydweddu Maint
-cz:Rozlišovat velikost písmen
-de:Groß-/Kleinschreibung beachten
-dk:Versalfølsom søgning
-el:Αντιστοίχιση πεζών-κεφαλαίων
-es:Coincidir mayúsculas y minúsculas
-et:Tõstutundlik
-eu:Hizki Larriak-xeheak Bereizi
-fa:دقیقا مثل عبارت وارد شده
-fi:Sama kirjainkoko
-fo:Samsvara Stavbundni
-fr:Respecter la casse
-ga:Comhoiriúnaigh an cás
-gl:Coincidir maiúsculas e minúsculas
-he:הבחן בין אותיות גדולות לקטנות
-hi:अक्षर आकार मिलाएं
-hr:Razlikuj velika i mala slova
-hu:Kis- és nagybetűk megkülönböztetése
-id:Cocok Besar Kecil Huruf
-it:Maiuscole/minuscole
-ja:大文字と小文字を区別する
-kr:대소문자 일치
-kw:An keth kas
-lt:Skirti didžiąsias ir mažąsias raides
-lv:Saskaņot reģistru
-my:Hampir sama
-nl:Hoofdlettergevoelig
-nn:Skil mellom store/små bokstavar
-no:Skill mellom store og små bokstaver
-pl:Uwzględnij wielkość liter
-pt:Sensível a maiúsculas
-ro:Potrivire literele mari și mici
-ru:Учитывать регистр
-sat:ᱪᱤᱠᱤ ᱢᱮᱲᱟᱣ
-sk:Rozlišovať veľké/malé písmená
-sl:Razlikuj med velikimi/malimi črkami
-sr-rs:Разликуј мала и велика слова
-sv:Matcha versaler/gemener
-ta:தட்டுப்பொருத்தம்
-th:จับคู่
-tl:Ipantay ang Laki ng Titik
-tr:Büyük/Küçük Harf Eşleştir
-tw:符合大小寫
-uk:Розрізняти малу й велику літери
-uz:Registrni hisobga olish
-vn:Phân biệt HOA-thường
 :Mobi documents
 am:XPS ֆայլեր
 ar:مستندات Mobi
@@ -13470,7 +13413,7 @@ sv:Öppna mapp i &Double Commander
 ta:டபுள் கமாண்டரில் கோப்புறை திற
 tl:Buksan ang Directory sa &Double Commander
 tr:Dizini &Double Commander ile aç
-tw:在 Double Commander 中開啟資料夾(&D)
+tw:在 Double Commander 中開啟目錄 (&D)
 uk:Відкрити папку в &Double Commander
 uz:Papkani &Double Commander’da ochish
 :Open Directory in &Explorer
@@ -13519,7 +13462,7 @@ sv:Öppna mapp i &Utforskaren
 ta:எக்ஸ்ப்ளோரரில் கோப்புறை திற
 tl:Buksan ang Directory sa &Explorer
 tr:Dizini &Explorer ile aç
-tw:在檔案總管中開啟資料夾(&E)
+tw:在檔案總管中開啟目錄 (&E)
 uk:Відкрити папку в &Провіднику
 uz:Papkani &Explorer’da ochish
 :Open Directory in &Total Commander
@@ -13568,7 +13511,7 @@ sv:Öppna mapp i &Total Commander
 ta:டோட்டல் கமாண்டரில் கோப்புறை திற
 tl:Buksan ang Directory sa &Total Commander
 tr:Dizini &Total Commander ile aç
-tw:在 Total Commander 中開啟資料夾(&T)
+tw:在 Total Commander 中開啟目錄(&T)
 uk:Відкрити папку в &Total Commander
 uz:Papkani &Total Commander’da ochish
 :Open Directory in Directory &Opus
@@ -13615,7 +13558,7 @@ sv:Öppna mapp i Directory &Opus
 ta:டைரக்டரி ஓபஸில் கோப்புறை திற
 tl:Buksan ang Directory sa Directory &Opus
 tr:Dizini Directory &Opus ile aç
-tw:在 Directory Opus 中開啟資料夾(&O)
+tw:在 Directory Opus 中開啟目錄(&O)
 uk:Відкрити папку в &Opus
 uz:Papkani Directory &Opus’da ochish
 :Open Embedded PDF
@@ -19678,7 +19621,7 @@ ta:நிறுவி கெட்டுள்ளது. மீண்டும�
 th:โปรแกรมติดตั้งเสียหาย โปรดดาวน์โหลดอีกครั้ง \n ขออภัยในความไม่สะดวก!
 tl:Nasira ang installer. Paki-download muli.\nPaumanhin sa abala!
 tr:Kurucu bozulmuş. Lütfen yeniden indirin.\nGeçici rahatsızlık için özür dileriz!
-tw:安裝程式已損壞。請重新下載。\n抱歉帶來不便！
+tw:安裝程式已損壞。請重新下載。\n很抱歉給您帶來不便！
 uk:Інсталятор було пошкоджено. Будь ласка завантажте його знову.\nВибачте за незручності!
 uz:O'rnatuvchi buzilgan. Qaytadan yuklab oling. \nNoqulayliklar uchun uzr so'raymiz!
 vn:Trình cài đặt đã bị lỗi. Xin vui lòng tải về lần nữa.\nRất tiếc về sự bất tiện này!
@@ -19796,6 +19739,7 @@ tw:標題:
 uk:Заголовок:
 uz:Sarlavha:
 vn:Tựa đề
+:Toggle Match Case
 :Translate with &DeepL
 am:Թարգմանել &DeepL-ով
 ar:ترجمة في &DeepL
@@ -20636,7 +20580,7 @@ br:Você tem a versão '%s' e a versão '%s' está disponível.\nVocê quer inst
 by:У вас устаноўлена версія '%s'. Даступна версія '%s'.\nХочаце ўстанавіць новую версію?
 ca:Aquesta és la versió «%s». Està disponible la versió «%s».\nVoleu instal·lar la versió nova?
 ca-xv:Aquesta és la versió «%s». Està disponible la versió «%s».\nVoleu instal·lar la versió nova?
-cn:您已安装 '%s' 版本，'%s' 版本已经发布.\n是否安装新版本？
+cn:您已安装 '%s' 版本，'%s' 版本已经发布。\n是否安装新版本？
 co:Impiegate a versione « %s » è a versione « %s » hè dispunibule.\nVulete installà a versione nova ?
 cy:Mae fersiwn '%s' gennych ac mae fersiwn '%s' ar gael.\nHoffech chi osod y fersiwn newydd?
 cz:Používáte verzi '%s' a verze '%s' je k dispozici.\nChcete nainstalovat novou verzi?
@@ -20678,7 +20622,7 @@ ta:உங்களிடம் பதிப்பு '%s' உள்ளது ப
 th:คุณมีรุ่น '%s'​ และรุ่น '%s'​ ใช่ได้ \nคุณต้องการจะติดตั้งรุ่นใหม่หรือไม่
 tl:Mayroon kang bersyon na '%s' at available ang bersyon na '%s'.\nGusto mo bang mag-install ng bagong bersyon?
 tr:'%s' sürümünüz var ve '%s' sürümü kullanılabilir.\nYeni sürümü kurmak ister misiniz?
-tw:目前版本: '%s' ．最新版本: '%s' \n請問要下載新版本嗎?
+tw:目前安裝版本: '%s'，最新可用版本: '%s'。 \n是否要下載新版本?
 uk:У вас є версія '%s'.Версія '%s' доступна.\nВи хочете встановити нову версію?
 uz:Sizda '%s' versiyasi o'rnatilgan va '%s' versiyasi mavjud.\nYangi versiyani o‘rnatmoqchimisiz?
 vn:Bạn có phiên bản '%s' và phiên bản '%s' sẵn sàng. \nBạn muốn cài đặt phiên bản mới?
@@ -20733,7 +20677,7 @@ ta:நீங்கள் 32-பிட் சுமத்ராPDFஐ 64-பி�
 th:คุณกำลังติดตั้ง SumatraPDF รุ่น 32-บิต บนระบปฏิบัติการ 64-บิต.\nคุณต้องการดาวน์โหลดหรือไม่\nรุ่น 64-บิต
 tl:Nag-i-install ka ng 32-bit na SumatraPDF sa 64-bit na OS.\nGusto mo bang mag-download ng\n64-bit na bersyon?
 tr:64 bit işletim sistemine 32 bit SumatraPDF kuruyorsunuz.\n64 bit sürümü indirmek\nister misiniz?
-tw:您正在一台64位元的電腦上安裝32位元的SumatraPDF。\n您想下載64位元的版本嗎?
+tw:您正在一台 64 位元的電腦上安裝 32 位元的 SumatraPDF。\n您想下載 64 位元的版本嗎?
 uk:Ви встановлюєте 32-розрядну версію SumatraPDF на 64-розрядну ОС.\nБажаєте завантажити\n64-розрядну версію?
 uz:64-bitli operatsion tizimga SumatraPDF’ning 32-bitli versiyasini o‘rnatyapsiz.\n 64-bitli versiyasini yuklab olishni xohlaysizmi?
 vn:Bạn đang cài đặt SumatraPDF 32-bit trên hệ điều hành 64-bit.\nBạn có muốn tả \nphiên bản 64-bit?
@@ -21018,7 +20962,7 @@ ta:[மாற்றங்கள் கண்டுபிடிக்க பட�
 th:[พบการเปลี่ยนแปลง; กำลังเรียกใหม่] %s
 tl:[May napansing mga pagbabago; nagre-refresh] %s
 tr:[Değişiklik saptandı; tazeleniyor] %s
-tw:[偵測到變更，正在更新] %s
+tw:[偵測到變更，正在重新整理] %s
 uk:[Знайдено зміни; оновлення] %s
 uz:[O'zgarishlar aniqlangan; yangilanmoqda] %s
 vn:[Phát hiện thay đổi; đang cập nhật] %s
