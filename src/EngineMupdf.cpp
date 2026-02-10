@@ -2949,6 +2949,13 @@ RenderedBitmap* EngineMupdf::RenderPage(RenderPageArgs& args) {
 
     ScopedCritSec cs(ctxAccess);
 
+    if (gGlobalPrefs->disableAntiAlias) {
+        fz_set_aa_level(ctx, 0);
+    } else {
+        // 8 seems to be the default
+        fz_set_aa_level(ctx, 8);
+    }
+
     auto pageRect = args.pageRect;
     auto zoom = args.zoom;
     auto rotation = args.rotation;

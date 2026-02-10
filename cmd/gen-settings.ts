@@ -9,7 +9,6 @@ import { extractSumatraVersion, detectVisualStudio, runLogged, isGitClean } from
 // Helpers
 // ---------------------------------------------------------------------------
 
-
 async function runCapture(cmd: string, args: string[], cwd?: string): Promise<string> {
   const proc = Bun.spawn([cmd, ...args], { stdout: "pipe", stderr: "pipe", cwd });
   const exitCode = await proc.exited;
@@ -716,6 +715,10 @@ const globalPrefs: Field[] = [
     "3.3",
   ),
   setVersion(mkField("UIFontSize", Int, 0, "over-ride application font size. 0 means Windows default"), "3.6"),
+  setVersion(
+    mkField("DisableAntiAlias", Bool, false, "if true, disables anti-aliasing for rendering PDF documents"),
+    "3,6",
+  ),
   setExpert(
     mkField(
       "UseSysColors",
@@ -1594,7 +1597,6 @@ const gLangs: string[][] = [
 function getWebsiteDir(): string {
   return join("..", "hack", "webapps", "sumatra-website");
 }
-
 
 async function getCurrentBranch(dir: string): Promise<string> {
   const out = await runCapture("git", ["branch"], dir);

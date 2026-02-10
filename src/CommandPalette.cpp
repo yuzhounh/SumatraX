@@ -472,6 +472,10 @@ static const char* UpdateCommandNameTemp(MainWindow* win, int cmdId, const char*
             isToggle = true;
             newIsOn = !gGlobalPrefs->showFavorites;
         } break;
+        case CmdToggleAntiAlias: {
+            isToggle = true;
+            newIsOn = gGlobalPrefs->disableAntiAlias;
+        } break;
         case CmdToggleZoom: {
             // TODO: this toggles via different values
         } break;

@@ -201,17 +201,12 @@ function mdToHTML(name: string): string {
     let href = tok.attrGet("href") ?? "";
 
     const isExternal =
-      (href.startsWith("https://") || href.startsWith("http://")) &&
-      !href.includes("sumatrapdfreader.org");
+      (href.startsWith("https://") || href.startsWith("http://")) && !href.includes("sumatrapdfreader.org");
     if (isExternal) {
       tok.attrSet("target", "_blank");
     }
 
-    if (
-      !href.startsWith("https://") &&
-      !href.startsWith("http://") &&
-      !href.startsWith("mailto:")
-    ) {
+    if (!href.startsWith("https://") && !href.startsWith("http://") && !href.startsWith("mailto:")) {
       const decoded = href.replace(/%20/g, " ");
       const hashIdx = decoded.indexOf("#");
       const fileName = hashIdx >= 0 ? decoded.slice(0, hashIdx) : decoded;
@@ -330,6 +325,11 @@ function checkCommandsAreDocumented(): void {
   const srcCmds = getCommandNames();
   console.log(`${srcCmds.length} commands in gen-commands.ts`);
   const docCmds = extractCommandsFromMarkdown();
+
+  // special-case: remove old name which is still documented but not present in code
+  let idx = docCmds.indexOf("CmdOpen");
+  docCmds.splice(idx, 1);
+
   console.log(`${docCmds.length} commands in Commands.md`);
 
   const docSet = new Set(docCmds);

@@ -153,6 +153,10 @@ TreeFontSize = 0
 ; version 3.6)
 UIFontSize = 0
 
+; if true, disables anti-aliasing for rendering PDF documents (introduced in
+; version 3,6)
+DisableAntiAlias = false
+
 ; if true, we use Windows system colors for background/text color. Over-rides
 ; other settings
 UseSysColors = false

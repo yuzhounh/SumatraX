@@ -8,6 +8,7 @@
 
 Changes in [pre-release builds](https://www.sumatrapdfreader.org/prerelease):
 
+- add `DisableAntiAlias` advanced setting and `CmdToggleAntiAlias` command
 - add `CmdShowAnnotations`, `CmdHideAnnotations`, `CmdToggleShowAnnotations` commands for temporarily hiding / showing annotations
 - add `CmdToggleInverseSearch` to temporarily disable mouse click invoking tex inverse search
 - add "bgcolor", "opacity", "textsize", "borderWidth" arguments to `CmdCreate

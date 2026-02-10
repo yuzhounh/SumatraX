@@ -75,7 +75,8 @@ static SeqStrings gCommandNames =
     "CmdSelectionHandler\0" "CmdSetTheme\0" "CmdToggleInverseSearch\0"
     "CmdDebugCorruptMemory\0" "CmdDebugCrashMe\0" "CmdDebugDownloadSymbols\0"
     "CmdDebugTestApp\0" "CmdDebugShowNotif\0" "CmdDebugStartStressTest\0"
-    "CmdDebugTogglePredictiveRender\0" "CmdDebugToggleRtl\0" "CmdNone\0" "\0";
+    "CmdDebugTogglePredictiveRender\0" "CmdDebugToggleRtl\0" "CmdToggleAntiAlias\0"
+    "CmdNone\0" "\0";
 
 static i32 gCommandIds[] = {
     CmdOpenFile, CmdClose, CmdCloseCurrentDocument,
@@ -140,7 +141,8 @@ static i32 gCommandIds[] = {
     CmdSelectionHandler, CmdSetTheme, CmdToggleInverseSearch,
     CmdDebugCorruptMemory, CmdDebugCrashMe, CmdDebugDownloadSymbols,
     CmdDebugTestApp, CmdDebugShowNotif, CmdDebugStartStressTest,
-    CmdDebugTogglePredictiveRender, CmdDebugToggleRtl, CmdNone,
+    CmdDebugTogglePredictiveRender, CmdDebugToggleRtl, CmdToggleAntiAlias,
+    CmdNone,
 };
 
 SeqStrings gCommandDescriptions =
@@ -206,7 +208,8 @@ SeqStrings gCommandDescriptions =
     "Launch a browser or run command with selection\0" "Set theme\0" "Toggle Inverse Search\0"
     "Debug: Corrupt Memory\0" "Debug: Crash Me\0" "Debug: Download Symbols\0"
     "Debug: Test App\0" "Debug: Show Notification\0" "Debug: Start Stress Test\0"
-    "Debug: Toggle Predictive Rendering\0" "Debug: Toggle Rtl\0" "Do nothing\0" "\0";
+    "Debug: Toggle Predictive Rendering\0" "Debug: Toggle Rtl\0" "Toggle Anti-Alias Rendering\0"
+    "Do nothing\0" "\0";
 // clang-format on
 // @gen-end cmd-c
 

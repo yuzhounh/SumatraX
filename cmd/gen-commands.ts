@@ -191,150 +191,151 @@ export const commands = [
     "CmdDebugStartStressTest", "Debug: Start Stress Test",
     "CmdDebugTogglePredictiveRender", "Debug: Toggle Predictive Rendering",
     "CmdDebugToggleRtl", "Debug: Toggle Rtl",
+    "CmdToggleAntiAlias", "Toggle Anti-Alias Rendering",
     "CmdNone", "Do nothing",
 ];
 
 function getNames(): string[] {
-    const names: string[] = [];
-    for (let i = 0; i < commands.length; i += 2) {
-        names.push(commands[i]);
-    }
-    return names;
+  const names: string[] = [];
+  for (let i = 0; i < commands.length; i += 2) {
+    names.push(commands[i]);
+  }
+  return names;
 }
 
 function getDescs(): string[] {
-    const descs: string[] = [];
-    for (let i = 0; i < commands.length; i += 2) {
-        descs.push(commands[i + 1]);
-    }
-    return descs;
+  const descs: string[] = [];
+  for (let i = 0; i < commands.length; i += 2) {
+    descs.push(commands[i + 1]);
+  }
+  return descs;
 }
 
 function generateEnum(): string {
-    const names = getNames();
-    const lines: string[] = [];
+  const names = getNames();
+  const lines: string[] = [];
 
-    lines.push("// clang-format off");
-    lines.push("enum {");
-    lines.push("    // commands are integers sent with WM_COMMAND so start them");
-    lines.push("    // at some number higher than 0");
-    lines.push("    CmdFirst = 200,");
-    lines.push("    CmdSeparator = CmdFirst,");
-    lines.push("");
+  lines.push("// clang-format off");
+  lines.push("enum {");
+  lines.push("    // commands are integers sent with WM_COMMAND so start them");
+  lines.push("    // at some number higher than 0");
+  lines.push("    CmdFirst = 200,");
+  lines.push("    CmdSeparator = CmdFirst,");
+  lines.push("");
 
-    // emit command names with explicit values, 3 per line
-    for (let i = 0; i < names.length; i += 3) {
-        const chunk = names.slice(i, i + 3);
-        const parts = chunk.map((name, j) => `${name} = ${201 + i + j}`);
-        lines.push(`    ${parts.join(", ")},`);
-    }
+  // emit command names with explicit values, 3 per line
+  for (let i = 0; i < names.length; i += 3) {
+    const chunk = names.slice(i, i + 3);
+    const parts = chunk.map((name, j) => `${name} = ${201 + i + j}`);
+    lines.push(`    ${parts.join(", ")},`);
+  }
 
-    lines.push("");
-    lines.push("    /* range for file history */");
-    lines.push("    CmdFileHistoryFirst,");
-    lines.push("    CmdFileHistoryLast = CmdFileHistoryFirst + 32,");
-    lines.push("");
-    lines.push("    /* range for favorites */");
-    lines.push("    CmdFavoriteFirst,");
-    lines.push("    CmdFavoriteLast = CmdFavoriteFirst + 256,");
-    lines.push("");
-    lines.push("    CmdLast = CmdFavoriteLast,");
-    lines.push("    CmdFirstCustom = CmdLast + 100,");
-    lines.push("");
-    lines.push("    // aliases, at the end to not mess ordering");
-    lines.push("    CmdViewLayoutFirst = CmdSinglePageView,");
-    lines.push("    CmdViewLayoutLast = CmdToggleMangaMode,");
-    lines.push("");
-    lines.push("    CmdZoomFirst = CmdZoomFitPage,");
-    lines.push("    CmdZoomLast = CmdZoomCustom,");
-    lines.push("");
-    lines.push("    CmdCreateAnnotFirst = CmdCreateAnnotText,");
-    lines.push("    CmdCreateAnnotLast = CmdCreateAnnotFileAttachment,");
-    lines.push("};");
-    lines.push("// clang-format on");
+  lines.push("");
+  lines.push("    /* range for file history */");
+  lines.push("    CmdFileHistoryFirst,");
+  lines.push("    CmdFileHistoryLast = CmdFileHistoryFirst + 32,");
+  lines.push("");
+  lines.push("    /* range for favorites */");
+  lines.push("    CmdFavoriteFirst,");
+  lines.push("    CmdFavoriteLast = CmdFavoriteFirst + 256,");
+  lines.push("");
+  lines.push("    CmdLast = CmdFavoriteLast,");
+  lines.push("    CmdFirstCustom = CmdLast + 100,");
+  lines.push("");
+  lines.push("    // aliases, at the end to not mess ordering");
+  lines.push("    CmdViewLayoutFirst = CmdSinglePageView,");
+  lines.push("    CmdViewLayoutLast = CmdToggleMangaMode,");
+  lines.push("");
+  lines.push("    CmdZoomFirst = CmdZoomFitPage,");
+  lines.push("    CmdZoomLast = CmdZoomCustom,");
+  lines.push("");
+  lines.push("    CmdCreateAnnotFirst = CmdCreateAnnotText,");
+  lines.push("    CmdCreateAnnotLast = CmdCreateAnnotFileAttachment,");
+  lines.push("};");
+  lines.push("// clang-format on");
 
-    return lines.join("\n");
+  return lines.join("\n");
 }
 
 function generateArrays(): string {
-    const names = getNames();
-    const descs = getDescs();
-    const lines: string[] = [];
+  const names = getNames();
+  const descs = getDescs();
+  const lines: string[] = [];
 
-    lines.push("// clang-format off");
+  lines.push("// clang-format off");
 
-    // gCommandNames: SeqStrings (null-separated, double-null terminated)
-    lines.push("static SeqStrings gCommandNames =");
-    for (let i = 0; i < names.length; i += 3) {
-        const chunk = names.slice(i, i + 3);
-        const parts = chunk.map(s => `"${s}\\0"`).join(" ");
-        const isLast = i + 3 >= names.length;
-        if (isLast) {
-            lines.push(`    ${parts} "\\0";`);
-        } else {
-            lines.push(`    ${parts}`);
-        }
+  // gCommandNames: SeqStrings (null-separated, double-null terminated)
+  lines.push("static SeqStrings gCommandNames =");
+  for (let i = 0; i < names.length; i += 3) {
+    const chunk = names.slice(i, i + 3);
+    const parts = chunk.map((s) => `"${s}\\0"`).join(" ");
+    const isLast = i + 3 >= names.length;
+    if (isLast) {
+      lines.push(`    ${parts} "\\0";`);
+    } else {
+      lines.push(`    ${parts}`);
     }
-    lines.push("");
+  }
+  lines.push("");
 
-    // gCommandIds
-    lines.push("static i32 gCommandIds[] = {");
-    for (let i = 0; i < names.length; i += 3) {
-        const chunk = names.slice(i, i + 3).join(", ");
-        lines.push(`    ${chunk},`);
+  // gCommandIds
+  lines.push("static i32 gCommandIds[] = {");
+  for (let i = 0; i < names.length; i += 3) {
+    const chunk = names.slice(i, i + 3).join(", ");
+    lines.push(`    ${chunk},`);
+  }
+  lines.push("};");
+  lines.push("");
+
+  // gCommandDescriptions
+  lines.push("SeqStrings gCommandDescriptions =");
+  for (let i = 0; i < descs.length; i += 3) {
+    const chunk = descs.slice(i, i + 3);
+    const parts = chunk.map((s) => `"${s}\\0"`).join(" ");
+    const isLast = i + 3 >= descs.length;
+    if (isLast) {
+      lines.push(`    ${parts} "\\0";`);
+    } else {
+      lines.push(`    ${parts}`);
     }
-    lines.push("};");
-    lines.push("");
+  }
 
-    // gCommandDescriptions
-    lines.push("SeqStrings gCommandDescriptions =");
-    for (let i = 0; i < descs.length; i += 3) {
-        const chunk = descs.slice(i, i + 3);
-        const parts = chunk.map(s => `"${s}\\0"`).join(" ");
-        const isLast = i + 3 >= descs.length;
-        if (isLast) {
-            lines.push(`    ${parts} "\\0";`);
-        } else {
-            lines.push(`    ${parts}`);
-        }
-    }
+  lines.push("// clang-format on");
 
-    lines.push("// clang-format on");
-
-    return lines.join("\n");
+  return lines.join("\n");
 }
 
 function replaceBetweenMarkers(content: string, startMarker: string, endMarker: string, generated: string): string {
-    const startIdx = content.indexOf(startMarker);
-    const endIdx = content.indexOf(endMarker);
-    if (startIdx < 0 || endIdx < 0) {
-        console.error(`Could not find markers '${startMarker}' and '${endMarker}'`);
-        process.exit(1);
-    }
-    const before = content.substring(0, startIdx + startMarker.length);
-    const after = content.substring(endIdx);
-    return before + "\n" + generated + "\n" + after;
+  const startIdx = content.indexOf(startMarker);
+  const endIdx = content.indexOf(endMarker);
+  if (startIdx < 0 || endIdx < 0) {
+    console.error(`Could not find markers '${startMarker}' and '${endMarker}'`);
+    process.exit(1);
+  }
+  const before = content.substring(0, startIdx + startMarker.length);
+  const after = content.substring(endIdx);
+  return before + "\n" + generated + "\n" + after;
 }
 
 function main() {
-    const rootDir = join(import.meta.dir, "..");
-    const headerPath = join(rootDir, "src", "Commands.h");
-    const cppPath = join(rootDir, "src", "Commands.cpp");
+  const rootDir = join(import.meta.dir, "..");
+  const headerPath = join(rootDir, "src", "Commands.h");
+  const cppPath = join(rootDir, "src", "Commands.cpp");
 
-    let headerContent = readFileSync(headerPath, "utf-8");
-    let cppContent = readFileSync(cppPath, "utf-8");
+  let headerContent = readFileSync(headerPath, "utf-8");
+  let cppContent = readFileSync(cppPath, "utf-8");
 
-    const enumCode = generateEnum();
-    headerContent = replaceBetweenMarkers(headerContent, "// @gen-start cmd-enum", "// @gen-end cmd-enum", enumCode);
-    writeFileSync(headerPath, headerContent, "utf-8");
-    console.log("Generated enum in src/Commands.h");
+  const enumCode = generateEnum();
+  headerContent = replaceBetweenMarkers(headerContent, "// @gen-start cmd-enum", "// @gen-end cmd-enum", enumCode);
+  writeFileSync(headerPath, headerContent, "utf-8");
+  console.log("Generated enum in src/Commands.h");
 
-    const arraysCode = generateArrays();
-    cppContent = replaceBetweenMarkers(cppContent, "// @gen-start cmd-c", "// @gen-end cmd-c", arraysCode);
-    writeFileSync(cppPath, cppContent, "utf-8");
-    console.log("Generated arrays in src/Commands.cpp");
+  const arraysCode = generateArrays();
+  cppContent = replaceBetweenMarkers(cppContent, "// @gen-start cmd-c", "// @gen-end cmd-c", arraysCode);
+  writeFileSync(cppPath, cppContent, "utf-8");
+  console.log("Generated arrays in src/Commands.cpp");
 }
 
 if (import.meta.main) {
-    main();
+  main();
 }

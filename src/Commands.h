@@ -71,7 +71,8 @@ enum {
     CmdSelectionHandler = 378, CmdSetTheme = 379, CmdToggleInverseSearch = 380,
     CmdDebugCorruptMemory = 381, CmdDebugCrashMe = 382, CmdDebugDownloadSymbols = 383,
     CmdDebugTestApp = 384, CmdDebugShowNotif = 385, CmdDebugStartStressTest = 386,
-    CmdDebugTogglePredictiveRender = 387, CmdDebugToggleRtl = 388, CmdNone = 389,
+    CmdDebugTogglePredictiveRender = 387, CmdDebugToggleRtl = 388, CmdToggleAntiAlias = 389,
+    CmdNone = 390,
 
     /* range for file history */
     CmdFileHistoryFirst,

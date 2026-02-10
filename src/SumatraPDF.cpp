@@ -6027,6 +6027,13 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             break;
         }
 
+        case CmdToggleAntiAlias: {
+            gGlobalPrefs->disableAntiAlias ^= true;
+            RerenderFixedPage();
+            SaveSettings();
+            break;
+        }
+
         case CmdNavigateBack:
             if (ctrl) {
                 ctrl->Navigate(-1);
