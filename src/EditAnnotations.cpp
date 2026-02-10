@@ -78,25 +78,6 @@ static PdfColor gColorsValues[] = {
 	0xffffff00, /* yellow */
 };
 
-static AnnotationType gAnnotsWithBorder[] = {
-    AnnotationType::FreeText,  AnnotationType::Ink,    AnnotationType::Line,
-    AnnotationType::Square,    AnnotationType::Circle, AnnotationType::Polygon,
-    AnnotationType::PolyLine,
-};
-
-static AnnotationType gAnnotsWithInteriorColor[] = {
-    AnnotationType::Line, AnnotationType::Square, AnnotationType::Circle,
-};
-
-static AnnotationType gAnnotsWithColor[] = {
-    AnnotationType::Stamp,     AnnotationType::Text,   AnnotationType::FileAttachment,
-    AnnotationType::Sound,     AnnotationType::Caret,     AnnotationType::FreeText,
-    AnnotationType::Ink,       AnnotationType::Line,      AnnotationType::Square,
-    AnnotationType::Circle,    AnnotationType::Polygon,   AnnotationType::PolyLine,
-    AnnotationType::Highlight, AnnotationType::Underline, AnnotationType::StrikeOut,
-    AnnotationType::Squiggly,
-};
-
 // list of annotations where GetColor() returns background color
 // TODO: probably incomplete;
 static AnnotationType gAnnotsIsColorBackground[] = {
@@ -645,9 +626,7 @@ static void TextColorSelectionChanged(EditAnnotationsWindow* ew) {
 }
 
 static void DoBorder(EditAnnotationsWindow* ew, Annotation* annot) {
-    size_t n = dimof(gAnnotsWithBorder);
-    bool isVisible = IsAnnotationTypeInArray(gAnnotsWithBorder, n, Type(annot));
-    if (!isVisible) {
+    if (!AnnotationSupportsBorder(annot->type)) {
         return;
     }
     int borderWidth = BorderWidth(annot);
@@ -744,14 +723,12 @@ static void IconSelectionChanged(EditAnnotationsWindow* ew) {
 }
 
 static void DoColor(EditAnnotationsWindow* ew, Annotation* annot) {
-    size_t n = dimof(gAnnotsWithColor);
-    bool isVisible = IsAnnotationTypeInArray(gAnnotsWithColor, n, Type(annot));
-    if (!isVisible) {
+    if (!AnnotationSupportsColor(annot->type)) {
         return;
     }
     PdfColor col = GetColor(annot);
     DropDownFillColors(ew->dropDownColor, col, ew->currCustomColor);
-    n = dimof(gAnnotsIsColorBackground);
+    int n = dimof(gAnnotsIsColorBackground);
     bool isBgCol = IsAnnotationTypeInArray(gAnnotsIsColorBackground, n, Type(annot));
     if (isBgCol) {
         ew->staticColor->SetText(_TRA("Background Color:"));
@@ -772,9 +749,7 @@ static void ColorSelectionChanged(EditAnnotationsWindow* ew) {
 }
 
 static void DoInteriorColor(EditAnnotationsWindow* ew, Annotation* annot) {
-    size_t n = dimof(gAnnotsWithInteriorColor);
-    bool isVisible = IsAnnotationTypeInArray(gAnnotsWithInteriorColor, n, Type(annot));
-    if (!isVisible) {
+    if (!AnnotationSupportsInteriorColor(annot->type)) {
         return;
     }
     PdfColor col = InteriorColor(annot);

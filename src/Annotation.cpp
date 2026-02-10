@@ -960,65 +960,75 @@ static TempStr GetAnnotationTextIconTemp() {
     return real;
 }
 
-// clang-format off
-static AnnotationType moveableAnnotations[] = {
-    AnnotationType::Text,
-    AnnotationType::Link,
-    AnnotationType::FreeText,
-    AnnotationType::Line,
-    AnnotationType::Square,
-    AnnotationType::Circle,
-    AnnotationType::Polygon,
-    AnnotationType::PolyLine,
-    //AnnotationType::Highlight,
-    //AnnotationType::Underline,
-    //AnnotationType::Squiggly,
-    //AnnotationType::StrikeOut,
-    //AnnotationType::Redact,
-    AnnotationType::Stamp,
-    AnnotationType::Caret,
-    //AnnotationType::Ink,
-    AnnotationType::Popup,
-    AnnotationType::FileAttachment,
-    AnnotationType::Sound,
-    AnnotationType::Movie,
-    //AnnotationType::Widget, // TODO: maybe moveble?
-    //AnnotationType::Screen,
-    AnnotationType::PrinterMark,
-    AnnotationType::TrapNet,
-    AnnotationType::Watermark,
-    AnnotationType::ThreeD,
-    AnnotationType::Unknown,// sentinel value
+static AnnotationType supportsInteriorColor[] = {
+    AnnotationType::Circle,  AnnotationType::Line,   AnnotationType::PolyLine,
+    AnnotationType::Polygon, AnnotationType::Square,
 };
-// clang-format on
 
-static bool IsAnnotationInList(AnnotationType tp, AnnotationType* allowed) {
+static AnnotationType moveableAnnotations[] = {
+    AnnotationType::Text,      AnnotationType::Link,   AnnotationType::FreeText,    AnnotationType::Line,
+    AnnotationType::Square,    AnnotationType::Circle, AnnotationType::Polygon,     AnnotationType::PolyLine,
+    AnnotationType::Stamp,     AnnotationType::Caret,  AnnotationType::Popup,       AnnotationType::FileAttachment,
+    AnnotationType::Sound,     AnnotationType::Movie,  AnnotationType::PrinterMark, AnnotationType::TrapNet,
+    AnnotationType::Watermark, AnnotationType::ThreeD,
+};
+
+// AnnotationType::Ink,
+// AnnotationType::Redact,
+// AnnotationType::Widget, // TODO: maybe moveble?
+// AnnotationType::Screen,
+
+static AnnotationType supportsBorder[] = {
+    AnnotationType::FreeText, AnnotationType::Ink,     AnnotationType::Line,     AnnotationType::Square,
+    AnnotationType::Circle,   AnnotationType::Polygon, AnnotationType::PolyLine,
+};
+
+static AnnotationType supportsColor[] = {
+    AnnotationType::Stamp,     AnnotationType::Text,      AnnotationType::FileAttachment,
+    AnnotationType::Sound,     AnnotationType::Caret,     AnnotationType::FreeText,
+    AnnotationType::Ink,       AnnotationType::Line,      AnnotationType::Square,
+    AnnotationType::Circle,    AnnotationType::Polygon,   AnnotationType::PolyLine,
+    AnnotationType::Highlight, AnnotationType::Underline, AnnotationType::StrikeOut,
+    AnnotationType::Squiggly,
+};
+
+static bool IsAnnotationInList(AnnotationType tp, AnnotationType* allowed, int nAllowed) {
     if (!allowed) {
         return true;
     }
-    int i = 0;
-    while (allowed[i] != AnnotationType::Unknown) {
+    for (int i = 0; i < nAllowed; i++) {
         AnnotationType tp2 = allowed[i];
         if (tp2 == tp) {
             return true;
         }
-        ++i;
     }
     return false;
 }
 
-bool IsMoveableAnnotation(AnnotationType tp) {
-    return IsAnnotationInList(tp, moveableAnnotations);
+bool AnnotationCanBeMoved(AnnotationType tp) {
+    return IsAnnotationInList(tp, moveableAnnotations, dimofi(moveableAnnotations));
 }
 
-bool IsResizeableAnnotation(AnnotationType tp) {
+bool AnnotationCanBeResized(AnnotationType tp) {
     switch (tp) {
         // TODO: for now don't allow resizing text annotation because it's just an icon
         // would have to figure out how to change the size of the icon
         case AnnotationType::Text:
             return false;
     }
-    return IsAnnotationInList(tp, moveableAnnotations);
+    return AnnotationCanBeMoved(tp);
+}
+
+bool AnnotationSupportsInteriorColor(AnnotationType tp) {
+    return IsAnnotationInList(tp, supportsInteriorColor, dimofi(supportsInteriorColor));
+}
+
+bool AnnotationSupportsBorder(AnnotationType tp) {
+    return IsAnnotationInList(tp, supportsBorder, dimofi(supportsBorder));
+}
+
+bool AnnotationSupportsColor(AnnotationType tp) {
+    return IsAnnotationInList(tp, supportsColor, dimofi(supportsColor));
 }
 
 Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF pos, AnnotCreateArgs* args) {
@@ -1032,6 +1042,7 @@ Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF p
     auto typ = args->annotType;
     auto col = args->col;
     auto bgCol = args->bgCol;
+    auto interiorCol = args->interiorCol;
     {
         ScopedCritSec cs(epdf->ctxAccess);
 
@@ -1139,6 +1150,11 @@ Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF p
                 }
             }
 
+            if (interiorCol.parsedOk && AnnotationSupportsInteriorColor(typ)) {
+                float interiorColor[3]{};
+                PdfColorToFloat(interiorCol.pdfCol, interiorColor);
+                pdf_set_annot_interior_color(ctx, annot, 3, interiorColor);
+            }
             pdf_update_annot(ctx, annot);
         }
         fz_catch(ctx) {
@@ -1172,10 +1188,6 @@ Annotation* EngineMupdfCreateAnnotation(EngineBase* engine, int pageNo, PointF p
                 break;
         }
     }
-    if (args->interiorCol.parsedOk) {
-        SetInteriorColor(res, args->interiorCol.pdfCol);
-    }
-
     pdf_drop_annot(ctx, annot);
     return res;
 }

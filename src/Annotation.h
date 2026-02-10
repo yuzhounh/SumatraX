@@ -130,6 +130,10 @@ bool IsAnnotationEq(Annotation* a1, Annotation* a2);
 void PdfColorToFloat(PdfColor c, float rgb[3]);
 
 void DeleteAnnotation(Annotation*);
-bool IsMoveableAnnotation(AnnotationType);
-bool IsResizeableAnnotation(AnnotationType);
+bool AnnotationCanBeMoved(AnnotationType);
+bool AnnotationCanBeResized(AnnotationType);
+bool AnnotationSupportsColor(AnnotationType);
+bool AnnotationSupportsBorder(AnnotationType);
+bool AnnotationSupportsInteriorColor(AnnotationType);
+
 AnnotationType CmdIdToAnnotationType(int cmdId);

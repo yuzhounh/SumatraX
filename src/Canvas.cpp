@@ -708,12 +708,12 @@ static void OnMouseLeftButtonDown(MainWindow* win, int x, int y, WPARAM key) {
 
     WindowTab* tab = win->CurrentTab();
     Annotation* annot = dm->GetAnnotationAtPos(pt, tab->selectedAnnotation);
-    bool isMoveableAnnot = annot && (annot == tab->selectedAnnotation) && IsMoveableAnnotation(annot->type);
+    bool isMoveableAnnot = annot && (annot == tab->selectedAnnotation) && AnnotationCanBeMoved(annot->type);
     // Check if we're clicking on a resize handle of the selected annotation
     // must check selectedAnnotation directly (not annot) because resize handles
     // extend beyond annotation bounds and GetAnnotationAtPos() won't find them
     ResizeHandle resizeHandle = ResizeHandle::None;
-    if (tab->selectedAnnotation && IsResizeableAnnotation(tab->selectedAnnotation->type)) {
+    if (tab->selectedAnnotation && AnnotationCanBeResized(tab->selectedAnnotation->type)) {
         resizeHandle = GetResizeHandleAt(win, pt, tab->selectedAnnotation);
     }
 
@@ -1135,7 +1135,7 @@ NO_INLINE static void PaintCurrentEditAnnotationMark(WindowTab* tab, HDC hdc, Di
         // it might not have zoom etc. calculated yet
         return;
     }
-    bool canResize = IsResizeableAnnotation(annot->type);
+    bool canResize = AnnotationCanBeResized(annot->type);
 
     Rect rect = dm->CvtToScreen(pageNo, GetRect(annot));
     if (!tab->didScrollToSelectedAnnotation) {
@@ -1416,7 +1416,7 @@ static LRESULT OnSetCursorMouseNone(MainWindow* win, HWND hwnd) {
     Annotation* selected = win->CurrentTab()->selectedAnnotation;
 
     // Check if hovering over resize handle of selected annotation
-    if (selected && IsResizeableAnnotation(selected->type)) {
+    if (selected && AnnotationCanBeResized(selected->type)) {
         ResizeHandle handle = GetResizeHandleAt(win, pt, selected);
         if (handle != ResizeHandle::None) {
             SetCursorCached(GetCursorForResizeHandle(handle));
@@ -1425,7 +1425,7 @@ static LRESULT OnSetCursorMouseNone(MainWindow* win, HWND hwnd) {
     }
 
     Annotation* annot = dm->GetAnnotationAtPos(pt, selected);
-    if (annot && (annot == selected) && IsMoveableAnnotation(annot->type)) {
+    if (annot && (annot == selected) && AnnotationCanBeMoved(annot->type)) {
         SetCursorCached(IDC_HAND);
         return TRUE;
     }
