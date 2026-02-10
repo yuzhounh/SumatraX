@@ -2824,6 +2824,11 @@ void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose) {
     // if list not empty, only close the tabs not on the list
     if (!canCloseWindow) {
         win->isBeingClosed = false;
+        for (auto& tab : win->Tabs()) {
+            if (tab->AsFixed()) {
+                tab->AsFixed()->pauseRendering = false;
+            }
+        }
         return;
     }
 
@@ -6395,7 +6400,7 @@ LRESULT CALLBACK WndProcSumatraFrame(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) 
             if (CanCloseWindow(win)) {
                 CloseWindow(win, true, false);
             }
-            break;
+            return 0;
         }
 
         case WM_DESTROY: {
