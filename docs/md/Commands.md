@@ -355,7 +355,7 @@ Arguments:
 
 Use case: if you want to go forward, back by more than 1 page
 
-## `CmdCreateAnnotHighlight` and other `CmdCreateAnnot*`
+## `CmdCreateAnnotHighlight` and other`CmdCreateAnnot*`
 
 Arguments:
 
@@ -379,7 +379,7 @@ Shortcuts [
 ]
 ```
 
-## CmdCreateAnnotFreeText
+## Other CmdCreateAnnot* arguments
 
 **Ver 3.6+**
 
@@ -390,6 +390,7 @@ Arguments for `CmdCreateAnnotHighlight` plus:
 - `textsize` : size of annotation text, 12 if not given
 - `borderwidth` : border width, 1 if not given
 - `opacity` : opacity of annotation, 0 - fully transparent (i.e. invisible), 100 - fully opaque (default if not given)
+- `interiorcolor` : interior color for circle, square etc. annotations, fully transparent if not given
 
 ## `CmdZoomCustom`
 
