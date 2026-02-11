@@ -120,7 +120,9 @@ static bool NeedsInfo(MainWindow* win) {
     return show;
 }
 
-static bool IsToolbarButtonVisible(MainWindow* win, int cmdId) {
+// some commands are only avialble in certain contexts
+// we remove toolbar buttons for un-availalbe commands 
+static bool IsCmdAvailable(MainWindow* win, int cmdId) {
     switch (cmdId) {
         case CmdZoomFitWidthAndContinuous:
         case CmdZoomFitPageAndSinglePage:
@@ -140,7 +142,7 @@ static bool IsToolbarButtonVisible(MainWindow* win, int cmdId) {
     }
 }
 
-static bool IsToolbarButtonEnabled(MainWindow* win, int cmdId) {
+static bool IsCmdEnabled(MainWindow* win, int cmdId) {
     auto ctx = NewBuildMenuCtx(win->CurrentTab(), Point{0, 0});
     AutoRun delCtx(DeleteBuildMenuCtx, ctx);
 
@@ -302,13 +304,13 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
         auto& tb = gToolbarButtons[i];
         int cmdId = tb.cmdId;
         if (setButtonsVisibility) {
-            bool hide = !IsToolbarButtonVisible(win, cmdId);
+            bool hide = !IsCmdAvailable(win, cmdId);
             SendMessageW(hwnd, TB_HIDEBUTTON, cmdId, hide);
         }
         if (SkipBuiltInButton(tb)) {
             continue;
         }
-        bool isEnabled = IsToolbarButtonEnabled(win, cmdId);
+        bool isEnabled = IsCmdEnabled(win, cmdId);
         SetToolbarButtonEnableState(win, cmdId, isEnabled);
     }
 
