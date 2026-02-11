@@ -56,10 +56,9 @@ struct BuildMenuCtx {
     bool hasUnsavedAnnotations = false;
     bool isCursorOnPage = false;
     bool canSendEmail = false;
-    ~BuildMenuCtx();
+    BuildMenuCtx() = default;
+    ~BuildMenuCtx() = default;
 };
-
-BuildMenuCtx::~BuildMenuCtx() {}
 
 // value associated with menu item for owner-drawn purposes
 struct MenuOwnerDrawInfo {

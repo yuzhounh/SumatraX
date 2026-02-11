@@ -137,9 +137,11 @@ static bool IsCmdAvailable(MainWindow* win, int cmdId) {
             return NeedsFindUI(win);
         case CmdInfoText:
             return NeedsInfo(win);
-        default:
-            return true;
     }
+    auto ctx = NewBuildMenuCtx(win->CurrentTab(), Point{0, 0});
+    AutoRun delCtx(DeleteBuildMenuCtx, ctx);
+    auto [remove, disable] = GetCommandIdState(ctx, cmdId);
+    return !remove;
 }
 
 static bool IsCmdEnabled(MainWindow* win, int cmdId) {
@@ -297,11 +299,23 @@ static void SetToolbarInfoText(MainWindow* win, const char* s) {
     MoveWindow(hwnd, x, y, size.dx, size.dy, TRUE);
 }
 
+static int TotalButtonsCount() {
+    int nCustomButtons = gCustomToolbarButtons ? gCustomToolbarButtons->Size() : 0;
+    return kButtonsCount + nCustomButtons;
+}
+
+static ToolbarButtonInfo& GetToolbarButtonInfoByIdx(int idx) {
+    if (idx < kButtonsCount) return gToolbarButtons[idx];
+    return gCustomToolbarButtons->At(idx - kButtonsCount);
+}
+
+
 // TODO: this is called too often
 void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
     HWND hwnd = win->hwndToolbar;
-    for (int i = 0; i < kButtonsCount; i++) {
-        auto& tb = gToolbarButtons[i];
+    int n = TotalButtonsCount();
+    for (int i = 0; i < n; i++) {
+        auto& tb = GetToolbarButtonInfoByIdx(i);
         int cmdId = tb.cmdId;
         if (setButtonsVisibility) {
             bool hide = !IsCmdAvailable(win, cmdId);
@@ -331,16 +345,10 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
 // so 4 should be more than enough
 static int GetToolbarButtonsByID(int cmdId, int (&buttons)[4]) {
     int nFound = 0;
-    int nCustom = gCustomToolbarButtons ? gCustomToolbarButtons->Size() : 0;
-    int n = kButtonsCount + nCustom;
-    ToolbarButtonInfo* tb;
+    int n = TotalButtonsCount();
     for (int idx = 0; idx < n; idx++) {
-        if (idx < kButtonsCount) {
-            tb = &gToolbarButtons[idx];
-        } else {
-            tb = &gCustomToolbarButtons->At(idx - kButtonsCount);
-        }
-        int tbCmdId = tb->cmdId;
+        ToolbarButtonInfo& tb = GetToolbarButtonInfoByIdx(idx);
+        int tbCmdId = tb.cmdId;
         auto cmd = FindCustomCommand(tbCmdId);
         if (cmd) tbCmdId = cmd->origId;
         cmd = FindCustomCommand(cmdId);
