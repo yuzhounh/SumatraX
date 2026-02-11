@@ -47,11 +47,6 @@ extern "C" {
 
 // https://docs.microsoft.com/en-us/windows/win32/controls/toolbar-control-reference
 
-// TODO: experimenting with matching toolbar colors with theme
-// Doesn't work, probably have to implement a custom toolbar control
-// where we draw everything ourselves.
-// #define USE_THEME_COLORS 1
-
 static int kButtonSpacingX = 4;
 
 // distance between label and edit field
@@ -121,7 +116,7 @@ static bool NeedsInfo(MainWindow* win) {
 }
 
 // some commands are only avialble in certain contexts
-// we remove toolbar buttons for un-availalbe commands 
+// we remove toolbar buttons for un-availalbe commands
 static bool IsCmdAvailable(MainWindow* win, int cmdId) {
     switch (cmdId) {
         case CmdZoomFitWidthAndContinuous:
@@ -226,6 +221,16 @@ static TBBUTTON TbButtonFromButtonInfo(const ToolbarButtonInfo& bi) {
     return b;
 }
 
+static int TotalButtonsCount() {
+    int nCustomButtons = gCustomToolbarButtons ? gCustomToolbarButtons->Size() : 0;
+    return kButtonsCount + nCustomButtons;
+}
+
+static ToolbarButtonInfo& GetToolbarButtonInfoByIdx(int idx) {
+    if (idx < kButtonsCount) return gToolbarButtons[idx];
+    return gCustomToolbarButtons->At(idx - kButtonsCount);
+}
+
 // Set toolbar button tooltips taking current language into account.
 void UpdateToolbarButtonsToolTipsForWindow(MainWindow* win) {
     TBBUTTONINFO binfo{};
@@ -286,29 +291,13 @@ static void SetToolbarInfoText(MainWindow* win, const char* s) {
         return;
     }
     TbSetButtonDx(win->hwndToolbar, CmdInfoText, size.dx);
-    int lastButtonCmdId = (int)CmdFindToggleMatchCase;
-    if (gCustomToolbarButtons) {
-        int n = gCustomToolbarButtons->Size();
-        ToolbarButtonInfo& last = gCustomToolbarButtons->At(n - 1);
-        lastButtonCmdId = last.cmdId;
-    }
+    int lastIdx = TotalButtonsCount() - 1;
     RECT r{};
-    TbGetRect(win->hwndToolbar, lastButtonCmdId, &r);
+    TbGetRectByIdx(win->hwndToolbar, lastIdx, &r);
     int x = r.right + DpiScale(win->hwndToolbar, 10);
     int y = (r.bottom - size.dy) / 2;
     MoveWindow(hwnd, x, y, size.dx, size.dy, TRUE);
 }
-
-static int TotalButtonsCount() {
-    int nCustomButtons = gCustomToolbarButtons ? gCustomToolbarButtons->Size() : 0;
-    return kButtonsCount + nCustomButtons;
-}
-
-static ToolbarButtonInfo& GetToolbarButtonInfoByIdx(int idx) {
-    if (idx < kButtonsCount) return gToolbarButtons[idx];
-    return gCustomToolbarButtons->At(idx - kButtonsCount);
-}
-
 
 // TODO: this is called too often
 void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
@@ -341,8 +330,7 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
     SetToolbarInfoText(win, msg);
 }
 
-// at most there should be 2 buttons with same id (one built-in, one custom)
-// so 4 should be more than enough
+// more than one because users can add custom buttons with overlapping ids
 static int GetToolbarButtonsByID(int cmdId, int (&buttons)[4]) {
     int nFound = 0;
     int n = TotalButtonsCount();
@@ -616,7 +604,7 @@ void UpdateToolbarFindText(MainWindow* win) {
     Rect findWndRect = WindowRect(win->hwndFindBg);
 
     RECT r{};
-    TbGetRect(win->hwndToolbar, CmdZoomIn, &r);
+    TbGetRectById(win->hwndToolbar, CmdZoomIn, &r);
     int currX = r.right + DpiScale(win->hwndToolbar, 10);
     int currY = (r.bottom - findWndRect.dy) / 2;
 

@@ -348,7 +348,8 @@ void TbGetPadding(HWND, int* padX, int* padY);
 void TbSetPadding(HWND, int padX, int padY);
 void TbGetMetrics(HWND hwnd, TBMETRICS* metrics);
 void TbSetMetrics(HWND hwnd, TBMETRICS* metrics);
-void TbGetRect(HWND hwnd, int buttonId, RECT* rc);
+void TbGetRectById(HWND hwnd, int buttonId, RECT* rc);
+void TbGetRectByIdx(HWND hwnd, int buttonIdx, RECT* rc);
 
 void TreeViewExpandRecursively(HWND hTree, HTREEITEM hItem, uint flag, bool subtree);
 void AddPathToRecentDocs(const char*);

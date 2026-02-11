@@ -2887,10 +2887,19 @@ void TbSetPadding(HWND hwnd, int padX, int padY) {
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/controls/tb-getrect
-void TbGetRect(HWND hwnd, int buttonId, RECT* rc) {
+void TbGetRectById(HWND hwnd, int buttonId, RECT* rc) {
     auto res = SendMessageW(hwnd, TB_GETRECT, buttonId, (LPARAM)rc);
     if (res == 0) {
-        logf("TbGetRect: hwnd=0x%p, buttonId: %d\n", hwnd,  buttonId);
+        logf("TbGetRect: hwnd=0x%p, buttonId: %d\n", hwnd, buttonId);
+        LogLastError();
+        ReportIf(res == 0);
+    }
+}
+
+void TbGetRectByIdx(HWND hwnd, int buttonIdx, RECT* rc) {
+    auto res = SendMessageW(hwnd, TB_GETITEMRECT, buttonIdx, (LPARAM)rc);
+    if (res == 0) {
+        logf("TbGetRectByIdx: hwnd=0x%p, buttonId: %d\n", hwnd, buttonIdx);
         LogLastError();
         ReportIf(res == 0);
     }
