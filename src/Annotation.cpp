@@ -965,18 +965,14 @@ static AnnotationType supportsInteriorColor[] = {
     AnnotationType::Polygon, AnnotationType::Square,
 };
 
+// matches rect_subtypes in pdf-annot.c + Line (because special case it in SetRect())
+// TODO: should include AnnotationType::ThreeD but mupdf doesn't
 static AnnotationType moveableAnnotations[] = {
-    AnnotationType::Text,      AnnotationType::Link,   AnnotationType::FreeText,    AnnotationType::Line,
-    AnnotationType::Square,    AnnotationType::Circle, AnnotationType::Polygon,     AnnotationType::PolyLine,
-    AnnotationType::Stamp,     AnnotationType::Caret,  AnnotationType::Popup,       AnnotationType::FileAttachment,
-    AnnotationType::Sound,     AnnotationType::Movie,  AnnotationType::PrinterMark, AnnotationType::TrapNet,
-    AnnotationType::Watermark, AnnotationType::ThreeD,
+    AnnotationType::Text,           AnnotationType::FreeText, AnnotationType::Square, AnnotationType::Circle,
+    AnnotationType::Redact,         AnnotationType::Stamp,    AnnotationType::Caret,  AnnotationType::Popup,
+    AnnotationType::FileAttachment, AnnotationType::Sound,    AnnotationType::Movie,  AnnotationType::Widget,
+    AnnotationType::Line,
 };
-
-// AnnotationType::Ink,
-// AnnotationType::Redact,
-// AnnotationType::Widget, // TODO: maybe moveble?
-// AnnotationType::Screen,
 
 static AnnotationType supportsBorder[] = {
     AnnotationType::FreeText, AnnotationType::Ink,     AnnotationType::Line,     AnnotationType::Square,
