@@ -2889,7 +2889,11 @@ void TbSetPadding(HWND hwnd, int padX, int padY) {
 // https://docs.microsoft.com/en-us/windows/win32/controls/tb-getrect
 void TbGetRect(HWND hwnd, int buttonId, RECT* rc) {
     auto res = SendMessageW(hwnd, TB_GETRECT, buttonId, (LPARAM)rc);
-    ReportIf(res == 0);
+    if (res == 0) {
+        logf("TbGetRect: hwnd=0x%p, buttonId: %d\n", hwnd,  buttonId);
+        LogLastError();
+        ReportIf(res == 0);
+    }
 }
 
 void TbGetMetrics(HWND hwnd, TBMETRICS* metrics) {
