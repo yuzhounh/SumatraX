@@ -397,11 +397,12 @@ bool HuffDicDecompressor::AddCdicData(u8* cdicData, u32 cdicDataLen) {
     return true;
 }
 
-static void DecodeMobiDocHeader(const u8* buf, MobiHeader* hdr) {
+static void DecodeMobiDocHeader(const u8* buf, size_t bufLen, MobiHeader* hdr) {
     memset(hdr, 0, sizeof(MobiHeader));
     hdr->drmEntriesCount = (u32)-1;
 
-    ByteOrderDecoder d(buf, kMobiHeaderLen, ByteOrderDecoder::BigEndian);
+    size_t decLen = std::min(bufLen, (size_t)kMobiHeaderLen);
+    ByteOrderDecoder d(buf, decLen, ByteOrderDecoder::BigEndian);
     d.Bytes(hdr->id, 4);
     hdr->hdrLen = d.UInt32();
     hdr->type = d.UInt32();
@@ -451,9 +452,6 @@ static void DecodeMobiDocHeader(const u8* buf, MobiHeader* hdr) {
     hdr->extraDataFlags = d.UInt16();
     if (hdr->hdrLen >= 232) {
         hdr->indxRec = d.UInt32();
-        ReportIf(kMobiHeaderLen != d.Offset());
-    } else {
-        ReportIf(kMobiHeaderLen - 4 != d.Offset());
     }
 }
 
@@ -532,7 +530,8 @@ bool MobiDoc::ParseHeader() {
     }
 
     MobiHeader mobiHdr;
-    DecodeMobiDocHeader(firstRecData + kPalmDocHeaderLen, &mobiHdr);
+    size_t mobiDataLen = recSize - kPalmDocHeaderLen;
+    DecodeMobiDocHeader(firstRecData + kPalmDocHeaderLen, mobiDataLen, &mobiHdr);
     if (!str::EqN("MOBI", mobiHdr.id, 4)) {
         logf("MobiHeader.id is not 'MOBI'\n");
         return false;
