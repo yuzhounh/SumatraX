@@ -87,7 +87,12 @@ static ToolbarButtonInfo gToolbarButtons[] = {
 
 constexpr int kButtonsCount = dimof(gToolbarButtons);
 
-static Vec<ToolbarButtonInfo>* gCustomToolbarButtons = nullptr;
+// 128 should be more than enough
+// we use static array so that we don't have to generate
+// code for Vec<ToolbarButtonInfo>
+constexpr int kMaxCustomButtons = 128;
+static ToolbarButtonInfo gCustomButtons[kMaxCustomButtons];
+int gCustomButtonsCount = 0;
 
 static bool SkipBuiltInButton(const ToolbarButtonInfo& tbi) {
     return tbi.bmpIndex == TbIcon::None;
@@ -222,13 +227,12 @@ static TBBUTTON TbButtonFromButtonInfo(const ToolbarButtonInfo& bi) {
 }
 
 static int TotalButtonsCount() {
-    int nCustomButtons = gCustomToolbarButtons ? gCustomToolbarButtons->Size() : 0;
-    return kButtonsCount + nCustomButtons;
+    return kButtonsCount + gCustomButtonsCount;
 }
 
 static ToolbarButtonInfo& GetToolbarButtonInfoByIdx(int idx) {
     if (idx < kButtonsCount) return gToolbarButtons[idx];
-    return gCustomToolbarButtons->At(idx - kButtonsCount);
+    return gCustomButtons[idx - kButtonsCount];
 }
 
 // Set toolbar button tooltips taking current language into account.
@@ -1078,11 +1082,13 @@ void CreateToolbar(MainWindow* win) {
     }
     SendMessageW(hwndToolbar, TB_ADDBUTTONS, kButtonsCount, (LPARAM)tbButtons);
 
-    delete gCustomToolbarButtons;
-    gCustomToolbarButtons = nullptr;
+    gCustomButtonsCount = 0;
 
     char* text;
     for (Shortcut* shortcut : *gGlobalPrefs->shortcuts) {
+        if (gCustomButtonsCount >= kMaxCustomButtons) {
+            break;
+        }
         text = shortcut->toolbarText;
         if (str::IsEmptyOrWhiteSpace(text)) {
             continue;
@@ -1091,20 +1097,15 @@ void CreateToolbar(MainWindow* win) {
         tbi.bmpIndex = TbIcon::Text;
         tbi.cmdId = shortcut->cmdId;
         tbi.toolTip = text;
-        if (!gCustomToolbarButtons) {
-            gCustomToolbarButtons = new Vec<ToolbarButtonInfo>();
-        }
-        gCustomToolbarButtons->Append(tbi);
+        gCustomButtons[gCustomButtonsCount++] = tbi;
     }
-    if (gCustomToolbarButtons) {
-        int n = gCustomToolbarButtons->Size();
-        TBBUTTON* buttons = AllocArray<TBBUTTON>(n);
-        for (int i = 0; i < n; i++) {
-            ToolbarButtonInfo tbi = gCustomToolbarButtons->At(i);
+    if (gCustomButtonsCount > 0) {
+        TBBUTTON* buttons = AllocArrayTemp<TBBUTTON>(gCustomButtonsCount);
+        for (int i = 0; i < gCustomButtonsCount; i++) {
+            ToolbarButtonInfo& tbi = gCustomButtons[i];
             buttons[i] = TbButtonFromButtonInfo(tbi);
         }
-        SendMessageW(hwndToolbar, TB_ADDBUTTONS, n, (LPARAM)buttons);
-        free((void*)buttons);
+        SendMessageW(hwndToolbar, TB_ADDBUTTONS, gCustomButtonsCount, (LPARAM)buttons);
     }
 
     {
