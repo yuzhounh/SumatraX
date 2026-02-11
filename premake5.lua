@@ -208,6 +208,7 @@ workspace "SumatraPDF"
     sanitize { "Address" }
     defines { "ASAN_BUILD=1" }
     flags { "NoIncrementalLink" }
+    editandcontinue "Off"
     -- disablewarnings { "4731" }
   filter {}
 
