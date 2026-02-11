@@ -19740,6 +19740,10 @@ uk:Заголовок:
 uz:Sarlavha:
 vn:Tựa đề
 :Toggle Match Case
+br:Diferenciar Maiúsculas/Minúsculas
+de:Groß-/Kleinschreibung umschalten
+pl:Przełącz uwzględnianie wielkości liter
+sk:Prepnúť rozlišovanie veľkých/malých písmen
 :Translate with &DeepL
 am:Թարգմանել &DeepL-ով
 ar:ترجمة في &DeepL

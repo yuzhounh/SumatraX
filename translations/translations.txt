@@ -1,5 +1,5 @@
 AppTranslator: SumatraPDF
-a76630fb3aa30ccc278087ba7f473025c8be0ce1
+c9d94b4d526750cd52c05723e4615e148af942fd
 :%s annotation. Ctrl+click to edit.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
 ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
@@ -22318,6 +22318,10 @@ uk:Заголовок:
 uz:Sarlavha:
 vn:Tựa đề
 :Toggle Match Case
+br:Diferenciar Maiúsculas/Minúsculas
+de:Groß-/Kleinschreibung umschalten
+pl:Przełącz uwzględnianie wielkości liter
+sk:Prepnúť rozlišovanie veľkých/malých písmen
 :Translate with &DeepL
 am:Թարգմանել &DeepL-ով
 ar:ترجمة في &DeepL
