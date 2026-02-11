@@ -6029,6 +6029,12 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
 
         case CmdToggleAntiAlias: {
             gGlobalPrefs->disableAntiAlias ^= true;
+            for (auto* w : gWindows) {
+                DisplayModel* fixedModel = w->AsFixed();
+                if (fixedModel) {
+                    fixedModel->GetEngine()->disableAntiAlias = gGlobalPrefs->disableAntiAlias;
+                }
+            }
             RerenderFixedPage();
             SaveSettings();
             break;

@@ -376,6 +376,7 @@ class EngineBase {
     char* decryptionKey = nullptr;
     bool hasPageLabels = false;
     bool hideAnnotations = false;
+    bool disableAntiAlias = false;
     int pageCount = -1;
 
     // TODO: migrate other engines to use this

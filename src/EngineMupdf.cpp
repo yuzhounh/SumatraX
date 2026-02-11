@@ -33,7 +33,6 @@ extern "C" {
 #include "EbookDoc.h"
 #include "SumatraConfig.h"
 #include "Settings.h"
-#include "GlobalPrefs.h"
 
 #include "utils/Log.h"
 
@@ -1740,6 +1739,8 @@ EngineBase* EngineMupdf::Clone() {
     }
     delete pwdUI;
 
+    clone->disableAntiAlias = disableAntiAlias;
+
     if (!decryptionKey && pdfdoc && pdfdoc->crypt) {
         free(clone->decryptionKey);
         clone->decryptionKey = nullptr;
@@ -2949,7 +2950,7 @@ RenderedBitmap* EngineMupdf::RenderPage(RenderPageArgs& args) {
 
     ScopedCritSec cs(ctxAccess);
 
-    if (gGlobalPrefs->disableAntiAlias) {
+    if (disableAntiAlias) {
         fz_set_aa_level(ctx, 0);
     } else {
         // 8 seems to be the default
