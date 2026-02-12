@@ -991,9 +991,10 @@ void CreateToc(MainWindow* win) {
 
     auto l = new LabelWithCloseWnd();
     {
-        LabelWithCloseCreateArgs args;
+        LabelWithCloseWnd::CreateArgs args;
         args.parent = win->hwndTocBox;
         args.cmdId = IDC_TOC_LABEL_WITH_CLOSE;
+        args.isRtl = IsUIRtl();
         // TODO: use the same font size as in GetTreeFont()?
         args.font = GetDefaultGuiFont(true, false);
         l->Create(args);
@@ -1008,6 +1009,7 @@ void CreateToc(MainWindow* win) {
     args.font = GetAppTreeFont();
     args.fullRowSelect = true;
     args.exStyle = WS_EX_STATICEDGE;
+    args.isRtl = IsUIRtl();
 
     auto fn = MkFunc1Void(TocContextMenu);
     treeView->onContextMenu = fn;

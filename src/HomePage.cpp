@@ -447,10 +447,12 @@ static void CreateInfotipForLink(StaticLinkInfo* linkInfo) {
         return;
     }
 
-    gAboutTooltip = new Tooltip();
     Tooltip::CreateArgs args;
     args.parent = gHwndAbout;
     args.font = GetAppFont();
+    args.isRtl = IsUIRtl();
+
+    gAboutTooltip = new Tooltip();
     gAboutTooltip->Create(args);
     gAboutTooltip->SetSingle(linkInfo->tooltip, linkInfo->rect, false);
 }

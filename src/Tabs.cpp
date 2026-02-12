@@ -431,20 +431,20 @@ static void MainWindowTabMigration(MainWindow* win, TabsCtrl::MigrationEvent* ev
 }
 
 void CreateTabbar(MainWindow* win) {
-    TabsCtrl* tabsCtrl = new TabsCtrl();
-
-    tabsCtrl->onTabClosed = MkFunc1(MainWindowTabClosed, win);
-    tabsCtrl->onSelectionChanging = MkFunc1(MainWindowTabSelectionChanging, win);
-    tabsCtrl->onSelectionChanged = MkFunc1(MainWindowTabSelectionChanged, win);
-    tabsCtrl->onContextMenu = MkFunc1Void(TabsContextMenu);
-    tabsCtrl->onTabMigration = MkFunc1(MainWindowTabMigration, win);
-
     TabsCtrl::CreateArgs args;
     args.parent = win->hwndFrame;
     args.withToolTips = true;
     args.font = GetAppFont();
     int tabWidth = gGlobalPrefs->tabWidth;
     args.tabDefaultDx = tabWidth;
+    args.isRtl = IsUIRtl();
+
+    TabsCtrl* tabsCtrl = new TabsCtrl();
+    tabsCtrl->onTabClosed = MkFunc1(MainWindowTabClosed, win);
+    tabsCtrl->onSelectionChanging = MkFunc1(MainWindowTabSelectionChanging, win);
+    tabsCtrl->onSelectionChanged = MkFunc1(MainWindowTabSelectionChanged, win);
+    tabsCtrl->onContextMenu = MkFunc1Void(TabsContextMenu);
+    tabsCtrl->onTabMigration = MkFunc1(MainWindowTabMigration, win);
     tabsCtrl->Create(args);
     win->tabsCtrl = tabsCtrl;
     win->tabSelectionHistory = new Vec<WindowTab*>();

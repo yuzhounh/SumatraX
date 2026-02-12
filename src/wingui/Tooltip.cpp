@@ -155,6 +155,7 @@ HWND Tooltip::Create(const CreateArgs& args) {
     CreateControlArgs cargs;
     cargs.className = TOOLTIPS_CLASS;
     cargs.font = args.font;
+    cargs.isRtl = args.isRtl;
     cargs.style = WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP;
     cargs.exStyle = WS_EX_TOPMOST;
 

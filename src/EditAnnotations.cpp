@@ -1005,6 +1005,7 @@ static Static* CreateStatic(HWND parent, const char* s = nullptr) {
     Static::CreateArgs args;
     args.parent = parent;
     args.text = s;
+    args.isRtl = IsUIRtl();
     args.font = GetAppFont();
     HWND hwnd = w->Create(args);
     ReportIf(!hwnd);
@@ -1023,6 +1024,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         args.parent = parent;
         args.idealSizeLines = 5;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
         auto w = new ListBox();
         w->SetInsetsPt(4, 0);
         w->Create(args);
@@ -1072,6 +1074,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         args.isMultiLine = true;
         args.idealSizeLines = 5;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
         auto w = new Edit();
         HWND hwnd = w->Create(args);
         ReportIf(!hwnd);
@@ -1092,6 +1095,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         DropDown::CreateArgs args;
         args.parent = parent;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new DropDown();
         w->SetInsetsPt(4, 0, 0, 0);
@@ -1114,6 +1118,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         DropDown::CreateArgs args;
         args.parent = parent;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
         auto w = new DropDown();
         w->SetInsetsPt(4, 0, 0, 0);
 
@@ -1137,6 +1142,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         args.rangeMin = 8;
         args.rangeMax = 36;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new Trackbar();
         w->SetInsetsPt(4, 0, 0, 0);
@@ -1158,6 +1164,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         DropDown::CreateArgs args;
         args.parent = parent;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new DropDown();
         w->SetInsetsPt(4, 0, 0, 0);
@@ -1180,6 +1187,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         DropDown::CreateArgs args;
         args.parent = parent;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new DropDown();
         w->SetInsetsPt(4, 0, 0, 0);
@@ -1201,6 +1209,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         DropDown::CreateArgs args;
         args.parent = parent;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new DropDown();
         w->SetInsetsPt(4, 0, 0, 0);
@@ -1222,6 +1231,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         DropDown::CreateArgs args;
         args.parent = parent;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new DropDown();
         w->SetInsetsPt(4, 0, 0, 0);
@@ -1245,6 +1255,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         args.rangeMin = borderWidthMin;
         args.rangeMax = borderWidthMax;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new Trackbar();
         w->Create(args);
@@ -1264,6 +1275,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         DropDown::CreateArgs args;
         args.parent = parent;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new DropDown();
         w->SetInsetsPt(4, 0, 0, 0);
@@ -1285,6 +1297,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         DropDown::CreateArgs args;
         args.parent = parent;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new DropDown();
         w->SetInsetsPt(4, 0, 0, 0);
@@ -1309,6 +1322,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         args.rangeMin = 0;
         args.rangeMax = 255;
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new Trackbar();
         w->Create(args);
@@ -1323,6 +1337,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         args.parent = parent;
         args.text = "Save...";
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new Button();
         w->SetInsetsPt(8, 0, 0, 0);
@@ -1339,6 +1354,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         args.parent = parent;
         args.text = "Embed...";
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new Button();
         w->SetInsetsPt(8, 0, 0, 0);
@@ -1355,6 +1371,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         args.parent = parent;
         args.text = _TRN("Delete Annotation");
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new Button();
         w->SetInsetsPt(11, 0, 0, 0);
@@ -1381,6 +1398,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         // TODO: maybe  file name e.g. "Save changes to foo.pdf"
         args.text = _TRA("Save changes to existing PDF");
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new Button();
         HWND hwnd = w->Create(args);
@@ -1398,6 +1416,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
         // TODO: maybe  file name e.g. "Save changes to foo.pdf"
         args.text = _TRA("Save changes to a new PDF");
         args.font = fnt;
+        args.isRtl = IsUIRtl();
 
         auto w = new Button();
         w->SetInsetsPt(8, 0, 0, 0);

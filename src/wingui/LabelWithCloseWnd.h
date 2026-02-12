@@ -1,17 +1,18 @@
 /* Copyright 2022 the SumatraPDF project authors (see AUTHORS file).
    License: Simplified BSD (see COPYING.BSD) */
 
-struct LabelWithCloseCreateArgs {
-    HWND parent = nullptr;
-    HFONT font = nullptr;
-    int cmdId = 0;
-};
-
 struct LabelWithCloseWnd : Wnd {
+    struct CreateArgs {
+        HWND parent = nullptr;
+        HFONT font = nullptr;
+        int cmdId = 0;
+        bool isRtl = false;
+    };
+
     LabelWithCloseWnd() = default;
     ~LabelWithCloseWnd() override = default;
 
-    HWND Create(const LabelWithCloseCreateArgs&);
+    HWND Create(const CreateArgs&);
 
     void OnPaint(HDC hdc, PAINTSTRUCT* ps) override;
     LRESULT WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;

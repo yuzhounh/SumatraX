@@ -427,12 +427,12 @@ static bool CreatePropertiesWindow(HWND hParent, PropertiesLayout* layoutData, b
         Button::CreateArgs args;
         args.parent = hwnd;
         args.text = _TRA("Copy To Clipboard");
+        args.isRtl = IsUIRtl();
 
         auto b = new Button();
         b->Create(args);
 
         layoutData->btnCopyToClipboard = b;
-        HwndSetRtl(b->hwnd, isRtl);
         b->onClick = MkFunc0(CopyPropertiesToClipboard, layoutData);
     }
 
@@ -440,11 +440,11 @@ static bool CreatePropertiesWindow(HWND hParent, PropertiesLayout* layoutData, b
         Button::CreateArgs args;
         args.parent = hwnd;
         args.text = _TRA("Get Fonts Info");
+        args.isRtl = IsUIRtl();
 
         auto b = new Button();
         b->Create(args);
 
-        HwndSetRtl(b->hwnd, isRtl);
         layoutData->btnGetFonts = b;
         b->onClick = MkFunc0(ShowExtendedProperties, layoutData);
     }

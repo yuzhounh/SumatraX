@@ -40,6 +40,7 @@ Checkbox::Checkbox() {
 HWND Checkbox::Create(const CreateArgs& args) {
     CreateControlArgs cargs;
     cargs.parent = args.parent;
+    cargs.isRtl = args.isRtl;
     cargs.text = args.text;
     cargs.className = WC_BUTTONW;
     cargs.style = WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_AUTOCHECKBOX;

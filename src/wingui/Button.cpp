@@ -51,6 +51,7 @@ HWND Button::Create(const CreateArgs& args) {
     cargs.className = WC_BUTTONW;
     cargs.parent = args.parent;
     cargs.font = args.font;
+    cargs.isRtl = args.isRtl;
     cargs.style = WS_CHILD | WS_VISIBLE | WS_TABSTOP;
     if (isDefault) {
         cargs.style |= BS_DEFPUSHBUTTON;
@@ -79,10 +80,11 @@ Size Button::SetTextAndResize(const WCHAR* s) {
 }
 #endif
 
-Button* CreateButton(HWND parent, const char* s, const Func0& onClick) {
+Button* CreateButton(HWND parent, const char* s, const Func0& onClick, bool isRtl) {
     Button::CreateArgs args;
     args.parent = parent;
     args.text = s;
+    args.isRtl = isRtl;
 
     auto b = new Button();
     b->onClick = onClick;
@@ -92,10 +94,11 @@ Button* CreateButton(HWND parent, const char* s, const Func0& onClick) {
 
 #define kButtonMargin 8
 
-Button* CreateDefaultButton(HWND parent, const char* s) {
+Button* CreateDefaultButton(HWND parent, const char* s, bool isRtl) {
     Button::CreateArgs args;
     args.parent = parent;
     args.text = s;
+    args.isRtl = isRtl;
 
     auto* b = new Button();
     b->Create(args);

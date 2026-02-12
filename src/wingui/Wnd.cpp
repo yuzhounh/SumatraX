@@ -952,6 +952,9 @@ HWND Wnd::CreateControl(const CreateControlArgs& args) {
         style &= ~WS_VISIBLE;
     }
     DWORD exStyle = args.exStyle;
+    if (args.isRtl) {
+        exStyle |= WS_EX_LAYOUTRTL | WS_EX_NOINHERITLAYOUT;
+    }
     const WCHAR* className = args.className;
     int x = args.pos.x;
     int y = args.pos.y;
@@ -962,8 +965,8 @@ HWND Wnd::CreateControl(const CreateControlArgs& args) {
     HINSTANCE inst = GetInstance();
     void* createParams = this;
     hwnd = ::CreateWindowExW(exStyle, className, L"", style, x, y, dx, dy, parent, id, inst, createParams);
-    HwndSetFont(hwnd, font);
     ReportIf(!hwnd);
+    HwndSetFont(hwnd, font);
 
     // TODO: validate that
     Subclass();
@@ -1017,6 +1020,9 @@ HWND Wnd::CreateCustom(const CreateCustomArgs& args) {
 
     DWORD tmpStyle = style & ~WS_VISIBLE;
     DWORD exStyle = args.exStyle;
+    if (args.isRtl) {
+        exStyle |= WS_EX_LAYOUTRTL | WS_EX_NOINHERITLAYOUT;
+    }
     ReportIf(args.menu && args.cmdId);
     HMENU m = args.menu;
     if (m == nullptr) {

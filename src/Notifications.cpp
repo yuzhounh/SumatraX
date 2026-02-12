@@ -167,10 +167,10 @@ HWND NotificationWnd::Create(const NotificationCreateArgs& args) {
         cargs.font = GetAppBiggerFont();
     }
     cargs.pos = Rect(0, 0, 0, 0);
+    cargs.isRtl = IsUIRtl();
 
     CreateCustom(cargs);
 
-    HwndSetRtl(hwnd, IsUIRtl());
     Layout(args.msg);
     ShowWindow(hwnd, SW_SHOW);
 

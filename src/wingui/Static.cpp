@@ -34,6 +34,7 @@ HWND Static::Create(const CreateArgs& args) {
     cargs.font = args.font;
     cargs.style = WS_CHILD | WS_VISIBLE | SS_NOTIFY;
     cargs.text = args.text;
+    cargs.isRtl = args.isRtl;
 
     Wnd::CreateControl(cargs);
     SizeToIdealSize(this);

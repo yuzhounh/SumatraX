@@ -83,22 +83,34 @@ void TabsCtrl::LayoutTabs() {
     int closeY = (dy - closeDy) / 2;
     // logfa("  closeDx: %d, closeDy: %d\n", closeDx, closeDy);
 
+    bool isRtl = HwndIsRtl(hwnd);
+
     HFONT hfont = GetFont();
-    int x = 0;
+    int x = isRtl ? rect.dx : 0;
     int xEnd;
     TooltipInfo* tools = AllocArray<TooltipInfo>(nTabs);
     for (int i = 0; i < nTabs; i++) {
         TabInfo* ti = GetTab(i);
-        xEnd = x + dx;
-        ti->r = {x, 0, dx, dy};
-        ti->rClose = {xEnd - closeDx - 8, closeY, closeDx, closeDy};
+        if (isRtl) {
+            xEnd = x - dx;
+            ti->r = {xEnd, 0, dx, dy};
+            ti->rClose = {xEnd + 8, closeY, closeDx, closeDy};
+        } else {
+            xEnd = x + dx;
+            ti->r = {x, 0, dx, dy};
+            ti->rClose = {xEnd - closeDx - 8, closeY, closeDx, closeDy};
+        }
         ti->titleSize = HwndMeasureText(hwnd, ti->text, hfont);
         int y = (dy - ti->titleSize.dy) / 2;
         // logfa("  ti->titleSize.dy: %d\n", ti->titleSize.dy);
         if (y < 0) {
             y = 0;
         }
-        ti->titlePos = {x + 2, y};
+        if (isRtl) {
+            ti->titlePos = {xEnd + dx - 2 - ti->titleSize.dx, y};
+        } else {
+            ti->titlePos = {x + 2, y};
+        }
         if (withToolTips) {
             tools[i].s = ti->tooltip;
             tools[i].id = i;
@@ -695,20 +707,21 @@ LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     return WndProcDefault(hwnd, msg, wp, lp);
 }
 
-HWND TabsCtrl::Create(TabsCtrl::CreateArgs& argsIn) {
-    withToolTips = argsIn.withToolTips;
-    tabDefaultDx = argsIn.tabDefaultDx;
-
-    CreateControlArgs args;
-    args.parent = argsIn.parent;
-    args.font = argsIn.font;
-    args.className = WC_TABCONTROLW;
-    args.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_FOCUSNEVER | TCS_FIXEDWIDTH | TCS_FORCELABELLEFT;
+HWND TabsCtrl::Create(TabsCtrl::CreateArgs& args) {
+    CreateControlArgs cargs;
+    cargs.parent = args.parent;
+    cargs.isRtl = args.isRtl;
+    cargs.font = args.font;
+    cargs.className = WC_TABCONTROLW;
+    cargs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_FOCUSNEVER | TCS_FIXEDWIDTH | TCS_FORCELABELLEFT;
     if (withToolTips) {
-        args.style |= TCS_TOOLTIPS;
+        cargs.style |= TCS_TOOLTIPS;
     }
 
-    HWND hwnd = CreateControl(args);
+    withToolTips = args.withToolTips;
+    tabDefaultDx = args.tabDefaultDx;
+
+    HWND hwnd = CreateControl(cargs);
     if (!hwnd) {
         return nullptr;
     }

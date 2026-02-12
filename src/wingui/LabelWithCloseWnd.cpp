@@ -141,15 +141,16 @@ void LabelWithCloseWnd::SetLabel(const char* label) const {
 // cmd is both the id of the window as well as id of WM_COMMAND sent
 // when close button is clicked
 // caller needs to free() the result
-HWND LabelWithCloseWnd::Create(const LabelWithCloseCreateArgs& args) {
-    cmdId = args.cmdId;
-
+HWND LabelWithCloseWnd::Create(const LabelWithCloseWnd::CreateArgs& args) {
     CreateCustomArgs cargs;
     cargs.parent = args.parent;
     cargs.font = args.font;
     cargs.pos = Rect(0, 0, 0, 0);
     cargs.style = WS_VISIBLE;
     cargs.cmdId = cmdId; // TODO: not sure if needed
+    cargs.isRtl = args.isRtl;
+    cmdId = args.cmdId;
+
     CreateCustom(cargs);
 
 #if 0

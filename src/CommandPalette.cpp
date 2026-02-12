@@ -1099,6 +1099,7 @@ static Static* CreateStatic(HWND parent, HFONT font, const char* s) {
     args.parent = parent;
     args.font = font;
     args.text = s;
+    args.isRtl = IsUIRtl();
     auto c = new Static();
     auto wnd = c->Create(args);
     ReportIf(!wnd);
@@ -1137,6 +1138,7 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix, int smartTab
         args.cueText = "enter search term";
         args.text = prefix;
         args.font = font;
+        args.isRtl = IsUIRtl();
         auto c = new Edit();
         c->SetColors(colTxt, colBg);
         c->maxDx = 150;
@@ -1187,6 +1189,7 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix, int smartTab
         ListBox::CreateArgs args;
         args.parent = hwnd;
         args.font = font;
+        args.isRtl = IsUIRtl();
         auto c = new ListBox();
         c->onDoubleClick = MkFunc0(ListDoubleClick, this);
         c->onDrawItem = MkFunc1Void<ListBox::DrawItemEvent*>(DrawListBoxItem);

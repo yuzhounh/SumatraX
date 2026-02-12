@@ -593,6 +593,11 @@ void MessageBoxWarning(HWND hwnd, const char* msg, const char* title) {
     MsgBox(hwnd, msg, title, type);
 }
 
+static BOOL CALLBACK SetRtlCallback(HWND hwnd, LPARAM lParam) {
+    HwndSetRtl(hwnd, (bool)lParam);
+    return TRUE;
+}
+
 // updates the layout for a window to either left-to-right or right-to-left
 // depending on the currently used language (see IsUIRtl)
 static void UpdateWindowRtlLayout(MainWindow* win) {
@@ -610,25 +615,12 @@ static void UpdateWindowRtlLayout(MainWindow* win) {
 
     // https://www.microsoft.com/middleeast/msdn/mirror.aspx
     HwndSetRtl(win->hwndFrame, isRTL);
-    HwndSetRtl(win->hwndTocBox, isRTL);
-    HwndSetRtl(win->tocLabelWithClose->hwnd, isRTL);
-    HwndSetRtl(win->hwndFavBox, isRTL);
-    HwndSetRtl(win->favLabelWithClose->hwnd, isRTL);
-    HwndSetRtl(win->favTreeView->hwnd, isRTL);
-    HwndSetRtl(win->hwndReBar, isRTL);
-    HwndSetRtl(win->hwndToolbar, isRTL);
-    HwndSetRtl(win->hwndFindEdit, isRTL);
-    HwndSetRtl(win->hwndFindLabel, isRTL);
-    HwndSetRtl(win->hwndTbInfoText, isRTL);
-    HwndSetRtl(win->hwndPageLabel, isRTL);
-    HwndSetRtl(win->hwndCaption, isRTL);
+    EnumChildWindows(win->hwndFrame, SetRtlCallback, (LPARAM)isRTL);
     SetCaptionButtonsRtl(win->caption, isRTL);
 
     // TODO: why isn't SetWindowPos(..., SWP_FRAMECHANGED) enough?
     SendMessageW(win->hwndFrame, WM_DWMCOMPOSITIONCHANGED, 0, 0);
     RelayoutCaption(win);
-    // TODO: make tab bar RTL aware
-    // HwndSetRtl(win->tabsCtrl->hwnd, isRTL);
 
     RelayoutNotifications(win->hwndCanvas);
 
@@ -1544,10 +1536,12 @@ static MainWindow* CreateMainWindow() {
     ShowWindow(win->hwndCanvas, SW_SHOW);
     UpdateWindow(win->hwndCanvas);
 
-    win->infotip = new Tooltip();
     Tooltip::CreateArgs args;
     args.parent = win->hwndCanvas;
     args.font = GetAppFont();
+    args.isRtl = IsUIRtl();
+
+    win->infotip = new Tooltip();
     win->infotip->Create(args);
 
     CreateCaption(win);
@@ -5873,8 +5867,11 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
 
         case CmdDebugToggleRtl:
             gForceRtl = !gForceRtl;
-            RelayoutWindow(win);
-            ScheduleRepaint(win, 0);
+            for (auto w : gWindows) {
+                UpdateWindowRtlLayout(w);
+                RelayoutWindow(w);
+                ScheduleRepaint(w, 0);
+            }
             break;
 
         case CmdDebugDownloadSymbols:

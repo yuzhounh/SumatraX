@@ -31,16 +31,17 @@ ListBox::~ListBox() {
 }
 
 HWND ListBox::Create(const CreateArgs& args) {
+    CreateControlArgs cargs;
+    cargs.className = L"LISTBOX";
+    cargs.parent = args.parent;
+    cargs.font = args.font;
+    cargs.isRtl = args.isRtl;
+
     idealSizeLines = args.idealSizeLines;
     if (idealSizeLines < 0) {
         idealSizeLines = 0;
     }
     idealSize = {DpiScale(args.parent, 120), DpiScale(args.parent, 32)};
-
-    CreateControlArgs cargs;
-    cargs.className = L"LISTBOX";
-    cargs.parent = args.parent;
-    cargs.font = args.font;
 
     // https://docs.microsoft.com/en-us/windows/win32/controls/list-box-styles
     cargs.style = WS_CHILD | WS_TABSTOP | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL;

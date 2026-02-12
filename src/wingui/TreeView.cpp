@@ -42,25 +42,26 @@ TreeView::TreeView() {
 
 TreeView::~TreeView() {}
 
-HWND TreeView::Create(const CreateArgs& argsIn) {
-    idealSize = {48, 120}; // arbitrary
-    fullRowSelect = argsIn.fullRowSelect;
+HWND TreeView::Create(const CreateArgs& args) {
+    CreateControlArgs cargs;
+    cargs.className = WC_TREEVIEWW;
+    cargs.parent = args.parent;
+    cargs.font = args.font;
+    cargs.style = WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER;
+    cargs.style |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_SHOWSELALWAYS;
+    cargs.style |= TVS_TRACKSELECT | TVS_NOHSCROLL | TVS_INFOTIP;
+    cargs.exStyle = args.exStyle | TVS_EX_DOUBLEBUFFER;
+    cargs.isRtl = args.isRtl;
 
-    CreateControlArgs args;
-    args.className = WC_TREEVIEWW;
-    args.parent = argsIn.parent;
-    args.font = argsIn.font;
-    args.style = WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_BORDER;
-    args.style |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_SHOWSELALWAYS;
-    args.style |= TVS_TRACKSELECT | TVS_NOHSCROLL | TVS_INFOTIP;
-    args.exStyle = argsIn.exStyle | TVS_EX_DOUBLEBUFFER;
+    idealSize = {48, 120}; // arbitrary
+    fullRowSelect = args.fullRowSelect;
 
     if (fullRowSelect) {
-        args.style |= TVS_FULLROWSELECT;
-        args.style &= ~TVS_HASLINES;
+        cargs.style |= TVS_FULLROWSELECT;
+        cargs.style &= ~TVS_HASLINES;
     }
 
-    Wnd::CreateControl(args);
+    Wnd::CreateControl(cargs);
 
     if (IsWindowsVistaOrGreater()) {
         SendMessageW(hwnd, TVM_SETEXTENDEDSTYLE, TVS_EX_DOUBLEBUFFER, TVS_EX_DOUBLEBUFFER);

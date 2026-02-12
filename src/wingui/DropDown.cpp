@@ -50,6 +50,7 @@ bool DropDown::OnCommand(WPARAM wp, LPARAM) {
 HWND DropDown::Create(const CreateArgs& args) {
     CreateControlArgs cargs;
     cargs.parent = args.parent;
+    cargs.isRtl = args.isRtl;
     cargs.style = WS_CHILD | WS_VISIBLE | WS_TABSTOP | CBS_DROPDOWNLIST;
     cargs.className = WC_COMBOBOX;
     cargs.font = args.font;

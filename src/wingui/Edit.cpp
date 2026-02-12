@@ -68,40 +68,41 @@ void Edit::SetCursorPositionAtEnd() {
     SetCursorPosition(pos);
 }
 
-HWND Edit::Create(const CreateArgs& editArgs) {
+HWND Edit::Create(const CreateArgs& args) {
     // https://docs.microsoft.com/en-us/windows/win32/controls/edit-control-styles
-    CreateControlArgs args;
-    args.className = WC_EDITW;
-    args.parent = editArgs.parent;
-    args.font = editArgs.font;
-    args.style = WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_LEFT;
-    if (editArgs.withBorder) {
-        args.exStyle = WS_EX_CLIENTEDGE;
+    CreateControlArgs cargs;
+    cargs.className = WC_EDITW;
+    cargs.parent = args.parent;
+    cargs.font = args.font;
+    cargs.isRtl = args.isRtl;
+    cargs.style = WS_CHILD | WS_VISIBLE | WS_TABSTOP | ES_LEFT;
+    if (args.withBorder) {
+        cargs.exStyle = WS_EX_CLIENTEDGE;
         // Note: when using WS_BORDER, we would need to remember
         // we have border and use it in Edit::HasBorder
         // args.style |= WS_BORDER;
     }
-    if (editArgs.isMultiLine) {
-        args.style |= ES_MULTILINE | WS_VSCROLL | ES_WANTRETURN;
+    if (args.isMultiLine) {
+        cargs.style |= ES_MULTILINE | WS_VSCROLL | ES_WANTRETURN;
     } else {
         // ES_AUTOHSCROLL disable wrapping in multi-line setup
-        args.style |= ES_AUTOHSCROLL;
+        cargs.style |= ES_AUTOHSCROLL;
     }
-    idealSizeLines = editArgs.idealSizeLines;
+    idealSizeLines = args.idealSizeLines;
     if (idealSizeLines < 1) {
         idealSizeLines = 1;
     }
-    Wnd::CreateControl(args);
+    Wnd::CreateControl(cargs);
     if (!hwnd) {
         return nullptr;
     }
     SizeToIdealSize(this);
 
-    if (editArgs.cueText) {
-        EditSetCueText(hwnd, editArgs.cueText);
+    if (args.cueText) {
+        EditSetCueText(hwnd, args.cueText);
     }
-    if (editArgs.text) {
-        SetText(editArgs.text);
+    if (args.text) {
+        SetText(args.text);
     }
     return hwnd;
 }

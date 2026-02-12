@@ -890,11 +890,12 @@ void CreateFavorites(MainWindow* win) {
 
     auto l = new LabelWithCloseWnd();
     {
-        LabelWithCloseCreateArgs args;
+        LabelWithCloseWnd::CreateArgs args;
         args.parent = win->hwndFavBox;
         args.cmdId = IDC_FAV_LABEL_WITH_CLOSE;
         // TODO: use the same font size as in GetTreeFont()?
         args.font = GetDefaultGuiFont(true, false);
+        args.isRtl = IsUIRtl();
         l->Create(args);
     }
 
@@ -908,6 +909,7 @@ void CreateFavorites(MainWindow* win) {
     args.font = GetAppTreeFont();
     args.fullRowSelect = true;
     args.exStyle = WS_EX_STATICEDGE;
+    args.isRtl = IsUIRtl();
 
     auto fn = MkFunc1Void(FavTreeContextMenu);
     treeView->onContextMenu = fn;

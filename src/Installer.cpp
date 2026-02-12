@@ -91,6 +91,7 @@ static Checkbox* CreateCheckbox(HWND hwndParent, const char* s, bool isChecked) 
     args.parent = hwndParent;
     args.text = s;
     args.initialState = isChecked ? Checkbox::State::Checked : Checkbox::State::Unchecked;
+    args.isRtl = IsUIRtl();
 
     Checkbox* w = new Checkbox();
     w->Create(args);
@@ -368,6 +369,8 @@ static void StartInstallation(InstallerWnd* wnd) {
     Progress::CreateArgs args;
     args.initialMax = nInstallationSteps;
     args.parent = wnd->hwnd;
+    args.isRtl = IsUIRtl();
+
     wnd->progressBar = new Progress();
     wnd->progressBar->Create(args);
     RECT prc = {rc.x, rc.y, rc.x + rc.dx, rc.y + rc.dy};
@@ -481,13 +484,13 @@ static void OnInstallationFinished(Flags* cli) {
 
     DeleteWnd(&gWnd->btnInstall);
     DeleteWnd(&gWnd->progressBar);
-
+    auto isRtl = IsUIRtl();
     if (gInstallFailed) {
-        gWnd->btnExit = CreateDefaultButton(gWnd->hwnd, _TRA("Close"));
+        gWnd->btnExit = CreateDefaultButton(gWnd->hwnd, _TRA("Close"), isRtl);
         gWnd->btnExit->onClick = MkFunc0Void(OnButtonExit);
         SetMsg(_TRA("Installation failed!"), COLOR_MSG_FAILED);
     } else {
-        gWnd->btnRunSumatra = CreateDefaultButton(gWnd->hwnd, _TRA("Start SumatraPDF"));
+        gWnd->btnRunSumatra = CreateDefaultButton(gWnd->hwnd, _TRA("Start SumatraPDF"), isRtl);
         gWnd->btnRunSumatra->onClick = MkFunc0Void(OnButtonStartSumatra);
         SetMsg(_TRA("Thank you! SumatraPDF has been installed."), COLOR_MSG_OK);
     }
@@ -707,8 +710,9 @@ static void CreateInstallerWindowControls(InstallerWnd* wnd, Flags* cli) {
 
     HWND hwnd = wnd->hwnd;
     int margin = DpiScale(hwnd, kInstallerWinMargin);
+    bool isRtl = IsUIRtl();
 
-    wnd->btnInstall = CreateDefaultButton(hwnd, _TRA("Install SumatraPDF"));
+    wnd->btnInstall = CreateDefaultButton(hwnd, _TRA("Install SumatraPDF"), isRtl);
     auto b = wnd->btnInstall;
     b->onClick = MkFunc0(OnButtonInstall, wnd);
     {
@@ -722,7 +726,7 @@ static void CreateInstallerWindowControls(InstallerWnd* wnd, Flags* cli) {
     }
 
     Rect r = ClientRect(hwnd);
-    wnd->btnOptions = CreateDefaultButton(hwnd, _TRA("&Options"));
+    wnd->btnOptions = CreateDefaultButton(hwnd, _TRA("&Options"), isRtl);
     b = wnd->btnOptions;
     b->onClick = MkFunc0(OnButtonOptions, wnd);
     int x = margin;
@@ -794,7 +798,7 @@ static void CreateInstallerWindowControls(InstallerWnd* wnd, Flags* cli) {
     // a bit more space between text box and checkboxes
     y -= (DpiScale(hwnd, 4) + margin);
 
-    wnd->btnBrowseDir = CreateDefaultButton(hwnd, "&...");
+    wnd->btnBrowseDir = CreateDefaultButton(hwnd, "&...", isRtl);
     wnd->btnBrowseDir->onClick = MkFunc0(OnButtonBrowse, wnd);
 
     Size btnSize2 = wnd->btnBrowseDir->GetIdealSize();
@@ -802,6 +806,8 @@ static void CreateInstallerWindowControls(InstallerWnd* wnd, Flags* cli) {
     Edit::CreateArgs eargs;
     eargs.parent = hwnd;
     eargs.withBorder = true;
+    eargs.isRtl = IsUIRtl();
+
     wnd->editInstallationDir = new Edit();
     HWND ehwnd = wnd->editInstallationDir->Create(eargs);
     wnd->editInstallationDir->SetText(cli->installDir);
@@ -826,6 +832,8 @@ static void CreateInstallerWindowControls(InstallerWnd* wnd, Flags* cli) {
     Static::CreateArgs args;
     args.parent = hwnd;
     args.text = s2;
+    args.isRtl = IsUIRtl();
+
     wnd->staticInstDir = new Static();
     wnd->staticInstDir->Create(args);
     wnd->staticInstDir->SetBounds(rc);

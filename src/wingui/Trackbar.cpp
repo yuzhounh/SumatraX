@@ -29,6 +29,12 @@ Trackbar::Trackbar() {
 
 // https://docs.microsoft.com/en-us/windows/win32/controls/wm-vscroll--trackbar-
 HWND Trackbar::Create(const CreateArgs& args) {
+    CreateControlArgs cargs;
+    cargs.className = TRACKBAR_CLASS;
+    cargs.parent = args.parent;
+    cargs.font = args.font;
+    cargs.isRtl = args.isRtl;
+
     DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_TABSTOP;
     dwStyle |= TBS_AUTOTICKS; // tick marks for each increment
     dwStyle |= TBS_TOOLTIPS;  // show current value when dragging in a tooltip
@@ -41,15 +47,8 @@ HWND Trackbar::Create(const CreateArgs& args) {
         idealSize.dy = 32;
         idealSize.dx = DpiScale(args.parent, 22);
     }
-
-    CreateControlArgs cargs;
-    cargs.className = TRACKBAR_CLASS;
-    cargs.parent = args.parent;
-    cargs.font = args.font;
-
     // TODO: add initial size to CreateControlArgs
     // initialSize = idealSize;
-
     cargs.style = dwStyle;
     // args.style |= WS_BORDER;
     Wnd::CreateControl(cargs);

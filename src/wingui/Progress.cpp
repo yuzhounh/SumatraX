@@ -30,6 +30,7 @@ Progress::Progress() {
 HWND Progress::Create(const CreateArgs& args) {
     CreateControlArgs cargs;
     cargs.parent = args.parent;
+    cargs.isRtl = args.isRtl;
     cargs.style = WS_CHILD | WS_VISIBLE;
     cargs.className = PROGRESS_CLASSW;
 
