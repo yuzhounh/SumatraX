@@ -317,7 +317,7 @@ Size MainWindow::GetViewPortSize() const {
     return size;
 }
 
-static BOOL RedrawHwndCallback(HWND hwnd, LPARAM lp) {
+static BOOL CALLBACK RedrawHwndCallback(HWND hwnd, LPARAM lp) {
     bool update = (bool)lp;
     InvalidateRect(hwnd, nullptr, true);
     if (update) {
