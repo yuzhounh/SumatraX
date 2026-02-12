@@ -665,22 +665,75 @@ static void CheckIsStoreBuild() {
 // as seen in crash reports
 // here I'm trying to explicitly LoadLibrary() to hopefully fix that
 // if not, at least I can add logging to figure out why it fails
-static void MaybeLoadLibmupdf() {
+constexpr int kBtnIdLearnMore = 100;
+constexpr const char* kFailedToLoadURL = "https://www.sumatrapdfreader.org/docs/Failed-to-load-libmpdf";
+
+static HRESULT CALLBACK LoadLibmupdfDialogCallback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam,
+                                                   LONG_PTR lpRefData) {
+    switch (msg) {
+        case TDN_HYPERLINK_CLICKED: {
+            WCHAR* s = (WCHAR*)lParam;
+            LaunchBrowser(ToUtf8Temp(s));
+            break;
+        }
+        case TDN_BUTTON_CLICKED:
+            if ((int)wParam == kBtnIdLearnMore) {
+                LaunchBrowser(kFailedToLoadURL);
+                return S_FALSE; // don't close the dialog
+            }
+            break;
+    }
+    return S_OK;
+}
+
+static bool LoadLibmupdf() {
     if (!ExeHasInstallerResources()) {
         // this is not a version that needs libmupdf.dll
-        return;
+        return true;
     }
     TempStr path = GetPathInExeDirTemp("libmupdf.dll");
     HMODULE hm = LoadLibraryW(ToWStrTemp(path));
-    if (hm) {
-        logf("loaded '%s'\n", path);
-        return;
+    if (hm) return true;
+    logf("LoadLibmupdf: failed to load %s\n", path);
+    DWORD err = GetLastError();
+    logf("last err: 0x%x\n", (int)err);
+    TempStr errStr = nullptr;
+    if (err != 0) {
+        errStr = GetLastErrorStrTemp(err);
+        logf("error string: %s\n", errStr ? errStr : "(none)");
     }
-    TempStr s = GetLastErrorStrTemp();
-    if (s) {
-        logf("%s\n", s);
+    ReportIfFast(true);
+
+    TempStr msg = str::FormatTemp(
+        "SumatraPDF.exe failed to load libmupdf.dll.\nError code: %d\nError message: %s\n"
+        "We can't proceed.\n"
+        "For more information see <a href=\"%s\">SumatraPDF docs</a>.",
+        (int)err, errStr ? errStr : "unknown", kFailedToLoadURL);
+
+    TASKDIALOG_BUTTON buttons[2];
+    buttons[0].nButtonID = IDOK;
+    buttons[0].pszButtonText = L"Ok";
+    buttons[1].nButtonID = kBtnIdLearnMore;
+    buttons[1].pszButtonText = L"Learn more";
+
+    TASKDIALOGCONFIG dialogConfig{};
+    DWORD flags = TDF_ALLOW_DIALOG_CANCELLATION | TDF_SIZE_TO_CONTENT | TDF_ENABLE_HYPERLINKS;
+    if (trans::IsCurrLangRtl()) {
+        flags |= TDF_RTL_LAYOUT;
     }
-    CrashMe();
+    dialogConfig.cbSize = sizeof(TASKDIALOGCONFIG);
+    dialogConfig.pszWindowTitle = L"SumatraPDF";
+    dialogConfig.pszMainInstruction = L"Failed to load libmupdf.dll";
+    dialogConfig.pszContent = ToWStrTemp(msg);
+    dialogConfig.nDefaultButton = IDOK;
+    dialogConfig.dwFlags = flags;
+    dialogConfig.pfCallback = LoadLibmupdfDialogCallback;
+    dialogConfig.pButtons = buttons;
+    dialogConfig.cButtons = 2;
+    dialogConfig.pszMainIcon = TD_ERROR_ICON;
+
+    TaskDialogIndirect(&dialogConfig, nullptr, nullptr, nullptr);
+    return false;
 }
 
 // TODO: maybe could set font on TDN_CREATED to Consolas, to better show the message
@@ -2407,7 +2460,9 @@ ContinueOpenWindow:
     }
 
     // below is code that might use libmupdf functions so try to load it eagerly
-    MaybeLoadLibmupdf();
+    if (!LoadLibmupdf()) {
+        ::ExitProcess(1);
+    }
 
     if (restoreSession) {
         for (SessionData* data : *gInitialSessionData) {
