@@ -1866,47 +1866,26 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
     }
     switch (cmdId) {
         case CmdCopySelection:
-            [[fallthrough]];
         case CmdTranslateSelectionWithGoogle:
-            [[fallthrough]];
         case CmdTranslateSelectionWithDeepL:
-            [[fallthrough]];
         case CmdSearchSelectionWithGoogle:
-            [[fallthrough]];
         case CmdSearchSelectionWithBing:
-            [[fallthrough]];
         case CmdSearchSelectionWithWikipedia:
-            [[fallthrough]];
         case CmdSearchSelectionWithGoogleScholar:
-            [[fallthrough]];
         case CmdSelectAll:
-            [[fallthrough]];
         case CmdSaveAs:
-            [[fallthrough]];
         case CmdPrint:
-            [[fallthrough]];
         case CmdToggleBookmarks:
-            [[fallthrough]];
         case CmdToggleTableOfContents:
-            [[fallthrough]];
         case CmdFavoriteToggle:
-            [[fallthrough]];
         case CmdProperties:
-            [[fallthrough]];
         case CmdToggleToolbar:
-            [[fallthrough]];
         case CmdToggleScrollbars:
-            [[fallthrough]];
         case CmdSaveAnnotations:
-            [[fallthrough]];
         case CmdSaveAnnotationsNewFile:
-            [[fallthrough]];
         case CmdFavoriteAdd:
-            [[fallthrough]];
         case CmdEditAnnotations:
-            [[fallthrough]];
         case CmdToggleFullscreen:
-            [[fallthrough]];
         case CmdDeleteAnnotation: {
             // handle in FrameOnCommand() in SumatraPDF.cpp
             HwndSendCommand(win->hwndFrame, cmdId);

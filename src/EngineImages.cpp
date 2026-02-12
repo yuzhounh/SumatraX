@@ -764,7 +764,7 @@ static Kind imageEngineKinds[] = {
 bool IsEngineImageSupportedFileType(Kind kind) {
     // logf("IsEngineImageSupportedFileType(%s)\n", kind);
     int n = (int)dimof(imageEngineKinds);
-    return KindInArray(imageEngineKinds, n, kind);
+    return KindIndexOf(imageEngineKinds, n, kind) >= 0;
 }
 
 EngineBase* CreateEngineImageFromFile(const char* path) {
@@ -1427,7 +1427,7 @@ static Kind cbxKinds[] = {
 
 bool IsEngineCbxSupportedFileType(Kind kind) {
     int n = dimof(cbxKinds);
-    return KindInArray(cbxKinds, n, kind);
+    return KindIndexOf(cbxKinds, n, kind) >= 0;
 }
 
 EngineBase* CreateEngineCbxFromFile(const char* path) {

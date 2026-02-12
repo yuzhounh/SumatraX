@@ -140,6 +140,14 @@ static Kind GetKindByFileExt(const char* path) {
     return gExtsKind[idx];
 }
 
+const char* GetExtForKind(Kind kind) {
+    int idx = KindIndexOf(gExtsKind, dimofi(gExtsKind), kind);
+    if (idx >= 0) {
+        return seqstrings::IdxToStr(gFileExts, idx);
+    }
+    return nullptr;
+}
+
 // ensure gFileExts and gExtsKind match
 static bool gDidVerifyExtsMatch = false;
 static void VerifyExtsMatch() {
@@ -151,14 +159,14 @@ static void VerifyExtsMatch() {
     gDidVerifyExtsMatch = true;
 }
 
-bool KindInArray(Kind* kinds, int nKinds, Kind kind) {
+int KindIndexOf(Kind* kinds, int nKinds, Kind kind) {
     for (int i = 0; i < nKinds; i++) {
         Kind k = kinds[i];
         if (k == kind) {
-            return true;
+            return i;
         }
     }
-    return false;
+    return -1;
 }
 
 #define FILE_SIGS(V)                                    \

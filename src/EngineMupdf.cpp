@@ -3754,6 +3754,10 @@ EngineBase* CreateEngineMupdfFromFile(const char* path, Kind kind, int displayDP
         SafeEngineRelease(&engine);
         return nullptr;
     }
+    const char* ext = GetExtForKind(kind);
+    if (ext) {
+        str::ReplaceWithCopy(&engine->defaultExt, ext);
+    }
     return engine;
 }
 
