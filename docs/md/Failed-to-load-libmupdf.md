@@ -10,4 +10,10 @@ You're reading this page because loading of `libmupdf.dll` failed and we can't p
 
 There are many possible reasons.
 
-You've got 
+Error code and error message is what Windows OS says the problem is.
+
+To learn more about that specific error:
+* uou can Google: `LoadLibrary <error-code>`
+* you can ask any AI: `when calling LoadLibrary() win32 api I got an error <error code>. Tell me what it means`
+
+Or you can as in [SumatraPDF forums](https://github.com/sumatrapdfreader/sumatrapdf/discussions).

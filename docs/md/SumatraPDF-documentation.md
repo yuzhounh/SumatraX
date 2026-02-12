@@ -57,6 +57,8 @@
 
 [Update check doesnt work?](Update-check-doesnt-work.md)
 
+[Failed to load libmupdf](Failed-to-load-libmupdf.md)
+
 [Corrupted installation](Corrupted-installation.md)
 
 [Why only Windows?](Why-only-Windows.md)
