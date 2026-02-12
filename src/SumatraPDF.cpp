@@ -637,6 +637,8 @@ static void UpdateWindowRtlLayout(MainWindow* win) {
             SendMessageW(win->hwndFavBox, WM_SIZE, 0, 0);
         }
     }
+    RelayoutWindow(win);
+    win->RedrawAll(true);
 }
 
 void RebuildMenuBarForWindow(MainWindow* win) {
@@ -3732,13 +3734,9 @@ void SetCurrentLanguageAndRefreshUI(const char* langCode) {
     SetCurrentLang(langCode);
 
     for (MainWindow* win : gWindows) {
-        UpdateWindowRtlLayout(win);
         RebuildMenuBarForWindow(win);
         UpdateToolbarSidebarText(win);
-        // About page text is translated during (re)drawing
-        if (win->IsCurrentTabAbout()) {
-            win->RedrawAll(true);
-        }
+        UpdateWindowRtlLayout(win);
     }
 
     SaveSettings();
@@ -5869,8 +5867,6 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             gForceRtl = !gForceRtl;
             for (auto w : gWindows) {
                 UpdateWindowRtlLayout(w);
-                RelayoutWindow(w);
-                ScheduleRepaint(w, 0);
             }
             break;
 
