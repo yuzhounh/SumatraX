@@ -870,6 +870,7 @@ struct DrawCloseButtonArgs {
     COLORREF colHoverBg = kColCloseXHoverBg;
     COLORREF colX = kColCloseX;
     COLORREF colXHover = kColCloseXHover;
+    bool noMirror = false;
 };
 
 void DrawCloseButton(const DrawCloseButtonArgs& args);

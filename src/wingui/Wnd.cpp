@@ -1292,7 +1292,7 @@ void DrawCloseButton(const DrawCloseButtonArgs& args) {
     HWND hwnd = WindowFromDC(args.hdc);
     // GDI+ doesn't pick up the window's orientation through the device context,
     // so we have to explicitly mirror all rendering horizontally
-    if (HwndIsRtl(hwnd)) {
+    if (HwndIsRtl(hwnd) && !args.noMirror) {
         g.ScaleTransform(-1, 1);
         g.TranslateTransform((float)ClientRect(hwnd).dx, 0, Gdiplus::MatrixOrderAppend);
     }

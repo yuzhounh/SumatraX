@@ -17,9 +17,10 @@ struct LabelWithCloseWnd : Wnd {
     void OnPaint(HDC hdc, PAINTSTRUCT* ps) override;
     LRESULT WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) override;
 
-    void SetLabel(const char*) const;
+    void SetLabel(const char*);
     void SetFont(HFONT);
     void SetPaddingXY(int x, int y);
+    void Layout();
 
     Size GetIdealSize();
 

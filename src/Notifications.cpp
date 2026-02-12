@@ -303,8 +303,11 @@ void NotificationWnd::OnPaint(HDC hdcIn, PAINTSTRUCT* ps) {
     HdcDrawText(hdc, text, &rTmp, format);
 
     Point curPos = HwndGetCursorPos(hwnd);
-    bool isHover = rClose.Contains(curPos);
-    DrawCloseButton(hdc, rClose, isHover);
+    DrawCloseButtonArgs args;
+    args.hdc = hdc;
+    args.r = rClose;
+    args.isHover = rClose.Contains(curPos);
+    DrawCloseButton(args);
 #if 0
     DrawCloseButtonArgs args;
     args.hdc = hdc;

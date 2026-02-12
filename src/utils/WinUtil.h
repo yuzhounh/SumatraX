@@ -133,6 +133,7 @@ bool IsCursorOverWindow(HWND);
 HWND HwndGetParent(HWND hwnd);
 TempStr HwndGetClassName(HWND hwnd);
 Point HwndGetCursorPos(HWND hwnd);
+Point& UnmirrorRtl(HWND hwnd, Point& p);
 int MapWindowPoints(HWND, HWND, Point*, int);
 void HwndScreenToClient(HWND, Point&);
 void HwndMakeVisible(HWND);

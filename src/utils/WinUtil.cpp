@@ -1335,6 +1335,14 @@ Point HwndGetCursorPos(HWND hwnd) {
     return {pt.x, pt.y};
 }
 
+Point& UnmirrorRtl(HWND hwnd, Point& p) {
+    if (!HwndIsRtl(hwnd)) return p;
+    RECT rc;
+    GetClientRect(hwnd, &rc);
+    p.x = rc.right - 1 - p.x;
+    return p;
+}
+
 bool IsMouseOverRect(HWND hwnd, const Rect& r) {
     Point curPos = HwndGetCursorPos(hwnd);
     return r.Contains(curPos);

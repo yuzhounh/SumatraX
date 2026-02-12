@@ -624,6 +624,9 @@ static void UpdateWindowRtlLayout(MainWindow* win) {
     SendMessageW(win->hwndFrame, WM_DWMCOMPOSITIONCHANGED, 0, 0);
     RelayoutCaption(win);
 
+    if (win->tocLabelWithClose) win->tocLabelWithClose->Layout();
+    if (win->favLabelWithClose) win->favLabelWithClose->Layout();
+
     RelayoutNotifications(win->hwndCanvas);
 
     // TODO: also update the canvas scrollbars (?)

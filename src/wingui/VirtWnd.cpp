@@ -92,7 +92,7 @@ void VirtWndText::Paint(HDC hdc) {
     prevBkMode = SetBkMode(hdc, TRANSPARENT);
     UINT fmt = DT_NOCLIP | DT_NOPREFIX;
     if (isRtl) {
-        fmt = fmt | DT_RTLREADING;
+        fmt |= DT_RTLREADING;
     }
     RECT dr = ToRECT(lastBounds);
     HdcDrawText(hdc, s, &dr, fmt, font);
