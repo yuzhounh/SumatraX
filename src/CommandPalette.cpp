@@ -1078,6 +1078,15 @@ static void DrawListBoxItem(ListBox::DrawItemEvent* ev) {
         }
 
         WCHAR* itemTextW = ToWStrTemp(itemText);
+        int itemTextWLen = str::Leni(itemTextW);
+
+        // measure total string width for RTL positioning
+        int strOriginX = rc.left;
+        if (isRtl) {
+            SIZE szTotal;
+            GetTextExtentPoint32W(hdc, itemTextW, itemTextWLen, &szTotal);
+            strOriginX = rc.right - szTotal.cx;
+        }
 
         // compute pixel rectangles for each highlighted range
         RECT highlightRects[16];
@@ -1093,13 +1102,8 @@ static void DrawListBoxItem(ListBox::DrawItemEvent* ev) {
 
             highlightRects[i].top = rc.top;
             highlightRects[i].bottom = rc.bottom;
-            if (isRtl) {
-                highlightRects[i].right = rc.right - szStart.cx;
-                highlightRects[i].left = rc.right - szEnd.cx;
-            } else {
-                highlightRects[i].left = rc.left + szStart.cx;
-                highlightRects[i].right = rc.left + szEnd.cx;
-            }
+            highlightRects[i].left = strOriginX + szStart.cx;
+            highlightRects[i].right = strOriginX + szEnd.cx;
         }
 
         // draw yellow background rectangles for matches (skip when selected)
