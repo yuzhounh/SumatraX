@@ -1456,7 +1456,7 @@ bool CopyImageToClipboard(HBITMAP hbmp, bool appendOnly) {
 }
 
 static void SetWindowStyle(HWND hwnd, DWORD flags, bool enable, int type) {
-    DWORD style = GetWindowLong(hwnd, type);
+    DWORD style = GetWindowLongW(hwnd, type);
     DWORD newStyle;
     if (enable) {
         newStyle = style | flags;
@@ -1464,22 +1464,22 @@ static void SetWindowStyle(HWND hwnd, DWORD flags, bool enable, int type) {
         newStyle = style & ~flags;
     }
     if (newStyle != style) {
-        SetWindowLong(hwnd, type, newStyle);
+        SetWindowLongW(hwnd, type, newStyle);
     }
 }
 
 bool IsWindowStyleSet(HWND hwnd, DWORD flags) {
-    DWORD style = GetWindowLong(hwnd, GWL_STYLE);
+    DWORD style = GetWindowLongW(hwnd, GWL_STYLE);
     return bit::IsMaskSet<DWORD>(style, flags);
 }
 
 bool IsWindowStyleExSet(HWND hwnd, DWORD flags) {
-    DWORD style = GetWindowLong(hwnd, GWL_EXSTYLE);
+    DWORD style = GetWindowLongW(hwnd, GWL_EXSTYLE);
     return (style != flags) != 0;
 }
 
 bool HwndIsRtl(HWND hwnd) {
-    DWORD style = GetWindowLong(hwnd, GWL_EXSTYLE);
+    DWORD style = GetWindowLongW(hwnd, GWL_EXSTYLE);
     return bit::IsMaskSet<DWORD>(style, WS_EX_LAYOUTRTL);
 }
 

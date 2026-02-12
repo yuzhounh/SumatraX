@@ -601,11 +601,15 @@ static BOOL CALLBACK SetRtlCallback(HWND hwnd, LPARAM lParam) {
 // updates the layout for a window to either left-to-right or right-to-left
 // depending on the currently used language (see IsUIRtl)
 static void UpdateWindowRtlLayout(MainWindow* win) {
+    bool wasRTL = HwndIsRtl(win->hwndFrame);
     bool isRTL = IsUIRtl();
-    bool wasRTL = (GetWindowLongW(win->hwndFrame, GWL_EXSTYLE) & WS_EX_LAYOUTRTL) != 0;
     if (wasRTL == isRTL) {
         return;
     }
+
+    // https://www.microsoft.com/middleeast/msdn/mirror.aspx
+    HwndSetRtl(win->hwndFrame, isRTL);
+    EnumChildWindows(win->hwndFrame, SetRtlCallback, (LPARAM)isRTL);
 
     bool tocVisible = win->tocVisible;
     bool favVisible = gGlobalPrefs->showFavorites;
@@ -613,9 +617,7 @@ static void UpdateWindowRtlLayout(MainWindow* win) {
         SetSidebarVisibility(win, false, false);
     }
 
-    // https://www.microsoft.com/middleeast/msdn/mirror.aspx
-    HwndSetRtl(win->hwndFrame, isRTL);
-    EnumChildWindows(win->hwndFrame, SetRtlCallback, (LPARAM)isRTL);
+    if (win->tabsCtrl) win->tabsCtrl->LayoutTabs();
     SetCaptionButtonsRtl(win->caption, isRTL);
 
     // TODO: why isn't SetWindowPos(..., SWP_FRAMECHANGED) enough?

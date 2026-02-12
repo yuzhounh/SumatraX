@@ -88,7 +88,7 @@ void TabsCtrl::LayoutTabs() {
     HFONT hfont = GetFont();
     int x = isRtl ? rect.dx : 0;
     int xEnd;
-    TooltipInfo* tools = AllocArray<TooltipInfo>(nTabs);
+    TooltipInfo* tools = AllocArrayTemp<TooltipInfo>(nTabs);
     for (int i = 0; i < nTabs; i++) {
         TabInfo* ti = GetTab(i);
         if (isRtl) {
@@ -122,7 +122,6 @@ void TabsCtrl::LayoutTabs() {
         HWND ttHwnd = GetToolTipsHwnd();
         TooltipAddTools(ttHwnd, hwnd, tools, nTabs);
     }
-    free(tools);
 
     HwndTabsSetItemSize(hwnd, tabSize);
 }
@@ -130,25 +129,33 @@ void TabsCtrl::LayoutTabs() {
 // Finds the index of the tab, which contains the given point.
 TabsCtrl::MouseState TabsCtrl::TabStateFromMousePosition(const Point& p) {
     TabsCtrl::MouseState res;
-    if (p.x < 0 || p.y < 0) {
+    // WS_EX_LAYOUTRTL mirrors client coordinates in mouse messages,
+    // but GDI+ (used for painting) doesn't respect DC mirroring.
+    // Un-mirror so mouse coords match our manually laid out tab rects.
+    Point pt = p;
+    if (HwndIsRtl(hwnd)) {
+        Rect rc = ClientRect(hwnd);
+        pt.x = rc.dx - 1 - pt.x;
+    }
+    if (pt.x < 0 || pt.y < 0) {
         return res;
     }
     int nTabs = TabCount();
     for (int i = 0; i < nTabs; i++) {
         TabInfo* ti = tabs[i];
         Rect r = ti->r;
-        // logfa("testing i=%d rect: %d %d %d %d pt: %d %d\n", i, ti->r.x, ti->r.y, ti->r.dx, ti->r.dy, p.x, p.y);
-        if (!r.Contains(p)) {
+        // logfa("testing i=%d rect: %d %d %d %d pt: %d %d\n", i, ti->r.x, ti->r.y, ti->r.dx, ti->r.dy, pt.x, pt.y);
+        if (!r.Contains(pt)) {
             continue;
         }
         res.tabIdx = i;
-        res.overClose = ti->rClose.Contains(p);
+        res.overClose = ti->rClose.Contains(pt);
         res.tabInfo = ti;
         Rect rightHalf = r;
         int halfDx = r.dx / 2;
         rightHalf.x = r.x + halfDx;
         rightHalf.dx = halfDx;
-        res.inRightHalf = rightHalf.Contains(p);
+        res.inRightHalf = rightHalf.Contains(pt);
         return res;
     }
 
@@ -279,7 +286,13 @@ void TabsCtrl::Paint(HDC hdc, const RECT& rc) {
         // draw text
         gfx.SetCompositingMode(Gdiplus::CompositingModeSourceOver);
         rTxt = ToGdipRectF(ti->r);
-        rTxt.X += 8;
+        if (HwndIsRtl(hwnd)) {
+            // RTL: [8px | close | text | 8px]
+            rTxt.X += (8 + r.dx);
+        } else {
+            // LTR: [8px | text | close | 8px]
+            rTxt.X += 8;
+        }
         rTxt.Width -= (8 + r.dx + 8);
         br.SetColor(GdipCol(textColor));
         TempWStr ws = ToWStrTemp(ti->text);
@@ -596,7 +609,12 @@ LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
                 return 0;
             }
 
-            grabLocation.x = mousePos.x - ti->r.x;
+            int mx = mousePos.x;
+            if (HwndIsRtl(hwnd)) {
+                Rect rc = ClientRect(hwnd);
+                mx = rc.dx - 1 - mx;
+            }
+            grabLocation.x = mx - ti->r.x;
             grabLocation.y = mousePos.y - ti->r.y;
             SetCapture(hwnd);
             return 0;

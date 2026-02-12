@@ -317,12 +317,18 @@ Size MainWindow::GetViewPortSize() const {
     return size;
 }
 
-void MainWindow::RedrawAll(bool update) const {
-    // logf("MainWindow::RedrawAll, update: %d  RenderCache:\n", (int)update);
-    InvalidateRect(this->hwndCanvas, nullptr, false);
+static BOOL RedrawHwndCallback(HWND hwnd, LPARAM lp) {
+    bool update = (bool)lp;
+    InvalidateRect(hwnd, nullptr, true);
     if (update) {
-        UpdateWindow(this->hwndCanvas);
+        UpdateWindow(hwnd);
     }
+    return TRUE;
+}
+
+void MainWindow::RedrawAll(bool update) const {
+    EnumChildWindows(this->hwndFrame, RedrawHwndCallback, (LPARAM)update);
+    RedrawHwndCallback(this->hwndFrame, (LPARAM)update);
 }
 
 void MainWindow::RedrawAllIncludingNonClient() const {
