@@ -990,6 +990,13 @@ static void DrawListBoxItem(ListBox::DrawItemEvent* ev) {
     SetBkColor(hdc, colBg);
     ExtTextOutW(hdc, 0, 0, ETO_OPAQUE, &rc, nullptr, 0, nullptr);
 
+    // For RTL: remove LAYOUT_RTL from DC so we can position text manually.
+    // The item rect spans full width so coordinates are the same mirrored or not.
+    bool isRtl = HwndIsRtl(lb->hwnd);
+    if (isRtl) {
+        SetLayout(hdc, 0); // LAYOUT_LTR
+    }
+
     // get item text and data
     const char* itemText = m->Item(ev->itemIndex);
     ItemDataCP* data = m->Data(ev->itemIndex);
@@ -1023,7 +1030,9 @@ static void DrawListBoxItem(ListBox::DrawItemEvent* ev) {
     int nWords = gCommandPaletteWnd ? gCommandPaletteWnd->filterWords.Size() : 0;
     if (nWords == 0) {
         WCHAR* itemTextW = ToWStrTemp(itemText);
-        DrawTextW(hdc, itemTextW, -1, &rc, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
+        uint fmt = DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX;
+        fmt |= isRtl ? (DT_RIGHT | DT_RTLREADING) : DT_LEFT;
+        DrawTextW(hdc, itemTextW, -1, &rc, fmt);
     } else {
         // find all match ranges in itemText
         int textLen = str::Leni(itemText);
@@ -1046,47 +1055,80 @@ static void DrawListBoxItem(ListBox::DrawItemEvent* ev) {
             }
         }
 
-        // draw text segment by segment
-        COLORREF colHighlightBg = RGB(255, 255, 0); // yellow
-        COLORREF colHighlightText = RGB(0, 0, 0);   // black text on yellow
-        RECT rcDraw = rc;
-        int pos = 0;
-        while (pos < textLen) {
-            // find run of same highlight state
-            bool isHighlight = highlighted[pos] != 0;
-            int runStart = pos;
-            while (pos < textLen && (highlighted[pos] != 0) == isHighlight) {
-                pos++;
+        // collect contiguous highlighted ranges (up to 16)
+        struct ByteRange {
+            int start;
+            int end;
+        };
+        ByteRange byteRanges[16];
+        int nRanges = 0;
+        {
+            int pos = 0;
+            while (pos < textLen && nRanges < 16) {
+                if (highlighted[pos]) {
+                    int start = pos;
+                    while (pos < textLen && highlighted[pos]) {
+                        pos++;
+                    }
+                    byteRanges[nRanges++] = {start, pos};
+                } else {
+                    pos++;
+                }
             }
-            int runLen = pos - runStart;
-            WCHAR* runW = ToWStrTemp(itemText + runStart, (size_t)runLen);
-
-            if (isHighlight && !ev->selected) {
-                SetBkMode(hdc, OPAQUE);
-                SetBkColor(hdc, colHighlightBg);
-                SetTextColor(hdc, colHighlightText);
-            } else {
-                SetBkMode(hdc, TRANSPARENT);
-                SetTextColor(hdc, colText);
-            }
-
-            // measure and draw this run
-            int runWLen = str::Leni(runW);
-            SIZE sz;
-            GetTextExtentPoint32W(hdc, runW, runWLen, &sz);
-            DrawTextW(hdc, runW, runWLen, &rcDraw, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
-            rcDraw.left += sz.cx;
         }
-        // restore
-        SetBkMode(hdc, TRANSPARENT);
-        SetTextColor(hdc, colText);
+
+        WCHAR* itemTextW = ToWStrTemp(itemText);
+
+        // compute pixel rectangles for each highlighted range
+        RECT highlightRects[16];
+        for (int i = 0; i < nRanges; i++) {
+            WCHAR* prefixToStart = ToWStrTemp(itemText, (size_t)byteRanges[i].start);
+            int wStart = str::Leni(prefixToStart);
+            WCHAR* prefixToEnd = ToWStrTemp(itemText, (size_t)byteRanges[i].end);
+            int wEnd = str::Leni(prefixToEnd);
+
+            SIZE szStart, szEnd;
+            GetTextExtentPoint32W(hdc, itemTextW, wStart, &szStart);
+            GetTextExtentPoint32W(hdc, itemTextW, wEnd, &szEnd);
+
+            highlightRects[i].top = rc.top;
+            highlightRects[i].bottom = rc.bottom;
+            if (isRtl) {
+                highlightRects[i].right = rc.right - szStart.cx;
+                highlightRects[i].left = rc.right - szEnd.cx;
+            } else {
+                highlightRects[i].left = rc.left + szStart.cx;
+                highlightRects[i].right = rc.left + szEnd.cx;
+            }
+        }
+
+        // draw yellow background rectangles for matches (skip when selected)
+        if (!ev->selected) {
+            HBRUSH hbrHighlight = CreateSolidBrush(RGB(255, 255, 0));
+            for (int i = 0; i < nRanges; i++) {
+                FillRect(hdc, &highlightRects[i], hbrHighlight);
+            }
+            DeleteObject(hbrHighlight);
+        }
+
+        // draw the whole string at once over the highlights
+        uint fmt = DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX;
+        fmt |= isRtl ? (DT_RIGHT | DT_RTLREADING) : DT_LEFT;
+        DrawTextW(hdc, itemTextW, -1, &rc, fmt);
     }
 
-    // draw accelerator on the right (if any)
+    // draw accelerator on the opposite side from the command name
     if (accelStr && accelStr[0]) {
         WCHAR* accelStrW = ToWStrTemp(accelStr);
-        rc.right -= DpiScale(lb->hwnd, 8); // extra right padding for accelerator
-        DrawTextW(hdc, accelStrW, -1, &rc, DT_RIGHT | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);
+        uint fmtAccel = DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX;
+        if (isRtl) {
+            rc.left += DpiScale(lb->hwnd, 8);
+            fmtAccel |= DT_LEFT | DT_RTLREADING;
+        } else {
+            rc.right -= DpiScale(lb->hwnd, 8);
+            fmtAccel |= DT_RIGHT;
+        }
+        DrawTextW(hdc, accelStrW, -1, &rc, fmtAccel);
     }
 
     if (oldFont) {
