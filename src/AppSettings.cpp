@@ -277,7 +277,9 @@ bool LoadSettings() {
     FreeAcceleratorTables();
     CreateSumatraAcceleratorTable();
 
-    ReCreateToolbars();
+    for (MainWindow* win : gWindows) {
+        ReCreateToolbar(win);
+    }
 
     SetCurrentThemeFromSettings();
     if (!file::Exists(settingsPath)) {

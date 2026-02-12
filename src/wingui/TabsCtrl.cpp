@@ -223,6 +223,9 @@ void TabsCtrl::Paint(HDC hdc, const RECT& rc) {
     sf.SetFormatFlags(Gdiplus::StringFormatFlagsNoWrap);
     sf.SetLineAlignment(StringAlignmentCenter);
     sf.SetTrimming(Gdiplus::StringTrimmingEllipsisCharacter);
+    if (HwndIsRtl(hwnd)) {
+        sf.SetAlignment(Gdiplus::StringAlignmentFar);
+    }
 
     TabInfo* ti;
     int n = TabCount();

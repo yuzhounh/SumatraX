@@ -639,6 +639,7 @@ static void UpdateWindowRtlLayout(MainWindow* win) {
             SendMessageW(win->hwndFavBox, WM_SIZE, 0, 0);
         }
     }
+    ReCreateToolbar(win);
     RelayoutWindow(win);
     win->RedrawAll(true);
 }

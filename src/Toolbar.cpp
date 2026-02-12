@@ -653,11 +653,13 @@ void UpdateToolbarState(MainWindow* win) {
 }
 
 static void CreateFindBox(MainWindow* win, HFONT hfont, int iconDy) {
+    bool isRtl = IsUIRtl();
     int findBoxDx = HwndMeasureText(win->hwndFrame, "this is a story of my", hfont).dx;
     HMODULE hmod = GetModuleHandleW(nullptr);
     HWND p = win->hwndToolbar;
     DWORD style = WS_VISIBLE | WS_CHILD | WS_BORDER;
     DWORD exStyle = 0;
+    if (isRtl) exStyle |= WS_EX_LAYOUTRTL;
     int dy = iconDy + 2;
     // Size textSize = HwndMeasureText(win->hwndFrame, L"M", hfont);
     HWND findBg =
@@ -667,10 +669,13 @@ static void CreateFindBox(MainWindow* win, HFONT hfont, int iconDy) {
     // dy = iconDy + DpiScale(win->hwndFrame, 2);
     dy = iconDy;
     exStyle = 0;
+    if (isRtl) exStyle |= WS_EX_LAYOUTRTL;
     HWND find = CreateWindowExW(exStyle, WC_EDIT, L"", style, 0, 1, findBoxDx, dy, p, (HMENU) nullptr, hmod, nullptr);
 
     style = WS_VISIBLE | WS_CHILD;
-    HWND label = CreateWindowExW(0, WC_STATIC, L"", style, 0, 1, 0, 0, p, (HMENU) nullptr, hmod, nullptr);
+    exStyle = 0;
+    if (isRtl) exStyle |= WS_EX_LAYOUTRTL;
+    HWND label = CreateWindowExW(exStyle, WC_STATIC, L"", style, 0, 1, 0, 0, p, (HMENU) nullptr, hmod, nullptr);
 
     SetWindowFont(label, hfont, FALSE);
     SetWindowFont(find, hfont, FALSE);
@@ -845,6 +850,8 @@ void UpdateToolbarPageText(MainWindow* win, int pageCount, bool updateOnly) {
 }
 
 static void CreatePageBox(MainWindow* win, HFONT font, int iconDy) {
+    bool isRtl = IsUIRtl();
+
     auto hwndFrame = win->hwndFrame;
     auto hwndToolbar = win->hwndToolbar;
     // TODO: this is broken, result is way too small
@@ -854,6 +861,8 @@ static void CreatePageBox(MainWindow* win, HFONT font, int iconDy) {
     int dx = boxWidth;
     int dy = iconDy + 2;
     DWORD exStyle = 0;
+    if (isRtl) exStyle |= WS_EX_LAYOUTRTL;
+
     HWND pageBg = CreateWindowExW(exStyle, WC_STATICW, L"", style | WS_BORDER, 0, 1, dx, dy, hwndToolbar,
                                   (HMENU) nullptr, h, nullptr);
     HWND label = CreateWindowExW(0, WC_STATICW, L"", style, 0, 1, 0, 0, hwndToolbar, (HMENU) nullptr, h, nullptr);
@@ -863,6 +872,7 @@ static void CreatePageBox(MainWindow* win, HFONT font, int iconDy) {
     dx = boxWidth - DpiScale(hwndFrame, 4); // 4 pixels padding on the right side of the text box
     dy = iconDy;
     exStyle = 0;
+    if (isRtl) exStyle |= WS_EX_LAYOUTRTL;
     HWND page = CreateWindowExW(exStyle, WC_EDIT, L"0", style, 0, 1, dx, dy, hwndToolbar, (HMENU) nullptr, h, nullptr);
 
     SetWindowFont(label, font, FALSE);
@@ -1022,14 +1032,19 @@ void UpdateToolbarAfterThemeChange(MainWindow* win) {
 
 // https://docs.microsoft.com/en-us/windows/win32/controls/toolbar-control-reference
 void CreateToolbar(MainWindow* win) {
+    bool isRtl = IsUIRtl();
+
     kButtonSpacingX = 0;
     HINSTANCE hinst = GetModuleHandle(nullptr);
     HWND hwndParent = win->hwndFrame;
 
-    DWORD dwStyle = WS_CHILD | WS_CLIPCHILDREN | WS_BORDER | RBS_VARHEIGHT | RBS_BANDBORDERS;
-    dwStyle |= CCS_NODIVIDER | CCS_NOPARENTALIGN | WS_VISIBLE;
-    win->hwndReBar = CreateWindowExW(WS_EX_TOOLWINDOW, REBARCLASSNAME, nullptr, dwStyle, 0, 0, 0, 0, hwndParent,
-                                     (HMENU)IDC_REBAR, hinst, nullptr);
+    DWORD style = WS_CHILD | WS_CLIPCHILDREN | WS_BORDER | RBS_VARHEIGHT | RBS_BANDBORDERS;
+    style |= CCS_NODIVIDER | CCS_NOPARENTALIGN | WS_VISIBLE;
+    DWORD exStyle = WS_EX_TOOLWINDOW;
+    if (isRtl) exStyle |= WS_EX_LAYOUTRTL;
+
+    win->hwndReBar = CreateWindowExW(exStyle, REBARCLASSNAME, nullptr, style, 0, 0, 0, 0, hwndParent, (HMENU)IDC_REBAR,
+                                     hinst, nullptr);
     SetWindowSubclass(win->hwndReBar, ReBarWndProc, 0, 0);
 
     REBARINFO rbi{};
@@ -1038,11 +1053,13 @@ void CreateToolbar(MainWindow* win) {
     rbi.himl = (HIMAGELIST) nullptr;
     SendMessageW(win->hwndReBar, RB_SETBARINFO, 0, (LPARAM)&rbi);
 
-    DWORD style = WS_CHILD | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
+    style = WS_CHILD | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
     style |= TBSTYLE_LIST | CCS_NODIVIDER | CCS_NOPARENTALIGN;
-    const WCHAR* cls = TOOLBARCLASSNAME;
+    exStyle = 0;
+    if (isRtl) exStyle |= WS_EX_LAYOUTRTL;
     HMENU cmd = (HMENU)IDC_TOOLBAR;
-    HWND hwndToolbar = CreateWindowExW(0, cls, nullptr, style, 0, 0, 0, 0, win->hwndReBar, cmd, hinst, nullptr);
+    HWND hwndToolbar =
+        CreateWindowExW(exStyle, TOOLBARCLASSNAME, nullptr, style, 0, 0, 0, 0, win->hwndReBar, cmd, hinst, nullptr);
     win->hwndToolbar = hwndToolbar;
     SendMessageW(hwndToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 
@@ -1164,7 +1181,7 @@ void CreateToolbar(MainWindow* win) {
     UpdateToolbarFindText(win);
 }
 
-static void ReCreateToolbar(MainWindow* win) {
+void ReCreateToolbar(MainWindow* win) {
     if (win->hwndReBar) {
         HwndDestroyWindowSafe(&win->hwndPageLabel);
         HwndDestroyWindowSafe(&win->hwndPageEdit);
@@ -1179,10 +1196,4 @@ static void ReCreateToolbar(MainWindow* win) {
     }
     CreateToolbar(win);
     RelayoutWindow(win);
-}
-
-void ReCreateToolbars() {
-    for (MainWindow* win : gWindows) {
-        ReCreateToolbar(win);
-    }
 }
