@@ -90,8 +90,9 @@ constexpr int kButtonsCount = dimof(gToolbarButtons);
 // 128 should be more than enough
 // we use static array so that we don't have to generate
 // code for Vec<ToolbarButtonInfo>
-constexpr int kMaxCustomButtons = 128;
-static ToolbarButtonInfo gCustomButtons[kMaxCustomButtons];
+constexpr int kMaxCustomButtons = 127;
+// +1 to ensure there's always space for WarningsMsgId button
+static ToolbarButtonInfo gCustomButtons[kMaxCustomButtons + 1];
 int gCustomButtonsCount = 0;
 
 static bool SkipBuiltInButton(const ToolbarButtonInfo& tbi) {
@@ -319,7 +320,7 @@ void UpdateToolbarButtonsToolTipsForWindow(MainWindow* win) {
 }
 
 static void UpdateWarningMessageHwnd(MainWindow* win, const char* s) {
-    // warning message is always the last button in toolbar
+    // warning message is always the last fixed button in toolbar
     int btnIdx = TotalButtonsCount() - 1;
     bool hide = str::IsEmptyOrWhiteSpace(s);
 
@@ -1098,6 +1099,7 @@ void CreateToolbar(MainWindow* win) {
     }
     SendMessageW(hwndToolbar, TB_ADDBUTTONS, kButtonsCount, (LPARAM)tbButtons);
 
+    // at least 1, for WarningMsgId
     gCustomButtonsCount = 0;
 
     char* text;
@@ -1115,22 +1117,15 @@ void CreateToolbar(MainWindow* win) {
         tbi.toolTip = text;
         gCustomButtons[gCustomButtonsCount++] = tbi;
     }
-    if (gCustomButtonsCount > 0) {
-        TBBUTTON* buttons = AllocArrayTemp<TBBUTTON>(gCustomButtonsCount);
-        for (int i = 0; i < gCustomButtonsCount; i++) {
-            ToolbarButtonInfo& tbi = gCustomButtons[i];
-            buttons[i] = TbButtonFromButtonInfo(tbi);
-        }
-        SendMessageW(hwndToolbar, TB_ADDBUTTONS, gCustomButtonsCount, (LPARAM)buttons);
-    }
+    // info text for showing "unsaved annotations" text
+    gCustomButtons[gCustomButtonsCount++] = ToolbarButtonInfo{TbIcon::None, WarningMsgId, nullptr};
 
-    {
-        // info text for showing "unsaved annotations" text
-        ToolbarButtonInfo tbi{TbIcon::None, WarningMsgId, nullptr};
-        TBBUTTON tb = TbButtonFromButtonInfo(tbi);
-        SendMessageW(hwndToolbar, TB_ADDBUTTONS, 1, (LPARAM)&tb);
+    TBBUTTON* buttons = AllocArrayTemp<TBBUTTON>(gCustomButtonsCount);
+    for (int i = 0; i < gCustomButtonsCount; i++) {
+        ToolbarButtonInfo& tbi = gCustomButtons[i];
+        buttons[i] = TbButtonFromButtonInfo(tbi);
     }
-
+    SendMessageW(hwndToolbar, TB_ADDBUTTONS, gCustomButtonsCount, (LPARAM)buttons);
     SendMessageW(hwndToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(iconSize, iconSize));
 
     RECT rc;

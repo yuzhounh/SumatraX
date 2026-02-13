@@ -168,7 +168,7 @@ void LabelWithCloseWnd::Layout() {
         y = (dy - btnDy) / 2;
     }
     closeBtnPos = Rect(x, y, btnDx, btnDy);
-    logf("closeBtnPos: (%d,%d) size: (%d, %d)\n", x, y, btnDx, btnDy);
+    // logf("closeBtnPos: (%d,%d) size: (%d, %d)\n", x, y, btnDx, btnDy);
     HwndScheduleRepaint(hwnd);
 }
 
