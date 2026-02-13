@@ -14,14 +14,15 @@
 
 // All registry manipulation needed for installer / uninstaller
 
-// clang-format off
 // list of supported file extensions for which SumatraPDF.exe will
 // be registered as a candidate for the Open With dialog's suggestions
+// clang-format off
 static SeqStrings gSupportedExts = 
     ".pdf\0.xps\0.oxps\0.cbz\0.cbr\0.cb7\0.cbt\0" \
     ".djvu\0.chm\0.mobi\0.epub\0.azw\0.azw3\0.azw4\0" \
     ".fb2\0.fb2z\0.prc\0.tif\0.tiff\0.jp2\0.png\0" \
-    ".jpg\0.jpeg\0.tga\0.gif\0.avif\0.heic\0.heif\0.webp\0";
+    ".jpg\0.jpeg\0.tga\0.gif\0.avif\0.heic\0.heif\0" \
+    ".jfif\0.webp\0";
 // clang-format on
 
 // notifies Shell that file associations changed.
