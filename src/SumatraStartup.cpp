@@ -476,7 +476,7 @@ static HACCEL FindAcceleratorsForHwnd(HWND hwnd, HWND* hwndAccel) {
     HWND hwndCP = CommandPaletteHwndForAccelerator(hwnd);
     if (hwndCP) {
         *hwndAccel = hwndCP;
-        return accTable;
+        return editAccTable;
     }
 
     MainWindow* win = FindMainWindowByHwnd(hwnd);
