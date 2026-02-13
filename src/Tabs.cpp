@@ -162,6 +162,11 @@ static void MaybeMigrateTab(WindowTab* tab, MainWindow* newWin) {
     }
     if (nDocTabs == 1 && !newWin) return;
 
+    auto engine = tab->GetEngine();
+    if (EngineHasUnsavedAnnotations(engine)) {
+        return;
+    }
+
     RemoveTab(tab);
 
     if (!newWin) {

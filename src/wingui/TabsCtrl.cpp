@@ -467,6 +467,11 @@ LRESULT TabsCtrl::OnNotifyReflect(WPARAM wp, LPARAM lp) {
 
 extern bool AppIsValidHWND(HWND);
 
+static bool CanDragTab(TabInfo* tab) {
+    if (tab->isPinned) return false;
+    return true;
+}
+
 LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     Point mousePos = {GET_X_LPARAM(lp), GET_Y_LPARAM(lp)};
     if (WM_MOUSELEAVE == msg) {
@@ -564,7 +569,7 @@ LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
                 // which re-layouts tabs and mouse is no longer over a tab
                 if (isDragging && hl != -1) {
                     // send notification if the highlighted tab is dragged over another
-                    if (!GetTab(tabUnderMouse)->isPinned) {
+                    if (!CanDragTab(GetTab(tabUnderMouse))) {
                         TriggerTabDragged(this, hl, tabUnderMouse);
                         UpdateAfterDrag(this, hl, tabUnderMouse);
                     }
