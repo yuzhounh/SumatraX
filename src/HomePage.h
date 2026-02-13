@@ -14,7 +14,7 @@ void ShowAboutWindow(MainWindow*);
 
 void DrawAboutPage(MainWindow* win, HDC hdc);
 
-char* GetStaticLinkTemp(Vec<StaticLinkInfo*>& linkInfo, int x, int y, StaticLinkInfo** info);
+TempStr GetStaticLinkAtTemp(Vec<StaticLinkInfo*>& linkInfo, int x, int y, StaticLinkInfo** info);
 
 constexpr const char* kLinkOpenFile = "<File,Open>";
 constexpr const char* kLinkShowList = "<View,ShowList>";

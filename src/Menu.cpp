@@ -1690,7 +1690,7 @@ void OnAboutContextMenu(MainWindow* win, int x, int y) {
         return;
     }
 
-    char* path = GetStaticLinkTemp(win->staticLinks, x, y, nullptr);
+    char* path = GetStaticLinkAtTemp(win->staticLinks, x, y, nullptr);
     if (!path || *path == '<' || str::StartsWith(path, "http://") || str::StartsWith(path, "https://")) {
         return;
     }

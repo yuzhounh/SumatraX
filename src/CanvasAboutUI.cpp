@@ -54,7 +54,7 @@ static void OnMouseLeftButtonDownAbout(MainWindow* win, int x, int y, WPARAM) {
 
     // remember a link under so that on mouse up we only activate
     // link if mouse up is on the same link as mouse down
-    win->urlOnLastButtonDown.SetCopy(GetStaticLinkTemp(win->staticLinks, x, y, nullptr));
+    win->urlOnLastButtonDown.SetCopy(GetStaticLinkAtTemp(win->staticLinks, x, y, nullptr));
 }
 
 static bool IsLink(const char* url) {
@@ -71,7 +71,7 @@ static bool IsLink(const char* url) {
 }
 
 static void OnMouseLeftButtonUpAbout(MainWindow* win, int x, int y, WPARAM) {
-    char* url = GetStaticLinkTemp(win->staticLinks, x, y, nullptr);
+    char* url = GetStaticLinkAtTemp(win->staticLinks, x, y, nullptr);
     char* prevUrl = win->urlOnLastButtonDown;
     bool clickedURL = url && str::Eq(url, prevUrl);
     win->urlOnLastButtonDown.Set(nullptr);
@@ -118,7 +118,7 @@ static LRESULT OnSetCursorAbout(MainWindow* win, HWND hwnd) {
     Point pt = HwndGetCursorPos(hwnd);
     if (!pt.IsEmpty()) {
         StaticLinkInfo* linkInfo;
-        if (GetStaticLinkTemp(win->staticLinks, pt.x, pt.y, &linkInfo)) {
+        if (GetStaticLinkAtTemp(win->staticLinks, pt.x, pt.y, &linkInfo)) {
             win->ShowToolTip(linkInfo->tooltip, linkInfo->rect);
             SetCursorCached(IDC_HAND);
         } else {

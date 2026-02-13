@@ -44,12 +44,12 @@ constexpr const char* promoteBuiltIn = R"(
 [
     Name = Edna
     URL = https://edna.arslexis.io
-    Info = note taking app for develelopers
+    Info = Note taking app for develelopers
 ]
 [
-    Name = "ArsLexis"
-    URL = https://arslexis.io
-    Info = Various web tools
+    Name = "MarkLexis"
+    URL = https://marklexis.arslexis.io
+    Info = Best bookmarking web application
 ]
 )";
 
@@ -423,19 +423,19 @@ static void CopyAboutInfoToClipboard() {
     CopyTextToClipboard(info.LendData());
 }
 
-char* GetStaticLinkTemp(Vec<StaticLinkInfo*>& staticLinks, int x, int y, StaticLinkInfo** linkOut) {
+TempStr GetStaticLinkAtTemp(Vec<StaticLinkInfo*>& staticLinks, int x, int y, StaticLinkInfo** linkOut) {
     if (!CanAccessDisk()) {
         return nullptr;
     }
 
     Point pt(x, y);
-    for (size_t i = 0; i < staticLinks.size(); i++) {
+    for (int i = 0; i < staticLinks.Size(); i++) {
         if (staticLinks.at(i)->rect.Contains(pt)) {
+            auto link = staticLinks.At(i);
             if (linkOut) {
-                *linkOut = staticLinks.at(i);
+                *linkOut = link;
             }
-            auto res = staticLinks.at(i)->target;
-            return str::DupTemp(res);
+            return str::DupTemp(link->target);
         }
     }
 
@@ -496,7 +496,7 @@ LRESULT CALLBACK WndProcAbout(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
             pt = HwndGetCursorPos(hwnd);
             if (!pt.IsEmpty()) {
                 StaticLinkInfo* linkInfo;
-                if (GetStaticLinkTemp(gStaticLinks, pt.x, pt.y, &linkInfo)) {
+                if (GetStaticLinkAtTemp(gStaticLinks, pt.x, pt.y, &linkInfo)) {
                     CreateInfotipForLink(linkInfo);
                     SetCursorCached(IDC_HAND);
                     return TRUE;
@@ -506,12 +506,12 @@ LRESULT CALLBACK WndProcAbout(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
             return DefWindowProc(hwnd, msg, wp, lp);
 
         case WM_LBUTTONDOWN: {
-            url = GetStaticLinkTemp(gStaticLinks, x, y, nullptr);
+            url = GetStaticLinkAtTemp(gStaticLinks, x, y, nullptr);
             str::ReplaceWithCopy(&gClickedURL, url);
         } break;
 
         case WM_LBUTTONUP:
-            url = GetStaticLinkTemp(gStaticLinks, x, y, nullptr);
+            url = GetStaticLinkAtTemp(gStaticLinks, x, y, nullptr);
             if (url && str::Eq(url, gClickedURL)) {
                 SumatraLaunchBrowser(url);
             }
@@ -606,6 +606,7 @@ void DrawAboutPage(MainWindow* win, HDC hdc) {
 
 /* alternate static page to display when no document is loaded */
 
+constexpr int kOpenDocumentYShift = 4;
 constexpr int kThumbsMaxCols = 5;
 constexpr int kThumbsSeparatorDy = 2;
 constexpr int kThumbsBorderDx = 1;
@@ -613,8 +614,8 @@ constexpr int kThumbsBorderDx = 1;
 #define kThumbsMarginRight DpiScale(hdc, 40)
 #define kThumbsMarginTop DpiScale(hdc, 50)
 #define kThumbsMarginBottom DpiScale(hdc, 40)
-#define kThumbsSpaceBetweenX DpiScale(hdc, 30)
-#define kThumbsSpaceBetweenY DpiScale(hdc, 50)
+#define kThumbsSpaceBetweenX DpiScale(hdc, 38)
+#define kThumbsSpaceBetweenY DpiScale(hdc, 58)
 #define kThumbsBottomBoxDy DpiScale(hdc, 50)
 
 struct ThumbnailLayout {
@@ -698,7 +699,6 @@ static Promote* ParsePromote(const char* s) {
     return first;
 }
 
-// layout homepage in r
 void LayoutHomePage(HomePageLayout& l) {
     l.promote = ParsePromote(promoteBuiltIn);
 
@@ -728,7 +728,7 @@ void LayoutHomePage(HomePageLayout& l) {
     l.rcLine = {0, sz.dy, rc.dx, 0};
 
     Rect& titleBox = l.rcAppWithVer;
-    rc.SubTB(titleBox.dy, kThumbsBottomBoxDy);
+    rc.SubTB(titleBox.dy, 0);
 
     int dx =
         (rc.dx - kThumbsMarginLeft - kThumbsMarginRight + kThumbsSpaceBetweenX) / (kThumbnailDx + kThumbsSpaceBetweenX);
@@ -763,11 +763,43 @@ void LayoutHomePage(HomePageLayout& l) {
     }
     hdr->SetBounds(rcHdr);
 
+    /* "Open a document" link next to header */
+    l.himlOpen = (HIMAGELIST)SendMessageW(win->hwndToolbar, TB_GETIMAGELIST, 0, 0);
+    Rect rcIconOpen(0, 0, 0, 0);
+    ImageList_GetIconSize(l.himlOpen, &rcIconOpen.dx, &rcIconOpen.dy);
+
+    txt = _TRA("Open a document...");
+    auto openDoc = new VirtWndText(hwnd, txt, fontText);
+    openDoc->isRtl = isRtl;
+    openDoc->withUnderline = true;
+    txtSize = openDoc->GetIdealSize(true);
+
+    int openDocSpacing = DpiScale(hdc, 16);
+    rcIconOpen.x = rcHdr.x + rcHdr.dx + openDocSpacing;
+    rcIconOpen.y = rcHdr.y + rcHdr.dy - rcIconOpen.dy - kOpenDocumentYShift + 3;
+    if (isRtl) {
+        rcIconOpen.x = rcHdr.x - openDocSpacing - rcIconOpen.dx;
+    }
+    l.rcIconOpen = rcIconOpen;
+
+    Rect rcOpenDoc(rcIconOpen.x + rcIconOpen.dx + 3, rcHdr.y + rcHdr.dy - txtSize.dy - kOpenDocumentYShift, txtSize.dx,
+                   txtSize.dy);
+    if (isRtl) {
+        rcOpenDoc.x = rcIconOpen.x - rcOpenDoc.dx - 3;
+    }
+    openDoc->SetBounds(rcOpenDoc);
+
+    rcOpenDoc = rcOpenDoc.Union(rcIconOpen);
+    rcOpenDoc.Inflate(10, 10);
+    l.openDoc = openDoc;
+    auto sl = new StaticLinkInfo(rcOpenDoc, kLinkOpenFile);
+    win->staticLinks.Append(sl);
+
     int nFiles = fileStates.Size();
     for (int row = 0; row < thumbsRows; row++) {
         for (int col = 0; col < thumbsCols; col++) {
             if (row * thumbsCols + col >= nFiles) {
-                // display the "Open a document" link right below the last row
+                // no more files to display
                 thumbsRows = col > 0 ? row + 1 : row;
                 break;
             }
@@ -802,37 +834,6 @@ void LayoutHomePage(HomePageLayout& l) {
             win->staticLinks.Append(thumb.sl);
         }
     }
-    /* bottom links */
-    rc.y +=
-        kThumbsMarginTop + thumbsRows * kThumbnailDy + (thumbsRows - 1) * kThumbsSpaceBetweenY + kThumbsMarginBottom;
-    rc.dy = kThumbsBottomBoxDy;
-
-    l.himlOpen = (HIMAGELIST)SendMessageW(win->hwndToolbar, TB_GETIMAGELIST, 0, 0);
-    Rect rcIconOpen(ptOff.x, rc.y, 0, 0);
-    ImageList_GetIconSize(l.himlOpen, &rcIconOpen.dx, &rcIconOpen.dy);
-    rcIconOpen.y += (rc.dy - rcIconOpen.dy) / 2;
-    if (isRtl) {
-        rcIconOpen.x = rc.dx - ptOff.x - rcIconOpen.dx;
-    }
-    l.rcIconOpen = rcIconOpen;
-
-    txt = _TRA("Open a document...");
-    auto openDoc = new VirtWndText(hwnd, txt, fontText);
-    openDoc->isRtl = isRtl;
-    openDoc->withUnderline = true;
-    txtSize = openDoc->GetIdealSize(true);
-    Rect rcOpenDoc(ptOff.x + rcIconOpen.dx + 3, rc.y + (rc.dy - txtSize.dy) / 2, txtSize.dx, txtSize.dy);
-    if (isRtl) {
-        rcOpenDoc.x = rcIconOpen.x - rcOpenDoc.dx - 3;
-    }
-    openDoc->SetBounds(rcOpenDoc);
-
-    // make the click target larger
-    rcOpenDoc = rcOpenDoc.Union(rcIconOpen);
-    rcOpenDoc.Inflate(10, 10);
-    l.openDoc = openDoc;
-    auto sl = new StaticLinkInfo(rcOpenDoc, kLinkOpenFile);
-    win->staticLinks.Append(sl);
 }
 
 static void GetFileStateIcon(FileState* fs) {
