@@ -327,7 +327,7 @@ static void UpdateWarningMessageHwnd(MainWindow* win, const char* s) {
     HWND hwnd = win->hwndTbWarningMsg;
     UpdateToolbarButtonStateByIdx(hwnd, btnIdx, hide, TBSTATE_HIDDEN);
     if (hide) {
-        MoveWindow(hwnd, 0, 0, 0, 0, TRUE);
+        HwndSetText(hwnd, "");
         return;
     }
 
@@ -336,7 +336,7 @@ static void UpdateWarningMessageHwnd(MainWindow* win, const char* s) {
     TbSetButtonDx(win->hwndToolbar, WarningMsgId, size.dx);
     RECT r{};
     TbGetRectByIdx(win->hwndToolbar, btnIdx, &r);
-    int x = r.right + DpiScale(win->hwndToolbar, 10);
+    int x = r.left + DpiScale(win->hwndToolbar, 10);
     int y = (r.bottom - size.dy) / 2;
     MoveWindow(hwnd, x, y, size.dx, size.dy, TRUE);
 }
