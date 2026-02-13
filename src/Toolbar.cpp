@@ -62,13 +62,13 @@ struct ToolbarButtonInfo {
 // thos are not real commands but we have to refer to toolbar buttons
 // is by a command. those are just background for area to be
 // covered by other HWNDs. They need the right size
-constexpr int CmdPageInfo = (int)CmdLast + 16;
-constexpr int CmdInfoText = (int)CmdLast + 17;
+constexpr int PageInfoId = (int)CmdLast + 16;
+constexpr int WarningMsgId = (int)CmdLast + 17;
 
 static ToolbarButtonInfo gToolbarButtons[] = {
     {TbIcon::Open, CmdOpenFile, _TRN("Open")},
     {TbIcon::Print, CmdPrint, _TRN("Print")},
-    {TbIcon::None, CmdPageInfo, nullptr}, // text box for page number + show current page / no of pages
+    {TbIcon::None, PageInfoId, nullptr}, // text box for page number + show current page / no of pages
     {TbIcon::PagePrev, CmdGoToPrevPage, _TRN("Previous Page")},
     {TbIcon::PageNext, CmdGoToNextPage, _TRN("Next Page")},
     {TbIcon::None, 0, nullptr}, // separator
@@ -114,12 +114,6 @@ static bool NeedsRotateUI(MainWindow* win) {
     return true;
 }
 
-static bool NeedsInfo(MainWindow* win) {
-    char* s = HwndGetTextTemp(win->hwndTbInfoText);
-    bool show = str::Len(s) > 0;
-    return show;
-}
-
 // some commands are only avialble in certain contexts
 // we remove toolbar buttons for un-availalbe commands
 static bool IsCmdAvailable(MainWindow* win, int cmdId) {
@@ -135,8 +129,8 @@ static bool IsCmdAvailable(MainWindow* win, int cmdId) {
         case CmdFindPrev:
         case CmdFindToggleMatchCase:
             return NeedsFindUI(win);
-        case CmdInfoText:
-            return NeedsInfo(win);
+        case PageInfoId:
+            return true;
     }
     auto ctx = NewBuildMenuCtx(win->CurrentTab(), Point{0, 0});
     AutoRun delCtx(DeleteBuildMenuCtx, ctx);
@@ -154,6 +148,8 @@ static bool IsCmdEnabled(MainWindow* win, int cmdId) {
         case CmdNextTabSmart:
         case CmdPrevTabSmart:
             return gGlobalPrefs->useTabs;
+        case PageInfoId:
+            return true;
     }
 
     auto [remove, disable] = GetCommandIdState(ctx, cmdId);
@@ -283,18 +279,18 @@ void UpdateToolbarButtonsToolTipsForWindow(MainWindow* win) {
 #endif
 }
 
-static void SetToolbarInfoText(MainWindow* win, const char* s) {
-    HWND hwnd = win->hwndTbInfoText;
+static void UpdateWarningMessageHwnd(MainWindow* win, const char* s) {
+    HWND hwnd = win->hwndTbWarningMsg;
     HwndSetText(hwnd, s);
     Size size = HwndMeasureText(hwnd, s);
 
     bool hide = size.dx == 0;
-    SendMessageW(hwnd, TB_HIDEBUTTON, CmdInfoText, hide);
+    SendMessageW(hwnd, TB_HIDEBUTTON, WarningMsgId, hide);
     if (hide) {
         MoveWindow(hwnd, 0, 0, 0, 0, TRUE);
         return;
     }
-    TbSetButtonDx(win->hwndToolbar, CmdInfoText, size.dx);
+    TbSetButtonDx(win->hwndToolbar, WarningMsgId, size.dx);
     int lastIdx = TotalButtonsCount() - 1;
     RECT r{};
     TbGetRectByIdx(win->hwndToolbar, lastIdx, &r);
@@ -305,6 +301,12 @@ static void SetToolbarInfoText(MainWindow* win, const char* s) {
 
 // TODO: this is called too often
 void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
+    const char* warningMsg = "";
+    DisplayModel* dm = win->AsFixed();
+    if (dm && EngineHasUnsavedAnnotations(dm->GetEngine())) {
+        warningMsg = _TRA("You have unsaved annotations");
+    }
+
     HWND hwnd = win->hwndToolbar;
     int n = TotalButtonsCount();
     for (int i = 0; i < n; i++) {
@@ -312,6 +314,9 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
         int cmdId = tb.cmdId;
         if (setButtonsVisibility) {
             bool hide = !IsCmdAvailable(win, cmdId);
+            if (cmdId == WarningMsgId) {
+                hide = str::IsEmptyOrWhiteSpace(warningMsg);
+            }
             SendMessageW(hwnd, TB_HIDEBUTTON, cmdId, hide);
         }
         if (SkipBuiltInButton(tb)) {
@@ -326,12 +331,7 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
     if (setButtonsVisibility && NeedsFindUI(win)) {
         UpdateToolbarFindText(win);
     }
-    const char* msg = "";
-    DisplayModel* dm = win->AsFixed();
-    if (dm && EngineHasUnsavedAnnotations(dm->GetEngine())) {
-        msg = _TRA("You have unsaved annotations");
-    }
-    SetToolbarInfoText(win, msg);
+    UpdateWarningMessageHwnd(win, warningMsg);
 }
 
 // more than one because users can add custom buttons with overlapping ids
@@ -483,7 +483,7 @@ static LRESULT CALLBACK WndProcToolbar(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp
         if (!win) {
             return CallWindowProc(DefWndProcToolbar, hwnd, msg, wp, lp);
         }
-        if (win->hwndTbInfoText == hwndCtrl) {
+        if (win->hwndTbWarningMsg == hwndCtrl) {
             COLORREF col = RGB(0xff, 0x00, 0x00);
             SetTextColor(hdc, col);
             SetBkMode(hdc, TRANSPARENT);
@@ -702,8 +702,8 @@ static void CreateInfoText(MainWindow* win, HFONT font) {
         CreateWindowExW(0, WC_STATIC, L"", style, 0, 1, 0, 0, win->hwndToolbar, (HMENU) nullptr, hmod, nullptr);
     SetWindowFont(labelInfo, font, FALSE);
 
-    win->hwndTbInfoText = labelInfo;
-    SetToolbarInfoText(win, "");
+    win->hwndTbWarningMsg = labelInfo;
+    UpdateWarningMessageHwnd(win, "");
 }
 
 static WNDPROC DefWndProcPageBox = nullptr;
@@ -841,10 +841,10 @@ void UpdateToolbarPageText(MainWindow* win, int pageCount, bool updateOnly) {
     TBBUTTONINFOW bi{};
     bi.cbSize = sizeof(bi);
     bi.dwMask = TBIF_SIZE;
-    SendMessageW(win->hwndToolbar, TB_GETBUTTONINFO, CmdPageInfo, (LPARAM)&bi);
+    SendMessageW(win->hwndToolbar, TB_GETBUTTONINFO, PageInfoId, (LPARAM)&bi);
     size2.dx += size.dx + pageWndRect.dx + 12;
     if (bi.cx != size2.dx || !updateOnly) {
-        TbSetButtonDx(win->hwndToolbar, CmdPageInfo, size2.dx);
+        TbSetButtonDx(win->hwndToolbar, PageInfoId, size2.dx);
     }
     InvalidateRect(win->hwndToolbar, nullptr, TRUE);
 }
@@ -1127,7 +1127,7 @@ void CreateToolbar(MainWindow* win) {
 
     {
         // info text for showing "unsaved annotations" text
-        ToolbarButtonInfo tbi{TbIcon::None, CmdInfoText, nullptr};
+        ToolbarButtonInfo tbi{TbIcon::None, WarningMsgId, nullptr};
         TBBUTTON tb = TbButtonFromButtonInfo(tbi);
         SendMessageW(hwndToolbar, TB_ADDBUTTONS, 1, (LPARAM)&tb);
     }
@@ -1190,7 +1190,7 @@ void ReCreateToolbar(MainWindow* win) {
         HwndDestroyWindowSafe(&win->hwndFindLabel);
         HwndDestroyWindowSafe(&win->hwndFindEdit);
         HwndDestroyWindowSafe(&win->hwndFindBg);
-        HwndDestroyWindowSafe(&win->hwndTbInfoText);
+        HwndDestroyWindowSafe(&win->hwndTbWarningMsg);
         HwndDestroyWindowSafe(&win->hwndToolbar);
         HwndDestroyWindowSafe(&win->hwndReBar);
     }
