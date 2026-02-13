@@ -943,7 +943,6 @@ void DrawHomePage(MainWindow* win, HDC hdc) {
 
     HomePageLayout l;
     l.rc = ClientRect(win->hwndCanvas);
-    ;
     l.hdc = hdc;
     l.hwnd = hwnd;
     l.win = win;

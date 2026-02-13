@@ -57,8 +57,6 @@ struct StaticLinkInfo {
 
     explicit StaticLinkInfo(Rect rect, const char* target, const char* infotip = nullptr);
     StaticLinkInfo() = default;
-    StaticLinkInfo(const StaticLinkInfo&);
-    StaticLinkInfo& operator=(const StaticLinkInfo& other);
     ~StaticLinkInfo();
 };
 

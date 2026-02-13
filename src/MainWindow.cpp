@@ -77,22 +77,6 @@ StaticLinkInfo::StaticLinkInfo(Rect rect, const char* target, const char* infoti
     this->tooltip = str::Dup(infotip);
 }
 
-StaticLinkInfo::StaticLinkInfo(const StaticLinkInfo& other) {
-    rect = other.rect;
-    str::ReplaceWithCopy(&target, other.target);
-    str::ReplaceWithCopy(&tooltip, other.tooltip);
-}
-
-StaticLinkInfo& StaticLinkInfo::operator=(const StaticLinkInfo& other) {
-    if (this == &other) {
-        return *this;
-    }
-    rect = other.rect;
-    str::ReplaceWithCopy(&target, other.target);
-    str::ReplaceWithCopy(&tooltip, other.tooltip);
-    return *this;
-}
-
 StaticLinkInfo::~StaticLinkInfo() {
     str::Free(target);
     str::Free(tooltip);
