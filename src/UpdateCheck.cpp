@@ -243,8 +243,6 @@ static void NotifyUserOfUpdate(UpdateInfo* updateInfo) {
     dialogConfig.pszWindowTitle = ToWStrTemp(title);
     dialogConfig.pszMainInstruction = ToWStrTemp(mainInstr);
     dialogConfig.pszContent = ToWStrTemp(content);
-    s = _TRA("Skip this version");
-    dialogConfig.pszVerificationText = ToWStrTemp(s);
     dialogConfig.nDefaultButton = kBtnIdInstall;
     dialogConfig.dwFlags = flags;
     dialogConfig.cxWidth = 0;
@@ -256,18 +254,14 @@ static void NotifyUserOfUpdate(UpdateInfo* updateInfo) {
     dialogConfig.hwndParent = updateInfo->hwndParent;
 
     int buttonPressedId = 0;
-    BOOL verificationFlagChecked = false;
 
-    auto hr = TaskDialogIndirect(&dialogConfig, &buttonPressedId, nullptr, &verificationFlagChecked);
+    auto hr = TaskDialogIndirect(&dialogConfig, &buttonPressedId, nullptr, nullptr);
     ReportIf(hr == E_INVALIDARG);
     bool doInstall = (hr == S_OK) && (buttonPressedId == kBtnIdInstall);
 
     auto installerPath = updateInfo->installerPath;
-    if (!doInstall && verificationFlagChecked) {
-        str::ReplaceWithCopy(&gGlobalPrefs->versionToSkip, updateInfo->latestVer);
-    }
 
-    // persist the versionToSkip and timeOfLastUpdateCheck
+    // persist timeOfLastUpdateCheck
     SaveSettings();
     if (!doInstall) {
         file::Delete(installerPath);
@@ -379,14 +373,6 @@ static bool ShouldDownloadUpdate(UpdateInfo* updateInfo, UpdateCheck updateCheck
         // by automatic update check and always triggers by user-initiated
         // user can cancel the update
         hasUpdate = updateCheckType == UpdateCheck::UserInitiated;
-    }
-    if (hasUpdate && updateCheckType == UpdateCheck::Automatic) {
-        // if user wanted to skip this version, we skip it in automated check
-        if (str::EqI(gGlobalPrefs->versionToSkip, latestVer)) {
-            logf("ShowAutoUpdateDialog: skipping auto-update of ver '%s' because of gGlobalPrefs->versionToSkip\n",
-                 latestVer);
-            return false;
-        }
     }
     return hasUpdate;
 }
