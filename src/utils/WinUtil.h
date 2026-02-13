@@ -344,7 +344,7 @@ bool DeleteObjectSafe(HGDIOBJ*);
 bool DeleteBrushSafe(HBRUSH*);
 bool DestroyIconSafe(HICON*);
 
-void TbSetButtonInfo(HWND hwnd, int buttonId, TBBUTTONINFO* info);
+void TbSetButtonInfoById(HWND hwnd, int buttonId, TBBUTTONINFO* info);
 void TbGetPadding(HWND, int* padX, int* padY);
 void TbSetPadding(HWND, int padX, int padY);
 void TbGetMetrics(HWND hwnd, TBMETRICS* metrics);

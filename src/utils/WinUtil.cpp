@@ -2877,7 +2877,7 @@ void HwndDestroyWindowSafe(HWND* hwndPtr) {
     ::DestroyWindow(hwnd);
 }
 
-void TbSetButtonInfo(HWND hwnd, int buttonId, TBBUTTONINFO* info) {
+void TbSetButtonInfoById(HWND hwnd, int buttonId, TBBUTTONINFO* info) {
     auto res = SendMessageW(hwnd, TB_SETBUTTONINFO, buttonId, (LPARAM)info);
     ReportDebugIf(0 == res);
 }
@@ -2895,10 +2895,11 @@ void TbSetPadding(HWND hwnd, int padX, int padY) {
 }
 
 // https://docs.microsoft.com/en-us/windows/win32/controls/tb-getrect
-void TbGetRectById(HWND hwnd, int buttonId, RECT* rc) {
-    auto res = SendMessageW(hwnd, TB_GETRECT, buttonId, (LPARAM)rc);
+void TbGetRectById(HWND hwnd, int buttonId, RECT* r) {
+    auto res = SendMessageW(hwnd, TB_GETRECT, buttonId, (LPARAM)r);
     if (res == 0) {
-        logf("TbGetRect: hwnd=0x%p, buttonId: %d\n", hwnd, buttonId);
+        logf("TbGetRect: hwnd=0x%p, buttonId: %d pos: (%d, %d) size: (%d, %d)\n", hwnd, buttonId, r->left, r->top,
+             RectDx(*r), RectDy(*r));
         LogLastError();
         ReportIf(res == 0);
     }

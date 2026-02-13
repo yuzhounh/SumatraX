@@ -98,12 +98,60 @@ static bool SkipBuiltInButton(const ToolbarButtonInfo& tbi) {
     return tbi.bmpIndex == TbIcon::None;
 }
 
+static void UpdateToolbarButtonStateByIdx(HWND hwnd, int idx, bool set, BYTE flag) {
+    TBBUTTONINFOW bi{};
+    bi.cbSize = sizeof(bi);
+    bi.dwMask = TBIF_BYINDEX | TBIF_STATE;
+    SendMessageW(hwnd, TB_GETBUTTONINFOW, idx, (LPARAM)&bi);
+    bi.fsState = set ? bi.fsState | flag : bi.fsState & ~flag;
+    SendMessageW(hwnd, TB_SETBUTTONINFOW, idx, (LPARAM)&bi);
+}
+
+static int TotalButtonsCount() {
+    return kButtonsCount + gCustomButtonsCount;
+}
+
+static ToolbarButtonInfo& GetToolbarButtonInfoByIdx(int idx) {
+    if (idx < kButtonsCount) return gToolbarButtons[idx];
+    return gCustomButtons[idx - kButtonsCount];
+}
+
+// more than one because users can add custom buttons with overlapping ids
+static int GetToolbarButtonsByID(int cmdId, int (&buttons)[4]) {
+    int nFound = 0;
+    int n = TotalButtonsCount();
+    for (int idx = 0; idx < n; idx++) {
+        ToolbarButtonInfo& tb = GetToolbarButtonInfoByIdx(idx);
+        int tbCmdId = tb.cmdId;
+        auto cmd = FindCustomCommand(tbCmdId);
+        if (cmd) tbCmdId = cmd->origId;
+        cmd = FindCustomCommand(cmdId);
+        if (cmd) cmdId = cmd->origId;
+        if (cmdId != tbCmdId) continue;
+        buttons[nFound++] = idx;
+        if (nFound >= 4) {
+            return nFound;
+        }
+    }
+    return nFound;
+}
+
+void SetToolbarButtonCheckedState(MainWindow* win, int cmdId, bool isChecked) {
+    int buttons[4];
+    int n = GetToolbarButtonsByID(cmdId, buttons);
+    if (n == 0) return;
+    for (int i = 0; i < n; i++) {
+        int idx = buttons[i];
+        UpdateToolbarButtonStateByIdx(win->hwndToolbar, idx, isChecked, TBSTATE_CHECKED);
+    }
+}
+
 static void TbSetButtonDx(HWND hwndToolbar, int cmd, int dx) {
     TBBUTTONINFOW bi{};
     bi.cbSize = sizeof(bi);
     bi.dwMask = TBIF_SIZE;
     bi.cx = (WORD)dx;
-    TbSetButtonInfo(hwndToolbar, cmd, &bi);
+    TbSetButtonInfoById(hwndToolbar, cmd, &bi);
 }
 
 // which documents support rotation
@@ -222,15 +270,6 @@ static TBBUTTON TbButtonFromButtonInfo(const ToolbarButtonInfo& bi) {
     return b;
 }
 
-static int TotalButtonsCount() {
-    return kButtonsCount + gCustomButtonsCount;
-}
-
-static ToolbarButtonInfo& GetToolbarButtonInfoByIdx(int idx) {
-    if (idx < kButtonsCount) return gToolbarButtons[idx];
-    return gCustomButtons[idx - kButtonsCount];
-}
-
 // Set toolbar button tooltips taking current language into account.
 void UpdateToolbarButtonsToolTipsForWindow(MainWindow* win) {
     TBBUTTONINFO binfo{};
@@ -254,7 +293,7 @@ void UpdateToolbarButtonsToolTipsForWindow(MainWindow* win) {
         binfo.dwMask = TBIF_TEXT | TBIF_BYINDEX;
         binfo.pszText = ToWStrTemp(s);
         WPARAM buttonId = (WPARAM)i;
-        TbSetButtonInfo(hwnd, buttonId, &binfo);
+        TbSetButtonInfoById(hwnd, buttonId, &binfo);
     }
     // TODO: need an explicit tooltip window https://chatgpt.com/c/18fb77c8-761c-4314-a1ac-e55b93edfeef
 #if 0
@@ -273,33 +312,36 @@ void UpdateToolbarButtonsToolTipsForWindow(MainWindow* win) {
             binfo.dwMask = TBIF_TEXT | TBIF_BYINDEX;
             binfo.pszText = ToWStrTemp(s);
             WPARAM buttonId = (WPARAM)(kButtonsCount + i);
-            TbSetButtonInfo(hwnd, buttonId, &binfo);
+            TbSetButtonInfoById(hwnd, buttonId, &binfo);
         }
     }
 #endif
 }
 
 static void UpdateWarningMessageHwnd(MainWindow* win, const char* s) {
-    HWND hwnd = win->hwndTbWarningMsg;
-    HwndSetText(hwnd, s);
-    Size size = HwndMeasureText(hwnd, s);
+    // warning message is always the last button in toolbar
+    int btnIdx = TotalButtonsCount() - 1;
+    bool hide = str::IsEmptyOrWhiteSpace(s);
 
-    bool hide = size.dx == 0;
-    SendMessageW(hwnd, TB_HIDEBUTTON, WarningMsgId, hide);
+    HWND hwnd = win->hwndTbWarningMsg;
+    UpdateToolbarButtonStateByIdx(hwnd, btnIdx, hide, TBSTATE_HIDDEN);
     if (hide) {
         MoveWindow(hwnd, 0, 0, 0, 0, TRUE);
         return;
     }
+
+    HwndSetText(hwnd, s);
+    Size size = HwndMeasureText(hwnd, s);
     TbSetButtonDx(win->hwndToolbar, WarningMsgId, size.dx);
-    int lastIdx = TotalButtonsCount() - 1;
     RECT r{};
-    TbGetRectByIdx(win->hwndToolbar, lastIdx, &r);
+    TbGetRectByIdx(win->hwndToolbar, btnIdx, &r);
     int x = r.right + DpiScale(win->hwndToolbar, 10);
     int y = (r.bottom - size.dy) / 2;
     MoveWindow(hwnd, x, y, size.dx, size.dy, TRUE);
 }
 
 // TODO: this is called too often
+// TODO: also set checked state instead of calling SetToolbarButtonCheckedState() all over
 void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
     const char* warningMsg = "";
     DisplayModel* dm = win->AsFixed();
@@ -312,18 +354,15 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
     for (int i = 0; i < n; i++) {
         auto& tb = GetToolbarButtonInfoByIdx(i);
         int cmdId = tb.cmdId;
-        if (setButtonsVisibility) {
+        if (setButtonsVisibility && cmdId != WarningMsgId) {
             bool hide = !IsCmdAvailable(win, cmdId);
-            if (cmdId == WarningMsgId) {
-                hide = str::IsEmptyOrWhiteSpace(warningMsg);
-            }
-            SendMessageW(hwnd, TB_HIDEBUTTON, cmdId, hide);
+            UpdateToolbarButtonStateByIdx(hwnd, i, hide, TBSTATE_HIDDEN);
         }
         if (SkipBuiltInButton(tb)) {
             continue;
         }
         bool isEnabled = IsCmdEnabled(win, cmdId);
-        SetToolbarButtonEnableState(win, cmdId, isEnabled);
+        UpdateToolbarButtonStateByIdx(hwnd, i, isEnabled, TBSTATE_ENABLED);
     }
 
     // Find labels may have to be repositioned if some
@@ -332,35 +371,6 @@ void ToolbarUpdateStateForWindow(MainWindow* win, bool setButtonsVisibility) {
         UpdateToolbarFindText(win);
     }
     UpdateWarningMessageHwnd(win, warningMsg);
-}
-
-// more than one because users can add custom buttons with overlapping ids
-static int GetToolbarButtonsByID(int cmdId, int (&buttons)[4]) {
-    int nFound = 0;
-    int n = TotalButtonsCount();
-    for (int idx = 0; idx < n; idx++) {
-        ToolbarButtonInfo& tb = GetToolbarButtonInfoByIdx(idx);
-        int tbCmdId = tb.cmdId;
-        auto cmd = FindCustomCommand(tbCmdId);
-        if (cmd) tbCmdId = cmd->origId;
-        cmd = FindCustomCommand(cmdId);
-        if (cmd) cmdId = cmd->origId;
-        if (cmdId != tbCmdId) continue;
-        buttons[nFound++] = idx;
-        if (nFound >= 4) {
-            return nFound;
-        }
-    }
-    return nFound;
-}
-
-void UpdateToolbarButtonStateByIdx(HWND hwnd, int idx, bool set, BYTE flag) {
-    TBBUTTONINFOW bi{};
-    bi.cbSize = sizeof(bi);
-    bi.dwMask = TBIF_BYINDEX | TBIF_STATE;
-    SendMessageW(hwnd, TB_GETBUTTONINFOW, idx, (LPARAM)&bi);
-    bi.fsState = set ? bi.fsState | flag : bi.fsState & ~flag;
-    SendMessageW(hwnd, TB_SETBUTTONINFOW, idx, (LPARAM)&bi);
 }
 
 void SetToolbarButtonEnableState(MainWindow* win, int cmdId, bool isEnabled) {
@@ -372,17 +382,6 @@ void SetToolbarButtonEnableState(MainWindow* win, int cmdId, bool isEnabled) {
         UpdateToolbarButtonStateByIdx(win->hwndToolbar, idx, isEnabled, TBSTATE_ENABLED);
     }
 }
-
-void SetToolbarButtonCheckedState(MainWindow* win, int cmdId, bool isChecked) {
-    int buttons[4];
-    int n = GetToolbarButtonsByID(cmdId, buttons);
-    if (n == 0) return;
-    for (int i = 0; i < n; i++) {
-        int idx = buttons[i];
-        UpdateToolbarButtonStateByIdx(win->hwndToolbar, idx, isChecked, TBSTATE_CHECKED);
-    }
-}
-
 void ShowOrHideToolbar(MainWindow* win) {
     if (win->presentation || win->isFullScreen) {
         return;
