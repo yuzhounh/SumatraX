@@ -150,8 +150,18 @@ static void CloseWindowIfNoDocuments(MainWindow* win) {
     CloseWindow(win, true, true);
 }
 
-static void MigrateTab(WindowTab* tab, MainWindow* newWin) {
+static void MaybeMigrateTab(WindowTab* tab, MainWindow* newWin) {
     MainWindow* oldWin = tab->win;
+
+    // don't migrate if it's only one document tab and not
+    // dragging over a window
+    int nDocTabs = 0;
+    for (auto& t : oldWin->Tabs()) {
+        if (t->IsAboutTab()) continue;
+        nDocTabs++;
+    }
+    if (nDocTabs == 1 && !newWin) return;
+
     RemoveTab(tab);
 
     if (!newWin) {
@@ -427,7 +437,7 @@ static void MainWindowTabMigration(MainWindow* win, TabsCtrl::MigrationEvent* ev
         // don't re-add to the same window
         releaseWnd = nullptr;
     }
-    MigrateTab(tab, releaseWnd);
+    MaybeMigrateTab(tab, releaseWnd);
 }
 
 void CreateTabbar(MainWindow* win) {
