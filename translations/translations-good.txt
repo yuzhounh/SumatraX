@@ -40,6 +40,7 @@ sl:Opomba %s. Ctrl+click za urejanje.
 sr-rs:%s белешка. Ctrl+клик за уређивање.
 sv:%s kommentar. Ctrl+klick för att ändra
 ta:%s குறிப்புரைகள். திருத்த Ctrl கிளிக் செய்யவும்.
+tr:%s açıklama. Düzenlemek için Ctrl + tıklayın.
 tw:%s 註解。按 Ctrl+滑鼠左鍵 進行編輯。
 uz:%s izoh. Tahrirlash uchun Ctrl+bosish.
 :&About
@@ -475,7 +476,7 @@ sv:&Markör
 ta:&இடையெச்சக்குறி
 th:&ผู้ดูแล
 tl:&Kareta
-tr:&Karet
+tr:&İşaret
 tw:插入符號(&C)
 uk:&Каретка
 uz:&Karet
@@ -1455,6 +1456,7 @@ sk:&Klávesové skratky
 sl:Bližnjice tip&kovnice
 sr-rs:&Пречице на тастатури
 sv:Kortkommandon
+tr:&Klavye Kısayolları
 tw:鍵盤快速鍵(&K)
 uz:Klaviatura qisqa yo‘llari
 :&Last Page
@@ -5499,6 +5501,7 @@ sl:Izbrisana zgodovina %d datotek, izbrisane sličice.
 sr-rs:Историја од %d датотека очишћена, сличице обрисане.
 sv:Rensade filhistorik för %d filer, tog bort miniatyrbilder
 ta:வரலாற்றிலிருந்து %d கோப்புகளும், சிறு படங்களும் நீக்கப்பட்டன.
+tr:%d Dosyanın geçmişi temizlendi, küçük resimler silindi.
 tw:已清除 %d 個檔案的歷史記錄，已刪除縮圖。
 uz:%d ta fayl tarixi tozalandi, miniatyuralar o‘chirildi.
 vn:Đã dọn lịch sử của %d tập tin, đã xóa hình thu nhỏ.
@@ -5544,6 +5547,7 @@ sl:Čiščenje zgodovine …
 sr-rs:Чишћење историје...
 sv:Rensa historik
 ta:வரலாறு அழிக்கபடுகிறது...
+tr:Geçmiş temizleme...
 tw:正在清除歷史記錄...
 uz:Tarix tozalanmoqda...
 vn:Đang dọn dẹp lịch sử...
@@ -5641,6 +5645,7 @@ sk:Zatvoriť všetky karty
 sl:Zapri vse zavihke
 sv:Stäng alla flikar
 ta:எல்லா கீற்றுகளையும் மூடிடுக
+tr:Tüm Sekmeleri Kapat
 tw:關閉全部分頁
 uz:Barcha yorliqlarni yopish
 :Close Other Tabs
@@ -5731,6 +5736,7 @@ sk:Zatvoriť karty vľavo
 sl:Zapri zavihke na levi
 sv:Stäng flikar till vänster
 ta:இடதுபுறம் உள்ள கீற்றுகளை மூடிடுக
+tr:Soldaki Sekmeleri Kapat
 tw:關閉左側分頁
 uz:Chap tomondagi ichki oynalarni yopish
 :Close Tabs To The Right
@@ -6561,6 +6567,7 @@ sr-rs:Копирај путању датотеке
 sv:Kopiera sökväg
 ta:கோப்பு பாதை நகலெடு
 tl:Kopyahin ang File Path
+tr:Dosya Yolunu Kopyala
 tw:複製檔案路徑
 uz:Fayl yo‘lini nusxalash
 :Copy To Clipboard
@@ -8006,6 +8013,7 @@ sk:Odstrániť
 sl:Zbriši
 sv:Radera
 ta:அழித்தல்
+tr:Sil
 tw:刪除
 uz:O‘chirish
 :Delete Annotation
@@ -8051,6 +8059,7 @@ sl:Izbriši opombo
 sr-rs:Обриши белешку
 sv:Radera kommentar
 ta:குறிப்புரைகளை நீக்குக
+tr:Açıklamayı Sil
 tw:刪除註解
 uk:Видалити анотацію
 uz:Izohni o‘chirish
@@ -8545,6 +8554,7 @@ sk:Upraviť %s anotáciu
 sl:Uredi opombo %s
 sr-rs:Уреди %s белешку
 sv:Redigera %s kommentar
+tr:%s Açıklamayı Düzenle
 tw:編輯 %s 註解
 uz:%s izohini tahrirlash
 :Edit Annotations
@@ -8813,6 +8823,7 @@ sk:Chyba
 sl:Napaka
 sr-rs:Грешка
 sv:Fel
+tr:Hata
 tw:錯誤
 uz:Xato
 :Error loading %s
@@ -12433,6 +12444,7 @@ sat:ᱣᱮᱵᱽᱥᱟᱭᱤᱴ ᱨᱮ ᱥᱟᱹᱠᱷᱤ
 sk:Manuál na webovej stránke
 sl:Priročnik na spletni strani
 sv:Manual på webbsida
+tr:Web Sitesinde Kullanım Klavuzu
 tw:線上說明
 uz:Veb-saytda qo‘llanma
 :Mobi documents
@@ -12751,6 +12763,7 @@ sat:ᱵᱟᱝᱟ
 sk:Nie
 sl:Ne
 sv:Nej
+tr:Hayır
 tw:否
 uz:Yo‘q
 :No matches were found
@@ -13662,6 +13675,7 @@ sr-rs:Отвори у новом прозору
 sv:Öppna i nytt fönster
 ta:புதிய சாளரத்தில் திற
 tl:Buksan sa bagong Window
+tr:Yeni Pencerede Aç
 tw:在新視窗中開啟
 uz:Yangi oynada ochish
 :Open Next File In Folder
@@ -13699,6 +13713,7 @@ sat:ᱯᱚᱴᱚᱢ ᱨᱮ ᱤᱱᱟᱹ ᱛᱟᱭᱚᱢᱟᱜ ᱨᱮᱫᱽ ᱡ�
 sk:Otvoriť nasledujúci súbor v priečinku
 sl:Odpri naslednjo datoteko v mapi
 sv:Öppna nästa fil i mapp
+tr:Klasördeki Sonraki Dosyayı Aç
 tw:開啟資料夾內的下一個檔案
 uz:Papkadagi keyingi faylni ochish
 :Open Previous File In Folder
@@ -13736,6 +13751,7 @@ sat:ᱯᱚᱴᱚᱢ ᱨᱮ ᱢᱟᱲᱟᱝᱟᱜ ᱨᱮᱫᱽ ᱡᱷᱤᱡᱽ �
 sk:Otvoriť predchádzajúci súbor v priečinku
 sl:Odpri prejšnjo datoteko v mapi
 sv:Öppna föregående fil i mapp
+tr:Klasördeki Önceki Dosyayı Aç
 tw:開啟資料夾內的上一個檔案
 uz:Papkadagi oldingi faylni ochish
 :Open a document...
@@ -15798,6 +15814,7 @@ sr-rs:Својства...
 sv:Egenskaper...
 ta:பண்புகள்
 tl:Properties...
+tr:Özellikler...
 tw:內容...
 uk:Властивості...
 uz:Xususiyatlar...
@@ -15866,6 +15883,7 @@ pt:Abertos Recentemente
 ro:Deschis recent
 sat:ᱱᱤᱛᱚᱜ ᱠᱷᱩᱞᱟ ᱮᱱᱟ
 sk:Naposledy otvorené
+tr:Yakın Zamanda Açılan
 tw:最近開啟
 :Rect: x=%d y=%d dx=%d dy=%d
 am:Ուղղանկյուն` x=%d y=%d dx=%d dy=%d
@@ -17159,6 +17177,7 @@ sat:&Google Scholar ᱥᱟᱶᱛᱮ ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ
 sk:Vyhľadať na &Google Scholar
 sl:Išči z &Google Učenjak (Scholar)
 sv:Sök med &Google Scholar
+tr:&Google Scholar ile ara
 tw:使用Google學術搜尋(&G)
 uz:&Google Scholar bilan qidirish
 :Search with &Wikipedia
@@ -17197,6 +17216,7 @@ sat:&Wikipedia ᱥᱟᱶᱛᱮ ᱥᱮᱸᱫᱽᱨᱟᱭ ᱢᱮ
 sk:Vyhľadať na &Wikipedii
 sl:Išči z &Wikipedijo
 sv:Sök med &Wikipedia
+tr:&Wikipedia ile ara
 tw:使用維基百科搜尋(&W)
 uz:&Wikipedia bilan qidirish
 :Searching %d of %d...
@@ -19742,8 +19762,10 @@ vn:Tựa đề
 :Toggle Match Case
 br:Diferenciar Maiúsculas/Minúsculas
 de:Groß-/Kleinschreibung umschalten
+nl:Schakel hoofdlettergebruik in/uit
 pl:Przełącz uwzględnianie wielkości liter
 sk:Prepnúť rozlišovanie veľkých/malých písmen
+tr:Büyük/Küçük Harfleri Değiştir
 :Translate with &DeepL
 am:Թարգմանել &DeepL-ով
 ar:ترجمة في &DeepL
@@ -20460,6 +20482,7 @@ sat:ᱦᱚᱭ
 sk:Áno
 sl:Da
 sv:Ja
+tr:Evet
 tw:是
 uz:Ha
 :You have the latest version.
