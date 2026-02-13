@@ -71,13 +71,13 @@ LinkHandler::~LinkHandler() {
 
 Vec<MainWindow*> gWindows;
 
-StaticLinkInfo::StaticLinkInfo(Rect rect, const char* target, const char* infotip) {
+StaticLink::StaticLink(Rect rect, const char* target, const char* infotip) {
     this->rect = rect;
     this->target = str::Dup(target);
     this->tooltip = str::Dup(infotip);
 }
 
-StaticLinkInfo::~StaticLinkInfo() {
+StaticLink::~StaticLink() {
     str::Free(target);
     str::Free(tooltip);
 }

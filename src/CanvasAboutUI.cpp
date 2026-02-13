@@ -117,7 +117,7 @@ static void OnMouseRightButtonUpAbout(MainWindow* win, int x, int y, WPARAM) {
 static LRESULT OnSetCursorAbout(MainWindow* win, HWND hwnd) {
     Point pt = HwndGetCursorPos(hwnd);
     if (!pt.IsEmpty()) {
-        StaticLinkInfo* link;
+        StaticLink* link;
         if (GetStaticLinkAtTemp(win->staticLinks, pt.x, pt.y, &link)) {
             win->ShowToolTip(link->tooltip, link->rect);
             SetCursorCached(IDC_HAND);

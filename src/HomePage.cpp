@@ -106,7 +106,7 @@ static AboutLayoutInfoEl gAboutLayoutInfo[] = {
 #endif
     {nullptr, nullptr, nullptr}};
 
-static Vec<StaticLinkInfo*> gStaticLinks;
+static Vec<StaticLink*> gStaticLinks;
 
 static TempStr GetAppVersionTemp() {
     char* s = str::DupTemp("v" CURR_VERSION_STRA);
@@ -219,7 +219,7 @@ static TempStr TrimGitTemp(char* s) {
 /* Draws the about screen and remembers some state for hyperlinking.
    It transcribes the design I did in graphics software - hopeless
    to understand without seeing the design. */
-static void DrawAbout(HWND hwnd, HDC hdc, Rect rect, Vec<StaticLinkInfo*>& staticLinks) {
+static void DrawAbout(HWND hwnd, HDC hdc, Rect rect, Vec<StaticLink*>& staticLinks) {
     auto col = ThemeWindowTextColor();
     AutoDeletePen penBorder(CreatePen(PS_SOLID, ABOUT_LINE_OUTER_SIZE, col));
     AutoDeletePen penDivideLine(CreatePen(PS_SOLID, ABOUT_LINE_SEP_SIZE, col));
@@ -292,7 +292,7 @@ static void DrawAbout(HWND hwnd, HDC hdc, Rect rect, Vec<StaticLinkInfo*>& stati
         if (hasUrl) {
             int underlineY = pos.y + pos.dy - 3;
             DrawLine(hdc, Rect(pos.x, underlineY, pos.dx, 0));
-            auto sl = new StaticLinkInfo(pos, el->url, el->url);
+            auto sl = new StaticLink(pos, el->url, el->url);
             staticLinks.Append(sl);
         }
     }
@@ -423,7 +423,7 @@ static void CopyAboutInfoToClipboard() {
     CopyTextToClipboard(info.LendData());
 }
 
-TempStr GetStaticLinkAtTemp(Vec<StaticLinkInfo*>& staticLinks, int x, int y, StaticLinkInfo** linkOut) {
+TempStr GetStaticLinkAtTemp(Vec<StaticLink*>& staticLinks, int x, int y, StaticLink** linkOut) {
     if (!CanAccessDisk()) {
         return nullptr;
     }
@@ -442,7 +442,7 @@ TempStr GetStaticLinkAtTemp(Vec<StaticLinkInfo*>& staticLinks, int x, int y, Sta
     return nullptr;
 }
 
-static void CreateInfotipForLink(StaticLinkInfo* linkInfo) {
+static void CreateInfotipForLink(StaticLink* linkInfo) {
     if (gAboutTooltip != nullptr) {
         return;
     }
@@ -495,7 +495,7 @@ LRESULT CALLBACK WndProcAbout(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
         case WM_SETCURSOR:
             pt = HwndGetCursorPos(hwnd);
             if (!pt.IsEmpty()) {
-                StaticLinkInfo* linkInfo;
+                StaticLink* linkInfo;
                 if (GetStaticLinkAtTemp(gStaticLinks, pt.x, pt.y, &linkInfo)) {
                     CreateInfotipForLink(linkInfo);
                     SetCursorCached(IDC_HAND);
@@ -599,7 +599,7 @@ void DrawAboutPage(MainWindow* win, HDC hdc) {
     DrawAbout(win->hwndCanvas, hdc, rc, win->staticLinks);
     if (HasPermission(Perm::SavePreferences | Perm::DiskAccess) && gGlobalPrefs->rememberOpenedFiles) {
         Rect rect = DrawHideFrequentlyReadLink(win->hwndCanvas, hdc, _TRA("Show frequently read"));
-        auto sl = new StaticLinkInfo(rect, kLinkShowList);
+        auto sl = new StaticLink(rect, kLinkShowList);
         win->staticLinks.Append(sl);
     }
 }
@@ -623,7 +623,7 @@ struct ThumbnailLayout {
     Size szThumb;
     Rect rcText;
     FileState* fs = nullptr; // info needed to draw the thumbnail
-    StaticLinkInfo* sl = nullptr;
+    StaticLink* sl = nullptr;
 };
 
 struct Promote {
@@ -792,7 +792,7 @@ void LayoutHomePage(HomePageLayout& l) {
     rcOpenDoc = rcOpenDoc.Union(rcIconOpen);
     rcOpenDoc.Inflate(10, 10);
     l.openDoc = openDoc;
-    auto sl = new StaticLinkInfo(rcOpenDoc, kLinkOpenFile);
+    auto sl = new StaticLink(rcOpenDoc, kLinkOpenFile);
     win->staticLinks.Append(sl);
 
     int nFiles = fileStates.Size();
@@ -830,7 +830,7 @@ void LayoutHomePage(HomePageLayout& l) {
             }
             thumb.rcText = rcText;
             char* path = fs->filePath;
-            thumb.sl = new StaticLinkInfo(rcText.Union(rcPage), path, path);
+            thumb.sl = new StaticLink(rcText.Union(rcPage), path, path);
             win->staticLinks.Append(thumb.sl);
         }
     }
@@ -932,7 +932,7 @@ static void DrawHomePageLayout(const HomePageLayout& l) {
 
     if (false) {
         Rect rcFreqRead = DrawHideFrequentlyReadLink(win->hwndCanvas, hdc, _TRA("Hide frequently read"));
-        auto sl = new StaticLinkInfo(rcFreqRead, kLinkHideList);
+        auto sl = new StaticLink(rcFreqRead, kLinkHideList);
         win->staticLinks.Append(sl);
     }
 }
