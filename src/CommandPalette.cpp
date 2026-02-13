@@ -218,6 +218,7 @@ struct CommandPaletteWnd : Wnd {
     void QueryChanged();
 
     void ExecuteCurrentSelection();
+    bool AdvanceSelection(int dir);
 };
 
 struct CommandPaletteBuildCtx {
@@ -644,7 +645,8 @@ static void SwitchToFileHistory(CommandPaletteWnd* wnd) {
     EditSetTextAndFocus(wnd->editQuery, kPalettePrefixFileHistory);
 }
 
-static CommandPaletteWnd* gCommandPaletteWnd = nullptr;
+CommandPaletteWnd* gCommandPaletteWnd = nullptr;
+HWND gCommandPaletteHwnd = nullptr;
 static HWND gHwndToActivateOnClose = nullptr;
 
 void SafeDeleteCommandPaletteWnd() {
@@ -654,6 +656,7 @@ void SafeDeleteCommandPaletteWnd() {
 
     auto tmp = gCommandPaletteWnd;
     gCommandPaletteWnd = nullptr;
+    gCommandPaletteHwnd = nullptr;
     delete tmp;
     if (gHwndToActivateOnClose) {
         SetActiveWindow(gHwndToActivateOnClose);
@@ -670,17 +673,31 @@ static void ScheduleDelete() {
     uitask::Post(fn, "SafeDeleteCommandPaletteWnd");
 }
 
-LRESULT CommandPaletteWnd::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT CommandPaletteWnd::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     switch (msg) {
         case WM_ACTIVATE:
-            if (wparam == WA_INACTIVE) {
+            if (wp == WA_INACTIVE) {
                 ScheduleDelete();
                 return 0;
             }
             break;
+        case WM_COMMAND: {
+            int cmdId = LOWORD(wp);
+            CustomCommand* cmd = FindCustomCommand(cmdId);
+            if (cmd != nullptr) {
+                cmdId = cmd->origId;
+            }
+            switch (cmdId) {
+                case CmdNextTabSmart:
+                case CmdPrevTabSmart: {
+                    int dir = cmdId == CmdNextTabSmart ? 1 : -1;
+                    return AdvanceSelection(dir);
+                }
+            }
+        }
     }
 
-    return WndProcDefault(hwnd, msg, wparam, lparam);
+    return WndProcDefault(hwnd, msg, wp, lp);
 }
 
 static void SelectionChange(CommandPaletteWnd* wnd) {
@@ -697,6 +714,26 @@ static void SelectionChange(CommandPaletteWnd* wnd) {
 static void SetCurrentSelection(CommandPaletteWnd* wnd, int idx) {
     wnd->listBox->SetCurrentSelection(idx);
     SelectionChange(wnd);
+}
+
+bool CommandPaletteWnd::AdvanceSelection(int dir) {
+    if (dir == 0) {
+        return false;
+    }
+    int n = listBox->GetCount();
+    if (n == 0) {
+        return false;
+    }
+    int currSel = listBox->GetCurrentSelection();
+    int sel = currSel + dir;
+    if (sel < 0) {
+        sel = n - 1;
+    }
+    if (sel >= n) {
+        sel = 0;
+    }
+    SetCurrentSelection(this, sel);
+    return true;
 }
 
 bool CommandPaletteWnd::PreTranslateMessage(MSG& msg) {
@@ -758,23 +795,7 @@ bool CommandPaletteWnd::PreTranslateMessage(MSG& msg) {
                 dir = IsShiftPressed() ? -1 : 1;
             }
         }
-        if (dir == 0) {
-            return false;
-        }
-        int n = listBox->GetCount();
-        if (n == 0) {
-            return false;
-        }
-        int currSel = listBox->GetCurrentSelection();
-        int sel = currSel + dir;
-        if (sel < 0) {
-            sel = n - 1;
-        }
-        if (sel >= n) {
-            sel = 0;
-        }
-        SetCurrentSelection(this, sel);
-        return true;
+        return AdvanceSelection(dir);
     }
 
     if (smartTabMode) {
@@ -1286,7 +1307,7 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix, int smartTab
     return true;
 }
 
-void RunCommandPallette(MainWindow* win, const char* prefix, int smartTabAdvance) {
+void RunCommandPalette(MainWindow* win, const char* prefix, int smartTabAdvance) {
     ReportIf(gCommandPaletteWnd);
 
     auto wnd = new CommandPaletteWnd();
@@ -1297,5 +1318,20 @@ void RunCommandPallette(MainWindow* win, const char* prefix, int smartTabAdvance
     bool ok = wnd->Create(win, prefix, smartTabAdvance);
     ReportIf(!ok);
     gCommandPaletteWnd = wnd;
+    gCommandPaletteHwnd = wnd->hwnd;
+    logf("gCommandPaletteHwnd: 0x%p\n", gCommandPaletteHwnd);
     gHwndToActivateOnClose = win->hwndFrame;
+}
+
+HWND CommandPaletteHwndForAccelerator(HWND hwnd) {
+    if (!gCommandPaletteWnd) return nullptr;
+    auto wnd = gCommandPaletteWnd;
+    HWND wHwnd = wnd->hwnd;
+    if (hwnd == wHwnd) return wHwnd;
+    if (wnd->editQuery && wnd->editQuery->hwnd == hwnd) {
+        return wHwnd;
+    }
+    if (!wnd->listBox) return nullptr;
+    if (hwnd == wnd->listBox->hwnd) return wHwnd;
+    return nullptr;
 }

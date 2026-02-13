@@ -5406,7 +5406,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             if (cmd) {
                 mode = GetCommandStringArg(cmd, kCmdArgMode, nullptr);
             }
-            RunCommandPallette(win, mode, 0);
+            RunCommandPalette(win, mode, 0);
         } break;
 
         case CmdClearHistory:
@@ -5431,7 +5431,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         case CmdPrevTabSmart: {
             if (win && win->TabCount() > 1) {
                 int advance = cmdId == CmdNextTabSmart ? 1 : -1;
-                RunCommandPallette(win, kPalettePrefixTabs, advance);
+                RunCommandPalette(win, kPalettePrefixTabs, advance);
             }
         } break;
 

@@ -72,6 +72,7 @@
 #include "PreviewPipe.h"
 #include "Theme.h"
 #include "DarkModeSubclass.h"
+#include "CommandPalette.h"
 
 #include "utils/Log.h"
 
@@ -472,6 +473,12 @@ static HACCEL FindAcceleratorsForHwnd(HWND hwnd, HWND* hwndAccel) {
         return editAccTable;
     }
 
+    HWND hwndCP = CommandPaletteHwndForAccelerator(hwnd);
+    if (hwndCP) {
+        *hwndAccel = hwndCP;
+        return accTable;
+    }
+
     MainWindow* win = FindMainWindowByHwnd(hwnd);
     if (!win) {
         return nullptr;
@@ -498,32 +505,27 @@ static HACCEL FindAcceleratorsForHwnd(HWND hwnd, HWND* hwndAccel) {
     return nullptr;
 }
 
+static bool MaybeTranslateAccelerator(MSG& msg) {
+    // TODO: why mouse events?
+    bool doAccels = ((msg.message >= WM_KEYFIRST && msg.message <= WM_KEYLAST) ||
+                     (msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST));
+    if (!doAccels) return false;
+    HWND hwndAccel;
+    HACCEL accels = FindAcceleratorsForHwnd(msg.hwnd, &hwndAccel);
+    if (!accels) return false;
+    return TranslateAcceleratorW(hwndAccel, accels, &msg);
+}
+
 static int RunMessageLoop() {
     MSG msg;
-    HACCEL accels;
-    HWND hwndDialog;
-    HWND hwndAccel;
 
     while (GetMessage(&msg, nullptr, 0, 0)) {
         if (PreTranslateMessage(msg)) {
             continue;
         }
 
-        // TODO: why mouse events?
-        bool doAccels = ((msg.message >= WM_KEYFIRST && msg.message <= WM_KEYLAST) ||
-                         (msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST));
-
-        if (doAccels) {
-            accels = FindAcceleratorsForHwnd(msg.hwnd, &hwndAccel);
-            if (accels) {
-                auto didTranslate = TranslateAccelerator(hwndAccel, accels, &msg);
-                if (didTranslate) {
-                    continue;
-                }
-            }
-        }
-
-        hwndDialog = GetCurrentModelessDialog();
+        if (MaybeTranslateAccelerator(msg)) continue;
+        HWND hwndDialog = GetCurrentModelessDialog();
         if (hwndDialog && IsDialogMessage(hwndDialog, &msg)) {
             // DbgLogMsg("dialog: ", msg.hwnd, msg.message, msg.wParam, msg.lParam);
             continue;
