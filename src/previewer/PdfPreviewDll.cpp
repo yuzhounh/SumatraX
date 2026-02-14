@@ -40,7 +40,7 @@ class PreviewClassFactory : public IClassFactory {
         return cRef;
     }
 
-    bool IsClsid(const WCHAR* s) {
+    bool IsClsid(const char* s) {
         CLSID clsid;
         return SUCCEEDED(CLSIDFromString(s, &clsid)) && IsEqualCLSID(m_clsid, clsid);
     }
