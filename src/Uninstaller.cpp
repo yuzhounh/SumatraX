@@ -523,10 +523,10 @@ int RunUninstaller() {
 
     // re-register if we un-registered but uninstallation was cancelled
     if (gWasSearchFilterInstalled) {
-        RegisterSearchFilter(gCli->allUsers);
+        RegisterSearchFilter(gCli->allUsers, gCli->installDir);
     }
     if (gWasPreviewInstaller) {
-        RegisterPreviewer(gCli->allUsers);
+        RegisterPreviewer(gCli->allUsers, gCli->installDir);
     }
     InitSelfDelete();
     LaunchFileIfExists(uninstallerLogPath);

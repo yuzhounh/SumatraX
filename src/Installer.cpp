@@ -272,11 +272,11 @@ static void InstallerThread(Flags* cli) {
     gPrevInstall.previewInstalled = false;
 
     if (cli->withFilter) {
-        RegisterSearchFilter(allUsers);
+        RegisterSearchFilter(allUsers, cli->installDir);
     }
 
     if (cli->withPreview) {
-        RegisterPreviewer(allUsers);
+        RegisterPreviewer(allUsers, cli->installDir);
     }
 
     CreateAppShortcuts(allUsers, installedExePath);
@@ -1259,11 +1259,11 @@ int RunInstaller() {
         // re-register if we un-registered but installation was cancelled
         if (gPrevInstall.searchFilterInstalled) {
             log("re-registering search filter\n");
-            RegisterSearchFilter(gCli->allUsers);
+            RegisterSearchFilter(gPrevInstall.allUsers, gPrevInstall.installationDir);
         }
         if (gPrevInstall.previewInstalled) {
             log("re-registering previewer\n");
-            RegisterPreviewer(gCli->allUsers);
+            RegisterPreviewer(gPrevInstall.allUsers, gPrevInstall.installationDir);
         }
     }
     log("Installer finished\n");
