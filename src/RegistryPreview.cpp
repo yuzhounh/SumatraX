@@ -24,10 +24,8 @@ static struct {
     bool skip = false;
 } gPreviewers[] = {
     {kPdfPreviewClsid, ".pdf"},
-    {kCbxPreviewClsid, ".cbz"},
-    {kCbxPreviewClsid, ".cbr"},
-    {kCbxPreviewClsid, ".cb7"},
-    {kCbxPreviewClsid, ".cbt"},
+    {kCbxPreviewClsid, ".cbz", ".cbr"},
+    {kCbxPreviewClsid, ".cb7", ".cbt"},
     {kTgaPreviewClsid, ".tga"},
     {kDjVuPreviewClsid, ".djvu"},
     {kXpsPreviewClsid, ".xps", ".oxps"},

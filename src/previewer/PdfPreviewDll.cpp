@@ -17,14 +17,6 @@
 
 long g_lRefCount = 0;
 
-static bool gBuildXpsPreview = true;
-static bool gBuildDjVuPreview = true;
-static bool gBuildEpubPreview = true;
-static bool gBuildFb2Preview = true;
-static bool gBuildMobiPreview = true;
-static bool gBuildCbxPreview = true;
-static bool gBuildTgaPreview = true;
-
 class PreviewClassFactory : public IClassFactory {
   public:
     explicit PreviewClassFactory(REFCLSID rclsid) : m_lRef(1), m_clsid(rclsid) { InterlockedIncrement(&g_lRefCount); }
@@ -48,6 +40,11 @@ class PreviewClassFactory : public IClassFactory {
         return cRef;
     }
 
+    bool IsClsid(const WCHAR* s) {
+        CLSID clsid;
+        return SUCCEEDED(CLSIDFromString(s, &clsid)) && IsEqualCLSID(m_clsid, clsid);
+    }
+
     // IClassFactory
     IFACEMETHODIMP CreateInstance(IUnknown* punkOuter, REFIID riid, void** ppv) {
         log("PdfPreview: CreateInstance()\n");
@@ -59,31 +56,21 @@ class PreviewClassFactory : public IClassFactory {
 
         ScopedComPtr<IInitializeWithStream> pObject;
 
-        CLSID clsid;
-        if (SUCCEEDED(CLSIDFromString(kPdfPreviewClsid, &clsid)) && IsEqualCLSID(m_clsid, clsid)) {
+        if (IsClsid(kPdfPreviewClsid)) {
             pObject = new PdfPreview(&g_lRefCount);
-        }
-        else if (gBuildXpsPreview && SUCCEEDED(CLSIDFromString(kXpsPreviewClsid, &clsid)) &&
-                   IsEqualCLSID(m_clsid, clsid)) {
+        } else if (IsClsid(kXpsPreviewClsid)) {
             pObject = new XpsPreview(&g_lRefCount);
-        }
-        else if (gBuildDjVuPreview && SUCCEEDED(CLSIDFromString(kDjVuPreviewClsid, &clsid)) &&
-                 IsEqualCLSID(m_clsid, clsid)) {
+        } else if (IsClsid(kDjVuPreviewClsid)) {
             pObject = new DjVuPreview(&g_lRefCount);
-        } else if (gBuildEpubPreview && SUCCEEDED(CLSIDFromString(kEpubPreviewClsid, &clsid)) &&
-                   IsEqualCLSID(m_clsid, clsid)) {
+        } else if (IsClsid(kEpubPreviewClsid)) {
             pObject = new EpubPreview(&g_lRefCount);
-        } else if (gBuildFb2Preview && SUCCEEDED(CLSIDFromString(kFb2PreviewClsid, &clsid)) &&
-                   IsEqualCLSID(m_clsid, clsid)) {
+        } else if (IsClsid(kFb2PreviewClsid)) {
             pObject = new Fb2Preview(&g_lRefCount);
-        } else if (gBuildMobiPreview && SUCCEEDED(CLSIDFromString(kMobiPreviewClsid, &clsid)) &&
-                   IsEqualCLSID(m_clsid, clsid)) {
+        } else if (IsClsid(kMobiPreviewClsid)) {
             pObject = new MobiPreview(&g_lRefCount);
-        } else if (gBuildCbxPreview && SUCCEEDED(CLSIDFromString(kCbxPreviewClsid, &clsid)) &&
-                   IsEqualCLSID(m_clsid, clsid)) {
+        } else if (IsClsid(kCbxPreviewClsid)) {
             pObject = new CbxPreview(&g_lRefCount);
-        } else if (gBuildTgaPreview && SUCCEEDED(CLSIDFromString(kTgaPreviewClsid, &clsid)) &&
-                   IsEqualCLSID(m_clsid, clsid)) {
+        } else if (IsClsid(kTgaPreviewClsid)) {
             pObject = new TgaPreview(&g_lRefCount);
         } else {
             return E_NOINTERFACE;
