@@ -184,8 +184,7 @@ class PdfPreview : public PreviewBase {
 
 class XpsPreview : public PreviewBase {
   public:
-    XpsPreview(long* plRefCount) : PreviewBase(plRefCount, kXpsPreviewClsid) {
-    }
+    XpsPreview(long* plRefCount) : PreviewBase(plRefCount, kXpsPreviewClsid) {}
 
   protected:
     EngineBase* LoadEngine(IStream* stream) override;

@@ -1013,7 +1013,7 @@ static EngineBase* CreateEngineFromDataForPreview(const ByteSlice& data, Preview
         case PreviewFileType::XPS:
         case PreviewFileType::PDF:
             __try {
-            const char* name = (fileType == PreviewFileType::PDF) ? "preview.pdf" : "preview.xps";
+                const char* name = (fileType == PreviewFileType::PDF) ? "preview.pdf" : "preview.xps";
                 engine = CreateEngineMupdfFromStream(stream, name);
             } __except (EXCEPTION_EXECUTE_HANDLER) {
                 logf("CreateEngineMupdfFromStream: failed with exception 0x%08x\n", GetExceptionCode());

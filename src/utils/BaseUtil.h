@@ -656,6 +656,19 @@ Func0 MkFunc0(void (*fn)(T*), T* d) {
     return res;
 }
 
+template <typename T, void (T::*Method)()>
+static void MethodTrampoline(void* obj) {
+    (static_cast<T*>(obj)->*Method)();
+}
+
+template <typename T, void (T::*Method)()>
+Func0 MkFunc0Method(T* obj) {
+    auto res = Func0{};
+    res.fn = (void*)&MethodTrampoline<T, Method>;
+    res.userData = (void*)obj;
+    return res;
+}
+
 template <typename T>
 struct Func1 {
     void (*fn)(void*, T) = nullptr;

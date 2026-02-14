@@ -219,6 +219,11 @@ struct CommandPaletteWnd : Wnd {
 
     void ExecuteCurrentSelection();
     bool AdvanceSelection(int dir);
+    void SwitchToCommands();
+    void SwitchToTabs();
+    void SwitchToFileHistory();
+    void OnSelectionChange();
+    void OnListDoubleClick();
 };
 
 struct CommandPaletteBuildCtx {
@@ -633,16 +638,16 @@ static void EditSetTextAndFocus(Edit* e, const char* s) {
     HwndSetFocus(e->hwnd);
 }
 
-static void SwitchToCommands(CommandPaletteWnd* wnd) {
-    EditSetTextAndFocus(wnd->editQuery, kPalettePrefixCommands);
+void CommandPaletteWnd::SwitchToCommands() {
+    EditSetTextAndFocus(editQuery, kPalettePrefixCommands);
 }
 
-static void SwitchToTabs(CommandPaletteWnd* wnd) {
-    EditSetTextAndFocus(wnd->editQuery, kPalettePrefixTabs);
+void CommandPaletteWnd::SwitchToTabs() {
+    EditSetTextAndFocus(editQuery, kPalettePrefixTabs);
 }
 
-static void SwitchToFileHistory(CommandPaletteWnd* wnd) {
-    EditSetTextAndFocus(wnd->editQuery, kPalettePrefixFileHistory);
+void CommandPaletteWnd::SwitchToFileHistory() {
+    EditSetTextAndFocus(editQuery, kPalettePrefixFileHistory);
 }
 
 CommandPaletteWnd* gCommandPaletteWnd = nullptr;
@@ -700,20 +705,20 @@ LRESULT CommandPaletteWnd::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     return WndProcDefault(hwnd, msg, wp, lp);
 }
 
-static void SelectionChange(CommandPaletteWnd* wnd) {
-    int idx = wnd->listBox->GetCurrentSelection();
+void CommandPaletteWnd::OnSelectionChange() {
+    int idx = listBox->GetCurrentSelection();
     // logf("Selection changed: %d\n", idx);
-    if (!wnd->smartTabMode) {
+    if (!smartTabMode) {
         return;
     }
-    auto m = (ListBoxModelCP*)wnd->listBox->model;
+    auto m = (ListBoxModelCP*)listBox->model;
     ItemDataCP* data = m->strings.AtData(idx);
-    HighlightTab(wnd->win, data->tab);
+    HighlightTab(win, data->tab);
 }
 
 static void SetCurrentSelection(CommandPaletteWnd* wnd, int idx) {
     wnd->listBox->SetCurrentSelection(idx);
-    SelectionChange(wnd);
+    wnd->OnSelectionChange();
 }
 
 bool CommandPaletteWnd::AdvanceSelection(int dir) {
@@ -924,10 +929,6 @@ void CommandPaletteWnd::QueryChanged() {
     SetCurrentSelection(this, 0);
 }
 
-static void CommandPaletteQueryChanged(CommandPaletteWnd* self) {
-    self->QueryChanged();
-}
-
 void CommandPaletteWnd::ExecuteCurrentSelection() {
     int idx = listBox->GetCurrentSelection();
     if (idx < 0) {
@@ -969,8 +970,8 @@ void CommandPaletteWnd::ExecuteCurrentSelection() {
     ScheduleDelete();
 }
 
-static void ListDoubleClick(CommandPaletteWnd* w) {
-    w->ExecuteCurrentSelection();
+void CommandPaletteWnd::OnListDoubleClick() {
+    ExecuteCurrentSelection();
 }
 
 void OnDestroy(Wnd::DestroyEvent*) {
@@ -1211,7 +1212,7 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix, int smartTab
         c->maxDx = 150;
         HWND ok = c->Create(args);
         ReportIf(!ok);
-        c->onTextChanged = MkFunc0(CommandPaletteQueryChanged, this);
+        c->onTextChanged = MkFunc0Method<CommandPaletteWnd, &CommandPaletteWnd::QueryChanged>(this);
         editQuery = c;
         vbox->AddChild(c);
     }
@@ -1224,28 +1225,28 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix, int smartTab
         {
             auto c = CreateStatic(hwnd, font, "# File History");
             c->SetColors(colTxt, colBg);
-            c->onClick = MkFunc0(SwitchToFileHistory, this);
+            c->onClick = MkFunc0Method<CommandPaletteWnd, &CommandPaletteWnd::SwitchToFileHistory>(this);
             auto p = new Padding(c, pad);
             hbox->AddChild(p);
         }
         {
             auto c = CreateStatic(hwnd, font, "> Commands");
             c->SetColors(colTxt, colBg);
-            c->onClick = MkFunc0(SwitchToCommands, this);
+            c->onClick = MkFunc0Method<CommandPaletteWnd, &CommandPaletteWnd::SwitchToCommands>(this);
             auto p = new Padding(c, pad);
             hbox->AddChild(p);
         }
         {
             auto c = CreateStatic(hwnd, font, "@ Tabs");
             c->SetColors(colTxt, colBg);
-            c->onClick = MkFunc0(SwitchToTabs, this);
+            c->onClick = MkFunc0Method<CommandPaletteWnd, &CommandPaletteWnd::SwitchToTabs>(this);
             auto p = new Padding(c, pad);
             hbox->AddChild(p);
         }
         {
             auto c = CreateStatic(hwnd, font, ": Everything");
             c->SetColors(colTxt, colBg);
-            c->onClick = MkFunc0(SwitchToTabs, this);
+            c->onClick = MkFunc0Method<CommandPaletteWnd, &CommandPaletteWnd::SwitchToTabs>(this);
             auto p = new Padding(c, pad);
             hbox->AddChild(p);
         }
@@ -1258,13 +1259,13 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix, int smartTab
         args.font = font;
         args.isRtl = IsUIRtl();
         auto c = new ListBox();
-        c->onDoubleClick = MkFunc0(ListDoubleClick, this);
+        c->onDoubleClick = MkFunc0Method<CommandPaletteWnd, &CommandPaletteWnd::OnListDoubleClick>(this);
         c->onDrawItem = MkFunc1Void<ListBox::DrawItemEvent*>(DrawListBoxItem);
         c->idealSizeLines = 32;
         c->SetInsetsPt(4, 0);
         c->Create(args);
         c->SetColors(colTxt, colBg);
-        c->onSelectionChanged = MkFunc0(SelectionChange, this);
+        c->onSelectionChanged = MkFunc0Method<CommandPaletteWnd, &CommandPaletteWnd::OnSelectionChange>(this);
         auto m = new ListBoxModelCP();
         FilterStringsForQuery(prefix, m->strings);
         c->SetModel(m);
