@@ -187,7 +187,6 @@ class PdfPreview : public PreviewBase {
     }
 };
 
-#if 0
 class XpsPreview : public PreviewBase {
   public:
     XpsPreview(long* plRefCount) : PreviewBase(plRefCount, kXpsPreviewClsid) {
@@ -198,7 +197,6 @@ class XpsPreview : public PreviewBase {
         return PreviewFileType::XPS;
     }
 };
-#endif
 
 class DjVuPreview : public PreviewBase {
   public:

@@ -759,13 +759,7 @@ workspace "SumatraPDF"
       "src", "src/wingui"
     }
     pdf_preview2_files()
-    filter {"configurations:Debug"}
-      -- defines { "BUILD_XPS_PREVIEW" }
-      -- TODO: use EngineMupdf for XPS
-      defines {
-        "BUILD_EPUB_PREVIEW",
-        "BUILD_FB2_PREVIEW", "BUILD_MOBI_PREVIEW"
-      }
+    filter {"configurations:Debug"}f
     filter {}
     -- TODO: "chm" should only be for Debug config but doing links { "chm" }
     -- in the filter breaks linking by setting LinkLibraryDependencies to false
@@ -783,12 +777,6 @@ workspace "SumatraPDF"
     }
     pdf_preview_files()
     filter {"configurations:Debug"}
-      -- defines { "BUILD_XPS_PREVIEW" }
-      -- TODO: use EngineMupdf for XPS
-      defines {
-        "BUILD_EPUB_PREVIEW",
-        "BUILD_FB2_PREVIEW", "BUILD_MOBI_PREVIEW"
-      }
     filter {}
     -- TODO: "chm" should only be for Debug config but doing links { "chm" }
     -- in the filter breaks linking by setting LinkLibraryDependencies to false

@@ -1010,11 +1010,13 @@ static EngineBase* CreateEngineFromDataForPreview(const ByteSlice& data, Preview
     }
     EngineBase* engine = nullptr;
     switch (fileType) {
+        case PreviewFileType::XPS:
         case PreviewFileType::PDF:
             __try {
-                engine = CreateEngineMupdfFromStream(stream, "preview.pdf");
+            const char* name = (fileType == PreviewFileType::PDF) ? "preview.pdf" : "preview.xps";
+                engine = CreateEngineMupdfFromStream(stream, name);
             } __except (EXCEPTION_EXECUTE_HANDLER) {
-                logf("CreateEngineFromDataForPreview: exception 0x%08x creating PDF engine\n", GetExceptionCode());
+                logf("CreateEngineMupdfFromStream: failed with exception 0x%08x\n", GetExceptionCode());
                 engine = nullptr;
             }
             break;
@@ -1427,6 +1429,9 @@ static PreviewFileType GetPreviewFileTypeFromPath(const char* path) {
     }
     if (str::EndsWithI(path, ".tga")) {
         return PreviewFileType::TGA;
+    }
+    if (str::EndsWithI(path, ".xps")) {
+        return PreviewFileType::XPS;
     }
     // Default to PDF
     return PreviewFileType::PDF;

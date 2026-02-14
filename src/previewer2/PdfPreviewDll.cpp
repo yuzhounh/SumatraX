@@ -13,32 +13,11 @@
 
 long g_lRefCount = 0;
 
-#ifdef BUILD_XPS_PREVIEW
 static bool gBuildXpsPreview = true;
-#else
-static bool gBuildXpsPreview = false;
-#endif
-
 static bool gBuildDjVuPreview = true;
-
-#ifdef BUILD_EPUB_PREVIEW
 static bool gBuildEpubPreview = true;
-#else
-static bool gBuildEpubPreview = false;
-#endif
-
-#ifdef BUILD_FB2_PREVIEW
 static bool gBuildFb2Preview = true;
-#else
-static bool gBuildFb2Preview = false;
-#endif
-
-#ifdef BUILD_MOBI_PREVIEW
 static bool gBuildMobiPreview = true;
-#else
-static bool gBuildMobiPreview = false;
-#endif
-
 static bool gBuildCbxPreview = true;
 static bool gBuildTgaPreview = true;
 
@@ -86,12 +65,10 @@ class PreviewClassFactory : public IClassFactory {
         if (SUCCEEDED(CLSIDFromString(kPdfPreviewClsid, &clsid)) && IsEqualCLSID(m_clsid, clsid)) {
             pObject = new PdfPreview(&g_lRefCount);
         }
-#if 0
         else if (gBuildXpsPreview && SUCCEEDED(CLSIDFromString(kXpsPreviewClsid, &clsid)) &&
                    IsEqualCLSID(m_clsid, clsid)) {
             pObject = new XpsPreview(&g_lRefCount);
         }
-#endif
         else if (gBuildDjVuPreview && SUCCEEDED(CLSIDFromString(kDjVuPreviewClsid, &clsid)) &&
                  IsEqualCLSID(m_clsid, clsid)) {
             pObject = new DjVuPreview(&g_lRefCount);

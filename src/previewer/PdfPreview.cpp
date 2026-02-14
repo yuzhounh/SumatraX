@@ -364,11 +364,9 @@ EngineBase* PdfPreview::LoadEngine(IStream* stream) {
     return CreateEngineMupdfFromStream(stream, "foo.pdf");
 }
 
-#if 0
 EngineBase* XpsPreview::LoadEngine(IStream* stream) {
-    return CreateEngineXpFromStream(stream);
+    return CreateEngineMupdfFromStream(stream, "foo.xps");
 }
-#endif
 
 EngineBase* DjVuPreview::LoadEngine(IStream* stream) {
     log("DjVuPreview::LoadEngine()\n");

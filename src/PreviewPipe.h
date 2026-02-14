@@ -14,7 +14,8 @@ enum class PreviewFileType : u32 {
     FB2 = 4,
     MOBI = 5,
     CBX = 6,
-    TGA = 7
+    TGA = 7,
+    XPS = 8
 };
 
 // Protocol constants for named pipe preview - must match SumatraStartup.cpp
