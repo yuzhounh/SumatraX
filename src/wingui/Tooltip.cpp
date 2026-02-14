@@ -35,33 +35,14 @@ int TooltipGetCount(HWND hwnd) {
     return n;
 }
 
-static void TooltipRemoveTool(HWND hwnd, HWND owner, int id) {
-    TOOLINFOW ti = {};
-    ti.cbSize = sizeof(ti);
-    ti.hwnd = owner;
-    ti.uId = (UINT_PTR)id;
-    SendMessageW(hwnd, TTM_DELTOOL, 0, (LPARAM)&ti);
-}
-
-int TooltipGetId(HWND hwnd, int idx) {
-    WCHAR buf[90]; // per docs returns max 80 chars
-    TOOLINFOW ti = {};
-    ti.cbSize = sizeof(ti);
-    ti.lpszText = buf;
-    BOOL ok = SendMessageW(hwnd, TTM_ENUMTOOLS, idx, (LPARAM)&ti);
-    ReportIf(!ok);
-    if (!ok) {
-        return -1;
-    }
-    return (int)ti.uId;
-}
-
-void TooltipRemoveAll(HWND hwnd, HWND owner) {
+void TooltipRemoveAll(HWND hwnd) {
     int n = TooltipGetCount(hwnd);
     for (int i = n - 1; i >= 0; i--) {
-        int id = TooltipGetId(hwnd, i);
-        if (id >= 0) {
-            TooltipRemoveTool(hwnd, owner, id);
+        TOOLINFOW ti{};
+        ti.cbSize = sizeof(ti);
+        BOOL ok = SendMessageW(hwnd, TTM_ENUMTOOLS, i, (LPARAM)&ti);
+        if (ok) {
+            SendMessageW(hwnd, TTM_DELTOOL, 0, (LPARAM)&ti);
         }
     }
 }

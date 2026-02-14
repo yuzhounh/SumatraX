@@ -279,7 +279,7 @@ struct TooltipInfo {
 };
 
 int TooltipGetCount(HWND hwnd);
-void TooltipRemoveAll(HWND hwnd, HWND owner);
+void TooltipRemoveAll(HWND hwnd);
 void TooltipAddTools(HWND hwnd, HWND owner, TooltipInfo* tools, int nTools);
 
 //--- Edit

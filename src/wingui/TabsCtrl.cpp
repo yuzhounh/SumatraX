@@ -113,7 +113,7 @@ void TabsCtrl::LayoutTabs() {
     }
     if (withToolTips) {
         HWND ttHwnd = GetToolTipsHwnd();
-        TooltipRemoveAll(ttHwnd, hwnd);
+        TooltipRemoveAll(ttHwnd);
         TooltipAddTools(ttHwnd, hwnd, tools, nTabs);
     }
 
