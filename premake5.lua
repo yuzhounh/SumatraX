@@ -745,6 +745,7 @@ workspace "SumatraPDF"
       kind "SharedLib"
       language "C++"
       cppdialect "C++latest"
+      mixed_dbg_rel_conf()
       disablewarnings { "4100", "4838" }
       includedirs { "src", "src/wingui" }
       search_filter2_files()
@@ -754,6 +755,7 @@ workspace "SumatraPDF"
     kind "SharedLib"
     language "C++"
     cppdialect "C++latest"
+    mixed_dbg_rel_conf()
     disablewarnings { "4100", "4838" }
     includedirs {
       "src", "src/wingui"
