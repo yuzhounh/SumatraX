@@ -1,5 +1,5 @@
 AppTranslator: SumatraPDF
-b6fe31cccc2197f7675e07a4c0b5d3eaeb4eb540
+63f16c25aab6dc9cc88126cd8529450224c5236a
 :%s annotation. Ctrl+click to edit.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
 ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
@@ -4442,6 +4442,8 @@ tw:進階
 uk:Просунуті
 uz:Qo'shimcha
 vn:Nâng cao
+:Advanced Options...
+:Advanced Settings...
 :All files
 am:Բոլոր ֆայլերը
 ar:كل الملفات
@@ -6089,6 +6091,8 @@ tw:變更語言
 uk:Змінити мову (Change Language)
 uz:Tilni o'zgartirish (Change Language)
 vn:Đổi ngôn ngữ (Change Language)
+:Change Language...
+:Check For Updates
 :Check for &Updates
 af:Kyk Vir Nuwe Uitgawe
 am:&Ստուգել նոր տարբերակը
@@ -6281,6 +6285,7 @@ tw:圓
 uk:Коло
 uz:Doira
 vn:Vòng tròn
+:Clear History
 :Cleared history of %d files, deleted thumbnails.
 am:%d ֆայլերի մաքրված պատմություն, ջնջված մանրապատկերներ:
 ar:تم مسح سجل %d من الملفات والصور المصغرة المحذوفة.
@@ -6484,6 +6489,8 @@ ta:எல்லா கீற்றுகளையும் மூடிடுக
 tr:Tüm Sekmeleri Kapat
 tw:關閉全部分頁
 uz:Barcha yorliqlarni yopish
+:Close Current Document
+:Close Document
 :Close Other Tabs
 am:Փակել այլ ներդիրները
 ar:أغلق علامات التبويب الأخرى
@@ -7494,6 +7501,7 @@ tw:複製註解(&M)
 uk:Копіювати коментар
 uz:&Izohni nusxa olish
 vn:Chép chú thích
+:Copy Comment
 :Copy File Path
 am:Պատճենել ֆայլի ուղին
 ar:نسخ مسار الملف
@@ -7543,6 +7551,9 @@ tl:Kopyahin ang File Path
 tr:Dosya Yolunu Kopyala
 tw:複製檔案路徑
 uz:Fayl yo‘lini nusxalash
+:Copy Image
+:Copy Link Target
+:Copy Selection
 :Copy To Clipboard
 am:Պատճենել սեղմնատախտակին
 ar:نسخ إلى الحافظة
@@ -8453,6 +8464,7 @@ tw:無法將 %s 寫入磁碟
 uk:Не вдалося записати %s на диск
 uz:%s diskka yozib bo'lmadi
 vn:Không thể ghi %s vào đĩa
+:Create .lnk Shortcut
 :Create Annotation &Under Cursor
 am:Ստեղծել մեկնաբանություն &նշորդի ներքո
 ar:أنشئ شرحًا &عند المؤشر
@@ -8569,6 +8581,24 @@ tw:從選取文字建立註解
 uk:Створити анотацію з виділеного
 uz:Tanlovdan izoh yaratish
 vn:Thêm Chú Thích Từ Phần Được Chọn
+:Create Caret Annotation
+:Create Circle Annotation
+:Create File Attachment Annotation
+:Create Free Text Annotation
+:Create Highlight Annotation
+:Create Ink Annotation
+:Create Line Annotation
+:Create Link Annotation
+:Create Poly Line Annotation
+:Create Polygon Annotation
+:Create Popup Annotation
+:Create Redact Annotation
+:Create Square Annotation
+:Create Squiggly Annotation
+:Create Stamp Annotation
+:Create Strike Out Annotation
+:Create Text Annotation
+:Create Underline Annotation
 :Created:
 af:Geskep
 am:Ստեղծված`
@@ -9022,6 +9052,14 @@ tw:日期:
 uk:Дата:
 uz:Sana:
 vn:Ngày:
+:Debug: Corrupt Memory
+:Debug: Crash Me
+:Debug: Download Symbols
+:Debug: Show Notification
+:Debug: Start Stress Test
+:Debug: Test App
+:Debug: Toggle Predictive Rendering
+:Debug: Toggle Rtl
 :Default &Layout:
 am:Ծրագրային &դասավորություն.
 ar:التخطيط الافتراضي&
@@ -9245,6 +9283,8 @@ tr:Açıklamayı Sil
 tw:刪除註解
 uk:Видалити анотацію
 uz:Izohni o‘chirish
+:Delete Favorite
+:Delete File
 :Denied Permissions:
 am:Լիազորությունները մերժված են.
 ar:رفض الأذونات:
@@ -9382,6 +9422,7 @@ tw:DjVu 文件
 uk:Документи DjVu
 uz:DjVu hujjatlari
 vn:Tập tin DjVu
+:Do nothing
 :Document Properties
 am:Ֆայլի հատկությունները
 ar:خصائص المستند
@@ -10168,6 +10209,8 @@ tw:載入 %s 時發生錯誤
 uk:Помилка завантаження %s
 uz:%s yuklab olish xatosi
 vn:Không mở %s được
+:Execute a program
+:Exit Application
 :Expand All
 am:Ընդարձակել բոլորը
 ar:بسط الكل
@@ -10469,6 +10512,7 @@ tw:雙頁檢視
 uk:Дві сторінки
 uz:Ikkita betdan
 vn:Trang kép
+:Facing View
 :Failed to delete uninstaller registry keys
 am:Հնարավոր չեղավ ջնջել Գրանցատեղիի բանալիները
 ar:فشل في حذف مفاتيح مكتب تسجيل إلغاء التثبيت
@@ -11465,6 +11509,7 @@ tw:尋找下一個
 uk:Знайти наступне
 uz:Keyingisini qidirish
 vn:Tìm xuống
+:Find Next Selection
 :Find Previous
 af:Soek Vorige
 am:Գտնել նախորդը
@@ -11538,6 +11583,7 @@ tw:尋找上一個
 uk:Знайти попереднє
 uz:Oldingisini qidirish
 vn:Tìm lên
+:Find Previous Selection
 :Find:
 af:Soek:
 am:Գտնել.
@@ -11611,6 +11657,8 @@ tw:尋找:
 uk:Знайти:
 uz:Qidirish:
 vn:Tìm kiếm:
+:Find: Toggle Match Case
+:First Page
 :Fit &Content
 am:Հարմարեցնել &բովանդակությունը
 ar:لائم ال&محتوى
@@ -12498,6 +12546,7 @@ tw:字型資訊
 uk:Отримати інформацію про шрифти
 uz:Shriftlar haqida ma’lumot olish
 vn:Lấy Thông Tin Fonts
+:Go to Page...
 :Go to page
 af:Gaan Na Bladsy
 am:Անցնել էջի
@@ -12571,6 +12620,11 @@ tw:前往頁
 uk:Перейти на сторінку
 uz:Betga o'tish
 vn:Nhảy đến trang
+:Help: About SumatraPDF
+:Help: Keyboard Shortcuts
+:Help: Manual
+:Help: Manual On Website
+:Help: SumatraPDF Website
 :Hide &Options
 am:Թաքցնել &ընտրանքները
 ar:إخفاء &الخيارات
@@ -12637,6 +12691,7 @@ tw:隱藏選項(&O)
 uk:Приховати налаштування
 uz:&Parametrlarni yashirish
 vn:Thiết lập ẩn và tùy chọn
+:Hide Annotations
 :Hide frequently read
 am:Թաքցնել հաճախակի բացվածները
 ar:إخفاء الأكثر قراءة
@@ -13496,6 +13551,8 @@ tw:內部顏色:
 uk:Колір інтер'єру:
 uz:Ichki rangi:
 vn:Màu Bên Trong:
+:Invert Colors
+:Invoke Inverse Search
 :KB
 af:KB
 am:ԿԲ
@@ -13569,6 +13626,8 @@ tw:KB
 uk:KB
 uz:KB
 vn:KB
+:Last Page
+:Launch a browser or run command with selection
 :Let Windows Desktop Search &search PDF documents
 am:Թույլատրել Windows Desktop Search-ին &PDF ֆայլերի որոնումը
 ar:دع &بحث Windows يبحث في مستندات PDF
@@ -14369,6 +14428,11 @@ tw:修改日期:
 uk:Змінено:
 uz:O'zgartirilgan:
 vn:Ngày chỉnh sửa
+:Move Frame Focus
+:Move Tab Left
+:Move Tab Right
+:Navigate Back
+:Navigate Forward
 :New &window
 am:Նոր &պատուհան
 ar:&نافذة جديدة
@@ -14552,6 +14616,7 @@ tw:下一頁
 uk:Наступна сторінка
 uz:Keyingi bet
 vn:Trang sau
+:Next Tab
 :No
 am:Ոչ
 ar:كلا
@@ -15299,6 +15364,12 @@ tr:Eki aç
 tw:開啟附件
 uk:Відкрити вкладення
 uz:Ilovani ochish
+:Open Current Document In New Tab
+:Open Current Document In New Window
+:Open Directory In Directory Opus
+:Open Directory In Double Commander
+:Open Directory In Explorer
+:Open Directory In Total Commander
 :Open Directory in &Double Commander
 am:Բացել գրացուցակը &Double Commander-ում
 ar:افتح الم&جلد في Double Commander
@@ -15549,6 +15620,7 @@ tw:開啟內嵌的 PDF
 uk:Відкрити вкладений PDF
 uz:Ichki PDF faylini ochish
 vn:Mở PDF Đã Nhúng
+:Open File...
 :Open In New Window
 am:Բացել նոր պատուհանում
 ar:افتح في نافذة جديدة
@@ -15597,6 +15669,7 @@ tl:Buksan sa bagong Window
 tr:Yeni Pencerede Aç
 tw:在新視窗中開啟
 uz:Yangi oynada ochish
+:Open New SumatraPDF Window
 :Open Next File In Folder
 am:Բացել հաջորդ ֆայլը պանակից
 ar:افتح الملف التالي في المجلد
@@ -15673,6 +15746,8 @@ sv:Öppna föregående fil i mapp
 tr:Klasördeki Önceki Dosyayı Aç
 tw:開啟資料夾內的上一個檔案
 uz:Papkadagi oldingi faylni ochish
+:Open Selected Document
+:Open With Pdf&Djvu Bookmarker
 :Open a document...
 am:Բացել փաստաթուղթ...
 ar:فتح مستند...
@@ -16007,6 +16082,9 @@ tw:開啟於 Microsoft XPS-Viewer(&W)
 uk:Відкрити у Microsoft XPS-Viewer
 uz:Microsoft XPS-Viewerda ochish
 vn:Mở bằng Microsoft XPS-Viewer
+:Open in Adobe Acrobat
+:Open in Foxit PhantomPDF
+:Open in Foxit Reader
 :Open in Microsoft &HTML Help
 am:Բացել Microsoft &HTML Օգնությունում
 ar:افتح في برنامج م&ساعدة HTML مايكروسوفت
@@ -16053,6 +16131,10 @@ tl:Buksan sa Microsoft &HTML Help
 tr:Dizini Microsoft &HTML ile aç
 tw:在 Microsoft HTML 說明中開啟(&H)
 uz:Microsoft &HTML Help’da ochish
+:Open in Microsoft HTML Help
+:Open in Microsoft Xps Viewer
+:Open in PDF-XChange
+:Options...
 :P&roperties
 am:Հ&ատկություններ
 ar:الخصائص
@@ -16913,6 +16995,7 @@ tw:PalmDoc 文件
 uk:Документи PalmDoc
 uz:PalmDoc ho'jjatlari
 vn:Tài liệu PalmDoc
+:Pin Selected Document
 :Please close %s to proceed!
 am:Շարունակելուց առաջ փակեք %s-ը:
 ar: !المضي قدما %s الرجاء اغلاق
@@ -17377,6 +17460,8 @@ tw:簡報模式(&E)
 uk:Презентація
 uz:Taqdimot
 vn:Trình Chiếu
+:Presentation Black Background
+:Presentation White Background
 :Previous Page
 af:Vorige Bladsy
 am:Նախորդ էջը
@@ -17449,6 +17534,7 @@ tw:上一頁
 uk:Попередня сторінка
 uz:Oldingi bet
 vn:Trang trước
+:Previous Tab
 :Print
 am:Տպել
 ar:طباعة
@@ -17517,6 +17603,7 @@ tw:列印
 uk:Друк
 uz:Chop etish
 vn:In
+:Print Document...
 :Print range
 am:Տպելու կարգը
 ar:نطاق الطباعة
@@ -18207,6 +18294,7 @@ tw:編輯
 uk:Редагувати
 uz:Tahrirlash
 vn:Biên tập
+:Reload Document
 :Remember &opened files
 am:Հիշել &բացված ֆայլերը
 ar:تذكر الملفات المفتوحة
@@ -18273,6 +18361,7 @@ tw:記憶最近開啟的檔案(&O)
 uk:Запам'ятати відкриті файли
 uz:&Ochilgan fayllarni eslab qolish
 vn:Nhớ các tập tin đã mở
+:Remove Selected Document From History
 :Remove from favorites
 af:Verwyder van gunstelinge
 am:Հեռացնել ընտրյալներից
@@ -18405,6 +18494,7 @@ tw:從我的最愛移除第 %s 頁
 uk:Видалити %s сторінку із закладок
 uz:%s betni tanlanganlardan o'chirish
 vn:Xoá trang %s khỏi Ưa thích
+:Rename File...
 :Rename To
 af:Hernoem na
 am:Վերանվանել՝
@@ -18474,6 +18564,7 @@ tw:重新命名為
 uk:Перейменувати в
 uz:Yangi nom
 vn:Đổi tên thành
+:Reopen Last Closed
 :Rotate &Left
 am:Պտտել &ձախ
 ar:دوّ&ر يسارا
@@ -18578,6 +18669,8 @@ tw:順時鐘旋轉(&R)
 uk:Повернути за годинниковою стрілкою
 uz:O‘ngga burish
 vn:Quay &Phải
+:Rotate Left
+:Rotate Right
 :S&election
 am:Ը&նտրում
 ar:ال&تحديد
@@ -18743,6 +18836,7 @@ tw:SVG 文件
 uk:SVG документи
 uz:SVG hujjatlari
 vn:Các Tài Liệu SVG
+:Save Annotations to a new PDF
 :Save Annotations to existing PDF
 am:Պահել ծանոթագրությունը առկա PDF-ում
 ar:حفظ التوضيحات في ملف PDF الحالي
@@ -18903,6 +18997,7 @@ tw:儲存內嵌的檔案...
 uk:Зберегти вкладений файл...
 uz:Ichki faylni saqlash...
 vn:Lưu Tập Đã Nhúng...
+:Save File As...
 :Save S&hortcut...
 am:Պահել դ&յուրանցումը...
 ar:احفظ الا&ختصار...
@@ -19286,6 +19381,20 @@ tw:儲存 '%s' 失敗，因為: '%s'
 uk:Не вдалося зберегти '%s' з допомогою: '%s'
 uz:'%s' ni saqlash muvaffaqiyatsiz tugadi: '%s'
 vn:Đang lưu '%s' lỗi với: '%s'
+:Scroll Down
+:Scroll Down By Half Page
+:Scroll Down By Page
+:Scroll Left
+:Scroll Left By Page
+:Scroll Right
+:Scroll Right By Page
+:Scroll Up
+:Scroll Up By Half Page
+:Scroll Up By Page
+:Search Selection with Bing
+:Search Selection with Google
+:Search Selection with Google Scholar
+:Search Selection with Wikipedia
 :Search With &Bing
 am:Որոնել &Bing-ով
 ar:بحث في &Bing
@@ -19607,6 +19716,7 @@ tw:全選(&A)
 uk:Вибрати все
 uz:&Hammasini tanlash
 vn:Chọn hết
+:Select All
 :Select content with Ctrl+left mouse button
 am:Նշել ընտրվածը Ctrl+մկնիկի ձախ կոճակով
 ar:حدد المحتوى بالضغط على زر الفأرة الأيسر و Ctrl
@@ -19673,6 +19783,7 @@ tw:按 Ctrl+滑鼠左鍵選取內容
 uk:Виберіть вміст з допомогою Ctrl+ліва кнопка миші
 uz:Ctrl va sichqonchaning chap tugmasini bosib tarkibini tanlang
 vn:Đánh dấu nội dung bằng Ctrl+phím chuột trái
+:Select next theme
 :Select the folder where SumatraPDF should be installed:
 am:Ընտրեք պանակ, որտեղ պետք է տեղադրվի SumatraPDF-ը՝
 ar:حدد المجلد الذي يجب أن يثبت فيه SumatraPDF:
@@ -19804,6 +19915,7 @@ tw:選取:
 uk:Виділення:
 uz:Tanlash:
 vn:Lựa chọn:
+:Send Document By Email...
 :Send by &E-mail...
 am:Ուղարկել &էլ. փոստով
 ar:إرسال ب&البريد الإلكتروني
@@ -19942,6 +20054,7 @@ tw:設定反向搜尋命令列
 uk:Установити зворотній пошук.
 uz:Teskari qidirish buyruq satrini moslash
 vn:Đặt dòng lệnh tìm kiếm ngược
+:Set theme
 :Show &Bookmarks
 am:Ցուցադրել &Էջանիշերը
 ar:اظهار &قوائم العناوين
@@ -20258,6 +20371,7 @@ tw:顯示工具列(&T)
 uk:Показати панель інструментів
 uz:&Asboblar panelini ko'rsatish
 vn:Hiện thanh công cụ
+:Show Annotations
 :Show Book&marks
 am:Ցուցադրել էջա&նիշերը
 ar:إظهار ال&علامات
@@ -20309,6 +20423,7 @@ tw:顯示書籤(&M)
 uk:Показати закладки
 uz:Belgilangan sahifalarni ko‘rsatish
 vn:Hiển thị Dấu &trang
+:Show Document Properties...
 :Show Favorites
 am:Ցուցադրել ընտրյալները
 ar:إظهار المفضلة
@@ -20375,6 +20490,8 @@ tw:顯示我的最愛
 uk:Перелік закладок
 uz:Tanlanganlarni ko'rsatish
 vn:Hiện Ưa thích
+:Show File In Folder...
+:Show Logs
 :Show Scr&ollbars
 am:Ցուցադրել ոլո&րագոտիները
 ar:إظهار أشرطة التمرير
@@ -20744,6 +20861,8 @@ tw:單頁檢視
 uk:Одна сторінка
 uz:Bitta bet
 vn:Trang đơn
+:Single Page View
+:Smart Next Tab
 :Sorry, that shouldn't have happened!\n\nPlease press 'Cancel', if you want to help us fix the cause of this crash.
 am:Կներեք, սա չպետք է տեղի ունենար։\n\nՍեղմեք 'Չեղարկել'՝եթե ցանկանում եք օգնել մեզ վերացնելու այս սխալը։
 ar:الرجاء اضغط 'إلغاء الأمر'، إذا كنت ترغب في مساعدتنا على إصلاح هذا الحادث \n\n !آسف، أنه لا ينبغي أن يكون قد حدث
@@ -22281,6 +22400,15 @@ tw:標題:
 uk:Заголовок:
 uz:Sarlavha:
 vn:Tựa đề
+:Toggle Anti-Alias Rendering
+:Toggle Bookmarks
+:Toggle Continuous View
+:Toggle Cursor Position
+:Toggle Favorites
+:Toggle Frequently Read
+:Toggle Fullscreen
+:Toggle Inverse Search
+:Toggle Manga Mode
 :Toggle Match Case
 br:Diferenciar Maiúsculas/Minúsculas
 de:Groß-/Kleinschreibung umschalten
@@ -22288,6 +22416,16 @@ nl:Schakel hoofdlettergebruik in/uit
 pl:Przełącz uwzględnianie wielkości liter
 sk:Prepnúť rozlišovanie veľkých/malých písmen
 tr:Büyük/Küçük Harfleri Değiştir
+:Toggle Menu Bar
+:Toggle Page Info
+:Toggle Scrollbars
+:Toggle Show Annotations
+:Toggle Show Links
+:Toggle Table Of Contents
+:Toggle Toolbar
+:Toggle Zoom
+:Translate Selection With DeepL
+:Translate Selection with Google
 :Translate with &DeepL
 am:Թարգմանել &DeepL-ով
 ar:ترجمة في &DeepL
@@ -22856,6 +22994,8 @@ tw:檢視
 uk:Вигляд
 uz:Ko'rish
 vn:Hiển thị
+:View With Custom External Viewer
+:View: Presentation Mode
 :Visit &Website
 af:&Besoek Webtuiste
 am:Ծրագրի &կայքը
@@ -23619,6 +23759,26 @@ tw:縮放比例
 uk:Масштаб
 uz:Miqyos omili
 vn:Hệ số thu phóng
+:Zoom: 100%
+:Zoom: 12.5%
+:Zoom: 125%
+:Zoom: 150%
+:Zoom: 1600%
+:Zoom: 200%
+:Zoom: 25%
+:Zoom: 3200%
+:Zoom: 400%
+:Zoom: 50%
+:Zoom: 6400%
+:Zoom: 8.33%
+:Zoom: 800%
+:Zoom: Actual Size
+:Zoom: Custom...
+:Zoom: Fit Content
+:Zoom: Fit Page
+:Zoom: Fit Page and Single Page
+:Zoom: Fit Width
+:Zoom: Fit Width And Continuous
 :[Changes detected; refreshing] %s
 am:[Հայտնաբերվել են փոփոխություններ, ընթանում է թարմացում] %s
 ar:%s [تغييرات إكتشفت؛ المنعش]
@@ -23756,6 +23916,7 @@ tw:正在複製文字
 uk:копіювання тексту
 uz:matnni nusxa olish
 vn:đang chép văn bản
+:don't use
 :printing document
 am:Ֆայլը տպվում է
 ar:طباعة المستند
