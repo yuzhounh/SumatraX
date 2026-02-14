@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { join, extname } from "node:path";
+import { commands } from "./gen-commands";
 
 const apptranslatorServer = "https://www.apptranslator.org";
 const translationsDir = "translations";
@@ -41,6 +42,16 @@ function extractStringsFromCFilesNoPaths(): string[] {
   return unique;
 }
 
+function extractStringsToTranslate(): string[] {
+  const strs = extractStringsFromCFilesNoPaths();
+  for (let i = 1; i < commands.length; i += 2) {
+    strs.push(commands[i]);
+  }
+  const unique = [...new Set(strs)];
+  console.log(`${unique.length} unique strings to translate (including command descriptions)`);
+  return unique;
+}
+
 function getTransSecret(): string {
   // try reading from secrets file first
   const secretsPath = join("..", "secrets", "sumatrapdf.env");
@@ -71,7 +82,7 @@ function getTransSecret(): string {
 
 async function downloadTranslationsMust(): Promise<string> {
   const timeStart = performance.now();
-  const strs = extractStringsFromCFilesNoPaths();
+  const strs = extractStringsToTranslate();
   strs.sort();
   console.log(`uploading ${strs.length} strings for translation`);
   const secret = getTransSecret();
@@ -174,7 +185,7 @@ function generateGoodSubset(d: string): void {
   for (const [lang, m] of perLang) {
     const nMissing = nStrings - m.size;
     let skipStr = "";
-    if (nMissing > 100) {
+    if (nMissing > 180) {
       skipStr = "  SKIP";
       langsToSkip.add(lang);
       notTranslated.push(lang);
