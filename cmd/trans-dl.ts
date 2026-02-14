@@ -149,7 +149,12 @@ function printBadTranslations(badTranslations: BadTranslation[]): void {
   }
 }
 
-function generateGoodSubset(d: string): void {
+interface ParsedTranslations {
+  perLang: Map<string, Map<string, string>>;
+  allStrings: string[];
+}
+
+function parseTranslations(d: string): ParsedTranslations {
   const lines = d.split("\n");
   const a = lines.slice(2);
   const perLang = new Map<string, Map<string, string>>();
@@ -175,7 +180,43 @@ function generateGoodSubset(d: string): void {
     }
     m.set(currString, trans);
   }
+  return { perLang, allStrings };
+}
 
+function stripAmpersand(s: string): string {
+  return s.replaceAll("&", "");
+}
+
+function autoAddNoPrefixTranslations(pt: ParsedTranslations): void {
+  const { perLang, allStrings } = pt;
+  let nAdded = 0;
+  for (const [lang, translations] of perLang) {
+    // build cache: for translated strings containing "&",
+    // map stripped_original => stripped_translation
+    const cache = new Map<string, string>();
+    for (const [orig, trans] of translations) {
+      if (orig.includes("&")) {
+        cache.set(stripAmpersand(orig), stripAmpersand(trans));
+      }
+    }
+    // for untranslated strings without "&", look up in cache
+    for (const s of allStrings) {
+      if (s.includes("&")) continue;
+      if (translations.has(s)) continue;
+      const trans = cache.get(s);
+      if (trans) {
+        translations.set(s, trans);
+        nAdded++;
+      }
+    }
+  }
+  if (nAdded > 0) {
+    console.log(`autoAddNoPrefixTranslations: added ${nAdded} translations`);
+  }
+}
+
+function generateGoodSubset(pt: ParsedTranslations): void {
+  const { perLang, allStrings } = pt;
   const nStrings = allStrings.length;
   const langsToSkip = new Set<string>();
   const goodLangs: string[] = [];
@@ -237,18 +278,20 @@ async function main() {
   const d = await downloadTranslationsMust();
   const { fixed, badTranslations } = fixTranslations(d);
 
-  printBadTranslations(badTranslations);
-
   const path = join(translationsDir, "translations.txt");
   const curr = readFileSync(path, "utf-8");
   if (fixed === curr) {
     console.log("Translations didn't change");
   }
 
-  generateGoodSubset(fixed);
+  const pt = parseTranslations(fixed);
+  autoAddNoPrefixTranslations(pt);
+  generateGoodSubset(pt);
 
   writeFileSync(path, fixed, "utf-8");
   console.log(`Wrote ${path} of size ${fixed.length}`);
+
+  printBadTranslations(badTranslations);
 }
 
 await main();
