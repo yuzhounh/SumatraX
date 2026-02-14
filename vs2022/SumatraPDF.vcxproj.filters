@@ -855,6 +855,9 @@
     <None Include="..\cmd\markdown-it.min.js">
       <Filter>cmd</Filter>
     </None>
+    <None Include="..\cmd\pdb-sizes.ts">
+      <Filter>cmd</Filter>
+    </None>
     <None Include="..\cmd\premake.ts">
       <Filter>cmd</Filter>
     </None>
@@ -862,6 +865,12 @@
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\trans-dl.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\trans-gen.ts">
+      <Filter>cmd</Filter>
+    </None>
+    <None Include="..\cmd\trans-with-ai.ts">
       <Filter>cmd</Filter>
     </None>
     <None Include="..\cmd\trigger-codeql.ts">
@@ -934,6 +943,9 @@
       <Filter>docs\md</Filter>
     </None>
     <None Include="..\docs\md\Editing-annotations.md">
+      <Filter>docs\md</Filter>
+    </None>
+    <None Include="..\docs\md\Failed-to-load-libmupdf.md">
       <Filter>docs\md</Filter>
     </None>
     <None Include="..\docs\md\How-to-submit-bug-reports.md">

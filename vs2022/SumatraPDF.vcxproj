@@ -1457,9 +1457,12 @@
     <None Include="..\cmd\logview-build.ts" />
     <None Include="..\cmd\logview.ts" />
     <None Include="..\cmd\markdown-it.min.js" />
+    <None Include="..\cmd\pdb-sizes.ts" />
     <None Include="..\cmd\premake.ts" />
     <None Include="..\cmd\run-tests.ts" />
     <None Include="..\cmd\trans-dl.ts" />
+    <None Include="..\cmd\trans-gen.ts" />
+    <None Include="..\cmd\trans-with-ai.ts" />
     <None Include="..\cmd\trigger-codeql.ts" />
     <None Include="..\cmd\update-auto-update-ver.ts" />
     <None Include="..\cmd\util.ts" />
@@ -1484,6 +1487,7 @@
     <None Include="..\docs\md\DDE-Commands.md" />
     <None Include="..\docs\md\Debugging-Sumatra.md" />
     <None Include="..\docs\md\Editing-annotations.md" />
+    <None Include="..\docs\md\Failed-to-load-libmupdf.md" />
     <None Include="..\docs\md\How-to-submit-bug-reports.md" />
     <None Include="..\docs\md\How-we-store-settings.md" />
     <None Include="..\docs\md\Installer-cmd-line-arguments.md" />
