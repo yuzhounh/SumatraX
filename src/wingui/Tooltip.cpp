@@ -35,7 +35,7 @@ int TooltipGetCount(HWND hwnd) {
     return n;
 }
 
-void TooltipoRemoveTool(HWND hwnd, HWND owner, int id) {
+static void TooltipRemoveTool(HWND hwnd, HWND owner, int id) {
     TOOLINFOW ti = {};
     ti.cbSize = sizeof(ti);
     ti.hwnd = owner;
@@ -57,16 +57,12 @@ int TooltipGetId(HWND hwnd, int idx) {
 }
 
 void TooltipRemoveAll(HWND hwnd, HWND owner) {
-    for (;;) {
-        int n = TooltipGetCount(hwnd);
-        if (n <= 0) {
-            return;
+    int n = TooltipGetCount(hwnd);
+    for (int i = n - 1; i >= 0; i--) {
+        int id = TooltipGetId(hwnd, i);
+        if (id >= 0) {
+            TooltipRemoveTool(hwnd, owner, id);
         }
-        int id = TooltipGetId(hwnd, 0);
-        if (id < 0) {
-            return;
-        }
-        TooltipoRemoveTool(hwnd, owner, id);
     }
 }
 
