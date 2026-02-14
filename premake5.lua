@@ -759,8 +759,6 @@ workspace "SumatraPDF"
       "src", "src/wingui"
     }
     pdf_preview2_files()
-    filter {"configurations:Debug"}
-    filter {}
     -- TODO: "chm" should only be for Debug config but doing links { "chm" }
     -- in the filter breaks linking by setting LinkLibraryDependencies to false
     links { "comctl32", "gdiplus", "msimg32", "shlwapi", "version", "wininet", "wintrust", "crypt32" }
@@ -776,8 +774,6 @@ workspace "SumatraPDF"
       "ext/libdjvu", "ext/CHMLib"
     }
     pdf_preview_files()
-    filter {"configurations:Debug"}
-    filter {}
     -- TODO: "chm" should only be for Debug config but doing links { "chm" }
     -- in the filter breaks linking by setting LinkLibraryDependencies to false
     links { "utils", "unrar", "libmupdf", "chm" }
