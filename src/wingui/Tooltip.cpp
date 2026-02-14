@@ -89,7 +89,8 @@ void TooltipAddTools(HWND hwnd, HWND owner, TooltipInfo* tools, int nTools) {
         ti.lpszText = (WCHAR*)ws;
         ti.rect = ToRECT(tti.r);
         ti.uFlags = TTF_SUBCLASS; // TODO: do I need this ?
-        SendMessageW(hwnd, TTM_ADDTOOL, 0, (LPARAM)&ti);
+        BOOL ok = SendMessageW(hwnd, TTM_ADDTOOLW, 0, (LPARAM)&ti);
+        ReportIfFast(!ok);
     }
     bool isRtl = nRtl > nLtr;
     HwndSetRtl(hwnd, isRtl);
@@ -187,6 +188,7 @@ int Tooltip::Add(const char* s, const Rect& rc, bool multiline) {
     ti.lpszText = (WCHAR*)ws;
     BOOL ok = SendMessageW(hwnd, TTM_ADDTOOLW, 0, (LPARAM)&ti);
     if (!ok) {
+        ReportIfFast(!ok);
         return -1;
     }
     bool isRtl = IsTextRtl(ws);

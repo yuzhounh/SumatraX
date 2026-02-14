@@ -51,13 +51,6 @@ TabInfo::~TabInfo() {
     str::Free(tooltip);
 }
 
-void TooltipRemoveAll(HWND hwnd) {
-    int n = TooltipGetCount(hwnd);
-    if (n == 0) {
-        return;
-    }
-}
-
 void TabsCtrl::ScheduleRepaint() {
     HwndScheduleRepaint(hwnd);
 }
@@ -120,6 +113,7 @@ void TabsCtrl::LayoutTabs() {
     }
     if (withToolTips) {
         HWND ttHwnd = GetToolTipsHwnd();
+        TooltipRemoveAll(ttHwnd, hwnd);
         TooltipAddTools(ttHwnd, hwnd, tools, nTabs);
     }
 
@@ -739,13 +733,13 @@ HWND TabsCtrl::Create(TabsCtrl::CreateArgs& args) {
     cargs.isRtl = args.isRtl;
     cargs.font = args.font;
     cargs.className = WC_TABCONTROLW;
+    withToolTips = args.withToolTips;
+    tabDefaultDx = args.tabDefaultDx;
+
     cargs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE | TCS_FOCUSNEVER | TCS_FIXEDWIDTH | TCS_FORCELABELLEFT;
     if (withToolTips) {
         cargs.style |= TCS_TOOLTIPS;
     }
-
-    withToolTips = args.withToolTips;
-    tabDefaultDx = args.tabDefaultDx;
 
     HWND hwnd = CreateControl(cargs);
     if (!hwnd) {
@@ -755,15 +749,6 @@ HWND TabsCtrl::Create(TabsCtrl::CreateArgs& args) {
     if (withToolTips) {
         HWND ttHwnd = GetToolTipsHwnd();
         SetWindowStyle(ttHwnd, TTS_NOPREFIX, true);
-        TOOLINFO ti{};
-        ti.cbSize = sizeof(ti);
-        ti.hwnd = hwnd;
-        ti.uId = 0;
-        ti.uFlags = TTF_SUBCLASS;
-        ti.lpszText = (WCHAR*)L"placeholder tooltip";
-        SetRectEmpty(&ti.rect);
-        RECT r = ti.rect;
-        SendMessageW(ttHwnd, TTM_ADDTOOL, 0, (LPARAM)&ti);
     }
     return hwnd;
 }
