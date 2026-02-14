@@ -1,5 +1,5 @@
 AppTranslator: SumatraPDF
-63f16c25aab6dc9cc88126cd8529450224c5236a
+7d035abe9afbe0b47fd3b84074e424d4ab7f0c23
 :%s annotation. Ctrl+click to edit.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
 ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
@@ -4443,7 +4443,9 @@ uk:Просунуті
 uz:Qo'shimcha
 vn:Nâng cao
 :Advanced Options...
+pl:Opcje zaawansowane...
 :Advanced Settings...
+pl:Ustawienia zaawansowane...
 :All files
 am:Բոլոր ֆայլերը
 ar:كل الملفات
@@ -6092,7 +6094,9 @@ uk:Змінити мову (Change Language)
 uz:Tilni o'zgartirish (Change Language)
 vn:Đổi ngôn ngữ (Change Language)
 :Change Language...
+pl:Zmień język...
 :Check For Updates
+pl:Sprawdź aktualizacje
 :Check for &Updates
 af:Kyk Vir Nuwe Uitgawe
 am:&Ստուգել նոր տարբերակը
@@ -6286,6 +6290,7 @@ uk:Коло
 uz:Doira
 vn:Vòng tròn
 :Clear History
+pl:Wyczyść historię
 :Cleared history of %d files, deleted thumbnails.
 am:%d ֆայլերի մաքրված պատմություն, ջնջված մանրապատկերներ:
 ar:تم مسح سجل %d من الملفات والصور المصغرة المحذوفة.
@@ -6490,7 +6495,9 @@ tr:Tüm Sekmeleri Kapat
 tw:關閉全部分頁
 uz:Barcha yorliqlarni yopish
 :Close Current Document
+pl:Zamknij bieżący dokument
 :Close Document
+pl:Zamknij dokument
 :Close Other Tabs
 am:Փակել այլ ներդիրները
 ar:أغلق علامات التبويب الأخرى
@@ -7502,6 +7509,7 @@ uk:Копіювати коментар
 uz:&Izohni nusxa olish
 vn:Chép chú thích
 :Copy Comment
+pl:Kopiuj komentarz
 :Copy File Path
 am:Պատճենել ֆայլի ուղին
 ar:نسخ مسار الملف
@@ -7552,8 +7560,11 @@ tr:Dosya Yolunu Kopyala
 tw:複製檔案路徑
 uz:Fayl yo‘lini nusxalash
 :Copy Image
+pl:Kopiuj obraz
 :Copy Link Target
+pl:Kopiuj łącze docelowe
 :Copy Selection
+pl:Kopiuj zaznaczenie
 :Copy To Clipboard
 am:Պատճենել սեղմնատախտակին
 ar:نسخ إلى الحافظة
@@ -8465,6 +8476,7 @@ uk:Не вдалося записати %s на диск
 uz:%s diskka yozib bo'lmadi
 vn:Không thể ghi %s vào đĩa
 :Create .lnk Shortcut
+pl:Utwórz skrót .lnk
 :Create Annotation &Under Cursor
 am:Ստեղծել մեկնաբանություն &նշորդի ներքո
 ar:أنشئ شرحًا &عند المؤشر
@@ -8582,6 +8594,7 @@ uk:Створити анотацію з виділеного
 uz:Tanlovdan izoh yaratish
 vn:Thêm Chú Thích Từ Phần Được Chọn
 :Create Caret Annotation
+pl:Utwórz adnotację karety
 :Create Circle Annotation
 :Create File Attachment Annotation
 :Create Free Text Annotation

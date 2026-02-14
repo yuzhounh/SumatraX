@@ -26452,3 +26452,5 @@ vn:Thu phóng: Vừa chiều rộng
 vn:Thu phóng: Vừa chiều rộng và liên tục
 :don't use
 vn:không sử dụng
+:Create Ink Annotation
+sat:इंक एनोटेशन तैयार करे

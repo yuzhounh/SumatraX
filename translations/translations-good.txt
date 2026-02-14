@@ -8695,7 +8695,7 @@ nl:Linkdoel kopiëren
 nn:Kopier lenkemål
 no:Kopier lenkemål
 pa:ਲਿੰਕ ਟੀਚਾ ਕਾਪੀ ਕਰੋ
-pl:Kopiuj cel odnośnika
+pl:Kopiuj łącze docelowe
 pt:Copiar Destino do Link
 ro:Copiază destinația linkului
 ru:Копировать ссылку
@@ -10066,7 +10066,7 @@ nl:Invoegpuntannotatie maken
 nn:Lag markørmerknad
 no:Opprett innsettingsmerke-merknad
 pa:ਕੈਰੇਟ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację daszka
+pl:Utwórz adnotację karety
 pt:Criar Anotação de Cursor
 ro:Creează adnotare caret
 ru:Создать аннотацию-каретку
@@ -10435,6 +10435,7 @@ pl:Utwórz adnotację pisma
 pt:Criar Anotação de Tinta
 ro:Creează adnotare cerneală
 ru:Создать рукописную аннотацию
+sat:इंक एनोटेशन तैयार करे
 si:තීන්ත විවරණය නිර්මාණය කරන්න
 sk:Vytvoriť anotáciu atramentu
 sl:Ustvari rokopisno opombo
