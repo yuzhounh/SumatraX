@@ -4557,7 +4557,7 @@ ro:Opțiuni avansate...
 ru:Расширенные настройки...
 sat:ᱩᱱᱱᱚᱛ ᱵᱟᱪᱷᱟᱣᱟᱜ ...
 si:සංකීර්ණ සැකසුුම්
-sk:Rozšírené možnosti...
+sk:Pokročilé možnosti
 sl:Napredne možnosti …
 sn:Sarudzo Dzakadzama...
 sp-rs:Napredna podešavanja...
@@ -4630,7 +4630,7 @@ ro:Setări avansate...
 ru:Дополнительные настройки...
 sat:ᱞᱟᱦᱟᱱᱛᱤ ᱥᱟᱡᱟᱣ ᱠᱚ...
 si:උසස් සැකසුම්...
-sk:Pokročilé nastavenia...
+sk:Pokročilé možnosti…
 sl:Napredne nastavitve...
 sn:Zvigadziriso Zvakadzama...
 sp-rs:Напредна подешавања...
@@ -6452,7 +6452,7 @@ ro:Schimbă limba...
 ru:Изменить язык...
 sat:ᱯᱟᱹᱨᱥᱤ ᱵᱚᱫᱚᱞ...
 si:භාෂාව වෙනස් කරන්න...
-sk:Zmeniť jazyk...
+sk:Zmeniť jazyk…
 sl:Spremeni jezik...
 sn:Chinja Mutauro...
 sp-rs:Промени језик...
@@ -8695,7 +8695,7 @@ nl:Linkdoel kopiëren
 nn:Kopier lenkemål
 no:Kopier lenkemål
 pa:ਲਿੰਕ ਟੀਚਾ ਕਾਪੀ ਕਰੋ
-pl:Kopiuj łącze docelowe
+pl:Kopiuj cel z odnośnika
 pt:Copiar Destino do Link
 ro:Copiază destinația linkului
 ru:Копировать ссылку
@@ -10066,7 +10066,7 @@ nl:Invoegpuntannotatie maken
 nn:Lag markørmerknad
 no:Opprett innsettingsmerke-merknad
 pa:ਕੈਰੇਟ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację karety
+pl:Utwórz adnotację karetą
 pt:Criar Anotação de Cursor
 ro:Creează adnotare caret
 ru:Создать аннотацию-каретку
@@ -10139,7 +10139,7 @@ nl:Cirkelannotatie maken
 nn:Lag sirkelmerknad
 no:Opprett sirkelmerknad
 pa:ਚੱਕਰ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację koła
+pl:Utwórz adnotację okręgiem
 pt:Criar Anotação de Círculo
 ro:Creează adnotare cerc
 ru:Создать аннотацию-круг
@@ -10212,7 +10212,7 @@ nl:Bestandsbijlageannotatie maken
 nn:Lag filvedleggsmerknad
 no:Opprett filvedleggsmerknad
 pa:ਫਾਈਲ ਅਟੈਚਮੈਂਟ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację załącznika pliku
+pl:Utwórz adnotację załącznikem pliku
 pt:Criar Anotação de Anexo de Arquivo
 ro:Creează adnotare atașament fișier
 ru:Создать аннотацию-вложение
@@ -10285,7 +10285,7 @@ nl:Vrije tekstannotatie maken
 nn:Lag fritekstmerknad
 no:Opprett fritekstmerknad
 pa:ਮੁਫਤ ਟੈਕਸਟ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację dowolnego tekstu
+pl:Utwórz adnotację dowolnym tekstem
 pt:Criar Anotação de Texto Livre
 ro:Creează adnotare text liber
 ru:Создать текстовую аннотацию
@@ -10358,7 +10358,7 @@ nl:Markeringsannotatie maken
 nn:Lag utheving-merknad
 no:Opprett utheving-merknad
 pa:ਹਾਈਲਾਈਟ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację zaznaczenia
+pl:Utwórz adnotację wyróżnieniem
 pt:Criar Anotação de Destaque
 ro:Creează adnotare evidențiere
 ru:Создать аннотацию-выделение
@@ -10431,7 +10431,7 @@ nl:Inktannotatie maken
 nn:Lag blekkstrek-merknad
 no:Opprett blekkmerknad
 pa:ਸਿਆਹੀ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację pisma
+pl:Utwórz adnotację atramentem
 pt:Criar Anotação de Tinta
 ro:Creează adnotare cerneală
 ru:Создать рукописную аннотацию
@@ -10504,7 +10504,7 @@ nl:Lijnannotatie maken
 nn:Lag linjemerknad
 no:Opprett linjemerknad
 pa:ਲਾਈਨ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację linii
+pl:Utwórz adnotację linią
 pt:Criar Anotação de Linha
 ro:Creează adnotare linie
 ru:Создать аннотацию-линию
@@ -10577,7 +10577,7 @@ nl:Linkannotatie maken
 nn:Lag lenkemerknad
 no:Opprett lenkemerknad
 pa:ਲਿੰਕ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację odnośnika
+pl:Utwórz adnotację odnośnikiem
 pt:Criar Anotação de Link
 ro:Creează adnotare link
 ru:Создать аннотацию-ссылку
@@ -10650,7 +10650,7 @@ nl:Polylijn-annotatie maken
 nn:Lag polylinejmerknad
 no:Opprett polylinjemerknad
 pa:ਪੌਲੀ ਲਾਈਨ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację linii łamanej
+pl:Utwórz adnotację polilinią
 pt:Criar Anotação de Polilinha
 ro:Creează adnotare polilinie
 ru:Создать аннотацию-ломаную
@@ -10723,7 +10723,7 @@ nl:Veelhoek-annotatie maken
 nn:Lag polygonmerknad
 no:Opprett polygonmerknad
 pa:ਬਹੁਭੁਜ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację wielokąta
+pl:Utwórz adnotację wielokątem
 pt:Criar Anotação de Polígono
 ro:Creează adnotare poligon
 ru:Создать аннотацию-многоугольник
@@ -10796,7 +10796,7 @@ nl:Pop-upannotatie maken
 nn:Lag sprettoppmerknad
 no:Opprett popup-merknad
 pa:ਪੌਪਅੱਪ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację wyskakującą
+pl:Utwórz adnotację wyskakującym okienkiem
 pt:Criar Anotação Popup
 ro:Creează adnotare popup
 ru:Создать всплывающую аннотацию
@@ -10869,7 +10869,7 @@ nl:Redigeerapnotatie maken
 nn:Lag sladdemerknad
 no:Opprett redigeringsmerknad
 pa:ਸੋਧ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację redakcji
+pl:Utwórz adnotację redagowaniem
 pt:Criar Anotação de Ocultação
 ro:Creează adnotare redactare
 ru:Создать аннотацию-затемнение
@@ -10942,7 +10942,7 @@ nl:Vierkantannotatie maken
 nn:Lag firkantmerknad
 no:Opprett firkantmerknad
 pa:ਵਰਗ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację kwadratu
+pl:Utwórz adnotację kwadratem
 pt:Criar Anotação de Quadrado
 ro:Creează adnotare pătrat
 ru:Создать аннотацию-квадрат
@@ -11015,7 +11015,7 @@ nl:Golvende annotatie maken
 nn:Lag buktemerknad
 no:Opprett bølgemerknad
 pa:ਲਹਿਰਦਾਰ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację falistego podkreślenia
+pl:Utwórz adnotację falowaniem
 pt:Criar Anotação Ondulada
 ro:Creează adnotare ondulat
 ru:Создать волнистую аннотацию
@@ -11088,7 +11088,7 @@ nl:Stempelannotatie maken
 nn:Lag stempelmerknad
 no:Opprett stempelmerknad
 pa:ਮੋਹਰ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację stempla
+pl:Utwórz adnotację pieczęcią
 pt:Criar Anotação de Carimbo
 ro:Creează adnotare ștampilă
 ru:Создать аннотацию-штамп
@@ -11161,7 +11161,7 @@ nl:Doorhaal-annotatie maken
 nn:Lag gjennomstrekingsmerknad
 no:Opprett gjennomstrekingsmerknad
 pa:ਕੱਟਣ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację przekreślenia
+pl:Utwórz adnotację skreśleniem
 pt:Criar Anotação de Tachado
 ro:Creează adnotare tăiat
 ru:Создать аннотацию-зачёркивание
@@ -11234,7 +11234,7 @@ nl:Tekstannotatie maken
 nn:Lag tekstmerknad
 no:Opprett tekstmerknad
 pa:ਟੈਕਸਟ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację tekstową
+pl:Utwórz adnotację tekstem
 pt:Criar Anotação de Texto
 ro:Creează adnotare text
 ru:Создать текстовую аннотацию
@@ -11307,7 +11307,7 @@ nl:Onderstrepingsannotatie maken
 nn:Lag understrekingsmerknad
 no:Opprett understrekingsmerknad
 pa:ਅੰਡਰਲਾਈਨ ਟਿੱਪਣੀ ਬਣਾਓ
-pl:Utwórz adnotację podkreślenia
+pl:Utwórz adnotację podkreśleniem
 pt:Criar Anotação de Sublinhado
 ro:Creează adnotare subliniere
 ru:Создать аннотацию-подчёркивание
@@ -11870,7 +11870,7 @@ nl:Debug: geheugen beschadigen
 nn:Feilsøk: Øydelegg minne
 no:Feilsøk: Korrumper minne
 pa:ਡੀਬੱਗ: ਖਰਾਬ ਮੈਮੋਰੀ
-pl:Debugowanie: Uszkodź pamięć
+pl:Debugowanie: uszkodź pamięć
 pt:Debug: Corromper Memória
 ro:Debug: Corupe memoria
 ru:Отладка: Повредить память
@@ -11943,7 +11943,7 @@ nl:Debug: laat crashen
 nn:Feilsøk: Krasj meg
 no:Feilsøk: Krasj meg
 pa:ਡੀਬੱਗ: ਮੈਨੂੰ ਕਰੈਸ਼ ਕਰੋ
-pl:Debugowanie: Wywołaj awarię
+pl:Debugowanie: zawieś mnie
 pt:Debug: Forçar Falha
 ro:Debug: Provoacă eroare
 ru:Отладка: Вызвать сбой
@@ -12016,7 +12016,7 @@ nl:Debug: symbolen downloaden
 nn:Feilsøk: Last ned symbol
 no:Feilsøk: Last ned symboler
 pa:ਡੀਬੱਗ: ਚਿੰਨ੍ਹ ਡਾਊਨਲੋਡ ਕਰੋ
-pl:Debugowanie: Pobierz symbole
+pl:Debugowanie: pobierz symbole
 pt:Debug: Baixar Símbolos
 ro:Debug: Descarcă simboluri
 ru:Отладка: Загрузить символы
@@ -12089,7 +12089,7 @@ nl:Debug: melding tonen
 nn:Feilsøk: Vis varsel
 no:Feilsøk: Vis varsel
 pa:ਡੀਬੱਗ: ਸੂਚਨਾ ਦਿਖਾਓ
-pl:Debugowanie: Pokaż powiadomienie
+pl:Debugowanie: pokaż powiadomienie
 pt:Debug: Mostrar Notificação
 ro:Debug: Afișează notificare
 ru:Отладка: Показать уведомление
@@ -12162,7 +12162,7 @@ nl:Debug: stresstest starten
 nn:Feilsøk: Start stresstest
 no:Feilsøk: Start stresstest
 pa:ਡੀਬੱਗ: ਤਣਾਅ ਟੈਸਟ ਸ਼ੁਰੂ ਕਰੋ
-pl:Debugowanie: Rozpocznij test obciążeniowy
+pl:Debugowanie: rozpocznij test obciążeniowy
 pt:Debug: Iniciar Teste de Estresse
 ro:Debug: Pornește test de stres
 ru:Отладка: Запустить стресс-тест
@@ -12235,7 +12235,7 @@ nl:Debug: app testen
 nn:Feilsøk: Test app
 no:Feilsøk: Test app
 pa:ਡੀਬੱਗ: ਐਪ ਟੈਸਟ ਕਰੋ
-pl:Debugowanie: Testuj aplikację
+pl:Debugowanie: testuj aplikację
 pt:Debug: Testar Aplicação
 ro:Debug: Testează aplicația
 ru:Отладка: Тестировать приложение
@@ -12308,7 +12308,7 @@ nl:Debug: voorspellende weergave schakelen
 nn:Feilsøk: Slå av/på prediktiv rendering
 no:Feilsøk: Veksle prediktiv gjengivelse
 pa:ਡੀਬੱਗ: ਭਵਿੱਖਬਾਣੀ ਰੈਂਡਰਿੰਗ ਟੌਗਲ ਕਰੋ
-pl:Debugowanie: Przełącz renderowanie predykcyjne
+pl:Debugowanie: przełącz renderowanie predykcyjne
 pt:Debug: Alternar Renderização Preditiva
 ro:Debug: Comută randare predictivă
 ru:Отладка: Переключить предварительную отрисовку
@@ -12381,7 +12381,7 @@ nl:Debug: RTL schakelen
 nn:Feilsøking: Slå av/på Rtl
 no:Feilsøk: Veksle RTL
 pa:ਡੀਬੱਗ: Rtl ਟੌਗਲ ਕਰੋ
-pl:Debugowanie: Przełącz Rtl
+pl:Debugowanie: przełącz RTL
 pt:Debug: Alternar Rtl
 ro:Debug: Comută Rtl
 ru:Отладка: Переключить RTL
@@ -14088,7 +14088,7 @@ nl:Toepassing afsluiten
 nn:Avslutt programmet
 no:Avslutt program
 pa:ਐਪਲੀਕੇਸ਼ਨ ਬੰਦ ਕਰੋ
-pl:Zakończ aplikację
+pl:Wyjdź z programu
 pt:Sair da Aplicação
 ro:Ieși din aplicație
 ru:Выход из приложения
@@ -14476,7 +14476,7 @@ nl:Tegenoverliggende weergave
 nn:Oppslåttsvising
 no:Motvisning
 pa:ਸਾਹਮਣਾ ਦ੍ਰਿਸ਼
-pl:Widok stron sąsiednich
+pl:Widok wielu stron
 pt:Visualização em Frente
 ro:Vizualizare față
 ru:Разворот
@@ -15622,7 +15622,7 @@ nl:Volgende selectie zoeken
 nn:Finn neste merking
 no:Finn neste forekomst
 pa:ਅਗਲੀ ਚੋਣ ਲੱਭੋ
-pl:Znajdź następne wystąpienie
+pl:Znajdź następne zaznaczenie
 pt:Localizar Próxima Seleção
 ro:Găsește selecția următoare
 ru:Найти следующее совпадение
@@ -15768,7 +15768,7 @@ nl:Vorige selectie zoeken
 nn:Finn førre merking
 no:Finn forrige forekomst
 pa:ਪਿਛਲੀ ਚੋਣ ਲੱਭੋ
-pl:Znajdź poprzednie wystąpienie
+pl:Znajdź poprzednie zaznaczenie
 pt:Localizar Seleção Anterior
 ro:Găsește selecția anterioară
 ru:Найти предыдущее совпадение
@@ -15914,7 +15914,7 @@ nl:Zoeken: hoofdlettergevoeligheid schakelen
 nn:Finn: Slå av/på skil store/små bokstavar
 no:Søk: Bytt mellom store/små bokstaver
 pa:ਲੱਭੋ: ਕੇਸ ਮੈਚ ਟੌਗਲ ਕਰੋ
-pl:Znajdź: Przełącz wielkość liter
+pl: Znajdź: przełącz uwzględnianie wielkości liter
 pt:Localizar: Alternar Maiúsculas/Minúsculas
 ro:Găsește: Comută potrivire majuscule
 ru:Поиск: Учитывать регистр
@@ -16359,7 +16359,7 @@ nl:Passend in breedte
 nn:Tilpass breidde
 no:Tilpass til bredde
 pa:ਚੋੜਾਈ ਦੇ ਮੁਤਾਬਕ
-pl:Dopasuj szerokości strony
+pl:Dopasuj do szerokości
 pt:Ajustar à largura
 ro:Potrivire după lățime pagină
 ru:По ширине
@@ -16432,7 +16432,7 @@ nl:Passend in breedte en pagina's doorlopend
 nn:Tilpass bredde og vis sider kontinuerleg
 no:Tilpass bredde og vis sider kontinuerlig
 pa:ਚੌੜਾਈ ਫਿੱਟ ਕਰੋ ਅਤੇ ਪੰਨੇ ਲਗਾਤਾਰ ਦਿਖਾਓ
-pl:Dopasuj szerokość i wyświetlaj strony w układzie ciągłym
+pl:Dopasuj do szerokości i wyświetlaj strony w układzie ciągłym
 pt:Ajustar largura e mostrar páginas contínuas
 ro:Potrivire după lățime și afișare continuă a paginilor
 ru:Вписать по ширине и прокручивать непрерывно (не по страницам)
@@ -17016,7 +17016,7 @@ nl:Ga naar pagina...
 nn:Gå til side...
 no:Gå til side...
 pa:ਪੰਨੇ 'ਤੇ ਜਾਓ...
-pl:Przejdź do strony...
+pl:Idź do strony...
 pt:Ir para Página...
 ro:Mergi la pagina...
 ru:Перейти к странице...
@@ -17162,7 +17162,7 @@ nl:Help: over SumatraPDF
 nn:Hjelp: Om SumatraPDF
 no:Hjelp: Om SumatraPDF
 pa:ਮਦਦ: SumatraPDF ਬਾਰੇ
-pl:Pomoc: O programie SumatraPDF
+pl:Pomoc: o programie SumatraPDF
 pt:Ajuda: Sobre o SumatraPDF
 ro:Ajutor: Despre SumatraPDF
 ru:Справка: О программе SumatraPDF
@@ -17235,7 +17235,7 @@ nl:Help: sneltoetsen
 nn:Hjelp: Tastatursnarvegar
 no:Hjelp: Tastatursnarveier
 pa:ਮਦਦ: ਕੀਬੋਰਡ ਸ਼ਾਰਟਕੱਟ
-pl:Pomoc: Skróty klawiszowe
+pl:Pomoc: skróty klawiaturowe
 pt:Ajuda: Atalhos de Teclado
 ro:Ajutor: Scurtături tastatură
 ru:Справка: Сочетания клавиш
@@ -17308,7 +17308,7 @@ nl:Help: handleiding
 nn:Hjelp: Handbok
 no:Hjelp: Manual
 pa:ਮਦਦ: ਮੈਨੂਅਲ
-pl:Pomoc: Podręcznik
+pl:Pomoc: instrukcja obsługi
 pt:Ajuda: Manual
 ro:Ajutor: Manual
 ru:Справка: Руководство
@@ -17381,7 +17381,7 @@ nl:Help: handleiding op website
 nn:Hjelp: Handbok på nettstaden
 no:Hjelp: Manual på nettside
 pa:ਮਦਦ: ਵੈੱਬਸਾਈਟ 'ਤੇ ਮੈਨੂਅਲ
-pl:Pomoc: Podręcznik na stronie internetowej
+pl:Pomoc: instrukcja obsługi na stronie internetowej
 pt:Ajuda: Manual no Site
 ro:Ajutor: Manual pe site
 ru:Справка: Руководство на сайте
@@ -17454,7 +17454,7 @@ nl:Help: SumatraPDF Website
 nn:Hjelp: SumatraPDF-nettstaden
 no:Hjelp: SumatraPDF-nettside
 pa:ਮਦਦ: SumatraPDF ਵੈੱਬਸਾਈਟ
-pl:Pomoc: Strona SumatraPDF
+pl:Pomoc: strona internetowa programu SumatraPDF
 pt:Ajuda: Site do SumatraPDF
 ro:Ajutor: Site-ul web SumatraPDF
 ru:Справка: Веб-сайт SumatraPDF
@@ -18754,7 +18754,7 @@ nl:Omgekeerd zoeken starten
 nn:Køyr omvendt søk
 no:Start invers søk
 pa:ਉਲਟ ਖੋਜ ਚਲਾਓ
-pl:Wywołaj wyszukiwanie odwrotne
+pl:Wywołaj odwrotne wyszukiwanie
 pt:Invocar Busca Inversa
 ro:Invocă căutarea inversă
 ru:Вызвать обратный поиск
@@ -18973,7 +18973,7 @@ nl:Browser starten of commando uitvoeren met selectie
 nn:Start nettlesar eller køyr kommando med merkinga
 no:Start nettleser eller kjør kommando med markering
 pa:ਚੋਣ ਨਾਲ ਬ੍ਰਾਊਜ਼ਰ ਲਾਂਚ ਕਰੋ ਜਾਂ ਕਮਾਂਡ ਚਲਾਓ
-pl:Uruchom przeglądarkę lub wykonaj polecenie z zaznaczeniem
+pl:Uruchom przeglądarkę lub polecenie z zaznaczeniem
 pt:Abrir um navegador ou executar comando com seleção
 ro:Lansează un browser sau execută comanda cu selecția
 ru:Открыть браузер или выполнить команду с выделенным
@@ -19971,7 +19971,7 @@ nl:Framefocus verplaatsen
 nn:Flytt rammefokus
 no:Flytt rammefokus
 pa:ਫਰੇਮ ਫੋਕਸ ਬਦਲੋ
-pl:Przenieś fokus ramki
+pl:Przenieś uaktywnienie ramki
 pt:Mover Foco do Quadro
 ro:Mută focalizarea cadrului
 ru:Переместить фокус рамки
@@ -20044,7 +20044,7 @@ nl:Tabblad naar links
 nn:Flytt fane til venstre
 no:Flytt fane til venstre
 pa:ਟੈਬ ਖੱਬੇ ਲਿਜਾਓ
-pl:Przenieś kartę w lewo
+pl:Przesuń kartę w lewo
 pt:Mover Aba para Esquerda
 ro:Mută fila la stânga
 ru:Переместить вкладку влево
@@ -20117,7 +20117,7 @@ nl:Tabblad naar rechts
 nn:Flytt fane til høgre
 no:Flytt fane til høyre
 pa:ਟੈਬ ਸੱਜੇ ਲਿਜਾਓ
-pl:Przenieś kartę w prawo
+pl:Przesuń kartę w prawo
 pt:Mover Aba para Direita
 ro:Mută fila la dreapta
 ru:Переместить вкладку вправо
@@ -20190,7 +20190,7 @@ nl:Terug navigeren
 nn:Naviger tilbake
 no:Naviger tilbake
 pa:ਪਿੱਛੇ ਜਾਓ
-pl:Przejdź wstecz
+pl:Nawiguj wstecz
 pt:Navegar para Trás
 ro:Navighează înapoi
 ru:Назад
@@ -20263,7 +20263,7 @@ nl:Vooruit navigeren
 nn:Naviger fram
 no:Naviger fremover
 pa:ਅੱਗੇ ਜਾਓ
-pl:Przejdź do przodu
+pl:Nawiguj do przodu
 pt:Navegar para Frente
 ro:Navighează înainte
 ru:Вперёд
@@ -21696,7 +21696,7 @@ nl:Map openen in Double Commander
 nn:Opne mappe i Double Commander
 no:Åpne mappe i Double Commander
 pa:ਡਾਇਰੈਕਟਰੀ Double Commander ਵਿੱਚ ਖੋਲ੍ਹੋ
-pl:Otwórz katalog w Double Commander
+pl:Otwórz katalog w Double Commanderze
 pt:Abrir Diretório no Double Commander
 ro:Deschide directorul în Double Commander
 ru:Открыть каталог в Double Commander
@@ -21842,7 +21842,7 @@ nl:Map openen in Total Commander
 nn:Opne mappe i Total Commander
 no:Åpne mappe i Total Commander
 pa:ਡਾਇਰੈਕਟਰੀ Total Commander ਵਿੱਚ ਖੋਲ੍ਹੋ
-pl:Otwórz katalog w Total Commander
+pl:Otwórz katalog w Total Commanderze
 pt:Abrir Diretório no Total Commander
 ro:Deschide directorul în Total Commander
 ru:Открыть каталог в Total Commander
@@ -22568,6 +22568,7 @@ uk:Відкрити виділений документ
 uz:Tanlangan hujjatni ochish
 vn:Mở tài liệu đã chọn
 :Open With Pdf&Djvu Bookmarker
+pl:Otwórz za pomocą PDF & DjVu Bookmarkera
 :Open a document...
 af:Open 'n dokument...
 am:Բացել փաստաթուղթ...
@@ -23112,7 +23113,7 @@ nl:Openen met Foxit Reader
 nn:Opne i Foxit Reader
 no:Åpne i Foxit Reader
 pa:Foxit Reader ਵਿੱਚ ਖੋਲ੍ਹੋ
-pl:Otwórz w Foxit Reader
+pl:Otwórz w Foxit Readerze
 pt:Abrir no Foxit Reader
 ro:Deschide în Foxit Reader
 ru:Открыть в Foxit Reader
@@ -23304,7 +23305,7 @@ nl:Openen in Microsoft Xps Viewer
 nn:Opna i Microsoft Xps Viewer
 no:Åpne i Microsoft Xps Viewer
 pa:Microsoft Xps Viewer ਵਿੱਚ ਖੋਲ੍ਹੋ
-pl:Otwórz w przeglądarce Microsoft Xps
+pl:Otwórz w Microsoft XPS Viewer
 pt:Abrir no Visualizador Xps da Microsoft
 ro:Deschide în Microsoft Xps Viewer
 ru:Открыть в Microsoft Xps Viewer
@@ -25079,7 +25080,7 @@ nl:Presentatie zwarte achtergrond
 nn:Presentasjon med svart bakgrunn
 no:Presentasjon svart bakgrunn
 pa:ਪੇਸ਼ਕਾਰੀ ਕਾਲਾ ਬੈਕਗ੍ਰਾਉਂਡ
-pl:Prezentacja z czarnym tłem
+pl:Czarne tło prezentacji
 pt:Apresentação com Fundo Preto
 ro:Prezentare cu fundal negru
 ru:Презентация с чёрным фоном
@@ -25152,7 +25153,7 @@ nl:Presentatie witte achtergrond
 nn:Presentasjon med kvit bakgrunn
 no:Presentasjon hvit bakgrunn
 pa:ਪੇਸ਼ਕਾਰੀ ਚਿੱਟਾ ਬੈਕਗ੍ਰਾਉਂਡ
-pl:Prezentacja z białym tłem
+pl:Białe tło prezentacji
 pt:Apresentação com Fundo Branco
 ro:Prezentare cu fundal alb
 ru:Презентация с белым фоном
@@ -26372,7 +26373,7 @@ nl:Document opnieuw laden
 nn:Last dokument på nytt
 no:Last inn dokument på nytt
 pa:ਦਸਤਾਵੇਜ਼ ਮੁੜ ਲੋਡ ਕਰੋ
-pl:Przeładuj dokument
+pl:Załaduj ponownie dokument
 pt:Recarregar Documento
 ro:Reîncarcă documentul
 ru:Перезагрузить документ
@@ -27308,7 +27309,7 @@ nl:SVG Documenten
 nn:SVG-dokument
 no:SVG-dokumenter
 pa:SVG ਦਸਤਾਵੇਜ਼
-pl:Documenty SVG
+pl:Dokumenty SVG
 pt:Documentos SVG
 ro:Documente SVG
 ru:Документы SVG
@@ -27381,7 +27382,7 @@ nl:Annotaties opslaan in een nieuwe PDF
 nn:Lagra merknadar til ny PDF
 no:Lagre merknader til en ny PDF
 pa:ਟਿੱਪਣੀਆਂ ਨੂੰ ਨਵੀਂ PDF ਵਿੱਚ ਸੰਭਾਲੋ
-pl:Zapisz adnotacje do nowego PDF
+pl:Zapisz adnotacje w nowym pliku PDF
 pt:Salvar Anotações em um novo PDF
 ro:Salvează adnotările într-un PDF nou
 ru:Сохранить аннотации в новый PDF
@@ -27454,7 +27455,7 @@ nl:Aantekeningen opslaan in deze PDF
 nn:Lagra merknadar til eksisterande PDF
 no:Lagre merknader til eksisterende PDF
 pa:ਟਿੱਪਣੀਆਂ ਨੂੰ ਮੌਜੂਦਾ PDF ਵਿੱਚ ਸੰਭਾਲੋ
-pl:Zapisz adnotacje do istniejącego pliku PDF
+pl:Zapisz adnotacje w istniejącym pliku PDF
 pt:Guardar anotações em PDF existente
 ro:Salvează adnotări în PDF existent
 ru:Со&хранить аннотации в имеющемся PDF
@@ -28948,7 +28949,7 @@ nl:Selectie zoeken met Bing
 nn:Søk i vald tekst med Bing
 no:Søk i utvalg med Bing
 pa:Bing ਨਾਲ ਚੋਣ ਖੋਜੋ
-pl:Szukaj zaznaczenia w Bing
+pl:Szukaj zaznaczenia za pomocą Bing
 pt:Pesquisar Seleção com Bing
 ro:Caută selecția cu Bing
 ru:Искать выделенное в Bing
@@ -29021,7 +29022,7 @@ nl:Selectie zoeken met Google
 nn:Søk i vald tekst med Google
 no:Søk i utvalg med Google
 pa:Google ਨਾਲ ਚੋਣ ਖੋਜੋ
-pl:Szukaj zaznaczenia w Google
+pl:Szukaj zaznaczenia za pomocą Google
 pt:Pesquisar Seleção com Google
 ro:Caută selecția cu Google
 ru:Искать выделенное в Google
@@ -29094,7 +29095,7 @@ nl:Selectie zoeken met Google Scholar
 nn:Søk i vald tekst med Google Scholar
 no:Søk i utvalg med Google Scholar
 pa:Google Scholar ਨਾਲ ਚੋਣ ਖੋਜੋ
-pl:Szukaj zaznaczenia w Google Scholar
+pl:Szukaj zaznaczenia za pomocą Google Scholar
 pt:Pesquisar Seleção com Google Scholar
 ro:Caută selecția cu Google Scholar
 ru:Искать выделенное в Google Scholar
@@ -29167,7 +29168,7 @@ nl:Selectie zoeken met Wikipedia
 nn:Søk i vald tekst med Wikipedia
 no:Søk i utvalg med Wikipedia
 pa:Wikipedia ਨਾਲ ਚੋਣ ਖੋਜੋ
-pl:Szukaj zaznaczenia w Wikipedii
+pl:Szukaj zaznaczenia za pomocą Wikipedii
 pt:Pesquisar Seleção com Wikipedia
 ro:Caută selecția cu Wikipedia
 ru:Искать выделенное в Википедии
@@ -30002,7 +30003,7 @@ ne:&ई-मेल द्वारा पठाउनुहोस्...
 nl:Verzend per &E-Mail...
 nn:Send med &E-post...
 no:Send med E-post...
-pl:Dołącz do wiadomości &e-mail...
+pl:Wyślij &e-mailem...
 pt:&Enviar por e-mail..
 ro:Trimite prin &E-mail...
 ru:Отправить по &электронной почте...
@@ -31425,7 +31426,7 @@ nl:Slim volgend tabblad
 nn:Smart neste fane
 no:Smart neste fane
 pa:ਸਮਾਰਟ ਅਗਲਾ ਟੈਬ
-pl:Inteligentna następna karta
+pl:Następna karta inteligentnie
 pt:Próximo Separador Inteligente
 ro:Filă următoare inteligentă
 ru:Умная следующая вкладка
@@ -33250,7 +33251,7 @@ nl:Anti-aliasing schakelen
 nn:Slå av/på kantutjamning
 no:Veksle kantutjevning
 pa:ਐਂਟੀ-ਐਲੀਅਸ ਰੈਂਡਰਿੰਗ ਟੌਗਲ ਕਰੋ
-pl:Przełącz renderowanie wygładzające
+pl:Przełącz renderowanie antyaliasingowe
 pt:Alternar Renderização Anti-Alias
 ro:Comută redare anti-alias
 ru:Переключить сглаживание
@@ -33615,7 +33616,7 @@ nl:Vaak gelezen schakelen
 nn:Slå av/på ofte lesne
 no:Veksle ofte lest
 pa:ਅਕਸਰ ਪੜ੍ਹੇ ਗਏ ਟੌਗਲ ਕਰੋ
-pl:Przełącz często czytane
+pl:Przełącz ostatnio otwierane
 pt:Alternar Lidos Frequentemente
 ro:Comută citite frecvent
 ru:Переключить часто читаемое
@@ -33688,7 +33689,7 @@ nl:Volledig scherm schakelen
 nn:Slå av/på fullskjerm
 no:Veksle fullskjerm
 pa:ਪੂਰੀ ਸਕਰੀਨ ਟੌਗਲ ਕਰੋ
-pl:Przełącz pełny ekran
+pl:Przełącz tryb pełnoekranowy
 pt:Alternar Ecrã Inteiro
 ro:Comută ecran complet
 ru:Переключить полноэкранный режим
@@ -33761,7 +33762,7 @@ nl:Omgekeerd zoeken schakelen
 nn:Slå av/på omvendt søk
 no:Veksle omvendt søk
 pa:ਉਲਟ ਖੋਜ ਟੌਗਲ ਕਰੋ
-pl:Przełącz wyszukiwanie odwrotne
+pl:Przełącz odwrotne wyszukiwanie
 pt:Alternar Pesquisa Inversa
 ro:Comută căutare inversă
 ru:Переключить обратный поиск
@@ -34199,7 +34200,7 @@ nl:Annotaties weergeven schakelen
 nn:Slå av/på vis merknadar
 no:Veksle vis merknader
 pa:ਟਿੱਪਣੀਆਂ ਦਿਖਾਓ ਟੌਗਲ ਕਰੋ
-pl:Przełącz wyświetlanie adnotacji
+pl:Przełącz pokazywanie adnotacji
 pt:Alternar Mostrar Anotações
 ro:Comută afișare adnotări
 ru:Переключить отображение аннотаций
@@ -34272,7 +34273,7 @@ nl:Links weergeven schakelen
 nn:Slå av/på vis lenkjer
 no:Veksle vis lenker
 pa:ਲਿੰਕ ਦਿਖਾਓ ਟੌਗਲ ਕਰੋ
-pl:Przełącz wyświetlanie linków
+pl:Przełącz pokazywanie odnośników
 pt:Alternar Mostrar Ligações
 ro:Comută afișare linkuri
 ru:Переключить отображение ссылок
@@ -35342,7 +35343,7 @@ nl:Weergeven met aangepaste externe viewer
 nn:Vis med tilpassa ekstern visar
 no:Vis med egendefinert ekstern viser
 pa:ਕਸਟਮ ਬਾਹਰੀ ਦਰਸ਼ਕ ਨਾਲ ਦੇਖੋ
-pl:Otwórz w niestandardowej przeglądarce zewnętrznej
+pl:Widok za pomocą niestandardowej przeglądarki zewnętrznej
 pt:Ver com Visualizador Externo Personalizado
 ro:Vizualizează cu vizualizator extern personalizat
 ru:Просмотреть в стороннем приложении
@@ -35415,7 +35416,7 @@ nl:Weergave: Presentatiemodus
 nn:Vising: Presentasjonsmodus
 no:Visning: Presentasjonsmodus
 pa:ਦ੍ਰਿਸ਼: ਪ੍ਰਸਤੁਤੀ ਮੋਡ
-pl:Widok: Tryb prezentacji
+pl:Widok: tryb prezentacji
 pt:Vista: Modo de Apresentação
 ro:Vizualizare: Mod prezentare
 ru:Режим презентации
@@ -37312,7 +37313,7 @@ nl:Zoom: Werkelijke grootte
 nn:Zoom: Faktisk storleik
 no:Zoom: Faktisk størrelse
 pa:ਜ਼ੂਮ: ਅਸਲ ਆਕਾਰ
-pl:Powiększenie: Rzeczywisty rozmiar
+pl:Powiększenie: rozmiar rzeczywisty
 pt:Zoom: Tamanho Real
 ro:Zoom: Dimensiune reală
 ru:Масштаб: реальный размер
@@ -37385,7 +37386,7 @@ nl:Zoom: Aangepast...
 nn:Zoom: Tilpassa...
 no:Zoom: Tilpasset...
 pa:ਜ਼ੂਮ: ਕਸਟਮ...
-pl:Powiększenie: Niestandardowe...
+pl:Powiększenie: niestandardowe...
 pt:Zoom: Personalizado...
 ro:Zoom: Personalizat...
 ru:Масштаб: произвольный...
@@ -37458,7 +37459,7 @@ nl:Zoom: Inhoud aanpassen
 nn:Zoom: Tilpass innhald
 no:Zoom: Tilpass innhold
 pa:ਜ਼ੂਮ: ਸਮੱਗਰੀ ਫਿੱਟ ਕਰੋ
-pl:Powiększenie: Dopasuj zawartość
+pl:Powiększenie: dopasuj do zawartości
 pt:Zoom: Ajustar Conteúdo
 ro:Zoom: Potrivește conținutul
 ru:Масштаб: по содержимому
@@ -37531,7 +37532,7 @@ nl:Zoom: Pagina aanpassen
 nn:Zoom: Tilpass side
 no:Zoom: Tilpass side
 pa:ਜ਼ੂਮ: ਪੰਨਾ ਫਿੱਟ ਕਰੋ
-pl:Powiększenie: Dopasuj stronę
+pl:Powiększenie: dopasuj do całej strony
 pt:Zoom: Ajustar Página
 ro:Zoom: Potrivește pagina
 ru:Масштаб: по размеру страницы
@@ -37604,7 +37605,7 @@ nl:Zoom: Pagina aanpassen en enkele pagina
 nn:Zoom: Tilpass side og enkeltside
 no:Zoom: Tilpass side og enkeltside
 pa:ਜ਼ੂਮ: ਪੰਨਾ ਫਿੱਟ ਕਰੋ ਅਤੇ ਇਕੱਲਾ ਪੰਨਾ
-pl:Powiększenie: Dopasuj stronę i pojedyncza strona
+pl:Powiększenie: dopasuj do całej i pojedynczej strony
 pt:Zoom: Ajustar Página e Página Única
 ro:Zoom: Potrivire pagină și pagină unică
 ru:Масштаб: по размеру страницы и одна страница
@@ -37677,7 +37678,7 @@ nl:Zoom: passend maken aan breedte
 nn:Zoom: Tilpass breidde
 no:Zoom: Tilpass bredde
 pa:ਜ਼ੂਮ: ਚੌੜਾਈ ਫਿੱਟ ਕਰੋ
-pl:Powiększenie: Dopasuj szerokość
+pl:Powiększenie: dopasuj do szerokości strony
 pt:Zoom: Ajustar Largura
 ro:Zoom: Potrivire lățime
 ru:Масштаб: по ширине
@@ -37750,7 +37751,7 @@ nl:Zoom: passend maken aan breedte en doorlopend
 nn:Zoom: Tilpass breidde og samanhengande
 no:Zoom: Tilpass bredde og kontinuerlig
 pa:ਜ਼ੂਮ: ਚੌੜਾਈ ਫਿੱਟ ਕਰੋ ਅਤੇ ਨਿਰੰਤਰ
-pl:Powiększenie: Dopasuj szerokość i ciągły widok
+pl:Powiększenie: dopasuj do szerokości i w układzie ciągłym
 pt:Zoom: Ajustar Largura e Contínuo
 ro:Zoom: Potrivire lățime și continuu
 ru:Масштаб: по ширине и непрерывно

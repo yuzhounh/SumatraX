@@ -1,5 +1,5 @@
 AppTranslator: SumatraPDF
-7d035abe9afbe0b47fd3b84074e424d4ab7f0c23
+a5e66a0a005553b326474bec176383ea87013be9
 :%s annotation. Ctrl+click to edit.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
 ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
@@ -4444,8 +4444,10 @@ uz:Qo'shimcha
 vn:Nâng cao
 :Advanced Options...
 pl:Opcje zaawansowane...
+sk:Pokročilé možnosti
 :Advanced Settings...
 pl:Ustawienia zaawansowane...
+sk:Pokročilé možnosti…
 :All files
 am:Բոլոր ֆայլերը
 ar:كل الملفات
@@ -6095,8 +6097,10 @@ uz:Tilni o'zgartirish (Change Language)
 vn:Đổi ngôn ngữ (Change Language)
 :Change Language...
 pl:Zmień język...
+sk:Zmeniť jazyk…
 :Check For Updates
 pl:Sprawdź aktualizacje
+sk:Skontrolovať aktualizácie
 :Check for &Updates
 af:Kyk Vir Nuwe Uitgawe
 am:&Ստուգել նոր տարբերակը
@@ -7562,7 +7566,7 @@ uz:Fayl yo‘lini nusxalash
 :Copy Image
 pl:Kopiuj obraz
 :Copy Link Target
-pl:Kopiuj łącze docelowe
+pl:Kopiuj cel z odnośnika
 :Copy Selection
 pl:Kopiuj zaznaczenie
 :Copy To Clipboard
@@ -8594,24 +8598,41 @@ uk:Створити анотацію з виділеного
 uz:Tanlovdan izoh yaratish
 vn:Thêm Chú Thích Từ Phần Được Chọn
 :Create Caret Annotation
-pl:Utwórz adnotację karety
+pl:Utwórz adnotację karetą
 :Create Circle Annotation
+pl:Utwórz adnotację okręgiem
 :Create File Attachment Annotation
+pl:Utwórz adnotację załącznikem pliku
 :Create Free Text Annotation
+pl:Utwórz adnotację dowolnym tekstem
 :Create Highlight Annotation
+pl:Utwórz adnotację wyróżnieniem
 :Create Ink Annotation
+pl:Utwórz adnotację atramentem
 :Create Line Annotation
+pl:Utwórz adnotację linią
 :Create Link Annotation
+pl:Utwórz adnotację odnośnikiem
 :Create Poly Line Annotation
+pl:Utwórz adnotację polilinią
 :Create Polygon Annotation
+pl:Utwórz adnotację wielokątem
 :Create Popup Annotation
+pl:Utwórz adnotację wyskakującym okienkiem
 :Create Redact Annotation
+pl:Utwórz adnotację redagowaniem
 :Create Square Annotation
+pl:Utwórz adnotację kwadratem
 :Create Squiggly Annotation
+pl:Utwórz adnotację falowaniem
 :Create Stamp Annotation
+pl:Utwórz adnotację pieczęcią
 :Create Strike Out Annotation
+pl:Utwórz adnotację skreśleniem
 :Create Text Annotation
+pl:Utwórz adnotację tekstem
 :Create Underline Annotation
+pl:Utwórz adnotację podkreśleniem
 :Created:
 af:Geskep
 am:Ստեղծված`
@@ -9066,13 +9087,21 @@ uk:Дата:
 uz:Sana:
 vn:Ngày:
 :Debug: Corrupt Memory
+pl:Debugowanie: uszkodź pamięć
 :Debug: Crash Me
+pl:Debugowanie: zawieś mnie
 :Debug: Download Symbols
+pl:Debugowanie: pobierz symbole
 :Debug: Show Notification
+pl:Debugowanie: pokaż powiadomienie
 :Debug: Start Stress Test
+pl:Debugowanie: rozpocznij test obciążeniowy
 :Debug: Test App
+pl:Debugowanie: testuj aplikację
 :Debug: Toggle Predictive Rendering
+pl:Debugowanie: przełącz renderowanie predykcyjne
 :Debug: Toggle Rtl
+pl:Debugowanie: przełącz RTL
 :Default &Layout:
 am:Ծրագրային &դասավորություն.
 ar:التخطيط الافتراضي&
@@ -9297,7 +9326,9 @@ tw:刪除註解
 uk:Видалити анотацію
 uz:Izohni o‘chirish
 :Delete Favorite
+pl:Usuń ulubione
 :Delete File
+pl:Usuń plik
 :Denied Permissions:
 am:Լիազորությունները մերժված են.
 ar:رفض الأذونات:
@@ -9436,6 +9467,7 @@ uk:Документи DjVu
 uz:DjVu hujjatlari
 vn:Tập tin DjVu
 :Do nothing
+pl:Nic nie rób
 :Document Properties
 am:Ֆայլի հատկությունները
 ar:خصائص المستند
@@ -10223,7 +10255,9 @@ uk:Помилка завантаження %s
 uz:%s yuklab olish xatosi
 vn:Không mở %s được
 :Execute a program
+pl:Uruchom program
 :Exit Application
+pl:Wyjdź z programu
 :Expand All
 am:Ընդարձակել բոլորը
 ar:بسط الكل
@@ -10526,6 +10560,7 @@ uk:Дві сторінки
 uz:Ikkita betdan
 vn:Trang kép
 :Facing View
+pl:Widok wielu stron
 :Failed to delete uninstaller registry keys
 am:Հնարավոր չեղավ ջնջել Գրանցատեղիի բանալիները
 ar:فشل في حذف مفاتيح مكتب تسجيل إلغاء التثبيت
@@ -11523,6 +11558,7 @@ uk:Знайти наступне
 uz:Keyingisini qidirish
 vn:Tìm xuống
 :Find Next Selection
+pl:Znajdź następne zaznaczenie
 :Find Previous
 af:Soek Vorige
 am:Գտնել նախորդը
@@ -11597,6 +11633,7 @@ uk:Знайти попереднє
 uz:Oldingisini qidirish
 vn:Tìm lên
 :Find Previous Selection
+pl:Znajdź poprzednie zaznaczenie
 :Find:
 af:Soek:
 am:Գտնել.
@@ -11671,7 +11708,9 @@ uk:Знайти:
 uz:Qidirish:
 vn:Tìm kiếm:
 :Find: Toggle Match Case
+pl: Znajdź: przełącz uwzględnianie wielkości liter
 :First Page
+pl:Pierwsza strona
 :Fit &Content
 am:Հարմարեցնել &բովանդակությունը
 ar:لائم ال&محتوى
@@ -12014,7 +12053,7 @@ nl:Passend in breedte
 nn:Tilpass breidde
 no:Tilpass til bredde
 pa:ਚੋੜਾਈ ਦੇ ਮੁਤਾਬਕ
-pl:Dopasuj szerokości strony
+pl:Dopasuj do szerokości
 pt:Ajustar à largura
 ro:Potrivire după lățime pagină
 ru:По ширине
@@ -12080,7 +12119,7 @@ ne:चौडाई अटाउनुहोस् र पृष्ठहरु �
 nl:Passend in breedte en pagina's doorlopend
 nn:Tilpass bredde og vis sider kontinuerleg
 no:Tilpass bredde og vis sider kontinuerlig
-pl:Dopasuj szerokość i wyświetlaj strony w układzie ciągłym
+pl:Dopasuj do szerokości i wyświetlaj strony w układzie ciągłym
 pt:Ajustar largura e mostrar páginas contínuas
 ro:Potrivire după lățime și afișare continuă a paginilor
 ru:Вписать по ширине и прокручивать непрерывно (не по страницам)
@@ -12560,6 +12599,7 @@ uk:Отримати інформацію про шрифти
 uz:Shriftlar haqida ma’lumot olish
 vn:Lấy Thông Tin Fonts
 :Go to Page...
+pl:Idź do strony...
 :Go to page
 af:Gaan Na Bladsy
 am:Անցնել էջի
@@ -12634,10 +12674,15 @@ uk:Перейти на сторінку
 uz:Betga o'tish
 vn:Nhảy đến trang
 :Help: About SumatraPDF
+pl:Pomoc: o programie SumatraPDF
 :Help: Keyboard Shortcuts
+pl:Pomoc: skróty klawiaturowe
 :Help: Manual
+pl:Pomoc: instrukcja obsługi
 :Help: Manual On Website
+pl:Pomoc: instrukcja obsługi na stronie internetowej
 :Help: SumatraPDF Website
+pl:Pomoc: strona internetowa programu SumatraPDF
 :Hide &Options
 am:Թաքցնել &ընտրանքները
 ar:إخفاء &الخيارات
@@ -12705,6 +12750,7 @@ uk:Приховати налаштування
 uz:&Parametrlarni yashirish
 vn:Thiết lập ẩn và tùy chọn
 :Hide Annotations
+pl:Ukryj adnotacje
 :Hide frequently read
 am:Թաքցնել հաճախակի բացվածները
 ar:إخفاء الأكثر قراءة
@@ -13565,7 +13611,9 @@ uk:Колір інтер'єру:
 uz:Ichki rangi:
 vn:Màu Bên Trong:
 :Invert Colors
+pl:Odwróć kolory
 :Invoke Inverse Search
+pl:Wywołaj odwrotne wyszukiwanie
 :KB
 af:KB
 am:ԿԲ
@@ -13640,7 +13688,9 @@ uk:KB
 uz:KB
 vn:KB
 :Last Page
+pl:Ostatnia strona
 :Launch a browser or run command with selection
+pl:Uruchom przeglądarkę lub polecenie z zaznaczeniem
 :Let Windows Desktop Search &search PDF documents
 am:Թույլատրել Windows Desktop Search-ին &PDF ֆայլերի որոնումը
 ar:دع &بحث Windows يبحث في مستندات PDF
@@ -14442,10 +14492,15 @@ uk:Змінено:
 uz:O'zgartirilgan:
 vn:Ngày chỉnh sửa
 :Move Frame Focus
+pl:Przenieś uaktywnienie ramki
 :Move Tab Left
+pl:Przesuń kartę w lewo
 :Move Tab Right
+pl:Przesuń kartę w prawo
 :Navigate Back
+pl:Nawiguj wstecz
 :Navigate Forward
+pl:Nawiguj do przodu
 :New &window
 am:Նոր &պատուհան
 ar:&نافذة جديدة
@@ -14630,6 +14685,7 @@ uk:Наступна сторінка
 uz:Keyingi bet
 vn:Trang sau
 :Next Tab
+pl:Następna karta
 :No
 am:Ոչ
 ar:كلا
@@ -15378,11 +15434,17 @@ tw:開啟附件
 uk:Відкрити вкладення
 uz:Ilovani ochish
 :Open Current Document In New Tab
+pl:Otwórz bieżący dokument w nowej karcie
 :Open Current Document In New Window
+pl:Otwórz bieżący dokument w nowym oknie
 :Open Directory In Directory Opus
+pl:Otwórz katalog w Directory Opus
 :Open Directory In Double Commander
+pl:Otwórz katalog w Double Commanderze
 :Open Directory In Explorer
+pl:Otwórz katalog w Eksploratorze
 :Open Directory In Total Commander
+pl:Otwórz katalog w Total Commanderze
 :Open Directory in &Double Commander
 am:Բացել գրացուցակը &Double Commander-ում
 ar:افتح الم&جلد في Double Commander
@@ -15634,6 +15696,7 @@ uk:Відкрити вкладений PDF
 uz:Ichki PDF faylini ochish
 vn:Mở PDF Đã Nhúng
 :Open File...
+pl:Otwórz plik...
 :Open In New Window
 am:Բացել նոր պատուհանում
 ar:افتح في نافذة جديدة
@@ -15683,6 +15746,7 @@ tr:Yeni Pencerede Aç
 tw:在新視窗中開啟
 uz:Yangi oynada ochish
 :Open New SumatraPDF Window
+pl:Otwórz nowe okno SumatraPDF
 :Open Next File In Folder
 am:Բացել հաջորդ ֆայլը պանակից
 ar:افتح الملف التالي في المجلد
@@ -15760,7 +15824,9 @@ tr:Klasördeki Önceki Dosyayı Aç
 tw:開啟資料夾內的上一個檔案
 uz:Papkadagi oldingi faylni ochish
 :Open Selected Document
+pl:Otwórz zaznaczony dokument
 :Open With Pdf&Djvu Bookmarker
+pl:Otwórz za pomocą PDF & DjVu Bookmarkera
 :Open a document...
 am:Բացել փաստաթուղթ...
 ar:فتح مستند...
@@ -16096,8 +16162,11 @@ uk:Відкрити у Microsoft XPS-Viewer
 uz:Microsoft XPS-Viewerda ochish
 vn:Mở bằng Microsoft XPS-Viewer
 :Open in Adobe Acrobat
+pl:Otwórz w Adobe Acrobat
 :Open in Foxit PhantomPDF
+pl:Otwórz w Foxit PhantomPDF
 :Open in Foxit Reader
+pl:Otwórz w Foxit Readerze
 :Open in Microsoft &HTML Help
 am:Բացել Microsoft &HTML Օգնությունում
 ar:افتح في برنامج م&ساعدة HTML مايكروسوفت
@@ -16145,9 +16214,13 @@ tr:Dizini Microsoft &HTML ile aç
 tw:在 Microsoft HTML 說明中開啟(&H)
 uz:Microsoft &HTML Help’da ochish
 :Open in Microsoft HTML Help
+pl:Otwórz w Microsoft HTML Help
 :Open in Microsoft Xps Viewer
+pl:Otwórz w Microsoft XPS Viewer
 :Open in PDF-XChange
+pl:Otwórz w PDF-XChange
 :Options...
+pl:Opcje...
 :P&roperties
 am:Հ&ատկություններ
 ar:الخصائص
@@ -17009,6 +17082,7 @@ uk:Документи PalmDoc
 uz:PalmDoc ho'jjatlari
 vn:Tài liệu PalmDoc
 :Pin Selected Document
+pl:Przypnij zaznaczony dokument
 :Please close %s to proceed!
 am:Շարունակելուց առաջ փակեք %s-ը:
 ar: !المضي قدما %s الرجاء اغلاق
@@ -17474,7 +17548,9 @@ uk:Презентація
 uz:Taqdimot
 vn:Trình Chiếu
 :Presentation Black Background
+pl:Czarne tło prezentacji
 :Presentation White Background
+pl:Białe tło prezentacji
 :Previous Page
 af:Vorige Bladsy
 am:Նախորդ էջը
@@ -17548,6 +17624,7 @@ uk:Попередня сторінка
 uz:Oldingi bet
 vn:Trang trước
 :Previous Tab
+pl:Poprzednia karta
 :Print
 am:Տպել
 ar:طباعة
@@ -17617,6 +17694,7 @@ uk:Друк
 uz:Chop etish
 vn:In
 :Print Document...
+pl:Drukuj dokument...
 :Print range
 am:Տպելու կարգը
 ar:نطاق الطباعة
@@ -18308,6 +18386,7 @@ uk:Редагувати
 uz:Tahrirlash
 vn:Biên tập
 :Reload Document
+pl:Załaduj ponownie dokument
 :Remember &opened files
 am:Հիշել &բացված ֆայլերը
 ar:تذكر الملفات المفتوحة
@@ -18375,6 +18454,7 @@ uk:Запам'ятати відкриті файли
 uz:&Ochilgan fayllarni eslab qolish
 vn:Nhớ các tập tin đã mở
 :Remove Selected Document From History
+pl:Usuń zaznaczony dokument z historii
 :Remove from favorites
 af:Verwyder van gunstelinge
 am:Հեռացնել ընտրյալներից
@@ -18508,6 +18588,7 @@ uk:Видалити %s сторінку із закладок
 uz:%s betni tanlanganlardan o'chirish
 vn:Xoá trang %s khỏi Ưa thích
 :Rename File...
+pl:Zmień nazwę pliku...
 :Rename To
 af:Hernoem na
 am:Վերանվանել՝
@@ -18578,6 +18659,7 @@ uk:Перейменувати в
 uz:Yangi nom
 vn:Đổi tên thành
 :Reopen Last Closed
+pl:Otwórz ponownie ostatnio zamknięty
 :Rotate &Left
 am:Պտտել &ձախ
 ar:دوّ&ر يسارا
@@ -18683,7 +18765,9 @@ uk:Повернути за годинниковою стрілкою
 uz:O‘ngga burish
 vn:Quay &Phải
 :Rotate Left
+pl:Obróć w lewo
 :Rotate Right
+pl:Obróć w prawo
 :S&election
 am:Ը&նտրում
 ar:ال&تحديد
@@ -18832,7 +18916,7 @@ my:Dokumen SVG
 nl:SVG Documenten
 nn:SVG-dokument
 no:SVG-dokumenter
-pl:Documenty SVG
+pl:Dokumenty SVG
 pt:Documentos SVG
 ro:Documente SVG
 ru:Документы SVG
@@ -18850,6 +18934,7 @@ uk:SVG документи
 uz:SVG hujjatlari
 vn:Các Tài Liệu SVG
 :Save Annotations to a new PDF
+pl:Zapisz adnotacje w nowym pliku PDF
 :Save Annotations to existing PDF
 am:Պահել ծանոթագրությունը առկա PDF-ում
 ar:حفظ التوضيحات في ملف PDF الحالي
@@ -18887,7 +18972,7 @@ lv:Saglabāt anotācijas esošos PDF failos
 my:Simpan Anotasi pada PDF sedia ada
 nl:Aantekeningen opslaan in deze PDF
 no:Lagre merknader til eksisterende PDF
-pl:Zapisz adnotacje do istniejącego pliku PDF
+pl:Zapisz adnotacje w istniejącym pliku PDF
 pt:Guardar anotações em PDF existente
 ro:Salvează adnotări în PDF existent
 ru:Со&хранить аннотации в имеющемся PDF
@@ -19011,6 +19096,7 @@ uk:Зберегти вкладений файл...
 uz:Ichki faylni saqlash...
 vn:Lưu Tập Đã Nhúng...
 :Save File As...
+pl:Zapisz plik jako...
 :Save S&hortcut...
 am:Պահել դ&յուրանցումը...
 ar:احفظ الا&ختصار...
@@ -19395,19 +19481,33 @@ uk:Не вдалося зберегти '%s' з допомогою: '%s'
 uz:'%s' ni saqlash muvaffaqiyatsiz tugadi: '%s'
 vn:Đang lưu '%s' lỗi với: '%s'
 :Scroll Down
+pl:Przewiń w dół
 :Scroll Down By Half Page
+pl:Przewiń w dół o pół strony
 :Scroll Down By Page
+pl:Przewiń w dół o stronę
 :Scroll Left
+pl:Przewiń w lewo
 :Scroll Left By Page
+pl:Przewiń w lewo o stronę
 :Scroll Right
+pl:Przewiń w prawo
 :Scroll Right By Page
+pl:Przewiń w prawo o stronę
 :Scroll Up
+pl:Przewiń w górę
 :Scroll Up By Half Page
+pl:Przewiń w górę o pół strony
 :Scroll Up By Page
+pl:Przewiń w górę o stronę
 :Search Selection with Bing
+pl:Szukaj zaznaczenia za pomocą Bing
 :Search Selection with Google
+pl:Szukaj zaznaczenia za pomocą Google
 :Search Selection with Google Scholar
+pl:Szukaj zaznaczenia za pomocą Google Scholar
 :Search Selection with Wikipedia
+pl:Szukaj zaznaczenia za pomocą Wikipedii
 :Search With &Bing
 am:Որոնել &Bing-ով
 ar:بحث في &Bing
@@ -19730,6 +19830,7 @@ uk:Вибрати все
 uz:&Hammasini tanlash
 vn:Chọn hết
 :Select All
+pl:Zaznacz wszystko
 :Select content with Ctrl+left mouse button
 am:Նշել ընտրվածը Ctrl+մկնիկի ձախ կոճակով
 ar:حدد المحتوى بالضغط على زر الفأرة الأيسر و Ctrl
@@ -19797,6 +19898,7 @@ uk:Виберіть вміст з допомогою Ctrl+ліва кнопка 
 uz:Ctrl va sichqonchaning chap tugmasini bosib tarkibini tanlang
 vn:Đánh dấu nội dung bằng Ctrl+phím chuột trái
 :Select next theme
+pl:Wybierz następny motyw
 :Select the folder where SumatraPDF should be installed:
 am:Ընտրեք պանակ, որտեղ պետք է տեղադրվի SumatraPDF-ը՝
 ar:حدد المجلد الذي يجب أن يثبت فيه SumatraPDF:
@@ -19929,6 +20031,7 @@ uk:Виділення:
 uz:Tanlash:
 vn:Lựa chọn:
 :Send Document By Email...
+pl:Wyślij dokument e-mailem...
 :Send by &E-mail...
 am:Ուղարկել &էլ. փոստով
 ar:إرسال ب&البريد الإلكتروني
@@ -19977,7 +20080,7 @@ ne:&ई-मेल द्वारा पठाउनुहोस्...
 nl:Verzend per &E-Mail...
 nn:Send med &E-post...
 no:Send med E-post...
-pl:Dołącz do wiadomości &e-mail...
+pl:Wyślij &e-mailem...
 pt:&Enviar por e-mail..
 ro:Trimite prin &E-mail...
 ru:Отправить по &электронной почте...
@@ -20068,6 +20171,7 @@ uk:Установити зворотній пошук.
 uz:Teskari qidirish buyruq satrini moslash
 vn:Đặt dòng lệnh tìm kiếm ngược
 :Set theme
+pl:Ustaw motyw
 :Show &Bookmarks
 am:Ցուցադրել &Էջանիշերը
 ar:اظهار &قوائم العناوين
@@ -20385,6 +20489,7 @@ uk:Показати панель інструментів
 uz:&Asboblar panelini ko'rsatish
 vn:Hiện thanh công cụ
 :Show Annotations
+pl:Pokaż adnotacje
 :Show Book&marks
 am:Ցուցադրել էջա&նիշերը
 ar:إظهار ال&علامات
@@ -20437,6 +20542,7 @@ uk:Показати закладки
 uz:Belgilangan sahifalarni ko‘rsatish
 vn:Hiển thị Dấu &trang
 :Show Document Properties...
+pl:Pokaż właściwości dokumentu...
 :Show Favorites
 am:Ցուցադրել ընտրյալները
 ar:إظهار المفضلة
@@ -20504,7 +20610,9 @@ uk:Перелік закладок
 uz:Tanlanganlarni ko'rsatish
 vn:Hiện Ưa thích
 :Show File In Folder...
+pl:Pokaż plik w folderze...
 :Show Logs
+pl:Pokaż dzienniki
 :Show Scr&ollbars
 am:Ցուցադրել ոլո&րագոտիները
 ar:إظهار أشرطة التمرير
@@ -20875,7 +20983,9 @@ uk:Одна сторінка
 uz:Bitta bet
 vn:Trang đơn
 :Single Page View
+pl:Widok pojedynczej strony
 :Smart Next Tab
+pl:Następna karta inteligentnie
 :Sorry, that shouldn't have happened!\n\nPlease press 'Cancel', if you want to help us fix the cause of this crash.
 am:Կներեք, սա չպետք է տեղի ունենար։\n\nՍեղմեք 'Չեղարկել'՝եթե ցանկանում եք օգնել մեզ վերացնելու այս սխալը։
 ar:الرجاء اضغط 'إلغاء الأمر'، إذا كنت ترغب في مساعدتنا على إصلاح هذا الحادث \n\n !آسف، أنه لا ينبغي أن يكون قد حدث
@@ -22414,14 +22524,23 @@ uk:Заголовок:
 uz:Sarlavha:
 vn:Tựa đề
 :Toggle Anti-Alias Rendering
+pl:Przełącz renderowanie antyaliasingowe
 :Toggle Bookmarks
+pl:Przełącz zakładki
 :Toggle Continuous View
+pl:Przełącz widok ciągły
 :Toggle Cursor Position
+pl:Przełącz pozycję kursora
 :Toggle Favorites
+pl:Przełącz ulubione
 :Toggle Frequently Read
+pl:Przełącz ostatnio otwierane
 :Toggle Fullscreen
+pl:Przełącz tryb pełnoekranowy
 :Toggle Inverse Search
+pl:Przełącz odwrotne wyszukiwanie
 :Toggle Manga Mode
+pl:Przełącz tryb mangi
 :Toggle Match Case
 br:Diferenciar Maiúsculas/Minúsculas
 de:Groß-/Kleinschreibung umschalten
@@ -22430,15 +22549,25 @@ pl:Przełącz uwzględnianie wielkości liter
 sk:Prepnúť rozlišovanie veľkých/malých písmen
 tr:Büyük/Küçük Harfleri Değiştir
 :Toggle Menu Bar
+pl:Przełącz pasek menu
 :Toggle Page Info
+pl:Przełącz informacje o stronie
 :Toggle Scrollbars
+pl:Przełącz paski przewijania
 :Toggle Show Annotations
+pl:Przełącz pokazywanie adnotacji
 :Toggle Show Links
+pl:Przełącz pokazywanie odnośników
 :Toggle Table Of Contents
+pl:Przełącz spis treści
 :Toggle Toolbar
+pl:Przełącz pasek narzędzi
 :Toggle Zoom
+pl:Przełącz powiększenie
 :Translate Selection With DeepL
+pl:Przetłumacz zaznaczenie za pomocą DeepL
 :Translate Selection with Google
+pl:Przetłumacz zaznaczenie za pomocą Google
 :Translate with &DeepL
 am:Թարգմանել &DeepL-ով
 ar:ترجمة في &DeepL
@@ -23008,7 +23137,9 @@ uk:Вигляд
 uz:Ko'rish
 vn:Hiển thị
 :View With Custom External Viewer
+pl:Widok za pomocą niestandardowej przeglądarki zewnętrznej
 :View: Presentation Mode
+pl:Widok: tryb prezentacji
 :Visit &Website
 af:&Besoek Webtuiste
 am:Ծրագրի &կայքը
@@ -23773,25 +23904,45 @@ uk:Масштаб
 uz:Miqyos omili
 vn:Hệ số thu phóng
 :Zoom: 100%
+pl:Powiększenie: 100%
 :Zoom: 12.5%
+pl:Powiększenie: 12,5%
 :Zoom: 125%
+pl:Powiększenie: 125%
 :Zoom: 150%
+pl:Powiększenie: 150%
 :Zoom: 1600%
+pl:Powiększenie: 1600%
 :Zoom: 200%
+pl:Powiększenie: 200%
 :Zoom: 25%
+pl:Powiększenie: 25%
 :Zoom: 3200%
+pl:Powiększenie: 3200%
 :Zoom: 400%
+pl:Powiększenie: 400%
 :Zoom: 50%
+pl:Powiększenie: 50%
 :Zoom: 6400%
+pl:Powiększenie: 6400%
 :Zoom: 8.33%
+pl:Powiększenie: 8,33%
 :Zoom: 800%
+pl:Powiększenie: 800%
 :Zoom: Actual Size
+pl:Powiększenie: rozmiar rzeczywisty
 :Zoom: Custom...
+pl:Powiększenie: niestandardowe...
 :Zoom: Fit Content
+pl:Powiększenie: dopasuj do zawartości
 :Zoom: Fit Page
+pl:Powiększenie: dopasuj do całej strony
 :Zoom: Fit Page and Single Page
+pl:Powiększenie: dopasuj do całej i pojedynczej strony
 :Zoom: Fit Width
+pl:Powiększenie: dopasuj do szerokości strony
 :Zoom: Fit Width And Continuous
+pl:Powiększenie: dopasuj do szerokości i w układzie ciągłym
 :[Changes detected; refreshing] %s
 am:[Հայտնաբերվել են փոփոխություններ, ընթանում է թարմացում] %s
 ar:%s [تغييرات إكتشفت؛ المنعش]
@@ -23930,6 +24081,7 @@ uk:копіювання тексту
 uz:matnni nusxa olish
 vn:đang chép văn bản
 :don't use
+pl:nie używaj
 :printing document
 am:Ֆայլը տպվում է
 ar:طباعة المستند
