@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, appendFileSync, existsSync } from "node:fs";
 import { join, extname } from "node:path";
 import { commands } from "./gen-commands";
 
@@ -54,7 +54,7 @@ function extractStringsToTranslate(): string[] {
 
 function getTransSecret(): string {
   // try reading from secrets file first
-  const secretsPath = join("..", "secrets", "sumatrapdf.env");
+  const secretsPath = join("..", "hack", "secrets", "sumatrapdf.env");
   try {
     const content = readFileSync(secretsPath, "utf-8");
     for (const line of content.split("\n")) {
@@ -215,6 +215,195 @@ function autoAddNoPrefixTranslations(pt: ParsedTranslations): void {
   }
 }
 
+const aiTranslationsPath = join(translationsDir, "translations-from-ai.txt");
+
+function getClaudeApiKey(): string {
+  const secretsPath = join("..", "hack", "secrets", "sumatrapdf.env");
+  try {
+    const content = readFileSync(secretsPath, "utf-8");
+    for (const line of content.split("\n")) {
+      const trimmed = line.trim();
+      if (trimmed.startsWith("CLAUDE_API_KEY")) {
+        const eqIdx = trimmed.indexOf("=");
+        if (eqIdx !== -1) {
+          const val = trimmed.substring(eqIdx + 1).trim();
+          if (val.length >= 4) {
+            return val;
+          }
+        }
+      }
+    }
+  } catch {
+    // fall through to env variable
+  }
+  const val = process.env["CLAUDE_API_KEY"] ?? "";
+  if (val.length < 4) {
+    throw new Error("must set CLAUDE_API_KEY env variable or in secrets file");
+  }
+  return val;
+}
+
+// load cached AI translations from file
+// format: :<english>\n<lang>:<translation>\n
+function loadAITranslationsCache(): Map<string, Map<string, string>> {
+  const cache = new Map<string, Map<string, string>>();
+  if (!existsSync(aiTranslationsPath)) {
+    return cache;
+  }
+  const content = readFileSync(aiTranslationsPath, "utf-8");
+  const lines = content.split("\n");
+  let currString = "";
+  for (const line of lines) {
+    if (line.length === 0) continue;
+    if (line.startsWith(":")) {
+      currString = line.substring(1);
+      continue;
+    }
+    const colonIdx = line.indexOf(":");
+    if (colonIdx === -1) continue;
+    const lang = line.substring(0, colonIdx);
+    const trans = line.substring(colonIdx + 1);
+    let m = cache.get(lang);
+    if (!m) {
+      m = new Map();
+      cache.set(lang, m);
+    }
+    m.set(currString, trans);
+  }
+  return cache;
+}
+
+function appendToAICache(english: string[], lang: string, translations: Map<string, string>): void {
+  let content = "";
+  for (const s of english) {
+    const trans = translations.get(s);
+    if (!trans) continue;
+    content += `:${s}\n${lang}:${trans}\n`;
+  }
+  if (content.length > 0) {
+    appendFileSync(aiTranslationsPath, content, "utf-8");
+  }
+}
+
+async function translateWithClaude(apiKey: string, strings: string[], langCode: string): Promise<Map<string, string>> {
+  const stringsJson = JSON.stringify(strings);
+  const prompt = `Translate the following English UI strings to the language identified by locale code "${langCode}". Return ONLY a JSON object mapping each English string to its translation. No explanation, no markdown formatting, just the JSON object.\n\n${stringsJson}`;
+
+  const resp = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-5-20250929",
+      max_tokens: 4096,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+
+  if (!resp.ok) {
+    const body = await resp.text();
+    throw new Error(`Claude API error: ${resp.status} ${resp.statusText}: ${body}`);
+  }
+
+  const data = (await resp.json()) as { content: { text: string }[] };
+  const text = data.content[0].text;
+
+  // extract JSON from response
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    console.log(`Claude response (no JSON found): ${text}`);
+    throw new Error(`No JSON found in Claude response for lang ${langCode}`);
+  }
+
+  let parsed: Record<string, string>;
+  try {
+    parsed = JSON.parse(jsonMatch[0]);
+  } catch (e) {
+    console.log(`Claude response (invalid JSON): ${text}`);
+    throw new Error(`Invalid JSON in Claude response for lang ${langCode}: ${e}`);
+  }
+
+  const result = new Map<string, string>();
+  for (const [key, value] of Object.entries(parsed)) {
+    if (typeof value === "string") {
+      result.set(key, value);
+    }
+  }
+  return result;
+}
+
+async function addTranslationsFromAI(pt: ParsedTranslations): Promise<void> {
+  const { perLang, allStrings } = pt;
+
+  let apiKey: string;
+  try {
+    apiKey = getClaudeApiKey();
+  } catch {
+    console.log("CLAUDE_API_KEY not set, skipping AI translations");
+    return;
+  }
+
+  // load cache of previously translated strings
+  const aiCache = loadAITranslationsCache();
+
+  let nFromCache = 0;
+  let nFromApi = 0;
+
+  for (const [lang, translations] of perLang) {
+    // find untranslated strings without "&"
+    const missing: string[] = [];
+    for (const s of allStrings) {
+      if (s.includes("&")) continue;
+      if (translations.has(s)) continue;
+      // check AI cache first
+      const cached = aiCache.get(lang)?.get(s);
+      if (cached) {
+        translations.set(s, cached);
+        nFromCache++;
+        continue;
+      }
+      missing.push(s);
+    }
+
+    if (missing.length === 0) continue;
+
+    // batch in groups of 48
+    for (let i = 0; i < missing.length; i += 48) {
+      const batch = missing.slice(i, i + 48);
+      console.log(
+        `Translating ${batch.length} strings to ${lang} (${i + 1}-${i + batch.length} of ${missing.length})...`,
+      );
+      try {
+        const result = translateWithClaude(apiKey, batch, lang);
+        const translated = await result;
+        for (const [english, trans] of translated) {
+          translations.set(english, trans);
+          // update in-memory cache
+          let langCache = aiCache.get(lang);
+          if (!langCache) {
+            langCache = new Map();
+            aiCache.set(lang, langCache);
+          }
+          langCache.set(english, trans);
+          nFromApi++;
+        }
+        // append to cache file immediately
+        appendToAICache(batch, lang, translated);
+      } catch (e) {
+        console.error(`Error translating to ${lang}: ${e}`);
+        // continue with next batch / language
+      }
+    }
+  }
+
+  if (nFromCache > 0 || nFromApi > 0) {
+    console.log(`AI translations: ${nFromCache} from cache, ${nFromApi} from API`);
+  }
+}
+
 function generateGoodSubset(pt: ParsedTranslations): void {
   const { perLang, allStrings } = pt;
   const nStrings = allStrings.length;
@@ -245,14 +434,9 @@ function generateGoodSubset(pt: ParsedTranslations): void {
   // write translations-good.txt with langs that don't miss too many translations
   allStrings.sort();
   // for backwards compat first 2 lines are skipped by ParseTranslationsTxt()
-  const out: string[] = [
-    "AppTranslator: SumatraPDF",
-    "AppTranslator: SumatraPDF",
-  ];
+  const out: string[] = ["AppTranslator: SumatraPDF", "AppTranslator: SumatraPDF"];
 
-  const sortedLangs = [...perLang.keys()]
-    .filter((lang) => !langsToSkip.has(lang))
-    .sort();
+  const sortedLangs = [...perLang.keys()].filter((lang) => !langsToSkip.has(lang)).sort();
 
   for (const s of allStrings) {
     out.push(":" + s);
@@ -286,6 +470,7 @@ async function main() {
 
   const pt = parseTranslations(fixed);
   autoAddNoPrefixTranslations(pt);
+  await addTranslationsFromAI(pt);
   generateGoodSubset(pt);
 
   writeFileSync(path, fixed, "utf-8");
