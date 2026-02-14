@@ -340,6 +340,7 @@ static void RememberSessionState() {
                         }
                     }
                 }
+                logf("RememberSessionState: didn't find state for file '%s'\n", fp ? fp : "(none)");
                 ReportIf(!didFind);
                 continue;
             }
