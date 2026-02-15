@@ -864,6 +864,7 @@ PageText EngineDjVu::ExtractPageText(int pageNo) {
     Vec<Rect> coords;
     bool success = ExtractPageText(pagetext, extracted, coords);
     ddjvu_miniexp_release(doc, pagetext);
+    minilisp_gc();
     if (!success) {
         return {};
     }
