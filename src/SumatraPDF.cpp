@@ -737,7 +737,7 @@ static void CreateThumbnailFinish(CreateThumbnailData* d) {
 static void CreateThumbnailOnBitmapRendered(CreateThumbnailData* d, RenderedBitmap* bmp) {
     d->bmp = bmp;
     auto fn = MkFunc0<CreateThumbnailData>(CreateThumbnailFinish, d);
-    uitask::PostOptimized(fn, "TaskSetThumbnail");
+    uitask::Post(fn, "TaskSetThumbnail");
 }
 
 static void CreateThumbnailForFile(MainWindow* win, FileState* ds) {
