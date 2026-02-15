@@ -306,11 +306,7 @@ workspace "SumatraPDF"
     defines { "UNRAR", "RARDLL", "SILENT" }
     -- os.hpp redefines WINVER, is there a better way?
     disablewarnings { "4005", "4100", "4201", "4211", "4244", "4310", "4389", "4456", "4459", "4505", "4701", "4702", "4706", "4709", "4731", "4996" }
-    -- unrar uses exception handling in savepos.hpp but I don't want to enable it
-    -- as it seems to infect the Sumatra binary as well (i.e. I see bad alloc exception
-    -- being thrown)
-    -- exceptionhandling "On"
-    disablewarnings { "4530" } -- warning about using C++ exception handler without exceptions enabled
+    exceptionhandling "On"
 
     includedirs { "ext/unrar" }
     unrar_files()
@@ -331,8 +327,9 @@ workspace "SumatraPDF"
     filter {"platforms:x64_asan"}
       defines { "DISABLE_MMX" }
     filter{}
+    exceptionhandling "On"
     disablewarnings { "4100", "4189", "4244", "4267", "4302", "4311", "4312", "4505"}
-    disablewarnings { "4456", "4457", "4459", "4530", "4701", "4702", "4703", "4706" }
+    disablewarnings { "4456", "4457", "4459", "4701", "4702", "4703", "4706" }
     includedirs { "ext/libjpeg-turbo" }
     libdjvu_files()
 
