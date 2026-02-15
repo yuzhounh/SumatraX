@@ -53,14 +53,14 @@ Changes in [pre-release builds](https://www.sumatrapdfreader.org/prerelease):
 - change: `Ctrl + Tab` is now `CmdNextTabSmart`, was `CmdNextTab`. `Ctrl + Shift + Tab` is now `CmdPrevTabSmart`, was `CmdPrevTab`. You can [re-bind it](Customizing-keyboard-shortcuts.md) if you prefer old behavior
 - `CmdCommandPalette` takes optional `mode` argument: `@` for tab selection, `#` for selecting from file history and `>` for commands.
 - command palette no longer shows combined tabs/file history/commands. `CmdCommandPalette` only shows commands. Because of that removed `CmdCommandPaletteNoFiles` because now ``CmdCommandPalette` behaves like it
-- removed `CmdCommandPaletteOnlyTabs`, replaced by`CmdCommandPaletteNoFiles @`
+- removed `CmdCommandPaletteOnlyTabs`, replaced by `CmdCommandPaletteNoFiles @`
 - `Ctrl + Shift + K` no longer active, use `Ctrl + K`. You can restore this shortcut by binding it to `CmdCommandPalette >` command.
 - add `Name` field for shortcuts. If given, the command will show up in Command Palette (`Ctrl + K`)
-- closing a current tab now behaves like in Chrome: selects next tab (to the right). We used to select previously active tab, but that's unpredicable and we prefer to align SumatraPDF behavior with other popular apps.
+- closing a current tab now behaves like in Chrome: selects next tab (to the right). We used to select previously active tab, but that's unpredictable and we prefer to align SumatraPDF behavior with other popular apps.
 - swapped key bindings: 'i' is now CmdTogglePageInfo, 'I' is CmdInvertColors. Several people were confused by accidentally typing 'i' to invert colors, is less likely to type it accidentally
 - allow creating custom themes in advanced settings in `Themes` section. [See docs](https://www.sumatrapdfreader.org/docs/Customize-theme-colors).
 - improve scrolling with middle click drag [#4529](https://github.com/sumatrapdfreader/sumatrapdf/issues/4529)
-- make built-in keyboard shortctus work on non-us keyboards (cyrillic , hebrew etc.)
+- make built-in keyboard shortcuts work on non-us keyboards (cyrillic , hebrew etc.)
 - add `CmdDuplicateInNewTab` (`Open Current Document In New Tab`) command
 
 ### 3.5.2 (2023-10-25)
@@ -85,7 +85,7 @@ Changes in [pre-release builds](https://www.sumatrapdfreader.org/prerelease):
 - `CmdEditAnnotations` select annotation under cursor and open annotation edit window
 - rename `CmdShowCursorPosition` => `CmdToggleCursorPosition`
 - add `Annotations [ FreeTextColor, FreeTextSize, FreeTextBorderWidth ]` settings
-- ability to move annotations. `Ctrl + click` to select annotation and them move via drag & drop
+- ability to move annotations. `Ctrl + click` to select annotation and then move via drag & drop
 - add `CmdCommandPaletteOnlyTabs` command with `Alt + K` shortcut
 - exit full screen / presentation modes via double click with left mouse button
 - ability to drag out a tab to open it in new window
@@ -186,7 +186,7 @@ Changes in [pre-release builds](https://www.sumatrapdfreader.org/prerelease):
 - added ability to hide scrollbar (more screen space for the document). Use right-click context menu.
 - add `-paperkind=${num}` printing option ([checkin](https://github.com/sumatrapdfreader/sumatrapdf/pull/1815/commits/2104e6104ea759dc4f839c7e8be5973f5a4f0488))
 
-Minor improvements and bug-fixes::
+Minor improvements and bug-fixes:
 
 - advanced setting to change font size in bookmarks / favorites tree view e.g. `TreeFontSize = 12`
 - support newer versions of ghostscript (≥ 9.54) for opening .ps files
@@ -204,10 +204,10 @@ Minor improvements and bug-fixes::
 
 This release upgrades the core PDF parsing and rendering library mupdf to the latest version. This fixes PDF rendering bugs and improves performance.
 
-Added support multiple windows with tabs:
+Added support for multiple windows with tabs:
 
 - added `File / New Window` (`Ctrl-n`) which opens a new window
-- to compare the same file side-by-side, `Ctrl-Shift-n` shortcut opens current file a new window. The same file is now opened in 2 windows that you can re-arrange as needed
+- to compare the same file side-by-side, `Ctrl-Shift-n` shortcut opens current file in a new window. The same file is now opened in 2 windows that you can re-arrange as needed
 - `-new-window` cmd-line option will open the document in new window
 - if you hold `SHIFT` when drag&dropping files from Explorer (and other apps), the file will be opened in a new window
 
@@ -231,7 +231,7 @@ This release no longer supports Windows XP. Latest version that support XP is 3.
 
 - (re)add support for old processors that don’t have SSE2
 - support newer versions of unrar.dll
-- allow keeping browser plugin if it’s already installed
+- allow keeping the browser plugin if it’s already installed
 - crash fixes
 
 ### 3.1 (2015-10-24)
@@ -256,7 +256,7 @@ This release no longer supports Windows XP. Latest version that support XP is 3.
 - added a document measurement UI. Press 'm' to start. Keep pressing 'm' to change measurement units
 - new advanced settings: FullPathInTitle, UseSysColors (no longer exposed through the Options dialog), UseTabs
 - replaced non-free UnRAR with a free RAR extraction library. If some CBR files fail to open for you, download unrar.dll from https://www.rarlab.com/rar_add.htm and place it alongside SumatraPDF.exe
-- deprecated browser plugin. We keep it if was installed in earlier version
+- deprecated browser plugin. We keep it if it was installed in earlier version
 
 ### 2.5.2 (2014-05-13)
 
@@ -402,7 +402,7 @@ This release no longer supports Windows XP. Latest version that support XP is 3.
 
 ### 1.4 (2011-03-12)
 
-- browser plugin for Firefox/Chrome/Opera (Internet Explorer is not supported). It's not installed by default so you have to check the apropriate checkbox in the installer
+- browser plugin for Firefox/Chrome/Opera (Internet Explorer is not supported). It's not installed by default so you have to check the appropriate checkbox in the installer
 - IFilter that enables full-text search of PDF files in Windows Desktop Search (i.e. search from Windows Vista/7's Start Menu). Also not installed by default
 - scrolling with right mouse button
 - you can choose a custom installation directory in the installer
@@ -410,7 +410,7 @@ This release no longer supports Windows XP. Latest version that support XP is 3.
 - we no longer compress the installer executable with mpress. It caused some anti-virus programs to falsely report Sumatra as a virus. The downside is that the binaries on disk are now bigger. Note: we still compress the portable .zip version
 - -title cmd-line option was removed
 - support for AES-256 encrypted PDF documents
-- fixed an integer overflow reported by Jeroen van der Gun and and other small fixes and improvements to PDF handling
+- fixed an integer overflow reported by Jeroen van der Gun and other small fixes and improvements to PDF handling
 
 ### 1.3 (2011-02-04)
 
@@ -438,7 +438,7 @@ This release no longer supports Windows XP. Latest version that support XP is 3.
 - add Ctrl-A as a shortcut for Select All Text
 - improved full screen mode
 - open embedded PDF documents
-- allow saving PDF document attachements to disk
+- allow saving PDF document attachments to disk
 - latest fixes and improvements to PDF rendering from mupdf project
 
 ### 1.1 (2010-05-20)
@@ -456,7 +456,7 @@ This release no longer supports Windows XP. Latest version that support XP is 3.
 
 - many memory leaks fixed (Simon Bünzli)
 - potential crash due to stack corruption (pointed out by Christophe Devine)
-- making Sumatra default PDF reader no longer asks for admin priviledges on Vista/Windows 7
+- making Sumatra default PDF reader no longer asks for admin privileges on Vista/Windows 7
 - translation updates
 
 ### 1.0 (2009-11-17)
@@ -477,17 +477,17 @@ This release no longer supports Windows XP. Latest version that support XP is 3.
 ### 0.9.3 (2008-10-07)
 
 - fix an issue with opening non-ascii files
-- updated Japanese and Brazillian translation
+- updated Japanese and Brazilian translation
 
 ### 0.9.2 (2008-10-06)
 
 - ability to disable auto-update check
 - improved text rendering - should fix problems with overlapping text
-- improved font substition for fonts not present in PDF file
+- improved font substitution for fonts not present in PDF file
 - can now open PDF files with non-ascii names
 - improvements to DDE (contributed by Danilo Roascio)
 - SyncTex improvements
-- improve persistance of state (contributed by Robert Liu)
+- improve persistence of state (contributed by Robert Liu)
 - fix crash when pressing 'Cancel' when entering a password
 - updated translations
 
@@ -530,7 +530,7 @@ This release no longer supports Windows XP. Latest version that support XP is 3.
 
 - added search (contributed by MrChuoi)
 - added table of contents (contributed by MrChuoi)
-- added many translation
+- added many translations
 - new program icon
 - fixed printing
 - fixed some crashes
@@ -567,7 +567,7 @@ This release no longer supports Windows XP. Latest version that support XP is 3.
 ### 0.5 (2007-03-04)
 
 - fixed rendering problems with some PDF files
-- speedups - the application should feel be snappy and there should be less waiting for rendering
+- speedups - the application should feel snappy and there should be less waiting for rendering
 - added 'r' keybinding for reloading currently open PDF file
 - added <Ctrl>-<Shift>-+ and <Ctrl>-<Shift>-- keybindings to rotate clockwise and counter-clockwise (just like Acrobat Reader)
 - fixed a crash or two

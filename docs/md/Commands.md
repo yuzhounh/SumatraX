@@ -221,7 +221,7 @@ CmdTranslateSelectionWithGoogle,,Translate Selection with Google,
 CmdSearchSelectionWithBing,,Search Selection with Bing,
 CmdSearchSelectionWithGoogle,,Search Selection with Google,
 CmdSearchSelectionWithWikipedia,,Search Selection with Wikipedia,ver 3.6+
-CmdSearchSelectionWithGoogleScholar,,Search Selection with Goolge Scholar,ver 3.6+
+CmdSearchSelectionWithGoogleScholar,,Search Selection with Google Scholar,ver 3.6+
 CmdSendByEmail,,Send Document By Email...,
 CmdInvokeInverseSearch,,Invoke Inverse Search,ver 3.6+
 
@@ -307,7 +307,7 @@ Shortcuts [
 
 By default `a` invokes `CmdCreateAnnotHighlight` with default yellow color.
 
-You can over-ride `a` shortcut to creat green (`#00ff00`) highlight annotation instead and automatically open annotations edit window (`openedit` boolean argument).
+You can over-ride `a` shortcut to create green (`#00ff00`) highlight annotation instead and automatically open annotations edit window (`openedit` boolean argument).
 
 You can create multiple keyboard shortcuts for multiple colors.
 
@@ -356,14 +356,14 @@ Arguments:
 
 Use case: if you want to go forward, back by more than 1 page
 
-## `CmdCreateAnnotHighlight` and other`CmdCreateAnnot*`
+## `CmdCreateAnnotHighlight` and other `CmdCreateAnnot*`
 
 Arguments:
 
 - `color` : default, color
 - `openedit` : boolean, `false` if not given
 - `copytoclipboard` : boolean, `false` if not given. For highlight/underline/squiggly/strikeout  annotations, copies the selection (text of annotation) to clipboard. This used to be default behavior for built-in `a` etc. keyboard shortcuts but now it has to be explicitly chosen.
-- `setcontent` : boolean, false if not give. For highlight/underline/squiggly/strikeout sets content of annotation to the selection (text of annotation)
+- `setcontent` : boolean, false if not given. For highlight/underline/squiggly/strikeout sets content of annotation to the selection (text of annotation)
 
 Use cases:
 - change default color for annotations
@@ -398,7 +398,7 @@ Arguments for `CmdCreateAnnotHighlight` plus:
 **Ver 3.6+**
 
 Arguments:
-- `level` : default, string or intenger, zoom level
+- `level` : default, string or integer, zoom level
 
 `level` can be:
 - a number describing zoom level in percent e.g.:

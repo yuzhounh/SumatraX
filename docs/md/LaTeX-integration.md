@@ -52,7 +52,7 @@ Now a double click in the PDF should take you back to TeXnicCenter either in an 
 
 Back in the editor press Alt+F7 (Build > Define Output Profiles) and for each of the PDF options select viewer
 
-In the 1Executable path1 section REMOVE any thing after the .exe
+In the 1Executable path1 section REMOVE anything after the .exe
 
 In the 1View project's Output1 select `Command line argument` and check it is `"%bm.pdf"`
 
@@ -65,7 +65,7 @@ function that is triggered on backward-search event, i.e. when you double
 click somewhere on the pdf.
 
 It is suggested to write such functions in `C:\Users\<your_user_id>\vimfiles\after\ftplugin\tex.vim` file
-so that they exists only in `tex` filetypes, but you are free to define them
+so that they exist only in `tex` filetypes, but you are free to define them
 in your `.vimrc` as well, although the first option is preferred.
 
 ### forward-search

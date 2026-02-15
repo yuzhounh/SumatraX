@@ -10,7 +10,7 @@ A portable version is a self-contained executable and cannot be corrupted.
 
 An installer needs to be run to be properly installed. Part of it is extracting `libmupdf.dll` library.
 
-There are 2 possible problem:
+There are 2 possible problems:
 
 - `libmupdf.dll` is missing
 - `libmupdf.dll` is there but its version doesn't match the version of `SumatraPDF.exe`

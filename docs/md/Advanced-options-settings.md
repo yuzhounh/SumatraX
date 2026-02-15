@@ -154,7 +154,7 @@ TreeFontSize = 0
 UIFontSize = 0
 
 ; if true, disables anti-aliasing for rendering PDF documents (introduced in
-; version 3,6)
+; version 3.6)
 DisableAntiAlias = false
 
 ; if true, we use Windows system colors for background/text color. Over-rides
@@ -555,7 +555,7 @@ OpenCountWeek = 0
 
 ## Syntax for color values
 
-The syntax for colors is: `#rrggbb` or `#rrggbb`.
+The syntax for colors is: `#rrggbb` or `#aarrggbb`.
 
 The components are hex values (ranging from 00 to FF) and stand for:
 - `rr` : red component
