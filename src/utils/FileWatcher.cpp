@@ -98,6 +98,7 @@ void WatchedFileSetIgnore(WatchedFile* wf, bool ignore) {
 static HANDLE gThreadHandle = nullptr;
 
 static HANDLE gThreadControlHandle = nullptr;
+static bool gShouldExit = false;
 
 // protects data structures shared between ui thread and file
 // watcher thread i.e. gWatchedDirs, gWatchedFiles
@@ -324,6 +325,9 @@ static void FileWatcherThread() {
 
     for (;;) {
         ResetTempAllocator();
+        if (gShouldExit) {
+            break;
+        }
         handles[0] = gThreadControlHandle;
         DWORD timeout = GetTimeoutInMs();
         DWORD obj = WaitForMultipleObjectsEx(1, handles, FALSE, timeout, alertable);
@@ -349,6 +353,7 @@ static void FileWatcherThread() {
             ReportIf(true);
         }
     }
+    logf("FileWatcherThread: exiting\n");
     DestroyTempAllocator();
 }
 
@@ -375,9 +380,9 @@ static void CALLBACK StopMonitoringDirAPC(ULONG_PTR arg) {
     SafeCloseHandle(&wd->hDir);
 }
 
-static void CALLBACK ExitMonitoringThread(ULONG_PTR arg) {
-    log("ExitMonitoringThraed\n");
-    ExitThread(0);
+static void CALLBACK SignalExitMonitoringThread(ULONG_PTR arg) {
+    logf("SignalExitMonitoringThread\n");
+    gShouldExit = true;
 }
 
 static WatchedDir* NewWatchedDir(const char* dirPath) {
@@ -511,26 +516,25 @@ static void RemoveWatchedDirIfNotReferenced(WatchedDir* wd) {
 }
 
 void FileWatcherWaitForShutdown() {
+    if (!gThreadHandle) {
+        return;
+    }
     // this is meant to be called at the end so we shouldn't
     // have any file watching subscriptions pending
     ReportIf(gWatchedFiles != nullptr);
     ReportIf(gWatchedDirs != nullptr);
-    QueueUserAPC(ExitMonitoringThread, gThreadHandle, (ULONG_PTR)0);
 
-    // wait for ReadDirectoryChangesNotification() process actions triggered
-    // in RemoveWatchedDirIfNotReferenced
-    LONG v;
-    int maxWait = 100; // 1 sec
-    for (;;) {
-        v = InterlockedCompareExchange(&gRemovalsPending, 0, 0);
-        if (v == 0) {
-            return;
-        }
-        Sleep(10);
-        if (--maxWait < 0) {
-            return;
-        }
+    // signal the thread to exit and wake it up via APC
+    QueueUserAPC(SignalExitMonitoringThread, gThreadHandle, (ULONG_PTR)0);
+
+    // wait for the thread to actually exit (up to 5 seconds)
+    DWORD res = WaitForSingleObject(gThreadHandle, 5000);
+    if (res == WAIT_TIMEOUT) {
+        logf("FileWatcherWaitForShutdown: thread didn't exit in 5 seconds\n");
     }
+    SafeCloseHandle(&gThreadHandle);
+    SafeCloseHandle(&gThreadControlHandle);
+    DeleteCriticalSection(&gFileWatcherMutex);
 }
 
 static void RemoveWatchedFile(WatchedFile* wf) {
