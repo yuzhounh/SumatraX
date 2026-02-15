@@ -1711,6 +1711,7 @@ EngineMupdf::~EngineMupdf() {
     }
 
     fz_drop_document(ctx, _doc);
+    fz_purge_glyph_cache(ctx);
     fz_drop_context(ctx);
 
     delete pageLabels;
