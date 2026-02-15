@@ -537,6 +537,9 @@ LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
             bool isDragging = (GetCapture() == hwnd);
             int hl = tabHighlighted;
             if (isDragging) {
+                if (hl < 0) {
+                    return 0;
+                }
                 // move the tab out: draw it as a image and drag around the screen
                 draggingTab = true;
                 TabInfo* thl = GetTab(hl);
