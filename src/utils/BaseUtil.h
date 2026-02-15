@@ -738,18 +738,10 @@ using AtomicBool = volatile LONG;
 bool AtomicBoolGet(AtomicBool* v);
 bool AtomicBoolSet(AtomicBool* v, bool newValue);
 
-struct AtomicRefCount {
-    AtomicRefCount() = default;
-    ~AtomicRefCount() = default;
-    int Add();
-    // returns true if counter reaches 0, meaning it has been released
-    // by all who held a reference to it
-    int Dec();
+using AtomicRefCount = volatile LONG;
 
-  private:
-    // starts life as acquired
-    volatile LONG val = 1;
-};
+int AtomicRefCountAdd(AtomicRefCount* v);
+int AtomicRefCountDec(AtomicRefCount* v);
 
 int setMinMax(int& v, int minVal, int maxVal);
 

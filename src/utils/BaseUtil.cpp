@@ -51,13 +51,12 @@ bool AtomicBoolSet(AtomicBool* v, bool newValue) {
 }
 
 // returns count after adding
-int AtomicRefCount::Add() {
-    return (int)InterlockedIncrement(&val);
+int AtomicRefCountAdd(AtomicRefCount* v) {
+    return (int)InterlockedIncrement(v);
 }
 
-int AtomicRefCount::Dec() {
-    auto res = InterlockedDecrement(&val);
-    return res;
+int AtomicRefCountDec(AtomicRefCount* v) {
+    return (int)InterlockedDecrement(v);
 }
 
 void* Allocator::Alloc(Allocator* a, size_t size) {

@@ -320,11 +320,11 @@ RenderPageArgs::RenderPageArgs(int pageNo, float zoom, int rotation, RectF* page
 }
 
 int EngineBase::AddRef() {
-    return refCount.Add();
+    return AtomicRefCountAdd(&refCount);
 }
 
 bool EngineBase::Release() {
-    int rc = refCount.Dec();
+    int rc = AtomicRefCountDec(&refCount);
     if (rc == 0) {
         delete this;
         return true;

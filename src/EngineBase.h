@@ -363,7 +363,7 @@ struct RenderPageArgs {
 class EngineBase {
   public:
     Kind kind = nullptr;
-    AtomicRefCount refCount;
+    AtomicRefCount refCount = 1; // starts life as acquired
     // the default file extension for a document like
     // the currently loaded one (e.g. L".pdf")
     const char* defaultExt = nullptr;
