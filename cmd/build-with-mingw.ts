@@ -651,7 +651,6 @@ const mupdfLibs: LibDef = {
     "HAVE_OT",
     "HAVE_UCDN",
     "HAVE_FREETYPE",
-    "HB_NO_MT",
     // libheif interop
     "LIBHEIF_STATIC_BUILD",
   ],

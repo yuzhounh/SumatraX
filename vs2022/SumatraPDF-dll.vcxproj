@@ -1487,6 +1487,7 @@
     <None Include="..\cmd\build-codeql.ts" />
     <None Include="..\cmd\build-no-info.ts" />
     <None Include="..\cmd\build-smoke.ts" />
+    <None Include="..\cmd\build-with-mingw.ts" />
     <None Include="..\cmd\build.ts" />
     <None Include="..\cmd\check-access-keys.ts" />
     <None Include="..\cmd\ci-build.ts" />

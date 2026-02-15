@@ -504,7 +504,6 @@ workspace "SumatraPDF"
       "HAVE_OT",
       "HAVE_UCDN",
       "HAVE_FREETYPE",
-      "HB_NO_MT",
     }
     filter "configurations:Debug or DebugFull"
       defines {

@@ -798,6 +798,9 @@
     <None Include="..\cmd\build-smoke.ts">
       <Filter>cmd</Filter>
     </None>
+    <None Include="..\cmd\build-with-mingw.ts">
+      <Filter>cmd</Filter>
+    </None>
     <None Include="..\cmd\build.ts">
       <Filter>cmd</Filter>
     </None>
