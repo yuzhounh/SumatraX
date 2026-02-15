@@ -617,6 +617,7 @@ static fz_buffer* load_and_cache_font(fz_context* ctx, win_font_info* fi, const 
     EnterCriticalSection(&cs_fonts);
     // ff->data is freed in destroy_system_font_list()
     ff->size = fz_buffer_extract(ctx, buffer, (unsigned char**)&ff->data);
+    fz_drop_buffer(ctx, buffer);
     buffer = fz_new_buffer_from_shared_data(ctx, ff->data, ff->size);
     LeaveCriticalSection(&cs_fonts);
     fz_warn(ctx, "loaded font '%s' from '%s'", font_name, ff->file_path);
