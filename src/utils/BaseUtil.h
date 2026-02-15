@@ -101,6 +101,13 @@
 #if defined(min) || defined(max)
 #error "min or max defined"
 #endif
+// mingw's gdiplus.h includes <math.h> which in C++ pulls in <cmath>/<limits>
+// that use min/max as identifiers; pre-include them before defining macros
+#ifdef __GNUC__
+#include <cmath>
+#include <algorithm>
+#include <limits>
+#endif
 #define min(x, y) ((x) < (y) ? (x) : (y))
 #define max(x, y) ((x) > (y) ? (x) : (y))
 #include <gdiplus.h>

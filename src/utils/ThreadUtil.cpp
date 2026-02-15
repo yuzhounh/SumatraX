@@ -52,7 +52,7 @@ void SetThreadName(const char* threadName, DWORD threadId) {
 }
 #pragma warning(push)
 #else
-void SetThreadName(DWORD, const char*) {
+void SetThreadName(const char*, DWORD) {
     // nothing
 }
 #endif // COMPILER_MSVC

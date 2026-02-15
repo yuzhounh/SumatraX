@@ -52,6 +52,8 @@ interface LibDef {
   rtti?: boolean;
   /** enable exceptions for C++ files */
   exceptions?: boolean;
+  /** extra compiler flags (e.g. -msse4.1) */
+  extraCflags?: string[];
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
@@ -82,8 +84,8 @@ function objPath(outDir: string, libName: string, src: string): string {
 }
 
 /** Spawn a compilation command; returns success/failure + stderr */
-async function spawnCmd(args: string[]): Promise<{ ok: boolean; stderr: string }> {
-  const proc = Bun.spawn(args, { stdout: "ignore", stderr: "pipe" });
+async function spawnCmd(args: string[], opts?: { cwd?: string }): Promise<{ ok: boolean; stderr: string }> {
+  const proc = Bun.spawn(args, { stdout: "ignore", stderr: "pipe", cwd: opts?.cwd });
   const code = await proc.exited;
   const stderr = await new Response(proc.stderr).text();
   return { ok: code === 0, stderr };
@@ -150,62 +152,45 @@ async function createArchive(archivePath: string, objFiles: string[]): Promise<v
   }
 }
 
-/** Convert a binary file to a .o with a specific symbol using objcopy */
+/** Convert a binary file to a .o with a specific symbol using objcopy.
+ *  Produces symbols: _binary_<symbolPrefix>, _binary_<symbolPrefix>_size
+ *  matching what mupdf's noto.c expects (non-HAVE_OBJCOPY path). */
 async function embedBinaryFile(
   inputFile: string,
   outputObj: string,
   symbolPrefix: string,
 ): Promise<void> {
   mkdirSync(dirname(outputObj), { recursive: true });
-  // Use ld to create a relocatable object from binary data
-  const tmpObj = outputObj + ".tmp";
-  // ld -r -b binary expects the file to be relative or absolute;
-  // symbols are derived from the filename.
-  // We copy to a temp location with a clean name to get predictable symbols.
-  const cleanName = basename(inputFile).replace(/-/g, "_");
-  const tmpInput = join(dirname(outputObj), cleanName);
+  const outAbsolute = join(process.cwd(), outputObj);
+
+  // Copy file to a temp dir with a clean name so objcopy derives predictable symbols.
+  // objcopy -I binary derives symbols from the filename: _binary_<filename_with_dots_as_underscores>_{start,end,size}
+  // We need the filename to match symbolPrefix (e.g. "NimbusMonoPS_Regular_cff")
+  // so objcopy generates _binary_NimbusMonoPS_Regular_cff_{start,end,size}.
+  const cleanFileName = symbolPrefix.replace(/^_binary_/, "");
+  const tmpDir = join(dirname(outputObj), "_fonttmp");
+  mkdirSync(tmpDir, { recursive: true });
+  const tmpInput = join(tmpDir, cleanFileName);
   const data = await readFile(inputFile);
   await writeFile(tmpInput, data);
 
-  const ldRes = await spawnCmd([
-    "x86_64-w64-mingw32-ld",
-    "-r",
-    "-b",
-    "binary",
-    "-o",
-    tmpObj,
-    cleanName,
-  ]);
-  // ld runs relative to the file, so we need to cd or use full paths
-  // Actually, let's just use objcopy directly:
-  // objcopy -I binary -O pe-x86-64 -B i386:x86-64 input output
-  if (!ldRes.ok) {
-    // fallback: use objcopy
-    const res2 = await spawnCmd([
-      OBJCOPY,
-      "-I",
-      "binary",
-      "-O",
-      "pe-x86-64",
-      "-B",
-      "i386:x86-64",
-      "--rename-section",
-      ".data=.rodata,CONTENTS,ALLOC,LOAD,READONLY,DATA",
-      tmpInput,
-      outputObj,
-    ]);
-    if (!res2.ok) {
-      console.error(`Failed to embed ${inputFile}: ${res2.stderr}`);
-    }
-  } else {
-    // rename from tmpObj
-    const { ok } = await spawnCmd(["mv", tmpObj, outputObj]);
-    if (!ok) console.error(`Failed to move ${tmpObj} to ${outputObj}`);
+  // Run objcopy from the tmpDir so symbols are based on just the filename
+  const res = await spawnCmd([
+    OBJCOPY,
+    "-I", "binary",
+    "-O", "pe-x86-64",
+    "-B", "i386:x86-64",
+    "--rename-section", ".data=.rodata,CONTENTS,ALLOC,LOAD,READONLY,DATA",
+    // Rename _start symbol to match the array name expected by noto.c
+    "--redefine-sym", `_binary_${cleanFileName}_start=${symbolPrefix}`,
+    cleanFileName,
+    outAbsolute,
+  ], { cwd: tmpDir });
+  if (!res.ok) {
+    console.error(`Failed to embed ${inputFile}: ${res.stderr}`);
   }
-  // cleanup temp
-  try {
-    await Bun.write(tmpInput, ""); // truncate
-  } catch {}
+  // cleanup temp file
+  try { await Bun.write(tmpInput, ""); } catch {}
 }
 
 // ── Library definitions ─────────────────────────────────────────────────────
@@ -241,6 +226,9 @@ const zlib: LibDef = {
 const unrar: LibDef = {
   name: "unrar",
   alwaysOptimize: true,
+  // MSVC compiles throw/catch with exceptions disabled (warning 4530);
+  // GCC requires -fexceptions for code that uses throw/catch
+  exceptions: true,
   defines: ["UNRAR", "RARDLL", "SILENT"],
   includes: ["ext/unrar"],
   files: [
@@ -305,6 +293,8 @@ const unrar: LibDef = {
 const libdjvu: LibDef = {
   name: "libdjvu",
   alwaysOptimize: true,
+  // libdjvu uses exceptions (GException.cpp, etc.)
+  exceptions: true,
   defines: [
     "_CRT_SECURE_NO_WARNINGS",
     "NEED_JPEG_DECODER",
@@ -477,8 +467,10 @@ const libwebp: LibDef = {
 const dav1d: LibDef = {
   name: "dav1d",
   alwaysOptimize: true,
-  defines: ["_CRT_SECURE_NO_WARNINGS", "ARCH_X86_32=0", "ARCH_X86_64=1"],
-  includes: ["ext/dav1d/include/compat/msvc", "ext/dav1d", "ext/dav1d/include"],
+  defines: ["_CRT_SECURE_NO_WARNINGS", "ARCH_X86_32=0", "ARCH_X86_64=1", "HAVE_ASM=0"],
+  // NOTE: do NOT include ext/dav1d/include/compat/msvc — it shadows GCC's
+  // native <stdatomic.h> with an MSVC-only version
+  includes: ["ext/dav1d", "ext/dav1d/include"],
   files: [
     {
       dir: "ext/dav1d/src",
@@ -513,10 +505,11 @@ const dav1d: LibDef = {
         "sumatra_bitdepth_16_2.c",
       ],
     },
-    // x86 C files (asm files skipped - they need NASM)
+    // x86 C files — only cpu.c; skip msac_init.c and refmvs_init.c as they
+    // reference asm symbols and we build with HAVE_ASM=0 (no NASM)
     {
       dir: "ext/dav1d/src/x86",
-      patterns: ["cpu.c", "msac_init.c", "refmvs_init.c"],
+      patterns: ["cpu.c"],
     },
   ],
 };
@@ -938,6 +931,8 @@ const mupdfLibs: LibDef = {
 const mupdf: LibDef = {
   name: "mupdf",
   alwaysOptimize: false,
+  // deskew.c/skew.c use SSE4.1 intrinsics
+  extraCflags: ["-msse4.1"],
   defines: [
     "USE_JPIP",
     "OPJ_EXPORTS",
@@ -1490,6 +1485,9 @@ const SYSTEM_LIBS = [
   "winspool",
   "uuid",
   "shcore",
+  "dwmapi",
+  "powrprof",
+  "wbemuuid",
 ];
 
 // ── Build a single library ──────────────────────────────────────────────────
@@ -1534,8 +1532,13 @@ async function buildLibrary(
   // Build include flags
   const includeFlags = lib.includes.map((d) => `-I${d}`);
 
-  // Common warning suppression (mingw is more lenient than MSVC, but suppress common noise)
-  const warnFlags = ["-w"]; // suppress all warnings for ext libraries; can refine later
+  // Suppress warnings; GCC 14+ promotes some to errors even with -w
+  const warnFlags = [
+    "-w",
+    "-Wno-incompatible-pointer-types",
+    "-Wno-int-conversion",
+    "-Wno-implicit-function-declaration",
+  ];
 
   // Prepare compile units
   const units: { src: string; obj: string; args: string[] }[] = [];
@@ -1555,7 +1558,7 @@ async function buildLibrary(
     units.push({
       src,
       obj,
-      args: [compiler, ...optFlags, ...defineFlags, ...includeFlags, ...warnFlags, ...langFlags, "-c", src, "-o", obj],
+      args: [compiler, ...optFlags, ...defineFlags, ...includeFlags, ...warnFlags, ...langFlags, ...(lib.extraCflags ?? []), "-c", src, "-o", obj],
     });
   }
 
@@ -1596,6 +1599,9 @@ async function buildSumatraExe(
     "DISABLE_DOCUMENT_RESTRICTIONS",
     "_DARKMODELIB_NO_INI_CONFIG",
     "LIBHEIF_STATIC_BUILD",
+    "UNICODE",
+    "_UNICODE",
+    "_USE_MATH_DEFINES",
   ];
   const defineFlags = allDefines.map((d) => `-D${d}`);
 
@@ -1623,7 +1629,8 @@ async function buildSumatraExe(
 
     const langFlags: string[] = [];
     if (isCpp) {
-      langFlags.push("-std=c++23", "-fno-rtti", "-fno-exceptions");
+      // -fpermissive: HWND-to-LONG casts, GDI+ overloads, etc.
+      langFlags.push("-std=c++23", "-fno-rtti", "-fno-exceptions", "-fpermissive");
     }
 
     const obj = objPath(outDir, "sumatrapdf", src);
@@ -1636,6 +1643,35 @@ async function buildSumatraExe(
 
   await compileAll(units, JOBS);
   const exeObjs = units.map((u) => u.obj);
+
+  // ── Compile _com_util stub (mingw doesn't ship comsuppw.lib) ─────────
+  const comUtilSrc = join(outDir, "obj", "_com_util_stub.cpp");
+  const comUtilObj = join(outDir, "obj", "_com_util_stub.o");
+  await writeFile(comUtilSrc, `
+#include <windows.h>
+#include <oleauto.h>
+namespace _com_util {
+  BSTR WINAPI ConvertStringToBSTR(const char *pSrc) {
+    if (!pSrc) return nullptr;
+    int len = MultiByteToWideChar(CP_ACP, 0, pSrc, -1, nullptr, 0);
+    BSTR bstr = SysAllocStringLen(nullptr, len - 1);
+    if (bstr) MultiByteToWideChar(CP_ACP, 0, pSrc, -1, bstr, len);
+    return bstr;
+  }
+  char *WINAPI ConvertBSTRToString(BSTR pSrc) {
+    if (!pSrc) return nullptr;
+    int len = WideCharToMultiByte(CP_ACP, 0, pSrc, -1, nullptr, 0, nullptr, nullptr);
+    char *str = new char[len];
+    WideCharToMultiByte(CP_ACP, 0, pSrc, -1, str, len, nullptr, nullptr);
+    return str;
+  }
+}
+`);
+  const comRes = await spawnCmd([CXX, "-Os", "-c", comUtilSrc, "-o", comUtilObj]);
+  if (!comRes.ok) {
+    console.error(`Failed to compile _com_util stub: ${comRes.stderr}`);
+  }
+  exeObjs.push(comUtilObj);
 
   // ── Embed font files ──────────────────────────────────────────────────
   console.log("Embedding font files...");
@@ -1656,16 +1692,23 @@ async function buildSumatraExe(
   console.log("Compiling resources...");
   const rcObj = join(outDir, "obj", "sumatrapdf", "SumatraPDF.res.o");
   mkdirSync(dirname(rcObj), { recursive: true });
+  const rcObjAbsolute = join(process.cwd(), rcObj);
+  // Create a modified .rc with forward slashes (macOS windres can't handle backslashes)
+  const rcOriginal = await readFile("src/SumatraPDF.rc", "utf-8");
+  const rcFixed = rcOriginal.replace(/\\\\/g, "/");
+  const rcTmpPath = join(outDir, "obj", "sumatrapdf", "SumatraPDF_mingw.rc");
+  await writeFile(rcTmpPath, rcFixed);
+  const rcTmpAbsolute = join(process.cwd(), rcTmpPath);
   const rcRes = await spawnCmd([
     WINDRES,
     "-I",
-    "src",
+    ".",
     "-D_WIN64",
     ...defineFlags,
-    "src/SumatraPDF.rc",
+    rcTmpAbsolute,
     "-o",
-    rcObj,
-  ]);
+    rcObjAbsolute,
+  ], { cwd: "src" });
   const rcObjs: string[] = [];
   if (rcRes.ok) {
     rcObjs.push(rcObj);
@@ -1690,6 +1733,8 @@ async function buildSumatraExe(
     ...fontObjs,
     // archives: order matters (dependents first)
     ...archives,
+    // WebView2 import library (MSVC import lib, mingw can usually consume these)
+    "packages/Microsoft.Web.WebView2.1.0.992.28/build/native/x64/WebView2Loader.dll.lib",
     // system libraries
     ...SYSTEM_LIBS.map((l) => `-l${l}`),
   ];

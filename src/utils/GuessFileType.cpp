@@ -214,7 +214,7 @@ static bool IsPdfFileContent(const ByteSlice& d) {
     char* end = data + n;
     while (data < end) {
         size_t nLeft = end - data;
-        data = (char*)std::memchr(data, '%', nLeft);
+        data = (char*)memchr(data, '%', nLeft);
         if (!data) {
             return false;
         }

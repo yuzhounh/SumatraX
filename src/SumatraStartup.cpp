@@ -1012,6 +1012,7 @@ static EngineBase* CreateEngineFromDataForPreview(const ByteSlice& data, Preview
     switch (fileType) {
         case PreviewFileType::XPS:
         case PreviewFileType::PDF:
+#ifdef _MSC_VER
             __try {
                 const char* name = (fileType == PreviewFileType::PDF) ? "preview.pdf" : "preview.xps";
                 engine = CreateEngineMupdfFromStream(stream, name);
@@ -1019,6 +1020,12 @@ static EngineBase* CreateEngineFromDataForPreview(const ByteSlice& data, Preview
                 logf("CreateEngineMupdfFromStream: failed with exception 0x%08x\n", GetExceptionCode());
                 engine = nullptr;
             }
+#else
+            {
+                const char* name = (fileType == PreviewFileType::PDF) ? "preview.pdf" : "preview.xps";
+                engine = CreateEngineMupdfFromStream(stream, name);
+            }
+#endif
             break;
         case PreviewFileType::DjVu:
             engine = CreateEngineDjVuFromStream(stream);
@@ -1402,7 +1409,7 @@ static bool SaveHBitmapAsPng(HBITMAP hBitmap, const char* filePath) {
     Gdiplus::Bitmap gbmp(hBitmap, nullptr);
     CLSID pngEncId = GetEncoderClsid(L"image/png");
     WCHAR* filePathW = ToWStrTemp(filePath);
-    Gdiplus::Status status = gbmp.Save(filePathW, &pngEncId);
+    Gdiplus::Status status = gbmp.Save(filePathW, &pngEncId, nullptr);
     return status == Gdiplus::Ok;
 }
 

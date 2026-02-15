@@ -479,7 +479,7 @@ bool RenderDocument(EngineBase* engine, const char* renderPath, float zoom = 1.f
             Gdiplus::Bitmap gbmp(bmp->GetBitmap(), nullptr);
             CLSID pngEncId = GetEncoderClsid(L"image/png");
             WCHAR* pageBmpPathW = ToWStrTemp(pageBmpPath);
-            gbmp.Save(pageBmpPathW, &pngEncId);
+            gbmp.Save(pageBmpPathW, &pngEncId, nullptr);
         } else if (str::EndsWithI(pageBmpPath, ".bmp")) {
             ByteSlice imgData = SerializeBitmap(bmp->GetBitmap());
             if (!imgData.empty()) {

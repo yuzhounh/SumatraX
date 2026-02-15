@@ -2327,7 +2327,7 @@ TempStr FormatSizeShortTemp(i64 size, const char* sizeUnits[3]) {
 
 // format file size in a readable way e.g. 1348258 is shown
 // as "1.29 MB (1,348,258 Bytes)"
-TempStr str::FormatFileSizeTemp(i64 size) {
+TempStr FormatFileSizeTemp(i64 size) {
     if (size <= 0) {
         return str::FormatTemp("%d", (int)size);
     }
