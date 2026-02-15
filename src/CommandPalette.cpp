@@ -124,6 +124,8 @@ static i32 gCommandsNoActivate[] = {
     CmdHelpVisitWebsite,
     CmdOpenFile,
     CmdProperties,
+    CmdNewWindow,
+    CmdDuplicateInNewWindow,
     // TOOD: probably more
     0,
 };
