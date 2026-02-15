@@ -2436,7 +2436,11 @@ bool SaveAnnotationsToExistingFile(WindowTab* tab) {
     if (!tab) {
         return false;
     }
-    EngineBase* engine = tab->AsFixed()->GetEngine();
+    DisplayModel* dm = tab->AsFixed();
+    if (!dm) {
+        return false;
+    }
+    EngineBase* engine = dm->GetEngine();
     const char* path = engine->FilePath();
     tab->ignoreNextAutoReload = true;
     ShowErrorData data{tab, path};
