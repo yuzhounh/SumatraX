@@ -621,7 +621,7 @@ RenderedBitmap* EngineDjVu::RenderPage(RenderPageArgs& args) {
     size_t dy = (size_t)screen.dy;
     size_t stride = ((dx * bytesPerPixel + 3) / 4) * 4;
     size_t nBytes = stride * (dy + 5);
-    char* bmpData = AllocArrayTemp<char>(nBytes);
+    char* bmpData = (char*)calloc(nBytes, 1);
     if (!bmpData) {
         return nullptr;
     }
@@ -634,6 +634,7 @@ RenderedBitmap* EngineDjVu::RenderPage(RenderPageArgs& args) {
         isBitonal = true;
     }
     bmp = CreateRenderedBitmap(bmpData, screen.Size(), isBitonal);
+    free(bmpData);
 
     return bmp;
 }
