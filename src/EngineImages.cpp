@@ -1351,8 +1351,17 @@ EngineBase* EngineCbx::CreateFromFile(const char* path) {
     auto timeStart = TimeGet();
     // we sniff the type from content first because the
     // files can be mis-named e.g. .cbr archive with .cbz ext
+    // we only need the archive format (zip/rar/7z), not the sub-type
+    // (epub/xps/fb2z), so use the ByteSlice overload to avoid
+    // opening a full archive just for type detection
 
-    Kind kind = GuessFileTypeFromContent(path);
+    char buf[2048 + 1]{};
+    int n = file::ReadN(path, buf, dimof(buf) - 1);
+    Kind kind = nullptr;
+    if (n > 0) {
+        ByteSlice d = {(u8*)buf, (size_t)n};
+        kind = GuessFileTypeFromContent(d);
+    }
     MultiFormatArchive* archive = nullptr;
     if (kind == kindFileZip) {
         archive = OpenZipArchive(path, false);
