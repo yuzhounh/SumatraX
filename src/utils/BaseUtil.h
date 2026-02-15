@@ -733,16 +733,10 @@ Func1<T2>* NewFunc1(void (*fn)(T1*, T2), T1* d) {
     return res;
 }
 
-class AtomicBool {
-  public:
-    AtomicBool() = default;
-    ~AtomicBool() = default;
-    bool Get() const;
-    bool Set(bool newValue);
+using AtomicBool = volatile LONG;
 
-  private:
-    volatile LONG val = 0;
-};
+bool AtomicBoolGet(AtomicBool* v);
+bool AtomicBoolSet(AtomicBool* v, bool newValue);
 
 struct AtomicRefCount {
     AtomicRefCount() = default;

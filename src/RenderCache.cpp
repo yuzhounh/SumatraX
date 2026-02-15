@@ -72,7 +72,7 @@ RenderCache::~RenderCache() {
 }
 
 void RenderCache::WaitForShutdown() {
-    shouldExit.Set(true);
+    AtomicBoolSet(&shouldExit, true);
     // wake the thread in case it's waiting on startRendering event
     SetEvent(startRendering);
     DWORD res = WaitForSingleObject(renderThread, 5000);
@@ -671,12 +671,12 @@ static DWORD WINAPI RenderCacheThread(LPVOID data) {
     RenderedBitmap* bmp;
 
     for (;;) {
-        if (cache->shouldExit.Get()) {
+        if (AtomicBoolGet(&cache->shouldExit)) {
             break;
         }
         if (cache->ClearCurrentRequest()) {
             DWORD waitResult = WaitForSingleObject(cache->startRendering, INFINITE);
-            if (cache->shouldExit.Get()) {
+            if (AtomicBoolGet(&cache->shouldExit)) {
                 break;
             }
             // Is it not a page render request?

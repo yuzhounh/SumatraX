@@ -40,13 +40,13 @@ int AtomicIntGet(AtomicInt* v) {
     return (int)InterlockedCompareExchange(v, 0, 0);
 }
 
-bool AtomicBool::Get() const {
-    return InterlockedCompareExchange((LONG*)&val, 0, 0) != 0;
+bool AtomicBoolGet(AtomicBool* v) {
+    return InterlockedCompareExchange(v, 0, 0) != 0;
 }
 
 // returns previous value
-bool AtomicBool::Set(bool newValue) {
-    auto res = InterlockedExchange((LONG*)&val, newValue ? 1 : 0);
+bool AtomicBoolSet(AtomicBool* v, bool newValue) {
+    auto res = InterlockedExchange(v, newValue ? 1 : 0);
     return res != 0;
 }
 

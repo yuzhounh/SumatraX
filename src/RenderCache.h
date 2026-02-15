@@ -103,7 +103,7 @@ struct RenderCache {
 
     /* Interface for page rendering thread */
     HANDLE startRendering = nullptr;
-    AtomicBool shouldExit;
+    AtomicBool shouldExit = 0;
 
     RenderCache();
     RenderCache(RenderCache const&) = delete;
