@@ -40,6 +40,12 @@ static bool gIsStressTesting = false;
 static int gCurrStressTimerId = FIRST_STRESS_TIMER_ID;
 static Kind kNotifStressTestBenchmark = "stressTestBenchmark";
 static Kind kNotifStressTestSummary = "stressTestSummary";
+static AtomicInt gStressTestFileNo = 0;
+
+// files to skip during stress testing, by name (not full path)
+static const char* gStressTestBlacklist[] = {
+    "1000.mobi",
+};
 
 bool IsStressTesting() {
     return gIsStressTesting;
@@ -207,7 +213,20 @@ void BenchFileOrDir(StrVec& pathsToBench) {
     }
 }
 
+static bool IsBlacklistedForStressTest(const char* filePath) {
+    const char* name = path::GetBaseNameTemp(filePath);
+    for (size_t i = 0; i < dimof(gStressTestBlacklist); i++) {
+        if (str::EqI(name, gStressTestBlacklist[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+
 static bool IsStressTestSupportedFile(const char* filePath, const char* filter) {
+    if (IsBlacklistedForStressTest(filePath)) {
+        return false;
+    }
     if (filter && !path::Match(path::GetBaseNameTemp(filePath), filter)) {
         return false;
     }
@@ -528,7 +547,12 @@ static void Start(StressTest* st, const char* path, const char* filter, const ch
 }
 
 static bool OpenFile(StressTest* st, const char* fileName) {
-    printf("%s\n", fileName);
+    if (IsBlacklistedForStressTest(fileName)) {
+        logf("Skipping blacklisted file: %s\n", fileName);
+        return false;
+    }
+    int fileNo = AtomicIntInc(&gStressTestFileNo);
+    printf("%d: %s\n", fileNo, fileName);
     fflush(stdout);
 
     LoadArgs args(fileName, st->win);
