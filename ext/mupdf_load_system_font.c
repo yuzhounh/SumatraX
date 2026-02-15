@@ -724,8 +724,16 @@ Exit:
     }
     buffer = load_and_cache_font(ctx, found, orig_name);
     int use_glyph_bbox = !streq(found->fontface, "DroidSansFallback");
-    font = fz_new_font_from_buffer(ctx, orig_name, buffer, found->index, use_glyph_bbox);
-    font->flags.ft_substitute = 1;
+    fz_try(ctx) {
+        font = fz_new_font_from_buffer(ctx, orig_name, buffer, found->index, use_glyph_bbox);
+        font->flags.ft_substitute = 1;
+    }
+    fz_always(ctx) {
+        fz_drop_buffer(ctx, buffer);
+    }
+    fz_catch(ctx) {
+        fz_rethrow(ctx);
+    }
     return font;
 }
 
