@@ -98,7 +98,7 @@ void WatchedFileSetIgnore(WatchedFile* wf, bool ignore) {
 static HANDLE gThreadHandle = nullptr;
 
 static HANDLE gThreadControlHandle = nullptr;
-static bool gShouldExit = false;
+static AtomicBool gShouldExit;
 
 // protects data structures shared between ui thread and file
 // watcher thread i.e. gWatchedDirs, gWatchedFiles
@@ -325,7 +325,7 @@ static void FileWatcherThread() {
 
     for (;;) {
         ResetTempAllocator();
-        if (gShouldExit) {
+        if (gShouldExit.Get()) {
             break;
         }
         handles[0] = gThreadControlHandle;
@@ -382,7 +382,7 @@ static void CALLBACK StopMonitoringDirAPC(ULONG_PTR arg) {
 
 static void CALLBACK SignalExitMonitoringThread(ULONG_PTR arg) {
     logf("SignalExitMonitoringThread\n");
-    gShouldExit = true;
+    gShouldExit.Set(true);
 }
 
 static WatchedDir* NewWatchedDir(const char* dirPath) {

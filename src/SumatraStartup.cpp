@@ -2647,6 +2647,7 @@ Exit:
     FreeAcceleratorTables();
 
     FileWatcherWaitForShutdown();
+    gRenderCache->WaitForShutdown();
     delete gRenderCache;
     SaveCallstackLogs();
     dbghelp::FreeCallstackLogs();

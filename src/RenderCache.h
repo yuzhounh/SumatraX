@@ -103,11 +103,13 @@ struct RenderCache {
 
     /* Interface for page rendering thread */
     HANDLE startRendering = nullptr;
+    AtomicBool shouldExit;
 
     RenderCache();
     RenderCache(RenderCache const&) = delete;
     RenderCache& operator=(RenderCache const&) = delete;
     ~RenderCache();
+    void WaitForShutdown();
 
     void RequestRendering(DisplayModel* dm, int pageNo);
     void Render(DisplayModel* dm, int pageNo, int rotation, float zoom, RectF pageRect,

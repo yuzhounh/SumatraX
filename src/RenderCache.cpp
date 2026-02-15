@@ -71,6 +71,16 @@ RenderCache::~RenderCache() {
     DeleteCriticalSection(&requestAccess);
 }
 
+void RenderCache::WaitForShutdown() {
+    shouldExit.Set(true);
+    // wake the thread in case it's waiting on startRendering event
+    SetEvent(startRendering);
+    DWORD res = WaitForSingleObject(renderThread, 5000);
+    if (res == WAIT_TIMEOUT) {
+        logf("RenderCache::WaitForShutdown: thread didn't exit in 5 seconds\n");
+    }
+}
+
 /* Find a bitmap for a page defined by <dm> and <pageNo> and optionally also
    <rotation> and <zoom> in the cache - call DropCacheEntry when you
    no longer need a found entry. */
@@ -661,8 +671,14 @@ static DWORD WINAPI RenderCacheThread(LPVOID data) {
     RenderedBitmap* bmp;
 
     for (;;) {
+        if (cache->shouldExit.Get()) {
+            break;
+        }
         if (cache->ClearCurrentRequest()) {
             DWORD waitResult = WaitForSingleObject(cache->startRendering, INFINITE);
+            if (cache->shouldExit.Get()) {
+                break;
+            }
             // Is it not a page render request?
             if (WAIT_OBJECT_0 != waitResult) {
                 continue;
@@ -723,7 +739,9 @@ static DWORD WINAPI RenderCacheThread(LPVOID data) {
         }
         ResetTempAllocator();
     }
+    logf("RenderCacheThread: exiting\n");
     DestroyTempAllocator();
+    return 0;
 }
 
 // TODO: conceptually, RenderCache is not the right place for code that paints
