@@ -12,7 +12,7 @@
  */
 
 import { Glob } from "bun";
-import { mkdirSync, existsSync, statSync } from "node:fs";
+import { mkdirSync, existsSync, statSync, rmSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { join, extname, dirname, basename } from "node:path";
 import { cpus } from "node:os";
@@ -1753,9 +1753,16 @@ namespace _com_util {
 // The link order for archives is: most-dependent first, least-dependent last.
 const ALL_LIBS: LibDef[] = [zlib, unrar, libdjvu, chm, unarrlib, libwebp, dav1d, libheif, mupdfLibs, mupdf, utils];
 
-async function build(isRelease: boolean): Promise<void> {
+async function build(isRelease: boolean, clean: boolean): Promise<void> {
   const config = isRelease ? "release" : "debug";
   const outDir = isRelease ? "out/mingw-rel64" : "out/mingw-dbg64";
+
+  if (clean && existsSync(outDir)) {
+    console.log(`Cleaning ${outDir}...`);
+    rmSync(outDir, { recursive: true, force: true });
+  }
+
+  const startTime = performance.now();
 
   console.log(`\n=== Building SumatraPDF (${config}, x64, mingw) ===\n`);
   console.log(`Output: ${outDir}`);
@@ -1784,15 +1791,16 @@ async function build(isRelease: boolean): Promise<void> {
   const linkArchives = [...archives].reverse();
   await buildSumatraExe(outDir, isRelease, linkArchives);
 
-  console.log(`\n=== Build complete (${config}) ===\n`);
+  const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+  console.log(`\n=== Build complete (${config}) in ${elapsed}s ===\n`);
 }
 
-async function build_debug(): Promise<void> {
-  await build(false);
+async function build_debug(clean: boolean): Promise<void> {
+  await build(false, clean);
 }
 
-async function build_release(): Promise<void> {
-  await build(true);
+async function build_release(clean: boolean): Promise<void> {
+  await build(true, clean);
 }
 
 // ── Main ────────────────────────────────────────────────────────────────────
@@ -1800,28 +1808,31 @@ async function build_release(): Promise<void> {
 const args = Bun.argv.slice(2);
 let doDebug = false;
 let doRelease = false;
+let doClean = false;
 
 for (const arg of args) {
   if (arg === "-debug") doDebug = true;
   else if (arg === "-release") doRelease = true;
+  else if (arg === "-clean") doClean = true;
   else {
     console.error(`Unknown argument: ${arg}`);
-    console.error("Usage: bun cmd/build-with-mingw.ts [-debug] [-release]");
+    console.error("Usage: bun cmd/build-with-mingw.ts [-debug] [-release] [-clean]");
     process.exit(1);
   }
 }
 
 if (!doDebug && !doRelease) {
-  console.error("Usage: bun cmd/build-with-mingw.ts [-debug] [-release]");
+  console.error("Usage: bun cmd/build-with-mingw.ts [-debug] [-release] [-clean]");
   console.error("  -debug    Build Debug x64 configuration");
   console.error("  -release  Build Release x64 configuration");
+  console.error("  -clean    Delete output directory before building");
   process.exit(1);
 }
 
 (async () => {
   try {
-    if (doDebug) await build_debug();
-    if (doRelease) await build_release();
+    if (doDebug) await build_debug(doClean);
+    if (doRelease) await build_release(doClean);
   } catch (e: any) {
     console.error(`\nBuild failed: ${e.message}`);
     process.exit(1);
