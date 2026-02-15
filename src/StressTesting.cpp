@@ -296,11 +296,23 @@ static void MakeRandomSelection(MainWindow* win, int pageNo) {
 // encapsulates the logic of getting the next file to test, so
 // that we can implement different strategies
 struct TestFileProvider {
+    AtomicRefCount refCount = 1;
     virtual ~TestFileProvider() {}
     // returns path of the next file to test or nullptr if done (caller needs to free() the result)
     virtual TempStr NextFile() = 0;
     virtual void Restart() = 0;
     virtual int GetFilesCount() = 0;
+
+    void AddRef() { AtomicRefCountAdd(&refCount); }
+    // returns new ref count
+    int Release() {
+        int n = AtomicRefCountDec(&refCount);
+        ReportIf(n < 0);
+        if (n == 0) {
+            delete this;
+        }
+        return n;
+    }
 };
 
 struct FilesProvider : TestFileProvider {
@@ -449,8 +461,9 @@ StressTest::StressTest(MainWindow* win, bool exitWhenDone) {
 }
 
 StressTest::~StressTest() {
-    // TODO: it can be shared so find a different way to free it
-    // delete fileProvider;
+    if (fileProvider) {
+        fileProvider->Release();
+    }
 }
 
 static void TickTimer(StressTest* st) {
@@ -887,6 +900,9 @@ void StartStressTest(Flags* i, MainWindow* win) {
             new DirFileProviderAsync(i->stressTestPath, i->stressTestFilter, i->stressTestMax, i->stressRandomizeFiles);
 
         for (int j = 0; j < n; j++) {
+            if (j > 0) {
+                filesProvider->AddRef();
+            }
             // dst will be deleted when the stress ends
             win = windows[j];
             StressTest* dst = new StressTest(win, i->exitWhenDone);
