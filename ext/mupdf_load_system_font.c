@@ -615,8 +615,7 @@ static fz_buffer* load_and_cache_font(fz_context* ctx, win_font_info* fi, const 
     }
 
     EnterCriticalSection(&cs_fonts);
-    // TODO: free this data. will have to make a copy using allocator
-    // not bound to ctx
+    // ff->data is freed in destroy_system_font_list()
     ff->size = fz_buffer_extract(ctx, buffer, (unsigned char**)&ff->data);
     buffer = fz_new_buffer_from_shared_data(ctx, ff->data, ff->size);
     LeaveCriticalSection(&cs_fonts);
@@ -927,7 +926,16 @@ void init_system_font_list(void) {
 }
 
 void destroy_system_font_list(void) {
-    // TODO: free names and file data
+    int i;
+    for (i = 0; i < g_win_fonts.len; i++) {
+        free((void*)g_win_fonts.fontmap[i].fontface);
+    }
+    g_win_fonts.len = 0;
+    for (i = 0; i < g_font_files.len; i++) {
+        free((void*)g_font_files.files[i].file_path);
+        free(g_font_files.files[i].data);
+    }
+    g_font_files.len = 0;
     DeleteCriticalSection(&cs_fonts);
 }
 
