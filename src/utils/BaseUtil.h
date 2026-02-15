@@ -395,15 +395,22 @@ struct Allocator {
     static void* MemDup(Allocator* a, const void* mem, size_t size, size_t extraBytes = 0);
 };
 
-// atomic integer using Windows Interlocked* APIs
-using AtomicInt = volatile LONG;
+using AtomicBool = volatile LONG;
+bool AtomicBoolGet(AtomicBool* v);
+bool AtomicBoolSet(AtomicBool* v, bool newValue);
 
+using AtomicInt = volatile LONG;
 int AtomicIntSet(AtomicInt* v, int n);
 int AtomicIntInc(AtomicInt* v);
 int AtomicIntDec(AtomicInt* v);
 int AtomicIntAdd(AtomicInt* v, int n);
 int AtomicIntSub(AtomicInt* v, int n);
 int AtomicIntGet(AtomicInt* v);
+
+using AtomicRefCount = volatile LONG;
+int AtomicRefCountAdd(AtomicRefCount* v);
+int AtomicRefCountDec(AtomicRefCount* v);
+
 
 // PoolAllocator is for the cases where we need to allocate pieces of memory
 // that are meant to be freed together. It simplifies the callers (only need
@@ -732,16 +739,6 @@ Func1<T2>* NewFunc1(void (*fn)(T1*, T2), T1* d) {
     res->userData = (void*)d;
     return res;
 }
-
-using AtomicBool = volatile LONG;
-
-bool AtomicBoolGet(AtomicBool* v);
-bool AtomicBoolSet(AtomicBool* v, bool newValue);
-
-using AtomicRefCount = volatile LONG;
-
-int AtomicRefCountAdd(AtomicRefCount* v);
-int AtomicRefCountDec(AtomicRefCount* v);
 
 int setMinMax(int& v, int minVal, int maxVal);
 
