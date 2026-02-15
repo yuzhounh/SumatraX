@@ -2098,6 +2098,7 @@ static void RunIFilterPipeServer(const char* pipeName) {
 }
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
+    RememberMainUIThreadId();
     int exitCode = 1; // by default it's error
     int nWithDde = 0;
     MainWindow* win = nullptr;

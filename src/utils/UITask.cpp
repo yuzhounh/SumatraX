@@ -69,7 +69,7 @@ void Post(const Func0& f, Kind kind) {
 } // NOLINT
 
 void PostOptimized(const Func0& f, Kind kind) {
-    if (IsGUIThread(FALSE)) {
+    if (IsMainUIThread()) {
         // if we're already on ui thread, execute immediately
         // faster and easier to debug
         f.Call();

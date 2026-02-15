@@ -33,6 +33,16 @@ bool ToBool(BOOL b) {
     return b ? true : false;
 }
 
+static DWORD gMainUIThreadId = 0;
+
+void RememberMainUIThreadId() {
+    gMainUIThreadId = GetCurrentThreadId();
+}
+
+bool IsMainUIThread() {
+    return GetCurrentThreadId() == gMainUIThreadId;
+}
+
 Size BlittableBitmap::GetSize() {
     return size;
 }
