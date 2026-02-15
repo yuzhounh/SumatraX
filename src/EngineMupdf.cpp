@@ -3413,6 +3413,7 @@ static const char* mupdfPropsMap[] = {
 
 TempStr EngineMupdf::GetPropertyTemp(const char* name) {
     auto ctx = Ctx();
+    ScopedCritSec ctxScope(ctxAccess);
 
     const char* key = GetMatchingString(mupdfPropsMap, name);
     if (key) {
