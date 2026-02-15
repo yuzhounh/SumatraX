@@ -2686,7 +2686,8 @@ void CloseTab(WindowTab* tab, bool quitIfLast) {
         return;
     }
     MainWindow* win = tab->win;
-    logf("CloseTab: tab: 0x%p win: 0x%p, hwndFrame: 0x%x, quitIfLast: %d\n", tab, win, win->hwndFrame, (int)quitIfLast);
+    logf("CloseTab: tab: 0x%p win: 0x%p, hwndFrame: 0x%x, quitIfLast: %d, dm: 0x%p\n", tab, win, win->hwndFrame,
+         (int)quitIfLast, tab->AsFixed());
 
     AbortFinding(win, true);
     RemoveNotificationsForGroup(win->hwndCanvas, kNotifPageInfo);

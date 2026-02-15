@@ -312,6 +312,7 @@ DisplayModel::DisplayModel(EngineBase* engine, DocControllerCallback* cb) : DocC
 }
 
 DisplayModel::~DisplayModel() {
+    logf("~DisplayModel: 0x%p\n", this);
     pauseRendering = true;
     cb->CleanUp(this);
 

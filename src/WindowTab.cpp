@@ -23,6 +23,8 @@
 #include "Translations.h"
 #include "EditAnnotations.h"
 
+#include "utils/Log.h"
+
 WindowTab::WindowTab(MainWindow* win) {
     this->win = win;
 }
@@ -38,6 +40,7 @@ bool WindowTab::IsAboutTab() const {
 }
 
 WindowTab::~WindowTab() {
+    logf("~WindowTab: 0x%p, dm: 0x%p\n", this, AsFixed());
     CloseAndDeleteEditAnnotationsWindow(this);
     FileWatcherUnsubscribe(watcher);
     if (AsChm()) {
