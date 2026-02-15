@@ -504,13 +504,24 @@ workspace "SumatraPDF"
       "HAVE_OT",
       "HAVE_UCDN",
       "HAVE_FREETYPE",
-      "HAVE_ATEXIT",
       "HB_NO_MT",
-      "hb_malloc_impl=sumatra_hb_malloc",
-      "hb_calloc_impl=sumatra_hb_calloc",
-      "hb_realloc_impl=sumatra_hb_realloc",
-      "hb_free_impl=sumatra_hb_free"
     }
+    filter "configurations:Debug or DebugFull"
+      defines {
+        "HAVE_ATEXIT",
+        "hb_malloc_impl=sumatra_hb_malloc",
+        "hb_calloc_impl=sumatra_hb_calloc",
+        "hb_realloc_impl=sumatra_hb_realloc",
+        "hb_free_impl=sumatra_hb_free"
+      }
+    filter "configurations:Release or ReleaseAnalyze"
+      defines {
+        "hb_malloc_impl=fz_hb_malloc",
+        "hb_calloc_impl=fz_hb_calloc",
+        "hb_realloc_impl=fz_hb_realloc",
+        "hb_free_impl=fz_hb_free"
+      }
+    filter {}
     disablewarnings { "4805", "4100", "4146", "4244", "4245", "4267", "4456", "4457", "4459", "4701", "4702", "4706" }
     harfbuzz_files()
 

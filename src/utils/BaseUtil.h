@@ -411,7 +411,6 @@ using AtomicRefCount = volatile LONG;
 int AtomicRefCountAdd(AtomicRefCount* v);
 int AtomicRefCountDec(AtomicRefCount* v);
 
-
 // PoolAllocator is for the cases where we need to allocate pieces of memory
 // that are meant to be freed together. It simplifies the callers (only need
 // to track this object and not all allocated pieces). Allocation and freeing
