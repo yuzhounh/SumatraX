@@ -388,6 +388,13 @@ RectF EngineImages::PageContentBox(int pageNo, RenderTarget target) {
     if (!bmp) return RectF{};
 
     const int w = bmp->GetWidth(), h = bmp->GetHeight();
+
+    // Handle degenerate cases where the image is too small for margin detection
+    // Minimum sensible dimension for margin cropping is about 10 pixels
+    if (w < 10 || h < 10) {
+        return RectF(0, 0, (float)w, (float)h);
+    }
+
     // don't need pixel-perfect margin, so scan 200 points at most
     const int deltaX = std::max(1, w / 200), deltaY = std::max(1, h / 200);
 
