@@ -814,7 +814,7 @@ static void OnMouseLeftButtonUp(MainWindow* win, int x, int y, WPARAM key) {
         return;
     }
 
-    if (tab->selectedAnnotation && win->annotationUnderCursor) {
+    if (win->annotationUnderCursor && (tab->selectedAnnotation || tab->editAnnotsWindow)) {
         SetSelectedAnnotation(tab, win->annotationUnderCursor);
         return;
     }
@@ -1409,7 +1409,8 @@ static LRESULT OnSetCursorMouseNone(MainWindow* win, HWND hwnd) {
         return TRUE;
     }
 
-    Annotation* selected = win->CurrentTab()->selectedAnnotation;
+    WindowTab* tab = win->CurrentTab();
+    Annotation* selected = tab->selectedAnnotation;
 
     // Check if hovering over resize handle of selected annotation
     if (selected && AnnotationCanBeResized(selected->type)) {
@@ -1421,7 +1422,7 @@ static LRESULT OnSetCursorMouseNone(MainWindow* win, HWND hwnd) {
     }
 
     Annotation* annot = dm->GetAnnotationAtPos(pt, selected);
-    if (annot && selected) {
+    if (annot && (selected || tab->editAnnotsWindow)) {
         SetCursorCached(IDC_HAND);
         return TRUE;
     }
