@@ -81,14 +81,16 @@ constexpr int kMaxNotifs = 128;
 static NotificationWnd* gNotifs[kMaxNotifs];
 static int gNotifsCount = 0;
 
-static void GetForHwnd(HWND hwnd, Vec<NotificationWnd*>& v) {
+static int GetForHwnd(HWND hwnd, NotificationWnd* wnds[kMaxNotifs]) {
+    int n = 0;
     for (int i = 0; i < gNotifsCount; i++) {
         auto* wnd = gNotifs[i];
         HWND parent = HwndGetParent(wnd->hwnd);
         if (parent == hwnd) {
-            v.Append(wnd);
+            wnds[n++] = wnd;
         }
     }
+    return n;
 }
 
 static int NotificationIndexOf(NotificationWnd* wnd) {
@@ -100,16 +102,16 @@ static int NotificationIndexOf(NotificationWnd* wnd) {
     return -1;
 }
 
-static void GetForSameHwnd(NotificationWnd* wnd, Vec<NotificationWnd*>& v) {
+static int GetForSameHwnd(NotificationWnd* wnd, NotificationWnd* wnds[kMaxNotifs]) {
     HWND parent = GetParent(wnd->hwnd);
-    GetForHwnd(parent, v);
+    return GetForHwnd(parent, wnds);
 }
 
 void RelayoutNotifications(HWND hwnd) {
-    Vec<NotificationWnd*> wnds;
+    NotificationWnd* wnds[kMaxNotifs];
     HWND parent = HwndGetParent(hwnd);
-    GetForHwnd(parent, wnds);
-    if (wnds.IsEmpty()) {
+    int nWnds = GetForHwnd(parent, wnds);
+    if (nWnds == 0) {
         return;
     }
 
@@ -119,7 +121,8 @@ void RelayoutNotifications(HWND hwnd) {
     int topLeftMargin = DpiScale(hwndCanvas, kTopLeftMargin);
     int dyPadding = DpiScale(hwndCanvas, kPadding);
     int y = topLeftMargin;
-    for (NotificationWnd* wnd : wnds) {
+    for (int i = 0; i < nWnds; i++) {
+        NotificationWnd* wnd = wnds[i];
         if (wnd->delayTimerId != 0) {
             // still in delay period, not yet visible
             continue;
@@ -481,24 +484,25 @@ DoDefault:
     return WndProcDefault(hwnd, msg, wp, lp);
 }
 
-static int NotifsRemoveForGroup(Vec<NotificationWnd*>& wnds, Kind groupId) {
+static int NotifsRemoveForGroup(NotificationWnd** wnds, int nWnds, Kind groupId) {
     ReportIf(groupId == nullptr);
-    Vec<NotificationWnd*> toRemove;
-    for (auto* wnd : wnds) {
-        if (wnd->groupId == groupId) {
-            toRemove.Append(wnd);
+    NotificationWnd* toRemove[kMaxNotifs];
+    int nRemove = 0;
+    for (int i = 0; i < nWnds; i++) {
+        if (wnds[i]->groupId == groupId) {
+            toRemove[nRemove++] = wnds[i];
         }
     }
-    for (auto* wnd : toRemove) {
-        NotifsRemoveNotification(wnd);
+    for (int i = 0; i < nRemove; i++) {
+        NotifsRemoveNotification(toRemove[i]);
     }
-    return toRemove.Size();
+    return nRemove;
 }
 
-static bool NotifsAdd(Vec<NotificationWnd*>& wnds, NotificationWnd* wnd, Kind groupId) {
+static bool NotifsAdd(NotificationWnd** wnds, int nWnds, NotificationWnd* wnd, Kind groupId) {
     bool skipRemove = (groupId == nullptr) || (groupId == kNotifAdHoc);
     if (!skipRemove) {
-        NotifsRemoveForGroup(wnds, groupId);
+        NotifsRemoveForGroup(wnds, nWnds, groupId);
     }
     if (gNotifsCount >= kMaxNotifs) {
         return false;
@@ -511,16 +515,16 @@ static bool NotifsAdd(Vec<NotificationWnd*>& wnds, NotificationWnd* wnd, Kind gr
 }
 
 static bool NotifsAdd(NotificationWnd* wnd, Kind groupId) {
-    Vec<NotificationWnd*> wnds;
-    GetForSameHwnd(wnd, wnds);
-    return NotifsAdd(wnds, wnd, groupId);
+    NotificationWnd* wnds[kMaxNotifs];
+    int nWnds = GetForSameHwnd(wnd, wnds);
+    return NotifsAdd(wnds, nWnds, wnd, groupId);
 }
 
-NotificationWnd* NotifsGetForGroup(Vec<NotificationWnd*>& wnds, Kind groupId) {
+NotificationWnd* NotifsGetForGroup(NotificationWnd** wnds, int nWnds, Kind groupId) {
     ReportIf(!groupId);
-    for (auto* wnd : wnds) {
-        if (wnd->groupId == groupId) {
-            return wnd;
+    for (int i = 0; i < nWnds; i++) {
+        if (wnds[i]->groupId == groupId) {
+            return wnds[i];
         }
     }
     return nullptr;
@@ -579,14 +583,14 @@ void RemoveNotification(NotificationWnd* wnd) {
 }
 
 bool RemoveNotificationsForGroup(HWND hwnd, Kind kind) {
-    Vec<NotificationWnd*> wnds;
-    GetForHwnd(hwnd, wnds);
-    int n = NotifsRemoveForGroup(wnds, kind);
+    NotificationWnd* wnds[kMaxNotifs];
+    int nWnds = GetForHwnd(hwnd, wnds);
+    int n = NotifsRemoveForGroup(wnds, nWnds, kind);
     return n > 0;
 }
 
 NotificationWnd* GetNotificationForGroup(HWND hwnd, Kind kind) {
-    Vec<NotificationWnd*> wnds;
-    GetForHwnd(hwnd, wnds);
-    return NotifsGetForGroup(wnds, kind);
+    NotificationWnd* wnds[kMaxNotifs];
+    int nWnds = GetForHwnd(hwnd, wnds);
+    return NotifsGetForGroup(wnds, nWnds, kind);
 }
