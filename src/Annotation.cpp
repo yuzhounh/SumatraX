@@ -178,31 +178,34 @@ void SetRect(Annotation* annot, RectF r) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
     bool failed = false;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    fz_rect rc = ToFzRect(r);
-    fz_try(ctx) {
-        if (annot->type == AnnotationType::Line) {
-            // line annotation doesn't have a rect but a line position
-            // TODO: not sure this is the right place for this
-            fz_point p1 = {rc.x0, rc.y0}, p2 = {rc.x1, rc.y1};
-            pdf_set_annot_line(ctx, a, p1, p2);
-        } else {
-            pdf_set_annot_rect(ctx, a, rc);
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        fz_rect rc = ToFzRect(r);
+        fz_try(ctx) {
+            if (annot->type == AnnotationType::Line) {
+                // line annotation doesn't have a rect but a line position
+                // TODO: not sure this is the right place for this
+                fz_point p1 = {rc.x0, rc.y0}, p2 = {rc.x1, rc.y1};
+                pdf_set_annot_line(ctx, a, p1, p2);
+            } else {
+                pdf_set_annot_rect(ctx, a, rc);
+            }
+            pdf_update_annot(ctx, a);
         }
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
-        // can happen for non-moveable annotations
-        failed = true;
-        logf("SetRect(): pdf_set_annot_rect() or pdf_update_annot() failed\n");
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+            // can happen for non-moveable annotations
+            failed = true;
+            logf("SetRect(): pdf_set_annot_rect() or pdf_update_annot() failed\n");
+        }
     }
     ReportIf(failed);
     if (failed) {
         return;
     }
     annot->bounds = r;
+    // must be called outside ctxAccess to avoid deadlock with pagesAccess
     MarkNotificationAsModified(e, annot);
 }
 
@@ -252,20 +255,22 @@ static bool IsValidQuadding(int i) {
 bool SetQuadding(Annotation* annot, int newQuadding) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    ReportIf(!IsValidQuadding(newQuadding));
-    bool didChange = Quadding(annot) != newQuadding;
-    if (!didChange) {
-        return false;
-    }
-    fz_try(ctx) {
-        pdf_set_annot_quadding(ctx, a, newQuadding);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
-        logf("SetQuadding(): pdf_set_annot_quadding or pdf_update_annot() failed\n");
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        ReportIf(!IsValidQuadding(newQuadding));
+        bool didChange = Quadding(annot) != newQuadding;
+        if (!didChange) {
+            return false;
+        }
+        fz_try(ctx) {
+            pdf_set_annot_quadding(ctx, a, newQuadding);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+            logf("SetQuadding(): pdf_set_annot_quadding or pdf_update_annot() failed\n");
+        }
     }
     MarkNotificationAsModified(e, annot);
     return true;
@@ -274,28 +279,30 @@ bool SetQuadding(Annotation* annot, int newQuadding) {
 void SetQuadPointsAsRect(Annotation* annot, const Vec<RectF>& rects) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    fz_quad quads[512];
-    int n = rects.Size();
-    if (n == 0) {
-        return;
-    }
-    constexpr int kMaxQuads = (int)dimof(quads);
-    for (int i = 0; i < n && i < kMaxQuads; i++) {
-        RectF rect = rects[i];
-        fz_rect r = ToFzRect(rect);
-        fz_quad q = fz_quad_from_rect(r);
-        quads[i] = q;
-    }
-    fz_try(ctx) {
-        pdf_clear_annot_quad_points(ctx, a);
-        pdf_set_annot_quad_points(ctx, a, n, quads);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
-        logf("SetQuadPointsAsRect(): mupdf calls failed\n");
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        fz_quad quads[512];
+        int n = rects.Size();
+        if (n == 0) {
+            return;
+        }
+        constexpr int kMaxQuads = (int)dimof(quads);
+        for (int i = 0; i < n && i < kMaxQuads; i++) {
+            RectF rect = rects[i];
+            fz_rect r = ToFzRect(rect);
+            fz_quad q = fz_quad_from_rect(r);
+            quads[i] = q;
+        }
+        fz_try(ctx) {
+            pdf_clear_annot_quad_points(ctx, a);
+            pdf_set_annot_quad_points(ctx, a, n, quads);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+            logf("SetQuadPointsAsRect(): mupdf calls failed\n");
+        }
     }
     MarkNotificationAsModified(e, annot);
 }
@@ -354,14 +361,16 @@ bool SetContents(Annotation* annot, const char* sv) {
     if (str::Eq(sv, currValue)) {
         return false;
     }
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    fz_try(ctx) {
-        pdf_set_annot_contents(ctx, a, sv);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        fz_try(ctx) {
+            pdf_set_annot_contents(ctx, a, sv);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+        }
     }
     MarkNotificationAsModified(e, annot);
     return true;
@@ -374,17 +383,19 @@ void DeleteAnnotation(Annotation* annot) {
     }
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
     bool failed = false;
-    pdf_page* page = nullptr;
-    fz_try(ctx) {
-        page = pdf_annot_page(ctx, a);
-        pdf_delete_annot(ctx, page, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
-        failed = true;
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        pdf_page* page = nullptr;
+        fz_try(ctx) {
+            page = pdf_annot_page(ctx, a);
+            pdf_delete_annot(ctx, page, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+            failed = true;
+        }
     }
     if (failed) {
         logf("failed to delete annotation on page %d\n", annot->pageNo);
@@ -471,14 +482,16 @@ const char* IconName(Annotation* annot) {
 void SetIconName(Annotation* annot, const char* iconName) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    fz_try(ctx) {
-        pdf_set_annot_icon_name(ctx, a, iconName);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        fz_try(ctx) {
+            pdf_set_annot_icon_name(ctx, a, iconName);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+        }
     }
     // TODO: only if the value changed
     MarkNotificationAsModified(e, annot);
@@ -487,14 +500,16 @@ void SetIconName(Annotation* annot, const char* iconName) {
 void SetLineEndStyles(Annotation* annot, int end) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    fz_try(ctx) {
-        pdf_set_annot_line_end_style(ctx, a, (pdf_line_ending)end);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        fz_try(ctx) {
+            pdf_set_annot_line_end_style(ctx, a, (pdf_line_ending)end);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+        }
     }
     MarkNotificationAsModified(e, annot);
 }
@@ -502,14 +517,16 @@ void SetLineEndStyles(Annotation* annot, int end) {
 void SetLineStartStyles(Annotation* annot, int start) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    fz_try(ctx) {
-        pdf_set_annot_line_start_style(ctx, a, (pdf_line_ending)start);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        fz_try(ctx) {
+            pdf_set_annot_line_start_style(ctx, a, (pdf_line_ending)start);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+        }
     }
     MarkNotificationAsModified(e, annot);
 }
@@ -585,55 +602,57 @@ PdfColor GetColor(Annotation* annot) {
 bool SetColor(Annotation* annot, PdfColor c) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    bool didChange = false;
-    float color[4]{};
-    int n = -1;
-    float oldOpacity = 0;
-    fz_try(ctx) {
-        pdf_annot_color(ctx, a, &n, color);
-        oldOpacity = pdf_annot_opacity(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
-        n = -1;
-    }
-    if (n == -1) {
-        return false;
-    }
-    float newColor[3];
-    PdfColorToFloat(c, newColor);
-    float opacity = GetOpacityFloat(c);
-    didChange = (n != 3);
-    if (!didChange) {
-        for (int i = 0; i < n; i++) {
-            if (color[i] != newColor[i]) {
-                didChange = true;
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        bool didChange = false;
+        float color[4]{};
+        int n = -1;
+        float oldOpacity = 0;
+        fz_try(ctx) {
+            pdf_annot_color(ctx, a, &n, color);
+            oldOpacity = pdf_annot_opacity(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+            n = -1;
+        }
+        if (n == -1) {
+            return false;
+        }
+        float newColor[3];
+        PdfColorToFloat(c, newColor);
+        float opacity = GetOpacityFloat(c);
+        didChange = (n != 3);
+        if (!didChange) {
+            for (int i = 0; i < n; i++) {
+                if (color[i] != newColor[i]) {
+                    didChange = true;
+                }
             }
         }
-    }
-    if (opacity != oldOpacity) {
-        didChange = true;
-    }
-    if (!didChange) {
-        return false;
-    }
-    fz_try(ctx) {
-        if (c == 0) {
-            pdf_set_annot_color(ctx, a, 0, newColor);
-            // TODO: set opacity to 1?
-            // pdf_set_annot_opacity(ctx, a, 1.f);
-        } else {
-            pdf_set_annot_color(ctx, a, 3, newColor);
-            if (oldOpacity != opacity) {
-                pdf_set_annot_opacity(ctx, a, opacity);
-            }
+        if (opacity != oldOpacity) {
+            didChange = true;
         }
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
+        if (!didChange) {
+            return false;
+        }
+        fz_try(ctx) {
+            if (c == 0) {
+                pdf_set_annot_color(ctx, a, 0, newColor);
+                // TODO: set opacity to 1?
+                // pdf_set_annot_opacity(ctx, a, 1.f);
+            } else {
+                pdf_set_annot_color(ctx, a, 3, newColor);
+                if (oldOpacity != opacity) {
+                    pdf_set_annot_opacity(ctx, a, opacity);
+                }
+            }
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+        }
     }
     MarkNotificationAsModified(e, annot);
     return true;
@@ -663,38 +682,40 @@ PdfColor InteriorColor(Annotation* annot) {
 bool SetInteriorColor(Annotation* annot, PdfColor c) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    bool didChange = false;
-    float color[4]{};
-    int n = -1;
-    fz_try(ctx) {
-        pdf_annot_interior_color(ctx, a, &n, color);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
-        n = -1;
-    }
-    float newColor[3]{};
-    PdfColorToFloat(c, newColor);
-    int newN = (c == 0) ? 0 : 3;
-    didChange = (n != newN);
-    if (!didChange) {
-        for (int i = 0; i < n; i++) {
-            if (color[i] != newColor[i]) {
-                didChange = true;
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        bool didChange = false;
+        float color[4]{};
+        int n = -1;
+        fz_try(ctx) {
+            pdf_annot_interior_color(ctx, a, &n, color);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+            n = -1;
+        }
+        float newColor[3]{};
+        PdfColorToFloat(c, newColor);
+        int newN = (c == 0) ? 0 : 3;
+        didChange = (n != newN);
+        if (!didChange) {
+            for (int i = 0; i < n; i++) {
+                if (color[i] != newColor[i]) {
+                    didChange = true;
+                }
             }
         }
-    }
-    if (!didChange) {
-        return false;
-    }
-    fz_try(ctx) {
-        pdf_set_annot_interior_color(ctx, a, newN, newColor);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
+        if (!didChange) {
+            return false;
+        }
+        fz_try(ctx) {
+            pdf_set_annot_interior_color(ctx, a, newN, newColor);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+        }
     }
     MarkNotificationAsModified(e, annot);
     return true;
@@ -721,19 +742,21 @@ const char* DefaultAppearanceTextFont(Annotation* annot) {
 void SetDefaultAppearanceTextFont(Annotation* annot, const char* sv) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    const char* fontName = nullptr;
-    float sizeF{0.0};
-    int n = 0;
-    float textColor[4]{};
-    fz_try(ctx) {
-        pdf_annot_default_appearance(ctx, a, &fontName, &sizeF, &n, textColor);
-        pdf_set_annot_default_appearance(ctx, a, sv, sizeF, n, textColor);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        const char* fontName = nullptr;
+        float sizeF{0.0};
+        int n = 0;
+        float textColor[4]{};
+        fz_try(ctx) {
+            pdf_annot_default_appearance(ctx, a, &fontName, &sizeF, &n, textColor);
+            pdf_set_annot_default_appearance(ctx, a, sv, sizeF, n, textColor);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+        }
     }
     MarkNotificationAsModified(e, annot);
 }
@@ -759,19 +782,21 @@ int DefaultAppearanceTextSize(Annotation* annot) {
 void SetDefaultAppearanceTextSize(Annotation* annot, int textSize) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    const char* fontName = nullptr;
-    float sizeF{0.0};
-    int n = 0;
-    float textColor[4]{};
-    fz_try(ctx) {
-        pdf_annot_default_appearance(ctx, a, &fontName, &sizeF, &n, textColor);
-        pdf_set_annot_default_appearance(ctx, a, fontName, (float)textSize, n, textColor);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        const char* fontName = nullptr;
+        float sizeF{0.0};
+        int n = 0;
+        float textColor[4]{};
+        fz_try(ctx) {
+            pdf_annot_default_appearance(ctx, a, &fontName, &sizeF, &n, textColor);
+            pdf_set_annot_default_appearance(ctx, a, fontName, (float)textSize, n, textColor);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+        }
     }
     MarkNotificationAsModified(e, annot);
 }
@@ -798,20 +823,22 @@ PdfColor DefaultAppearanceTextColor(Annotation* annot) {
 void SetDefaultAppearanceTextColor(Annotation* annot, PdfColor col) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    const char* fontName = nullptr;
-    float sizeF{0.0};
-    int n = 0;
-    float textColor[4]{}; // must be at least 4
-    fz_try(ctx) {
-        pdf_annot_default_appearance(ctx, a, &fontName, &sizeF, &n, textColor);
-        PdfColorToFloat(col, textColor);
-        pdf_set_annot_default_appearance(ctx, a, fontName, sizeF, 3, textColor);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        const char* fontName = nullptr;
+        float sizeF{0.0};
+        int n = 0;
+        float textColor[4]{}; // must be at least 4
+        fz_try(ctx) {
+            pdf_annot_default_appearance(ctx, a, &fontName, &sizeF, &n, textColor);
+            PdfColorToFloat(col, textColor);
+            pdf_set_annot_default_appearance(ctx, a, fontName, sizeF, 3, textColor);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+        }
     }
     MarkNotificationAsModified(e, annot);
 }
@@ -858,15 +885,17 @@ void SetBorderWidth(Annotation* annot, int newWidth) {
     }
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    fz_try(ctx) {
-        pdf_set_annot_border_width(ctx, a, (float)newWidth);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
-        logf("SetBorderWidth: SetBorderWidth() or pdf_update_annot() failed\n");
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        fz_try(ctx) {
+            pdf_set_annot_border_width(ctx, a, (float)newWidth);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+            logf("SetBorderWidth: SetBorderWidth() or pdf_update_annot() failed\n");
+        }
     }
     MarkNotificationAsModified(e, annot);
 }
@@ -891,19 +920,21 @@ int Opacity(Annotation* annot) {
 void SetOpacity(Annotation* annot, int newOpacity) {
     EngineMupdf* e = annot->engine;
     auto a = annot->pdfannot;
-    auto ctx = e->Ctx();
-    ScopedCritSec cs(e->ctxAccess);
-    ReportIf(newOpacity < 0 || newOpacity > 255);
-    newOpacity = std::clamp(newOpacity, 0, 255);
-    float fopacity = (float)newOpacity / 255.f;
+    {
+        auto ctx = e->Ctx();
+        ScopedCritSec cs(e->ctxAccess);
+        ReportIf(newOpacity < 0 || newOpacity > 255);
+        newOpacity = std::clamp(newOpacity, 0, 255);
+        float fopacity = (float)newOpacity / 255.f;
 
-    fz_try(ctx) {
-        pdf_set_annot_opacity(ctx, a, fopacity);
-        pdf_update_annot(ctx, a);
-    }
-    fz_catch(ctx) {
-        fz_report_error(ctx);
-        logf("SetOpacity: pdf_set_annot_opacity() or pdf_update_annot() failed\n");
+        fz_try(ctx) {
+            pdf_set_annot_opacity(ctx, a, fopacity);
+            pdf_update_annot(ctx, a);
+        }
+        fz_catch(ctx) {
+            fz_report_error(ctx);
+            logf("SetOpacity: pdf_set_annot_opacity() or pdf_update_annot() failed\n");
+        }
     }
     MarkNotificationAsModified(e, annot);
 }
