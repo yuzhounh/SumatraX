@@ -180,11 +180,13 @@ struct DjVuContext {
         }
     }
 
-    // temporarily release the lock before blocking in SpinMessageLoop
-    // to avoid holding the lock while waiting for libdjvu messages
+    // temporarily release the lock and process any pending libdjvu messages.
+    // uses non-blocking peek to avoid two threads both blocking inside
+    // GMonitor::wait() on the same ddjvu_context, which corrupts monitor state
     void SpinMessageLoopWithUnlock() {
         LeaveCriticalSection(&lock);
-        SpinMessageLoop();
+        SpinMessageLoop(false);
+        Sleep(10);
         EnterCriticalSection(&lock);
     }
 
