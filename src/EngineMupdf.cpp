@@ -1669,13 +1669,14 @@ EngineMupdf::EngineMupdf() {
 }
 
 fz_context* EngineMupdf::Ctx() const {
-    return _ctx;
+    return GetOrClonePerThreadContext(const_cast<EngineMupdf*>(this), _ctx);
 }
 
 EngineMupdf::~EngineMupdf() {
     EnterCriticalSection(&pagesAccess);
 
-    auto ctx = Ctx();
+    ReleaseAllPerThreadContexts(this);
+    auto ctx = _ctx;
     for (FzPageInfo* pi : pages) {
         DeleteVecMembers(pi->links);
         DeleteVecMembers(pi->autoLinks);
@@ -1702,7 +1703,6 @@ EngineMupdf::~EngineMupdf() {
 
     fz_drop_document(ctx, _doc);
     fz_purge_glyph_cache(ctx);
-    ReleaseAllPerThreadContexts(this);
     fz_drop_context(ctx);
 
     delete pageLabels;
@@ -2782,7 +2782,7 @@ fz_stext_page* fz_new_stext_page_from_page2(fz_context* ctx, fz_page* page, cons
 // Maybe: when loading fully, cache extracted text in FzPageInfo
 // so that we don't have to re-do fz_new_stext_page_from_page() when doing search
 FzPageInfo* EngineMupdf::GetFzPageInfo(int pageNo, bool loadQuick, fz_cookie* cookie) {
-    auto ctx = GetOrClonePerThreadContext(this, Ctx());
+    auto ctx = Ctx();
     // TODO: minimize time spent under pagesAccess when fully loading
     ScopedCritSec scope(&pagesAccess);
 
@@ -2945,7 +2945,7 @@ RectF EngineMupdf::Transform(const RectF& rect, int pageNo, float zoom, int rota
 }
 
 RenderedBitmap* EngineMupdf::RenderPage(RenderPageArgs& args) {
-    auto ctx = GetOrClonePerThreadContext(this, Ctx());
+    auto ctx = Ctx();
     auto pageNo = args.pageNo;
 
     fz_cookie* fzcookie = nullptr;
