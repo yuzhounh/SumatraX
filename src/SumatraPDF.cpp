@@ -6093,7 +6093,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
                 Annotation* annot = GetAnnotionUnderCursor(tab, nullptr);
                 ShowEditAnnotationsWindow(tab);
                 if (annot) {
-                    SetSelectedAnnotation(tab, annot);
+                    SetSelectedAnnotation(tab, annot, InitialAction::SelectEdit);
                 }
             }
             break;
@@ -6208,7 +6208,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         UpdateAnnotationsList(tab->editAnnotsWindow);
         if (openAnnotationEdit && !win->isFullScreen) {
             ShowEditAnnotationsWindow(tab);
-            SetSelectedAnnotation(tab, lastCreatedAnnot);
+            SetSelectedAnnotation(tab, lastCreatedAnnot, InitialAction::SelectEdit);
         }
     }
     return 0;

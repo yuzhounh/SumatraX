@@ -811,7 +811,7 @@ static void OnMouseLeftButtonUp(MainWindow* win, int x, int y, WPARAM key) {
 
     if (IsCtrlPressed() && win->annotationUnderCursor) {
         ShowEditAnnotationsWindow(tab);
-        SetSelectedAnnotation(tab, win->annotationUnderCursor);
+        SetSelectedAnnotation(tab, win->annotationUnderCursor, InitialAction::FocusList);
         return;
     }
 
@@ -894,7 +894,7 @@ static void OnMouseLeftButtonDblClk(MainWindow* win, int x, int y, WPARAM key) {
     WindowTab* tab = win->CurrentTab();
     if (IsCtrlPressed() && win->annotationUnderCursor) {
         ShowEditAnnotationsWindow(tab);
-        SetSelectedAnnotation(tab, win->annotationUnderCursor);
+        SetSelectedAnnotation(tab, win->annotationUnderCursor, InitialAction::SelectEdit);
         return;
     }
 #endif
