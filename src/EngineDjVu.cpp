@@ -127,9 +127,11 @@ struct DjVuContext {
     ddjvu_context_t* ctx = nullptr;
     int refCount = 1;
     CRITICAL_SECTION lock;
+    CRITICAL_SECTION spinLock;
 
     DjVuContext() {
         InitializeCriticalSection(&lock);
+        InitializeCriticalSection(&spinLock);
         ctx = ddjvu_context_create("DjVuEngine");
         // reset the locale to "C" as most other code expects
         setlocale(LC_ALL, "C");
@@ -160,6 +162,7 @@ struct DjVuContext {
         }
         LeaveCriticalSection(&lock);
         DeleteCriticalSection(&lock);
+        DeleteCriticalSection(&spinLock);
     }
 
     void SpinMessageLoop(bool wait = true) const {
@@ -181,11 +184,15 @@ struct DjVuContext {
     }
 
     // temporarily release the lock and process any pending libdjvu messages.
+    // spinLock serializes message processing so only one thread peeks/pops
+    // at a time, preventing use-after-free on the returned message pointer.
     // uses non-blocking peek to avoid two threads both blocking inside
     // GMonitor::wait() on the same ddjvu_context, which corrupts monitor state
     void SpinMessageLoopWithUnlock() {
         LeaveCriticalSection(&lock);
+        EnterCriticalSection(&spinLock);
         SpinMessageLoop(false);
+        LeaveCriticalSection(&spinLock);
         Sleep(10);
         EnterCriticalSection(&lock);
     }
