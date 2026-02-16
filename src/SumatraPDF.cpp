@@ -4381,6 +4381,11 @@ static bool FrameOnKeydown(MainWindow* win, WPARAM key, LPARAM lp) {
         logf("VK_DIVIDE\n");
         dm->RotateBy(-90);
         gIsDivideKeyDown = true;
+    } else if (VK_DELETE == key && !isCtrl && !isShift) {
+        WindowTab* tab = win->CurrentTab();
+        if (tab && tab->selectedAnnotation) {
+            DeleteAnnotationAndUpdateUI(tab, tab->selectedAnnotation);
+        }
     } else {
         return false;
     }
