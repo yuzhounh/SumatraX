@@ -567,7 +567,12 @@ RenderedBitmap* EngineDjVu::CreateRenderedBitmap(const char* bmpData, Size size,
 }
 
 RenderedBitmap* EngineDjVu::RenderPage(RenderPageArgs& args) {
-    ScopedCritSec scope(&gDjVuContext->lock);
+    ddjvu_page_t* page = nullptr;
+    ddjvu_format_t* fmt = nullptr;
+    RenderedBitmap* bmp = nullptr;
+
+    EnterCriticalSection(&gDjVuContext->lock);
+
     auto pageRect = args.pageRect;
     auto zoom = args.zoom;
     auto pageNo = args.pageNo;
@@ -577,14 +582,17 @@ RenderedBitmap* EngineDjVu::RenderPage(RenderPageArgs& args) {
     Rect full = Transform(PageMediabox(pageNo), pageNo, zoom, rotation).Round();
     screen = full.Intersect(screen);
 
-    ddjvu_page_t* page = ddjvu_page_create_by_pageno(doc, pageNo - 1);
+    page = ddjvu_page_create_by_pageno(doc, pageNo - 1);
     if (!page) {
+        LeaveCriticalSection(&gDjVuContext->lock);
         return nullptr;
     }
     while (!ddjvu_page_decoding_done(page)) {
         gDjVuContext->SpinMessageLoopWithUnlock();
     }
     if (ddjvu_page_decoding_error(page)) {
+        LeaveCriticalSection(&gDjVuContext->lock);
+        ddjvu_page_release(page);
         return nullptr;
     }
 
@@ -612,19 +620,13 @@ RenderedBitmap* EngineDjVu::RenderPage(RenderPageArgs& args) {
 
     bool isBitonal = DDJVU_PAGETYPE_BITONAL == ddjvu_page_get_type(page);
     ddjvu_format_style_t style = isBitonal ? DDJVU_FORMAT_GREY8 : DDJVU_FORMAT_BGR24;
-    ddjvu_format_t* fmt = ddjvu_format_create(style, 0, nullptr);
-
-    defer {
-        ddjvu_format_release(fmt);
-        ddjvu_page_release(page);
-    };
+    fmt = ddjvu_format_create(style, 0, nullptr);
 
     int topToBottom = TRUE;
     ddjvu_format_set_row_order(fmt, topToBottom);
     ddjvu_rect_t prect = {full.x, full.y, (uint)full.dx, (uint)full.dy};
     ddjvu_rect_t rrect = {screen.x, 2 * full.y - screen.y + full.dy - screen.dy, (uint)screen.dx, (uint)screen.dy};
 
-    RenderedBitmap* bmp = nullptr;
     size_t bytesPerPixel = isBitonal ? 1 : 3;
     size_t dx = (size_t)screen.dx;
     size_t dy = (size_t)screen.dy;
@@ -632,6 +634,9 @@ RenderedBitmap* EngineDjVu::RenderPage(RenderPageArgs& args) {
     size_t nBytes = stride * (dy + 5);
     char* bmpData = (char*)calloc(nBytes, 1);
     if (!bmpData) {
+        LeaveCriticalSection(&gDjVuContext->lock);
+        ddjvu_format_release(fmt);
+        ddjvu_page_release(page);
         return nullptr;
     }
 
@@ -644,6 +649,13 @@ RenderedBitmap* EngineDjVu::RenderPage(RenderPageArgs& args) {
     }
     bmp = CreateRenderedBitmap(bmpData, screen.Size(), isBitonal);
     free(bmpData);
+
+    // release the lock before releasing djvu objects to avoid deadlock:
+    // ddjvu_page_release can trigger DjVuFile::~DjVuFile -> GMonitor::~GMonitor
+    // which acquires libdjvu internal locks
+    LeaveCriticalSection(&gDjVuContext->lock);
+    ddjvu_format_release(fmt);
+    ddjvu_page_release(page);
 
     return bmp;
 }
