@@ -675,7 +675,9 @@ static void ScheduleDelete() {
     if (!gCommandPaletteWnd) {
         return;
     }
-    HighlightTab(gCommandPaletteWnd->win, nullptr);
+    if (IsMainWindowValid(gCommandPaletteWnd->win)) {
+        HighlightTab(gCommandPaletteWnd->win, nullptr);
+    }
     auto fn = MkFunc0Void(SafeDeleteCommandPaletteWnd);
     uitask::Post(fn, "SafeDeleteCommandPaletteWnd");
 }
