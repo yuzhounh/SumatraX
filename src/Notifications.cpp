@@ -37,6 +37,7 @@ constexpr int kPadding = 6;
 constexpr int kTopLeftMargin = 8;
 
 constexpr UINT_PTR kNotifTimerTimeoutId = 1;
+constexpr UINT_PTR kNotifTimerDelayId = 2;
 
 struct NotificationWnd : Wnd {
     NotificationWnd() = default;
@@ -67,6 +68,8 @@ struct NotificationWnd : Wnd {
     float shrinkLimit = 1.0f;
 
     int progressPerc = -1;
+    int delayInMs = 0;
+    UINT_PTR delayTimerId = 0;
 
     Rect rTxt;
     Rect rClose;
@@ -110,6 +113,10 @@ void RelayoutNotifications(HWND hwnd) {
     int dyPadding = DpiScale(hwndCanvas, kPadding);
     int y = topLeftMargin;
     for (NotificationWnd* wnd : wnds) {
+        if (wnd->delayTimerId != 0) {
+            // still in delay period, not yet visible
+            continue;
+        }
         Rect rect = WindowRect(wnd->hwnd);
         rect = MapRectToWindow(rect, HWND_DESKTOP, hwndCanvas);
         if (IsUIRtl()) {
@@ -139,7 +146,12 @@ int GetWndX(NotificationWnd* wnd) {
     return rect.x;
 }
 
-NotificationWnd::~NotificationWnd() {}
+NotificationWnd::~NotificationWnd() {
+    if (delayTimerId != 0) {
+        KillTimer(hwnd, delayTimerId);
+        delayTimerId = 0;
+    }
+}
 
 HWND NotificationWnd::Create(const NotificationCreateArgs& args) {
     highlight = args.warning;
@@ -167,15 +179,21 @@ HWND NotificationWnd::Create(const NotificationCreateArgs& args) {
         cargs.font = GetAppBiggerFont();
     }
     cargs.pos = Rect(0, 0, 0, 0);
+    cargs.visible = args.delayInMs == 0;
     cargs.isRtl = IsUIRtl();
 
     CreateCustom(cargs);
 
     Layout(args.msg);
-    ShowWindow(hwnd, SW_SHOW);
-
-    if (timeoutMs != 0) {
-        SetTimer(hwnd, kNotifTimerTimeoutId, timeoutMs, nullptr);
+    delayInMs = args.delayInMs;
+    if (delayInMs > 0) {
+        // create hidden, will show after delay
+        delayTimerId = SetTimer(hwnd, kNotifTimerDelayId, delayInMs, nullptr);
+    } else {
+        ShowWindow(hwnd, SW_SHOW);
+        if (timeoutMs != 0) {
+            SetTimer(hwnd, kNotifTimerTimeoutId, timeoutMs, nullptr);
+        }
     }
     return hwnd;
 }
@@ -370,6 +388,18 @@ static void NotifDelete(NotificationWnd* wnd) {
 }
 
 void NotificationWnd::OnTimer(UINT_PTR timerId) {
+    if (timerId == kNotifTimerDelayId) {
+        // delay elapsed, now show the notification
+        KillTimer(hwnd, delayTimerId);
+        delayTimerId = 0;
+        BringWindowToTop(hwnd);
+        ShowWindow(hwnd, SW_SHOW);
+        RelayoutNotifications(hwnd);
+        if (timeoutMs != 0) {
+            SetTimer(hwnd, kNotifTimerTimeoutId, timeoutMs, nullptr);
+        }
+        return;
+    }
     ReportIf(kNotifTimerTimeoutId != timerId);
     // TODO a better way to delete myself
     if (wndRemovedCb.IsValid()) {
@@ -477,7 +507,9 @@ NotificationWnd* ShowNotification(const NotificationCreateArgs& args) {
         delete wnd;
         return nullptr;
     }
-    BringWindowToTop(wnd->hwnd);
+    if (wnd->delayTimerId == 0) {
+        BringWindowToTop(wnd->hwnd);
+    }
     NotifsAdd(wnd, args.groupId);
     return wnd;
 }

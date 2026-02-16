@@ -19,6 +19,7 @@ struct NotificationCreateArgs {
     Kind groupId = kNotifActionResponse;
     bool warning = false;
     int timeoutMs = 0; // if 0 => persists until closed manually
+    int delayInMs = 0; // if > 0 => create hidden, show after delay
     float shrinkLimit = 1.0f;
     const char* msg = nullptr;
     NotificationWndRemoved onRemoved;
@@ -26,9 +27,9 @@ struct NotificationCreateArgs {
 
 void NotificationUpdateMessage(NotificationWnd* wnd, const char* msg, int timeoutInMS = 0, bool highlight = false);
 void RemoveNotification(NotificationWnd*);
-bool RemoveNotificationsForGroup(HWND hwnd, Kind);
-bool RemoveNotificationsForHwnd(HWND hwnd);
-NotificationWnd* GetNotificationForGroup(HWND hwnd, Kind);
+bool RemoveNotificationsForGroup(HWND, Kind);
+bool RemoveNotificationsForHwnd(HWND);
+NotificationWnd* GetNotificationForGroup(HWND, Kind);
 bool UpdateNotificationProgress(NotificationWnd*, const char* msg, int perc);
 bool NotificationExists(NotificationWnd*);
 void RelayoutNotifications(HWND hwnd);

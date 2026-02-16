@@ -501,7 +501,8 @@ static void OnMouseMove(MainWindow* win, int x, int y, WPARAM) {
                         NotificationCreateArgs args;
                         args.hwndParent = win->hwndCanvas;
                         args.groupId = kNotifAnnotation;
-                        args.timeoutMs = -1;
+                        args.timeoutMs = 3000;
+                        args.delayInMs = 1000;
                         TempStr name = annot ? AnnotationReadableNameTemp(annot->type) : (TempStr) "none";
                         args.msg = str::FormatTemp(_TRN("%s annotation. Ctrl+click to edit."), name);
                         ShowNotification(args);
