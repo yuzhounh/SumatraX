@@ -180,6 +180,14 @@ struct DjVuContext {
         }
     }
 
+    // temporarily release the lock before blocking in SpinMessageLoop
+    // to avoid holding the lock while waiting for libdjvu messages
+    void SpinMessageLoopWithUnlock() {
+        LeaveCriticalSection(&lock);
+        SpinMessageLoop();
+        EnterCriticalSection(&lock);
+    }
+
     ddjvu_document_t* OpenFile(const char* fileName) {
         ScopedCritSec scope(&lock);
         // TODO: libdjvu sooner or later crashes inside its caching code; cf.
@@ -464,7 +472,7 @@ bool EngineDjVu::FinishLoading() {
     ScopedCritSec scope(&gDjVuContext->lock);
 
     while (!ddjvu_document_decoding_done(doc)) {
-        gDjVuContext->SpinMessageLoop();
+        gDjVuContext->SpinMessageLoopWithUnlock();
     }
 
     if (ddjvu_document_decoding_error(doc)) {
@@ -486,7 +494,7 @@ bool EngineDjVu::FinishLoading() {
             ddjvu_status_t status;
             ddjvu_pageinfo_t info;
             while ((status = ddjvu_document_get_pageinfo(doc, i, &info)) < DDJVU_JOB_OK) {
-                gDjVuContext->SpinMessageLoop();
+                gDjVuContext->SpinMessageLoopWithUnlock();
             }
             if (DDJVU_JOB_OK == status) {
                 DjVuPageInfo* pi = pages[i];
@@ -499,7 +507,7 @@ bool EngineDjVu::FinishLoading() {
     }
 
     while ((outline = ddjvu_document_get_outline(doc)) == miniexp_dummy) {
-        gDjVuContext->SpinMessageLoop();
+        gDjVuContext->SpinMessageLoopWithUnlock();
     }
     if (!miniexp_consp(outline) || miniexp_car(outline) != miniexp_symbol("bookmarks")) {
         ddjvu_miniexp_release(doc, outline);
@@ -511,7 +519,7 @@ bool EngineDjVu::FinishLoading() {
         ddjvu_status_t status;
         ddjvu_fileinfo_s info;
         while ((status = ddjvu_document_get_fileinfo(doc, i, &info)) < DDJVU_JOB_OK) {
-            gDjVuContext->SpinMessageLoop();
+            gDjVuContext->SpinMessageLoopWithUnlock();
         }
         if (DDJVU_JOB_OK == status && info.type == 'P' && info.pageno >= 0) {
             fileInfos.Append(info);
@@ -574,7 +582,7 @@ RenderedBitmap* EngineDjVu::RenderPage(RenderPageArgs& args) {
         return nullptr;
     }
     while (!ddjvu_page_decoding_done(page)) {
-        gDjVuContext->SpinMessageLoop();
+        gDjVuContext->SpinMessageLoopWithUnlock();
     }
     if (ddjvu_page_decoding_error(page)) {
         return nullptr;
@@ -650,7 +658,7 @@ RectF EngineDjVu::PageContentBox(int pageNo, RenderTarget) {
     }
 
     while (!ddjvu_page_decoding_done(page)) {
-        gDjVuContext->SpinMessageLoop();
+        gDjVuContext->SpinMessageLoopWithUnlock();
     }
     if (ddjvu_page_decoding_error(page)) {
         return pageRc;
@@ -856,7 +864,7 @@ PageText EngineDjVu::ExtractPageText(int pageNo) {
 
     miniexp_t pagetext;
     while ((pagetext = ddjvu_document_get_pagetext(doc, pageNo - 1, nullptr)) == miniexp_dummy) {
-        gDjVuContext->SpinMessageLoop();
+        gDjVuContext->SpinMessageLoopWithUnlock();
     }
     if (miniexp_nil == pagetext) {
         return {};
@@ -880,7 +888,7 @@ PageText EngineDjVu::ExtractPageText(int pageNo) {
     ddjvu_status_t status;
     ddjvu_pageinfo_t info;
     while ((status = ddjvu_document_get_pageinfo(doc, pageNo - 1, &info)) < DDJVU_JOB_OK) {
-        gDjVuContext->SpinMessageLoop();
+        gDjVuContext->SpinMessageLoopWithUnlock();
     }
     float dpiFactor = 1.0;
     if (DDJVU_JOB_OK == status) {
@@ -925,7 +933,7 @@ Vec<IPageElement*> EngineDjVu::GetElements(int pageNo) {
         while (pi->annos == miniexp_dummy) {
             pi->annos = ddjvu_document_get_pageanno(doc, pageNo - 1);
             if (pi->annos == miniexp_dummy) {
-                gDjVuContext->SpinMessageLoop();
+                gDjVuContext->SpinMessageLoopWithUnlock();
             }
         }
     }
@@ -939,7 +947,7 @@ Vec<IPageElement*> EngineDjVu::GetElements(int pageNo) {
     ddjvu_status_t status;
     ddjvu_pageinfo_t info;
     while ((status = ddjvu_document_get_pageinfo(doc, pageNo - 1, &info)) < DDJVU_JOB_OK) {
-        gDjVuContext->SpinMessageLoop();
+        gDjVuContext->SpinMessageLoopWithUnlock();
     }
     float dpiFactor = 1.0;
     if (DDJVU_JOB_OK == status) {
