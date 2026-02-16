@@ -698,7 +698,7 @@ static void PrintThread(PrintThreadData* ptd) {
 }
 
 static void PrintToDeviceOnThread(MainWindow* win, PrintData* data) {
-    ReportIf(win->printThread);
+    AbortPrinting(win);
     PrintThreadData* threadData = new PrintThreadData(win, data);
     win->printThread = nullptr;
     auto fn = MkFunc0(PrintThread, threadData);
