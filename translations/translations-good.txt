@@ -636,7 +636,7 @@ cn:继续安装 32 位版本(&C)
 co:&Cuntinuà l’installazione di a versione 32-bit
 cy:&Parhau i osod y fersiwn 32-did
 cz:&Pokračovat v instalaci 32-bitové verze
-de:Installation der 32-Bit-Version fortsetzen
+de:Installation der 32-Bit-Version &fortsetzen
 dk:&Fortsæt med installation af 32-bit version
 el:Συνέχεια της εγκατάστασης της έκδοσης 32-bit
 es:&Continuar con la instalación de la versión de 32 bits
@@ -2826,7 +2826,7 @@ cn:从历史记录删除(&R)
 co:&Caccià da a cronolugia
 cy:Tynnu o'&r Hanes
 cz:&Odstranit z historie
-de:Aus Verlauf entfernen
+de:Aus Verlauf &entfernen
 dk:&Fjern fra historikken
 el:Κατάργηση από το ιστορικό
 es:&Eliminar del historial
@@ -3299,7 +3299,7 @@ cn:删除线(&S)
 co:&Rigà
 cy:&Taro Allan
 cz:&Přeškrtnutí
-de:Durchstreichen
+de:&Durchstreichen
 dk:&Gennemstreg
 el:Εξάλειψη
 es:&Tachar
@@ -11834,7 +11834,7 @@ cn:调试：损坏内存
 co:Spannatura : Memoria alterata
 cy:Dadfygio: Llygru Cof
 cz:Ladění: Poškodit paměť
-de:Debug: Speicher beschädigen
+de:Debug: Beschädigter Speicher
 dk:Fejlfinding: Korrumpér hukommelse
 el:Αποσφαλμάτωση: Καταστροφή Μνήμης
 es:Depurar: Corromper memoria
@@ -11907,7 +11907,7 @@ cn:调试：使程序崩溃
 co:Spannatura : Tombami
 cy:Dadfygio: Fy Chwalu
 cz:Ladění: Vyvolat pád
-de:Debug: Absturz erzwingen
+de:Debug: Absturz provozieren
 dk:Fejlfinding: Få programmet til at gå ned
 el:Αποσφαλμάτωση: Κατάρρευση
 es:Depurar: Forzar fallo
@@ -12272,7 +12272,7 @@ cn:调试：切换预测性渲染
 co:Spannatura : Attivà o disattivà a restituzione di predizzione
 cy:Dadfygio: Toglo Rendro Rhagfynegol
 cz:Ladění: Přepnout prediktivní vykreslování
-de:Debug: Vorausschauendes Rendern umschalten
+de:Debug: Vorschau-Rendering umschalten
 dk:Fejlfinding: Skift forudsigende rendering
 el:Αποσφαλμάτωση: Εναλλαγή Προβλεπτικής Απόδοσης
 es:Depurar: Alternar renderizado predictivo
@@ -12345,7 +12345,7 @@ cn:调试：切换从右向左模式
 co:Spannatura : Attivà o disattivà Rtl
 cy:Dadfygio: Toglo Rtl
 cz:Ladění: Přepnout RTL
-de:Debug: Rechts-nach-Links umschalten
+de:Debug: RTL umschalten
 dk:Fejlfinding: Skift Rtl
 el:Αποσφαλμάτωση: Εναλλαγή Rtl
 es:Depurar: Alternar RTL
@@ -13334,7 +13334,7 @@ cn:退出全屏(&X)
 co:&Esce di u modu screnu sanu
 cy:Gadael Sgrin Lawn
 cz:O&pustit režim celé obrazovky
-de:Vollbild verlassen
+de:&Vollbild verlassen
 dk:A&fslut fuldskærm
 el:Έξοδος από την πλήρη οθόνη
 es:&Salir de la pantalla completa
@@ -14440,7 +14440,7 @@ cn:双页视图
 co:Affissà cum’è pagina doppia
 cy:Golwg Wynebu
 cz:Zobrazení naproti
-de:Gegenüberliegende Ansicht
+de:Doppelseitenansicht
 dk:Modstående visning
 el:Προβολή Αντικριστών Σελίδων
 es:Vista enfrentada
@@ -16977,7 +16977,7 @@ by:Перайсці да старонкі...
 ca:Vés a la pàgina...
 ca-xv:Vés a la pàgina...
 cn:转到页面…
-co:Andà à a pagina...
+co:Andà à a pagina…
 cy:Mynd i Dudalen...
 cz:Přejít na stránku...
 de:Zu Seite gehen…
@@ -17199,7 +17199,7 @@ cn:帮助：键盘快捷键
 co:Aiutu : Accurtatoghji di tastera
 cy:Cymorth: Llwybrau Byr Bysellfwrdd
 cz:Nápověda: Klávesové zkratky
-de:Hilfe: Tastaturkürzel
+de:Hilfe: Tastenkombinationen
 dk:Hjælp: Tastaturgenveje
 el:Βοήθεια: Συντομεύσεις Πληκτρολογίου
 es:Ayuda: Atajos de teclado
@@ -18645,7 +18645,7 @@ cn:反转颜色
 co:Invert Culori
 cy:Gwrthdroi Lliwiau
 cz:Invertovat barvy
-de:Farben invertieren
+de:Farben umkehren
 dk:Inverter farver
 el:Αντιστροφή Χρωμάτων
 es:Invertir colores
@@ -18937,7 +18937,7 @@ cn:对选中内容启动浏览器或运行命令
 co:Lancià un navigatore o una cumanda cù a selezzione
 cy:Lansio porwr neu redeg gorchymyn gyda'r dewisiad
 cz:Spustit prohlížeč nebo spustit příkaz s výběrem
-de:Browser öffnen oder Befehl mit Auswahl ausführen
+de:Browser starten oder Befehl mit Auswahl ausführen
 dk:Start browser eller kør kommando med markering
 el:Εκκίνηση προγράμματος περιήγησης ή εκτέλεση εντολής με επιλογή
 es:Abrir navegador o ejecutar comando con la selección
@@ -20426,7 +20426,7 @@ cn:下一页
 co:Pagina seguente
 cy:Tudalen Nesaf
 cz:Další stránka
-de:&Nächste Seite
+de:Nächste Seite
 dk:Næste side
 el:Επόμενη σελίδα
 es:Página siguiente
@@ -22145,7 +22145,7 @@ cn:打开文件…
 co:Apre un schedariu...
 cy:Agor Ffeil...
 cz:Otevřít soubor...
-de:Datei öffnen...
+de:Datei öffnen…
 dk:Åbn fil...
 el:Άνοιγμα Αρχείου...
 es:Abrir archivo...
@@ -22570,6 +22570,7 @@ vn:Mở tài liệu đã chọn
 :Open With Pdf&Djvu Bookmarker
 br:Abrir com Pdf&Djvu Bookmarker
 cn:使用 Pdf&Djvu Bookmarker 打开
+de:Mit Pdf & DjVu Bookmarker öffnen
 pl:Otwórz za pomocą PDF & DjVu Bookmarkera
 sk:Otvoriť pomocou Pdf&Djvu Bookmarker
 tw:以 Pdf&Djvu Bookmarker 開啟
@@ -23081,7 +23082,7 @@ cn:在 福昕阅读器 中打开
 co:Apre cù Foxit Reader
 cy:Agor yn Foxit Reader
 cz:Otevřít v programu Foxit Reader
-de:Mit Foxit Reader öffnen
+de:In Foxit Reader öffnen
 dk:Åbn med Foxit Reader
 el:Άνοιγμα με Foxit Reader
 es:Abrir con Foxit Reader
@@ -23149,7 +23150,7 @@ cn:在 Microsoft HTML 帮助中打开(&H)
 co:Apre cù Microsoft &HTML Help
 cy:Agor yn Microsoft &HTML Help
 cz:Otevřít v Microsoft &HTML Help
-de:In Microsoft &HTML-Hilfe öffnen
+de:In Microsoft &HTML Help öffnen
 el:Άνοιγμα στη βοήθεια Microsoft &HTML
 es:Abrir en Microsoft HTML Help
 fa:باز کردن در Microsoft &HTML Help
@@ -23200,7 +23201,7 @@ cn:在 Microsoft HTML 帮助中打开
 co:Apre cù Microsoft HTML Help
 cy:Agor yn Microsoft HTML Help
 cz:Otevřít v Microsoft HTML Help
-de:In Microsoft HTML-Hilfe öffnen
+de:In Microsoft HTML Help öffnen
 dk:Åbn i Microsoft HTML Help
 el:Άνοιγμα στη βοήθεια Microsoft HTML
 es:Abrir en Microsoft HTML Help
@@ -23273,7 +23274,7 @@ cn:在 Microsoft XPS Viewer 中打开
 co:Apre in Microsoft Xps Viewer
 cy:Agor yn Microsoft Xps Viewer
 cz:Otevřít v Microsoft Xps Viewer
-de:In Microsoft XPS-Viewer öffnen
+de:In Microsoft XPS Viewer öffnen
 dk:Åbn i Microsoft Xps Viewer
 el:Άνοιγμα στο Microsoft Xps Viewer
 es:Abrir en Visor de XPS de Microsoft
@@ -23346,7 +23347,7 @@ cn:在 PDF-XChange 中打开
 co:Apre cù PDF-XChange
 cy:Agor yn PDF-XChange
 cz:Otevřít v programu PDF-XChange
-de:Mit PDF-XChange öffnen
+de:In PDF-XChange öffnen
 dk:Åbn med PDF-XChange
 el:Άνοιγμα με PDF-XChange
 es:Abrir con PDF-XChange
@@ -25194,7 +25195,7 @@ cn:上一页
 co:Pagina precedente
 cy:Tudalen Flaenorol
 cz:Předchozí stránka
-de:&Vorherige Seite
+de:Vorherige Seite
 dk:Forrige side
 el:Προηγούμενη σελίδα
 es:Página anterior
@@ -26480,7 +26481,7 @@ cn:从历史记录中移除所选文档
 co:Caccià u Documentu Selezziunatu da a Cronolugia
 cy:Tynnu'r Ddogfen a Ddewiswyd o'r Hanes
 cz:Odstranit vybraný dokument z historie
-de:Ausgewähltes Dokument aus Verlauf entfernen
+de:Ausgewähltes Dokument aus dem Verlauf entfernen
 dk:Fjern valgt dokument fra historik
 el:Αφαίρεση Επιλεγμένου Εγγράφου Από Ιστορικό
 es:Eliminar documento seleccionado del historial
@@ -26699,7 +26700,7 @@ cn:重命名文件…
 co:Rinuminà u Schedariu...
 cy:Ailenwi Ffeil...
 cz:Přejmenovat soubor...
-de:Datei umbenennen...
+de:Datei umbenennen…
 dk:Omdøb fil...
 el:Μετονομασία Αρχείου...
 es:Renombrar archivo...
@@ -26845,7 +26846,7 @@ cn:重新打开上次关闭的文件
 co:Riapre l'Ultimu Chjusu
 cy:Ailagor yr Olaf a Gaewyd
 cz:Znovu otevřít naposledy zavřený
-de:Zuletzt geschlossenes erneut öffnen
+de:Zuletzt geschlossene erneut öffnen
 dk:Genåbn senest lukkede
 el:Επαναφορά Τελευταίου Κλεισμένου
 es:Reabrir último cerrado
@@ -27022,7 +27023,7 @@ cn:向左旋转
 co:Girà à manca
 cy:Troi i'r Chwith
 cz:Otočit vlevo
-de:Gegen UZS drehen
+de:Nach links drehen
 dk:Rotér Venstre
 el:Περιστροφή αριστερά
 es:Girar a la izquierda
@@ -27095,7 +27096,7 @@ cn:向右旋转
 co:Girà à diritta
 cy:Troi i'r Dde
 cz:Otočit vpravo
-de:Im UZS drehen
+de:Nach rechts drehen
 dk:Rotér Højre
 el:Περιστροφή δεξιά
 es:Girar a la derecha
@@ -27165,7 +27166,7 @@ cn:选择(&E)
 co:S&elezzione
 cy:&Dewis
 cz:V&ýběr
-de:Auswahl
+de:&Auswahl
 dk:&Markering
 el:Επιλογή
 es:S&elección
@@ -27221,7 +27222,7 @@ cn:波浪线(&Q)
 co:&Undulà
 cy:&Sgwigli
 cz:V&lnovka
-de:Verschnörkelt
+de:&Verschnörkelt
 el:Στριφογυριστό
 es:&Ondulado
 et:&Kritseldus
@@ -27711,7 +27712,7 @@ cn:保存快捷方式(&H)...
 co:Arregistrà l’&accurtatoghju…
 cy:Cadw &Llwybr Byr...
 cz:Uložit Z&ástupce
-de:Verknüpfung speichern…
+de:&Verknüpfung speichern…
 dk:Gem gen&vej
 el:Αποθήκευση συντόμευσης
 es:Guardar A&tajo...
@@ -28260,7 +28261,7 @@ cn:向下滚动半页
 co:Scorri in Ghjò di una Mezza Pagina
 cy:Sgrolio i Lawr Hanner Tudalen
 cz:Posunout dolů o půl stránky
-de:Um halbe Seite nach unten scrollen
+de:Eine halbe Seite nach unten scrollen
 dk:Rul ned med en halv side
 el:Κύλιση Κάτω Κατά Μισή Σελίδα
 es:Desplazar media página hacia abajo
@@ -28333,7 +28334,7 @@ cn:向下滚动一页
 co:Scorri in Ghjò di una Pagina
 cy:Sgrolio i Lawr Fesul Tudalen
 cz:Posunout dolů o stránku
-de:Um Seite nach unten scrollen
+de:Seitenweise nach unten scrollen
 dk:Rul ned med en side
 el:Κύλιση Κάτω Κατά Σελίδα
 es:Desplazar una página hacia abajo
@@ -28479,7 +28480,7 @@ cn:向左滚动一页
 co:Scorri à Manca di una Pagina
 cy:Sgrolio i'r Chwith Fesul Tudalen
 cz:Posunout vlevo o stránku
-de:Um Seite nach links scrollen
+de:Seitenweise nach links scrollen
 dk:Rul til venstre med en side
 el:Κύλιση Αριστερά Κατά Σελίδα
 es:Desplazar una página a la izquierda
@@ -28625,7 +28626,7 @@ cn:向右滚动一页
 co:Scorri à Diritta di una Pagina
 cy:Sgrolio i'r Dde Fesul Tudalen
 cz:Posunout vpravo o stránku
-de:Um Seite nach rechts scrollen
+de:Seitenweise nach rechts scrollen
 dk:Rul til højre med en side
 el:Κύλιση Δεξιά Κατά Σελίδα
 es:Desplazar una página a la derecha
@@ -28771,7 +28772,7 @@ cn:向上滚动半页
 co:Scorri in Sù di una Mezza Pagina
 cy:Sgrolio i Fyny Hanner Tudalen
 cz:Posunout nahoru o půl stránky
-de:Um halbe Seite nach oben scrollen
+de:Eine halbe Seite nach oben scrollen
 dk:Rul op med en halv side
 el:Κύλιση Πάνω Κατά Μισή Σελίδα
 es:Desplazar media página hacia arriba
@@ -28844,7 +28845,7 @@ cn:向上滚动一页
 co:Scorri in Sù di una Pagina
 cy:Sgrolio i Fyny Fesul Tudalen
 cz:Posunout nahoru o stránku
-de:Um Seite nach oben scrollen
+de:Seitenweise nach oben scrollen
 dk:Rul op efter side
 el:Κύλιση Πάνω Κατά Σελίδα
 es:Desplazar una página hacia arriba
@@ -29902,7 +29903,7 @@ cn:通过电子邮件发送文档…
 co:Mandà u ducumentu per email...
 cy:Anfon Dogfen Drwy E-bost...
 cz:Odeslat dokument e-mailem...
-de:Dokument per E-Mail senden...
+de:Dokument per E-Mail senden…
 dk:Send dokument via e-mail...
 el:Αποστολή Εγγράφου με Email...
 es:Enviar documento por correo electrónico...
@@ -30373,7 +30374,7 @@ cn:显示滚动条(&S)
 co:&Affissà e barre di sfilarata
 cy:Dangos Barrau &Sgrolio
 cz:Zobrazit &posuvníky
-de:Bildlaufleisten anzeigen
+de:&Bildlaufleisten anzeigen
 dk:Vis &rullepaneler
 el:Εμφάνιση μπαρών κύλισης
 es:Mostrar las &barras de desplazamiento
@@ -30574,7 +30575,7 @@ cn:显示书签(&M)
 co:Affissà l’&indette
 cy:Dangos &Nodau Tudalen
 cz:Zobrazit &Záložky
-de:Lesezeichen anzeigen
+de:&Lesezeichen anzeigen
 dk:Vis bog&mærker
 el:Εμφάνιση σελιδοδεικτών
 es:Mostrar favo&ritos
@@ -30629,7 +30630,7 @@ cn:显示文档属性…
 co:Mustrà e pruprietà di u ducumentu...
 cy:Dangos Priodweddau Dogfen...
 cz:Zobrazit vlastnosti dokumentu...
-de:Dokumenteigenschaften anzeigen...
+de:Dokumenteigenschaften anzeigen…
 dk:Vis dokumentegenskaber...
 el:Εμφάνιση Ιδιοτήτων Εγγράφου...
 es:Mostrar propiedades del documento...
@@ -30775,7 +30776,7 @@ cn:在文件夹中显示文件…
 co:Mustrà u schedariu in u cartulare...
 cy:Dangos Ffeil Yn y Ffolder...
 cz:Zobrazit soubor ve složce...
-de:Datei im Ordner anzeigen...
+de:Datei im Ordner anzeigen…
 dk:Vis fil i mappe...
 el:Εμφάνιση Αρχείου στον Φάκελο...
 es:Mostrar archivo en carpeta...
@@ -30918,7 +30919,7 @@ cn:显示滚动条(&O)
 co:&Affissà e barre di sfilarata
 cy:Dangos Barrau Sgr&olio
 cz:Zobrazit Pos&uvníky
-de:Scrollbalken anzeigen
+de:&Bildlaufleisten anzeigen
 dk:Vis rul&lepaneler
 el:Εμφάνιση μπαρών κύλισης
 es:Mostrar las barras de &desplazamiento
@@ -35311,7 +35312,7 @@ cn:通过自定义外部查看器查看
 co:Visualizà cù un visualizatore esternu persunalizatu
 cy:Gweld Gyda Gwyliwr Allanol Personol
 cz:Zobrazit s vlastním externím prohlížečem
-de:Mit benutzerdefiniertem externen Viewer anzeigen
+de:Mit benutzerdefiniertem externen Betrachter anzeigen
 dk:Vis med brugerdefineret ekstern fremviser
 el:Προβολή με Προσαρμοσμένο Εξωτερικό Πρόγραμμα
 es:Ver con visor externo personalizado
@@ -37354,7 +37355,7 @@ cn:缩放：自定义…
 co:Zoom: Persunalizatu...
 cy:Chwyddo: Personol...
 cz:Přiblížení: Vlastní...
-de:Zoom: Benutzerdefiniert...
+de:Zoom: Benutzerdefiniert…
 dk:Zoom: Tilpasset...
 el:Μεγέθυνση: Προσαρμοσμένη...
 es:Zoom: Personalizado...
@@ -37427,7 +37428,7 @@ cn:缩放：适合内容
 co:Zoom: Adattà u cuntenutu
 cy:Chwyddo: Ffitio Cynnwys
 cz:Přiblížení: Přizpůsobit obsah
-de:Zoom: Inhalt anpassen
+de:Zoom: An Inhalt anpassen
 dk:Zoom: Tilpas indhold
 el:Μεγέθυνση: Προσαρμογή Περιεχομένου
 es:Zoom: Ajustar contenido
@@ -37500,7 +37501,7 @@ cn:缩放：适合页面
 co:Zoom: Adattà a pagina
 cy:Chwyddo: Ffitio Tudalen
 cz:Zoom: Přizpůsobit stránku
-de:Zoom: Seite anpassen
+de:Zoom: An Seite anpassen
 dk:Zoom: Tilpas side
 el:Ζουμ: Προσαρμογή σελίδας
 es:Zoom: Ajustar página
@@ -37646,7 +37647,7 @@ cn:缩放：适合宽度
 co:Zoom: Adattà a Larghezza
 cy:Chwyddo: Ffitio Lled
 cz:Zoom: Přizpůsobit šířku
-de:Zoom: Seitenbreite
+de:Zoom: An Fensterbreite anpassen
 dk:Zoom: Tilpas bredde
 el:Ζουμ: Προσαρμογή πλάτους
 es:Zoom: Ajustar ancho
@@ -37719,7 +37720,7 @@ cn:缩放：适合宽度且连续显示
 co:Zoom: Adattà a Larghezza è Cuntinuu
 cy:Chwyddo: Ffitio Lled a Pharhaus
 cz:Zoom: Přizpůsobit šířku a souvislé
-de:Zoom: Seitenbreite und fortlaufend
+de:Zoom: Fortlaufend an Fensterbreite anpassen
 dk:Zoom: Tilpas bredde og kontinuerlig
 el:Ζουμ: Προσαρμογή πλάτους και συνεχής
 es:Zoom: Ajustar ancho y continuo
