@@ -1021,10 +1021,10 @@ static EngineBase* CreateEngineFromDataForPreview(const ByteSlice& data, Preview
                 engine = nullptr;
             }
 #else
-            {
-                const char* name = (fileType == PreviewFileType::PDF) ? "preview.pdf" : "preview.xps";
-                engine = CreateEngineMupdfFromStream(stream, name);
-            }
+        {
+            const char* name = (fileType == PreviewFileType::PDF) ? "preview.pdf" : "preview.xps";
+            engine = CreateEngineMupdfFromStream(stream, name);
+        }
 #endif
             break;
         case PreviewFileType::DjVu:
