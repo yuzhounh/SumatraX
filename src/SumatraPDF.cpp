@@ -6208,8 +6208,8 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         UpdateAnnotationsList(tab->editAnnotsWindow);
         if (openAnnotationEdit && !win->isFullScreen) {
             ShowEditAnnotationsWindow(tab);
+            SetSelectedAnnotation(tab, lastCreatedAnnot);
         }
-        SetSelectedAnnotation(tab, lastCreatedAnnot);
     }
     return 0;
 }
