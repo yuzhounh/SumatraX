@@ -1608,42 +1608,61 @@ void InitializeEngineMupdf() {
 
 fz_context* GetOrClonePerThreadContext(EngineMupdf* engine, fz_context* ctx) {
     DWORD threadID = GetCurrentThreadId();
-    ScopedCritSec cs(&gPerThreadContextsCs);
-    for (auto& el : *gPerThreadContexts) {
-        if (el.engine == engine && el.threadID == threadID) {
-            return el.ctx;
+    {
+        ScopedCritSec cs(&gPerThreadContextsCs);
+        for (auto& el : *gPerThreadContexts) {
+            if (el.engine == engine && el.threadID == threadID) {
+                return el.ctx;
+            }
         }
     }
+    // clone context without holding gPerThreadContextsCs to avoid deadlock
+    // with threads that hold fz_locks (e.g. ctxAccess) and then call Ctx()
+    // safe because only current thread can create a context for its own threadID
     auto newCtx = fz_clone_context(ctx);
-    ContextThreadID el{engine, newCtx, threadID};
-    gPerThreadContexts->Append(el);
+    {
+        ScopedCritSec cs(&gPerThreadContextsCs);
+        ContextThreadID el{engine, newCtx, threadID};
+        gPerThreadContexts->Append(el);
+    }
     return newCtx;
 }
 
 void ReleasePerThreadContext(EngineMupdf* engine) {
     DWORD threadID = GetCurrentThreadId();
-    ScopedCritSec cs(&gPerThreadContextsCs);
-    auto n = gPerThreadContexts->Size();
-    for (int i = 0; i < n; i++) {
-        auto& el = gPerThreadContexts->at(i);
-        if (el.engine == engine && el.threadID == threadID) {
-            auto ctx = el.ctx;
-            fz_drop_context(ctx);
-            gPerThreadContexts->RemoveAtFast(i);
-            return;
+    fz_context* ctxToDrop = nullptr;
+    {
+        ScopedCritSec cs(&gPerThreadContextsCs);
+        auto n = gPerThreadContexts->Size();
+        for (int i = 0; i < n; i++) {
+            auto& el = gPerThreadContexts->at(i);
+            if (el.engine == engine && el.threadID == threadID) {
+                ctxToDrop = el.ctx;
+                gPerThreadContexts->RemoveAtFast(i);
+                break;
+            }
         }
+    }
+    if (ctxToDrop) {
+        fz_drop_context(ctxToDrop);
     }
 }
 
 // Release all per-thread contexts for a given engine (called from destructor)
 static void ReleaseAllPerThreadContexts(EngineMupdf* engine) {
-    ScopedCritSec cs(&gPerThreadContextsCs);
-    for (int i = (int)gPerThreadContexts->Size() - 1; i >= 0; i--) {
-        auto& el = gPerThreadContexts->at(i);
-        if (el.engine == engine) {
-            fz_drop_context(el.ctx);
-            gPerThreadContexts->RemoveAtFast(i);
+    Vec<fz_context*> ctxsToDrop;
+    {
+        ScopedCritSec cs(&gPerThreadContextsCs);
+        for (int i = (int)gPerThreadContexts->Size() - 1; i >= 0; i--) {
+            auto& el = gPerThreadContexts->at(i);
+            if (el.engine == engine) {
+                ctxsToDrop.Append(el.ctx);
+                gPerThreadContexts->RemoveAtFast(i);
+            }
         }
+    }
+    for (auto ctx : ctxsToDrop) {
+        fz_drop_context(ctx);
     }
 }
 
