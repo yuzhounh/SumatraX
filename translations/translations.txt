@@ -1,5 +1,5 @@
 AppTranslator: SumatraPDF
-a5e66a0a005553b326474bec176383ea87013be9
+a09ddbcacae5a554f7e242818b8f3077114a8753
 :%s annotation. Ctrl+click to edit.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
 ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
@@ -525,7 +525,7 @@ pt:&Cursor
 ro:&Semn de omisiune
 ru:&Каретка
 sat:ᱠᱟᱨᱮᱴ
-sk:&Vkladacia vsuvka
+sk:&Vsuvka
 sl:&Karet
 sr-rs:&Карет
 sv:&Markör
@@ -714,7 +714,7 @@ ta:&தேர்ந்தெடுத்ததைப் படியெடுத
 th:&คัดลอกตำแหน่งที่เลือก
 tl:Kopyahin ang napili
 tr:Seçimi &Kopyala
-tw:複製選取範圍(&C)
+tw:複製選取内容 (&C)
 uk:Скопіювати вибране
 uz:&Tanlanganni nusxa olish
 vn:&Chép phần đã chọn
@@ -1097,7 +1097,7 @@ ar:ابحث عن&:
 az:&Axtarılan sətir:
 bg:&Търсене на:
 bn:কি &খুঁজছেন
-br:&Achar o quê:
+br:&Localiz&ar o quê:
 bs:&Traži:
 by:&Узор:
 ca-xv:&Cerca el què:
@@ -1880,7 +1880,7 @@ ro:&Potrivire literele mari și mici
 ru:&Учитывать регистр
 sat:ᱪᱤᱠᱤ &ᱢᱮᱲᱟᱣ ᱢᱮ
 si:&උදාහරණය ගැළපීම
-sk:&Podľa zadaných kritérií
+sk:Rozlišovať veľké/&malé písmená
 sl:Razlikuj &med velikimi/malimi črkami
 sp-rs:Razlikuj mala i velika slova
 sq:&Krahasoj shkronjat
@@ -2161,7 +2161,7 @@ cn:打开(&O)...
 co:&Apre…
 cy:&Agor...
 cz:&Otevřít...
-de:&Öffnen...
+de:&Öffnen…
 dk:Å&bn
 el:Άνοιγμα
 es:&Abrir...
@@ -2796,7 +2796,7 @@ cn:从历史记录删除(&R)
 co:&Caccià da a cronolugia
 cy:Tynnu o'&r Hanes
 cz:&Odstranit z historie
-de:Aus der Historie entfernen
+de:Aus Verlauf entfernen
 dk:&Fjern fra historikken
 el:Κατάργηση από το ιστορικό
 es:&Eliminar del historial
@@ -2836,7 +2836,7 @@ ta:வரலாற்றிலிருந்து நீக்கு
 th:&ย้ายออกจากประวัติ
 tl:I-&Remove sa History
 tr:Geçmişten &Kaldır
-tw:從歷史記錄中移除(&R)
+tw:從歷程記錄中移除(&R)
 uk:&Видалити з історії
 uz:Tarixdan o‘chirish
 vn:&Xoá Khỏi Lịch Sử
@@ -3381,7 +3381,7 @@ cn:主题(&T)
 co:&Temu
 cy:&Thema
 cz:&Motiv
-de:Anwendungs&stil
+de:De&sign
 dk:Tema
 el:&Θέμα
 es:&Tema
@@ -4443,11 +4443,21 @@ uk:Просунуті
 uz:Qo'shimcha
 vn:Nâng cao
 :Advanced Options...
+br:Opções Avançadas...
+cn:高级选项…
+co:Ozzioni d’espertu…
+de:Erweiterte Optionen…
 pl:Opcje zaawansowane...
 sk:Pokročilé možnosti
+tw:進階選項…
 :Advanced Settings...
+br:Configurações Avançadas...
+cn:高级设置…
+co:Parametri d’espertu…
+de:Erweiterte Einstellungen…
 pl:Ustawienia zaawansowane...
 sk:Pokročilé možnosti…
+tw:進階設定…
 :All files
 am:Բոլոր ֆայլերը
 ar:كل الملفات
@@ -6096,11 +6106,21 @@ uk:Змінити мову (Change Language)
 uz:Tilni o'zgartirish (Change Language)
 vn:Đổi ngôn ngữ (Change Language)
 :Change Language...
+br:Mudar Idioma...
+cn:更改语言…
+co:Cambià di lingua…
+de:Sprache ändern…
 pl:Zmień język...
 sk:Zmeniť jazyk…
+tw:變更語言…
 :Check For Updates
+br:Procurar Atualizações
+cn:检查更新
+co:Cuntrollà e messe à livellu
+de:Nach Updates suchen
 pl:Sprawdź aktualizacje
 sk:Skontrolovať aktualizácie
+tw:檢查是否有更新
 :Check for &Updates
 af:Kyk Vir Nuwe Uitgawe
 am:&Ստուգել նոր տարբերակը
@@ -6186,7 +6206,7 @@ cn:正在检查更新...
 co:Cuntrollu di e messe à livellu…
 cy:Gwirio am ddiweddariad...
 cz:Kontroluji aktualizace...
-de:Nach einem Update suchen...
+de:Nach Update suchen…
 dk:Søger efter opdateringer
 el:Έλεγχος για ενημέρωση...
 es:Buscando actualizaciones...
@@ -6241,7 +6261,7 @@ br:Círculo
 by:Круг
 ca-xv:Cercle
 ca:Cercle
-cn:圆
+cn:圆圈
 co:Chjerchju
 cy:Cylchu
 cz:Kruh
@@ -6289,12 +6309,18 @@ ta:வட்டம்
 th:วงกลม
 tl:Bilog
 tr:Çember
-tw:圓
+tw:圓圈
 uk:Коло
 uz:Doira
 vn:Vòng tròn
 :Clear History
+br:Limpar Histórico
+cn:清除历史记录
+co:Viutà a cronolugia
+de:Verlauf löschen
 pl:Wyczyść historię
+sk:Vymazať históriu
+tw:清除歷程記錄
 :Cleared history of %d files, deleted thumbnails.
 am:%d ֆայլերի մաքրված պատմություն, ջնջված մանրապատկերներ:
 ar:تم مسح سجل %d من الملفات والصور المصغرة المحذوفة.
@@ -6338,7 +6364,7 @@ sr-rs:Историја од %d датотека очишћена, сличице
 sv:Rensade filhistorik för %d filer, tog bort miniatyrbilder
 ta:வரலாற்றிலிருந்து %d கோப்புகளும், சிறு படங்களும் நீக்கப்பட்டன.
 tr:%d Dosyanın geçmişi temizlendi, küçük resimler silindi.
-tw:已清除 %d 個檔案的歷史記錄，已刪除縮圖。
+tw:已清除 %d 個檔案的歷程記錄，已刪除縮圖。
 uz:%d ta fayl tarixi tozalandi, miniatyuralar o‘chirildi.
 vn:Đã dọn lịch sử của %d tập tin, đã xóa hình thu nhỏ.
 :Clearing history...
@@ -6352,7 +6378,7 @@ cn:正在清除历史记录…
 co:Viutatura di a cronolugia…
 cy:Yn clirio hanes...
 cz:Mažu historii...
-de:Historie löschen...
+de:Verlauf wird gelöscht…
 dk:Rydder historik
 el:Καθάρισμα Ιστορικού...
 es:Borrando historial...
@@ -6385,7 +6411,7 @@ sr-rs:Чишћење историје...
 sv:Rensa historik
 ta:வரலாறு அழிக்கபடுகிறது...
 tr:Geçmiş temizleme...
-tw:正在清除歷史記錄...
+tw:正在清除歷程記錄...
 uz:Tarix tozalanmoqda...
 vn:Đang dọn dẹp lịch sử...
 :Close
@@ -6499,9 +6525,21 @@ tr:Tüm Sekmeleri Kapat
 tw:關閉全部分頁
 uz:Barcha yorliqlarni yopish
 :Close Current Document
+br:Fechar Documento Atual
+cn:关闭当前文档
+co:Chjode u ducumentu attuale
+de:Aktuelles Dokument schließen
 pl:Zamknij bieżący dokument
+sk:Zatvoriť aktuálny dokument
+tw:關閉目前之文件
 :Close Document
+br:Fechar Documento
+cn:关闭文档
+co:Chjode u ducumentu
+de:Dokument schließen
 pl:Zamknij dokument
+sk:Zatvoriť dokument
+tw:關閉文件
 :Close Other Tabs
 am:Փակել այլ ներդիրները
 ar:أغلق علامات التبويب الأخرى
@@ -7174,7 +7212,7 @@ bs:Dvije stranice slijedno
 by:Працягла дзьве старонкі
 ca-xv:Pàgina doble contínua
 ca:Pàgina doble contínua
-cn:连续对页视图
+cn:连续双页视图
 co:Vista in cuntinuu, pagina doppia
 cy:Wynebu'n Barhaus
 cz:Více stran průběžně
@@ -7513,7 +7551,13 @@ uk:Копіювати коментар
 uz:&Izohni nusxa olish
 vn:Chép chú thích
 :Copy Comment
+br:Copiar Comentário
+cn:复制注释
+co:Cupià u cummentu
+de:Kommentar kopieren
 pl:Kopiuj komentarz
+sk:Kopírovať komentár
+tw:複製留言
 :Copy File Path
 am:Պատճենել ֆայլի ուղին
 ar:نسخ مسار الملف
@@ -7564,11 +7608,29 @@ tr:Dosya Yolunu Kopyala
 tw:複製檔案路徑
 uz:Fayl yo‘lini nusxalash
 :Copy Image
+br:Copiar Imagem
+cn:复制图片
+co:Cupià a fiura
+de:Bild kopieren
 pl:Kopiuj obraz
+sk:Kopírovať obrázok
+tw:複製圖片
 :Copy Link Target
+br:Copiar Endereço do Link
+cn:复制链接目标
+co:Cupià a destinazione di u liame
+de:Linkziel kopieren
 pl:Kopiuj cel z odnośnika
+sk:Kopírovať adresu odkazu
+tw:複製連結目標
 :Copy Selection
+br:Copiar Seleção
+cn:复制所选内容
+co:Cupià a selezzione
+de:Auswahl kopieren
 pl:Kopiuj zaznaczenie
+sk:Kopírovať výber
+tw:複製選取内容
 :Copy To Clipboard
 am:Պատճենել սեղմնատախտակին
 ar:نسخ إلى الحافظة
@@ -7890,7 +7952,7 @@ ta:நிறுவல் கோப்புறையினை உருவா
 th:ไม่สามารถสร้างไดเรคทอรี่ติดตั้งได้
 tl:Hindi magawa ang installation directory
 tr:Kurulum dizini oluşturulamadı
-tw:無法建立安裝目錄
+tw:無法建立安裝資料夾
 uk:Не вдалося створити папку для встановлення
 uz:O'rnatish directoriyasini yaratib bo'lmadi
 vn:Không tạo được thư mục cài đặt
@@ -8215,7 +8277,7 @@ ta:பக்கத்தை அளிக்க முடியவில்லை
 th:ไม่สามารถแสดงผลหน้าเพจ
 tl:Hindi maipakita ang pahina
 tr:Sayfa oluşturulamadı
-tw:無法產生頁面
+tw:無法渲染頁面
 uk:Неможливо згенерувати(відобразити) сторінку
 uz:Betni render qilib bo'lmadi
 vn:Không hiện được trang
@@ -8480,7 +8542,13 @@ uk:Не вдалося записати %s на диск
 uz:%s diskka yozib bo'lmadi
 vn:Không thể ghi %s vào đĩa
 :Create .lnk Shortcut
+br:Criar Atalho
+cn:创建 .lnk 快捷方式
+co:Creà un accurtatoghju .lnk
+de:LNK-Verknüpfung erstellen
 pl:Utwórz skrót .lnk
+sk:Vytvoriť odkaz .lnk
+tw:建立 .lnk 捷徑
 :Create Annotation &Under Cursor
 am:Ստեղծել մեկնաբանություն &նշորդի ներքո
 ar:أنشئ شرحًا &عند المؤشر
@@ -8593,46 +8661,154 @@ ta:தேர்வு செய்ததிலிருந்து குறி
 th:สร้างคำอธิบายประกอบจากส่วนที่เลือก
 tl:Lumikha ng anotasyon mula sa pinili
 tr:Seçimden Dipnot Oluştur
-tw:從選取文字建立註解
+tw:從選取内容建立註解
 uk:Створити анотацію з виділеного
 uz:Tanlovdan izoh yaratish
 vn:Thêm Chú Thích Từ Phần Được Chọn
 :Create Caret Annotation
+br:Criar Anotação Circunflexo
+cn:创建插入符标注
+co:Creà un’annutazione di barra d’inserzione
+de:Caret‑Anmerkung erstellen
 pl:Utwórz adnotację karetą
+sk:Vytvoriť anotáciu so vsuvkou
+tw:建立插入符號註解
 :Create Circle Annotation
+br:Criar Anotação Círculo
+cn:创建圆圈标注
+co:Creà un’annutazione circulare
+de:Kreis-Anmerkung erstellen
 pl:Utwórz adnotację okręgiem
+sk:Vytvoriť kruhovú anotáciu
+tw:建立圓圈註解
 :Create File Attachment Annotation
+br:Criar Anotação Arquivo Anexado
+cn:创建文件附件标注
+co:Creà un’annutazione di pezza ghjunta
+de:Dateianhang-Anmerkung erstellen
 pl:Utwórz adnotację załącznikem pliku
+sk:Vytvoriť anotáciu k prílohe súboru
+tw:建立檔案附件註解
 :Create Free Text Annotation
+br:Criar Anotação Texto Livre
+cn:创建自由文本标注
+co:Creà un’annutazione di testu liberu
+de:Freitext-Anmerkung erstellen
 pl:Utwórz adnotację dowolnym tekstem
+sk:Vytvoriť anotáciu s voľným textom
+tw:建立自由文字註解
 :Create Highlight Annotation
+br:Criar Anotação Destacar
+cn:创建高亮标注
+co:Creà un’annutazione di messa in evidenza
+de:Hervorhebungsanmerkung erstellen
 pl:Utwórz adnotację wyróżnieniem
+sk:Vytvoriť zvýraznenú anotáciu
+tw:建立螢光標示註解
 :Create Ink Annotation
+br:Criar Anotação Tinta
+cn:创建墨迹标注
+co:Creà un’annutazione lnk
+de:Freihandanmerkung erstellen
 pl:Utwórz adnotację atramentem
+sk:Vytvoriť anotáciu atramentom
+tw:建立筆跡註解
 :Create Line Annotation
+br:Criar Anotação Linha
+cn:创建线条标注
+co:Creà un’annutazione di linea
+de:Zeilenanmerkung erstellen
 pl:Utwórz adnotację linią
+sk:Vytvoriť anotáciu čiarou
+tw:建立線條註解
 :Create Link Annotation
+br:Criar Anotação Link
+cn:创建链接注释
+co:Creà un’annutazione di liame
+de:Link-Anmerkung erstellen
 pl:Utwórz adnotację odnośnikiem
+sk:Vytvoriť anotáciu s odkazom
+tw:建立連結註解
 :Create Poly Line Annotation
+br:Criar Anotação Poli-Linha
+cn:创建折线标注
+co:Creà un’annutazione di linea tronca
+de:Polylinien-Anmerkung erstellen
 pl:Utwórz adnotację polilinią
+sk:Vytvoriť anotáciu lomenou čiarou
+tw:建立多段線註解
 :Create Polygon Annotation
+br:Criar Anotação Polígono
+cn:创建多边形标注
+co:Creà un’annutazione di poligonu
+de:Polygon-Anmerkung erstellen
 pl:Utwórz adnotację wielokątem
+sk:Vytvoriť mnohouholníkovú anotáciu
+tw:建立多邊形註解
 :Create Popup Annotation
+br:Criar Anotação Popup
+cn:创建弹出式标注
+co:Creà un’annutazione di finestrinu
+de:Einblendbare Anmerkung erstellen
 pl:Utwórz adnotację wyskakującym okienkiem
+sk:Vytvoriť vyskakovaciu anotáciu
+tw:建立彈出式註解
 :Create Redact Annotation
+br:Criar Anotação Redigir
+cn:创建密文标注
+co:Creà un’annutazione di redazzione
+de:Schwärzungsanmerkung erstellen
 pl:Utwórz adnotację redagowaniem
+sk:Vytvoriť redigovanú poznámku
+tw:建立密文註解
 :Create Square Annotation
+br:Criar Anotação Quadrado
+cn:创建矩形标注
+co:Creà un’annutazione quadrata
+de:Quadratische Anmerkung erstellen
 pl:Utwórz adnotację kwadratem
+sk:Vytvoriť štvorcovú anotáciu
+tw:建立矩形註解
 :Create Squiggly Annotation
+br:Criar Anotação Ondulado
+cn:创建波浪线标注
+co:Creà un’annutazione undulata
+de:Geschwungene Anmerkung erstellen
 pl:Utwórz adnotację falowaniem
+sk:Vytvoriť vlnovkovú anotáciu
+tw:建立波浪線註解
 :Create Stamp Annotation
+br:Criar Anotação Carimbo
+cn:创建图章标注
+co:Creà un’annutazione di stampaghjolu
+de:Stempelanmerkung erstellen
 pl:Utwórz adnotację pieczęcią
+sk:Vytvoriť anotáciu s pečiatkou
+tw:建立印章註解
 :Create Strike Out Annotation
+br:Criar Anotação Riscado
+cn:创建删除线标注
+co:Creà un’annutazione di linea rigata
+de:Streichungsanmerkung erstellen
 pl:Utwórz adnotację skreśleniem
+sk:Vytvoriť prečiarknutú anotáciu
+tw:建立刪除線註解
 :Create Text Annotation
+br:Criar Anotação Texto
+cn:创建文本注释
+co:Creà un’annutazione di testu
+de:Textanmerkung erstellen
 pl:Utwórz adnotację tekstem
+sk:Vytvoriť textovú anotáciu
+tw:建立文字註解
 :Create Underline Annotation
+br:Criar Anotação Sublinhado
+cn:创建下划线标注
+co:Creà un’annutazione sottulineata
+de:Unterstrichene Anmerkung erstellen
 pl:Utwórz adnotację podkreśleniem
+sk:Vytvoriť podčiarknutú anotáciu
+tw:建立底線註解
 :Created:
 af:Geskep
 am:Ստեղծված`
@@ -8853,7 +9029,7 @@ cn:自定义缩放(&Z)...
 co:&Ingrandamentu persunalizatu…
 cy:Chwyddo &Cyfaddas...
 cz:Vlastní &zvětšení
-de:Benutzerdefinierter &Zoom...
+de:Benutzerdefinierter &Zoom…
 dk:Tilpasset &Zoom
 el:Ορισμός Ζουμ
 es:Zoom &personalizado...
@@ -9087,21 +9263,61 @@ uk:Дата:
 uz:Sana:
 vn:Ngày:
 :Debug: Corrupt Memory
+br:Depuração: Memória Corrompida
+cn:调试：损坏内存
+co:Spannatura : Memoria alterata
 pl:Debugowanie: uszkodź pamięć
+sk:Ladenie: Poškodená pamäť
+tw:除錯：損毀記憶體
 :Debug: Crash Me
+br:Depuração: Trave-me
+cn:调试：使程序崩溃
+co:Spannatura : Tombami
 pl:Debugowanie: zawieś mnie
+sk:Ladenie: Pád aplikácie
+tw:除錯：讓程式當機
 :Debug: Download Symbols
+br:Depuração: Baixar Símbolos
+cn:调试：下载符号
+co:Spannatura : Scaricà i simbuli
 pl:Debugowanie: pobierz symbole
+sk:Ladenie: Stiahnuť symboly
+tw:除錯：下載符號
 :Debug: Show Notification
+br:Depuração: Mostrar Notificação
+cn:调试：显示通知
+co:Spannatura : Affissà a nutificazione
 pl:Debugowanie: pokaż powiadomienie
+sk:Ladenie: Zobraziť upozornenie
+tw:除錯：顯示通知
 :Debug: Start Stress Test
+br:Depuração: Iniciar Teste de Stress
+cn:调试：开始压力测试
+co:Spannatura : Lancià una prova di custrizzione
 pl:Debugowanie: rozpocznij test obciążeniowy
+sk:Ladenie: Spustiť záťažový test
+tw:除錯：開始壓力測試
 :Debug: Test App
+br:Depuração: Testar Aplicação
+cn:调试：测试应用
+co:Spannatura : Appiecazione di prova
 pl:Debugowanie: testuj aplikację
+sk:Ladenie: Testovať aplikáciu
+tw:除錯：測試應用程式
 :Debug: Toggle Predictive Rendering
+br:Depuração: Ativar/Desativar Renderização Preditiva
+cn:调试：切换预测性渲染
+co:Spannatura : Attivà o disattivà a restituzione di predizzione
 pl:Debugowanie: przełącz renderowanie predykcyjne
+sk:Ladenie: Prepnúť prediktívne vykresľovanie
+tw:除錯：切換預測性渲染
 :Debug: Toggle Rtl
+br:Depuração: Ativar/Desativar Rtl
+cn:调试：切换从右向左模式
+co:Spannatura : Attivà o disattivà Rtl
 pl:Debugowanie: przełącz RTL
+sk:Ladenie: Prepnúť RTL
+tw:除錯：切換從右向左模式
 :Default &Layout:
 am:Ծրագրային &դասավորություն.
 ar:التخطيط الافتراضي&
@@ -9326,9 +9542,21 @@ tw:刪除註解
 uk:Видалити анотацію
 uz:Izohni o‘chirish
 :Delete Favorite
+br:Apagar Favorito
+cn:从收藏夹删除
+co:Squassà u favuritu
+de:Favorit löschen
 pl:Usuń ulubione
+sk:Odstrániť obľúbené
+tw:從我的最愛刪除
 :Delete File
+br:Apagar Arquivo
+cn:删除文件
+co:Squassà u schedariu
+de:Datei löschen
 pl:Usuń plik
+sk:Odstrániť súbor
+tw:刪除檔案
 :Denied Permissions:
 am:Լիազորությունները մերժված են.
 ar:رفض الأذونات:
@@ -9467,7 +9695,13 @@ uk:Документи DjVu
 uz:DjVu hujjatlari
 vn:Tập tin DjVu
 :Do nothing
+br:Não fazer nada
+cn:不执行操作
+co:Ùn fà nunda
+de:Nichts tun
 pl:Nic nie rób
+sk:Nič nerobiť
+tw:不執行任何動作
 :Document Properties
 am:Ֆայլի հատկությունները
 ar:خصائص المستند
@@ -10255,9 +10489,21 @@ uk:Помилка завантаження %s
 uz:%s yuklab olish xatosi
 vn:Không mở %s được
 :Execute a program
+br:Executar um programa
+cn:执行程序
+co:Lancià un prugramma
+de:Ein Programm ausführen
 pl:Uruchom program
+sk:Spustiť program
+tw:執行程式
 :Exit Application
+br:Sair
+cn:退出应用程序
+co:Esce da l’appiecazione
+de:Anwendung beenden
 pl:Wyjdź z programu
+sk:Ukončiť aplikáciu
+tw:結束應用程式
 :Expand All
 am:Ընդարձակել բոլորը
 ar:بسط الكل
@@ -10560,7 +10806,12 @@ uk:Дві сторінки
 uz:Ikkita betdan
 vn:Trang kép
 :Facing View
+br:Visualizar em Página Dupla
+cn:双页视图
+co:Affissà cum’è pagina doppia
 pl:Widok wielu stron
+sk:Zobraziť dve strany
+tw:雙頁檢視
 :Failed to delete uninstaller registry keys
 am:Հնարավոր չեղավ ջնջել Գրանցատեղիի բանալիները
 ar:فشل في حذف مفاتيح مكتب تسجيل إلغاء التثبيت
@@ -11368,14 +11619,14 @@ am:Գտն&ել...
 ar:ال&بحث...
 az:A&xtar...
 bg:&Търси
-br:Acha&r...
+br:Localiza&r...
 by:&Знайсці…
 ca:&Troba...
 cn:查找(&D)...
 co:&Circà…
 cy:&Canfod...
 cz:Nají&t...
-de:S&uchen...
+de:S&uchen…
 dk:Fin&d...
 el:Εύρεση
 es:Busca&r...
@@ -11420,7 +11671,7 @@ ar:بحث
 az:Axtar
 bg:Търсене
 bn:খুজুন
-br:Achar
+br:Localizar
 bs:Traži
 by:Знайсці
 ca-xv:Cerca
@@ -11491,7 +11742,7 @@ ar:بحث عن التالي
 az:Sonrakını tap
 bg:Намиране на следващото съвпадение
 bn:পরবর্তী অনুসন্ধান
-br:Achar o Próximo
+br:Localizar Próximo
 bs:Nađi sljedeće
 by:Найти следующее
 ca-xv:Cerca següent
@@ -11558,7 +11809,12 @@ uk:Знайти наступне
 uz:Keyingisini qidirish
 vn:Tìm xuống
 :Find Next Selection
+br:Localizar Próximo
+cn:查找下一个所选内容
+co:Truvà a selezzione seguente
 pl:Znajdź następne zaznaczenie
+sk:Hľadať ďalší výber
+tw:尋找下個選取内容
 :Find Previous
 af:Soek Vorige
 am:Գտնել նախորդը
@@ -11566,7 +11822,7 @@ ar:البحث عن السابق
 az:Əvvəlkini tap
 bg:Намиране на предишното съвпадение
 bn:পূর্ববর্তী অনুসন্ধান
-br:Achar o Anterior
+br:Localizar Anterior
 bs:Nađi prethodno
 by:Знайсці папярэдняе
 ca-xv:Cerca anterior
@@ -11633,7 +11889,12 @@ uk:Знайти попереднє
 uz:Oldingisini qidirish
 vn:Tìm lên
 :Find Previous Selection
+br:Localizar Anterior
+cn:查找上一个所选内容
+co:Truvà a selezzione precedente
 pl:Znajdź poprzednie zaznaczenie
+sk:Hľadať predchádzajúci výber
+tw:尋找上個選取内容
 :Find:
 af:Soek:
 am:Գտնել.
@@ -11641,7 +11902,7 @@ ar:بحث
 az:Axtar:
 bg:Търсене:
 bn:অনুসন্ধান:
-br:Achar:
+br:Localizar:
 bs:Traži:
 by:Знайсці:
 ca-xv:Cerca:
@@ -11708,9 +11969,19 @@ uk:Знайти:
 uz:Qidirish:
 vn:Tìm kiếm:
 :Find: Toggle Match Case
+br:Localizar: Diferenciar Maiúsculas/Minúsculas
+cn:查找：切换区分大小写
+co:Circà : Attivà o disattivà u rispettu di a cassa
 pl: Znajdź: przełącz uwzględnianie wielkości liter
+sk:Hľadať: Prepnúť rozlišovanie veľkých/malých písmen
+tw:尋找：切換區分大小寫
 :First Page
+br:Primeira Página
+cn:第一页
+co:Prima pagina
 pl:Pierwsza strona
+sk:Prvá strana
+tw:第一頁
 :Fit &Content
 am:Հարմարեցնել &բովանդակությունը
 ar:لائم ال&محتوى
@@ -12125,7 +12396,7 @@ ro:Potrivire după lățime și afișare continuă a paginilor
 ru:Вписать по ширине и прокручивать непрерывно (не по страницам)
 sat:ᱚᱥᱟᱨ ᱠᱷᱟᱯ ᱟᱨ ᱥᱟᱦᱴᱟᱠᱚ ᱞᱮᱛᱟᱲ ᱥᱟᱦᱤᱡ ᱫᱮᱠᱷᱟᱣᱢᱮ
 si:අඛණ්ඩව නිසිලෙස පළල සකසමින් පිටු පෙන්වන්න
-sk:Prispôsobiť šírke okna
+sk:Prispôsobiť šírke a zobrazovať stránky priebežne
 sl:Prilagodi po širini in prikaži strani nepretrgano
 sp-rs:Podesi prema širini i prikaži stranice bez prekida
 sq:Përshtat gjerësinë dhe tregoj faqet në vazhdimësi
@@ -12421,7 +12692,7 @@ cn:经常打开的文件
 co:Ducumenti letti aspessu
 cy:Darllen yn Aml
 cz:Často čtené dokumenty
-de:Oft gelesene Dokumente
+de:Häufig gelesen
 dk:Hyppigt læste
 el:Συχνά αναγνωσμένα
 es:Lo más leído
@@ -12599,7 +12870,12 @@ uk:Отримати інформацію про шрифти
 uz:Shriftlar haqida ma’lumot olish
 vn:Lấy Thông Tin Fonts
 :Go to Page...
+br:Ir para Página...
+cn:转到页面…
+de:Zu Seite gehen…
 pl:Idź do strony...
+sk:Prejsť na stranu…
+tw:跳至頁面…
 :Go to page
 af:Gaan Na Bladsy
 am:Անցնել էջի
@@ -12674,15 +12950,40 @@ uk:Перейти на сторінку
 uz:Betga o'tish
 vn:Nhảy đến trang
 :Help: About SumatraPDF
+br:Ajuda: Sobre o SumatraPDF
+cn:帮助：关于 SumatraPDF
+co:Aiutu : Apprupositu di SumatraPDF
 pl:Pomoc: o programie SumatraPDF
+sk:Pomoc: O programe SumatraPDF
+tw:說明：關於 SumatraPDF
 :Help: Keyboard Shortcuts
+br:Ajuda: Atalhos de Teclado
+cn:帮助：键盘快捷键
+co:Aiutu : Accurtatoghji di tastera
 pl:Pomoc: skróty klawiaturowe
+sk:Pomoc: Klávesové skratky
+tw:說明：鍵盤快速鍵
 :Help: Manual
+br:Ajuda: Manual
+cn:帮助：使用手册
+co:Aiutu : Manuale
 pl:Pomoc: instrukcja obsługi
+sk:Pomoc: Príručka
+tw:說明：使用手冊
 :Help: Manual On Website
+br:Ajuda: Manual no Site
+cn:帮助：在线手册
+co:Aiutu : Manuale nant’à u situ web
 pl:Pomoc: instrukcja obsługi na stronie internetowej
+sk:Pomoc: Príručka na webovej stránke
+tw:說明：線上手冊
 :Help: SumatraPDF Website
+br:Ajuda: Site do SumatraPDF
+cn:帮助：SumatraPDF 网站
+co:Aiutu : Situ web di SumatraPDF
 pl:Pomoc: strona internetowa programu SumatraPDF
+sk:Pomoc: Webová stránka SumatraPDF
+tw:說明：SumatraPDF 網站
 :Hide &Options
 am:Թաքցնել &ընտրանքները
 ar:إخفاء &الخيارات
@@ -12750,7 +13051,12 @@ uk:Приховати налаштування
 uz:&Parametrlarni yashirish
 vn:Thiết lập ẩn và tùy chọn
 :Hide Annotations
+br:Ocultar Anotações
+cn:隐藏标注
+co:Piattà l’annutazioni
 pl:Ukryj adnotacje
+sk:Skryť anotácie
+tw:隱藏註解
 :Hide frequently read
 am:Թաքցնել հաճախակի բացվածները
 ar:إخفاء الأكثر قراءة
@@ -12766,7 +13072,7 @@ cn:隐藏经常打开的文件
 co:Piattà i ducumenti letti aspessu
 cy:Cuddio darllen yn aml
 cz:Skrýt často čtené dokumenty
-de:Oft gelesene Dokumente ausblenden
+de:Häufig gelesene Dokumente ausblenden
 dk:Skjul hyppigt læste
 el:Απόκρυψη συχνά αναγνωσμένων αρχείων
 es:Ocultar lo más leído
@@ -12871,7 +13177,7 @@ ro:Sugestie: Utilizați tasta F3 pentru a căuta mai departe
 ru:Для повторного поиска нажмите F3
 sat:ᱩᱫᱩᱜ : ᱫᱩᱦᱲᱟᱹ ᱯᱟᱱᱛᱮ ᱞᱟᱹᱜᱤᱫ F3 ᱵᱩᱛᱟᱹᱢ ᱵᱮᱵᱷᱟᱨ ᱢᱮ
 si:ඉඟිය: නැවත සෙවීම සඳහා F3 යතුර භාවිත කරන්න
-sk:Rada: Použite klávesu F3 pre ďalšie hľadanie
+sk:Rada: Použite kláves F3 na ďalšie hľadanie
 sl:Namig: uporabite tipko F3 za ponovno iskanje
 sp-rs:Savet: Upotrebite taster F3 za nastavak pretrage
 sq:Këshillë: Përdorni tastin F3 për gjetjen e radhës
@@ -13122,7 +13428,7 @@ ta:மை
 th:น้ำหมึก
 tl:Tinta
 tr:Mürekkep
-tw:墨迹
+tw:筆跡
 uk:Чорнила
 uz:Qalam izi
 vn:Mực
@@ -13611,9 +13917,19 @@ uk:Колір інтер'єру:
 uz:Ichki rangi:
 vn:Màu Bên Trong:
 :Invert Colors
+br:Inverter Cores
+cn:反转颜色
 pl:Odwróć kolory
+sk:Invertovať farby
+tw:反轉顏色
 :Invoke Inverse Search
+br:Invocar Busca Invertida
+cn:调用逆向搜索
+co:Lancià a ricerca à l’arritrosa
+de:Rückwärtssuche ausführen
 pl:Wywołaj odwrotne wyszukiwanie
+sk:Použiť inverzné vyhľadávanie
+tw:叫用反向搜尋
 :KB
 af:KB
 am:ԿԲ
@@ -13688,9 +14004,20 @@ uk:KB
 uz:KB
 vn:KB
 :Last Page
+br:Última Página
+cn:最后一页
+co:Ultima pagina
+de:Letzte Seite
 pl:Ostatnia strona
+sk:Posledná strana
+tw:最後一頁
 :Launch a browser or run command with selection
+br:Abrir Navegador ou executar comando com seleção
+cn:对选中内容启动浏览器或运行命令
+co:Lancià un navigatore o una cumanda cù a selezzione
 pl:Uruchom przeglądarkę lub polecenie z zaznaczeniem
+sk:Spustiť prehliadač alebo spustiť príkaz s výberom
+tw:對選取內容啟動瀏覽器或執行命令
 :Let Windows Desktop Search &search PDF documents
 am:Թույլատրել Windows Desktop Search-ին &PDF ֆայլերի որոնումը
 ar:دع &بحث Windows يبحث في مستندات PDF
@@ -14068,7 +14395,7 @@ cn:载入 %s ...
 co:Caricamentu di %s …
 cy:Wrthi'n llwytho %s ...
 cz:Načítám %s ...
-de:Lädt %s...
+de:%s wird geladen…
 dk:Indlæser %s ...
 el:Φόρτωση %s...
 es:Cargando %s ...
@@ -14492,15 +14819,42 @@ uk:Змінено:
 uz:O'zgartirilgan:
 vn:Ngày chỉnh sửa
 :Move Frame Focus
+br:Mover o Quadro de Foco
+cn:移动框架焦点
+co:Dispiazzà u puntu fucale di a vista
 pl:Przenieś uaktywnienie ramki
+sk:Presunúť zameranie rámca
+tw:移動框架焦點
 :Move Tab Left
+br:Mover Aba para a Esquerda
+cn:左移标签页
+co:Dispiazzà l’unghjetta à manu manca
 pl:Przesuń kartę w lewo
+sk:Presunúť kartu doľava
+tw:向左移動分頁
 :Move Tab Right
+br:Mover Aba para a Direita
+cn:右移标签页
+co:Dispiazzà l’unghjetta à manu diritta
 pl:Przesuń kartę w prawo
+sk:Presunúť kartu doprava
+tw:向右移動分頁
 :Navigate Back
+br:Navegar para Trás
+cn:向后导航
+co:Navigazione in daretu
+de:Zurück
 pl:Nawiguj wstecz
+sk:Prejsť späť
+tw:向後巡覽
 :Navigate Forward
+br:Navegar para a Frente
+cn:向前导航
+co:Navigazione in avanti
+de:Weiter
 pl:Nawiguj do przodu
+sk:Prejsť dopredu
+tw:向前巡覽
 :New &window
 am:Նոր &պատուհան
 ar:&نافذة جديدة
@@ -14685,7 +15039,13 @@ uk:Наступна сторінка
 uz:Keyingi bet
 vn:Trang sau
 :Next Tab
+br:Próxima Aba
+cn:下一标签页
+co:Unghjetta seguente
+de:Nächster Tab
 pl:Następna karta
+sk:Ďalšia karta
+tw:下一個分頁
 :No
 am:Ոչ
 ar:كلا
@@ -15434,17 +15794,48 @@ tw:開啟附件
 uk:Відкрити вкладення
 uz:Ilovani ochish
 :Open Current Document In New Tab
+br:Abrir Documento Atual em Nova Aba
+cn:在新标签页中打开当前文档
+co:Apre u ducumentu attuale in un’unghjetta nova
+de:Aktuelles Dokument in neuem Tab öffnen
 pl:Otwórz bieżący dokument w nowej karcie
+sk:Otvoriť aktuálny dokument na novej karte
+tw:在新分頁中開啟目前文件
 :Open Current Document In New Window
+br:Abrir Documento Atual em Nova Janela
+cn:在新窗口中打开当前文档
+co:Apre u ducumentu attuale in una finestra nova
 pl:Otwórz bieżący dokument w nowym oknie
+sk:Otvoriť aktuálny dokument v novom okne
+tw:在新視窗中開啟目前文件
 :Open Directory In Directory Opus
+br:Abrir o Diretório no Directory Opus
+cn:在 Directory Opus 中打开文件目录
+co:Apre u cartulare cù Directory &Opus
 pl:Otwórz katalog w Directory Opus
+sk:Otvoriť priečinok v Directory Opus
+tw:在 Directory Opus 中開啟資料夾
 :Open Directory In Double Commander
+br:Abrir o Diretório no Double Commander
+cn:在 Double Commander 中打开文件目录
+co:Apre u cartulare cù Double Commander
 pl:Otwórz katalog w Double Commanderze
+sk:Otvoriť priečinok v Double Commander
+tw:在 Double Commander 中開啟資料夾
 :Open Directory In Explorer
+br:Abrir o Diretório no Explorer
+cn:在资源管理器中打开文件目录
+co:Apre u cartulare cù l’espluratore
 pl:Otwórz katalog w Eksploratorze
+sk:Otvoriť priečinok v Prieskumníkovi
+tw:在檔案總管中開啟資料夾
 :Open Directory In Total Commander
+br:Abrir o Diretório no Total Commander
+cn:在 Total Commander 中打开文件目录
+co:Apre u cartulare cù Total Commander
 pl:Otwórz katalog w Total Commanderze
+sk:Otvoriť priečinok v Total Commander
+tw:在 Total Commander 中開啟資料夾
 :Open Directory in &Double Commander
 am:Բացել գրացուցակը &Double Commander-ում
 ar:افتح الم&جلد في Double Commander
@@ -15452,7 +15843,7 @@ az:Qovluğu &Double Commander-də aç
 br:Abrir o Diretório no &Double Commander
 by:Адкрыць каталог у &Double Commander
 ca:Obre el directori amb &Double Commander
-cn:在 Double Commander 中打开目录(&D)
+cn:在 Double Commander 中打开文件目录(&D)
 co:Apre u cartulare cù &Double Commander
 cy:Agor Cyfeiriadur yn &Double Commander
 cz:Otevřít složku v &Double Commanderu
@@ -15490,7 +15881,7 @@ sv:Öppna mapp i &Double Commander
 ta:டபுள் கமாண்டரில் கோப்புறை திற
 tl:Buksan ang Directory sa &Double Commander
 tr:Dizini &Double Commander ile aç
-tw:在 Double Commander 中開啟目錄 (&D)
+tw:在 Double Commander 中開啟資料夾 (&D)
 uk:Відкрити папку в &Double Commander
 uz:Papkani &Double Commander’da ochish
 :Open Directory in &Explorer
@@ -15500,7 +15891,7 @@ az:Qovluğu &Explorer-də aç
 br:Abrir o Diretório no &Explorer
 by:Адкрыць каталог у &Правадніку
 ca:Obre el directori amb l'&Explorador
-cn:在文件资源管理器中打开目录(&E)
+cn:在资源管理器中打开文件目录(&E)
 co:Apre u cartulare cù l’&espluratore
 cy:Agor Cyfeiriadur yn &Chwilotwr
 cz:Otevřít složku v &Průzkumníku
@@ -15539,7 +15930,7 @@ sv:Öppna mapp i &Utforskaren
 ta:எக்ஸ்ப்ளோரரில் கோப்புறை திற
 tl:Buksan ang Directory sa &Explorer
 tr:Dizini &Explorer ile aç
-tw:在檔案總管中開啟目錄 (&E)
+tw:在檔案總管中開啟資料夾 (&E)
 uk:Відкрити папку в &Провіднику
 uz:Papkani &Explorer’da ochish
 :Open Directory in &Total Commander
@@ -15549,7 +15940,7 @@ az:Qovluğu &Total Commander-də aç
 br:Abrir o Diretório no &Total Commander
 by:Адкрыць каталог у &Total Commander
 ca:Obre el directori amb &Total Commander
-cn:在 Total Commander 中打开目录(&T)
+cn:在 Total Commander 中打开文件目录(&T)
 co:Apre u cartulare cù &Total Commander
 cy:Agor Cyfeiriadur yn &Total Commander
 cz:Otevřít složku v &Total Commanderu
@@ -15588,7 +15979,7 @@ sv:Öppna mapp i &Total Commander
 ta:டோட்டல் கமாண்டரில் கோப்புறை திற
 tl:Buksan ang Directory sa &Total Commander
 tr:Dizini &Total Commander ile aç
-tw:在 Total Commander 中開啟目錄(&T)
+tw:在 Total Commander 中開啟資料夾 (&T)
 uk:Відкрити папку в &Total Commander
 uz:Papkani &Total Commander’da ochish
 :Open Directory in Directory &Opus
@@ -15598,7 +15989,7 @@ az:Qovluğu Directory &Opus-da aç
 br:Abrir o Diretório no Directory &Opus
 by:Адкрыць каталог у Directory &Opus
 ca:Obre el directori amb el Directory &Opus
-cn:在 Directory Opus 中打开目录(&O)
+cn:在 Directory Opus 中打开文件目录(&O)
 co:Apre u cartulare cù Directory &Opus
 cy:Agor Cyfarwyddiadur yng Nghyfarwyddiadur &Opus
 cz:Otevřít složku v Directory &Opusu
@@ -15635,7 +16026,7 @@ sv:Öppna mapp i Directory &Opus
 ta:டைரக்டரி ஓபஸில் கோப்புறை திற
 tl:Buksan ang Directory sa Directory &Opus
 tr:Dizini Directory &Opus ile aç
-tw:在 Directory Opus 中開啟目錄(&O)
+tw:在 Directory Opus 中開啟資料夾 (&O)
 uk:Відкрити папку в &Opus
 uz:Papkani Directory &Opus’da ochish
 :Open Embedded PDF
@@ -15696,7 +16087,12 @@ uk:Відкрити вкладений PDF
 uz:Ichki PDF faylini ochish
 vn:Mở PDF Đã Nhúng
 :Open File...
+br:Abrir Arquivo...
+cn:打开文件…
+co:Apre un schedariu...
 pl:Otwórz plik...
+sk:Otvoriť súbor…
+tw:開啟檔案…
 :Open In New Window
 am:Բացել նոր պատուհանում
 ar:افتح في نافذة جديدة
@@ -15746,7 +16142,11 @@ tr:Yeni Pencerede Aç
 tw:在新視窗中開啟
 uz:Yangi oynada ochish
 :Open New SumatraPDF Window
+br:Abrir Nova Janela do SumatraPDF
+cn:打开新的 SumatraPDF 窗口
 pl:Otwórz nowe okno SumatraPDF
+sk:Otvoriť nové okno SumatraPDF
+tw:開啟新的 SumatraPDF 視窗
 :Open Next File In Folder
 am:Բացել հաջորդ ֆայլը պանակից
 ar:افتح الملف التالي في المجلد
@@ -15824,9 +16224,17 @@ tr:Klasördeki Önceki Dosyayı Aç
 tw:開啟資料夾內的上一個檔案
 uz:Papkadagi oldingi faylni ochish
 :Open Selected Document
+br:Abrir Documento Selecionado
+cn:打开选中的文档
 pl:Otwórz zaznaczony dokument
+sk:Otvoriť vybraný dokument
+tw:開啟選取的文件
 :Open With Pdf&Djvu Bookmarker
+br:Abrir com Pdf&Djvu Bookmarker
+cn:使用 Pdf&Djvu Bookmarker 打开
 pl:Otwórz za pomocą PDF & DjVu Bookmarkera
+sk:Otvoriť pomocou Pdf&Djvu Bookmarker
+tw:以 Pdf&Djvu Bookmarker 開啟
 :Open a document...
 am:Բացել փաստաթուղթ...
 ar:فتح مستند...
@@ -16162,11 +16570,26 @@ uk:Відкрити у Microsoft XPS-Viewer
 uz:Microsoft XPS-Viewerda ochish
 vn:Mở bằng Microsoft XPS-Viewer
 :Open in Adobe Acrobat
+br:Abrir com Adobe Acrobat
+cn:在 Adobe Acrobat 中打开
+co:Apre cù Adobe Reader
 pl:Otwórz w Adobe Acrobat
+sk:Otvoriť v Adobe Acrobat
+tw:在 Adobe Acrobat 中開啟
 :Open in Foxit PhantomPDF
+br:Abrir no Foxit PhantomPDF
+cn:在 福昕 PDF 编辑器 中打开
+co:Apre cù Foxit PhantomPDF
 pl:Otwórz w Foxit PhantomPDF
+sk:Otvoriť v Foxit PhantomPDF
+tw:在 Foxit PhantomPDF 中開啟
 :Open in Foxit Reader
+br:Abrir no Foxit Reader
+cn:在 福昕阅读器 中打开
+co:Apre cù Foxit Reader
 pl:Otwórz w Foxit Readerze
+sk:Otvoriť vo Foxit Reader
+tw:在 Foxit Reader 中開啟
 :Open in Microsoft &HTML Help
 am:Բացել Microsoft &HTML Օգնությունում
 ar:افتح في برنامج م&ساعدة HTML مايكروسوفت
@@ -16214,13 +16637,31 @@ tr:Dizini Microsoft &HTML ile aç
 tw:在 Microsoft HTML 說明中開啟(&H)
 uz:Microsoft &HTML Help’da ochish
 :Open in Microsoft HTML Help
+br:Abrir no Microsoft HTML Help
+cn:在 Microsoft HTML 帮助中打开
+co:Apre cù Microsoft HTML Help
 pl:Otwórz w Microsoft HTML Help
+sk:Otvoriť v Microsoft HTML Help
+tw:在 Microsoft HTML 說明中開啟
 :Open in Microsoft Xps Viewer
+br:Abrir no Microsoft Xps Viewer
+cn:在 Microsoft XPS Viewer 中打开
 pl:Otwórz w Microsoft XPS Viewer
+sk:Otvoriť v Microsoft Xps Viewer
+tw:在 Microsoft XPS Viewer 中開啟
 :Open in PDF-XChange
+br:Abrir No PDF-XChange
+cn:在 PDF-XChange 中打开
 pl:Otwórz w PDF-XChange
+sk:Otvoriť v PDF-XChange
+tw:在 PDF-XChange 中開啟
 :Options...
+br:Opções...
+cn:选项…
+de:Optionen…
 pl:Opcje...
+sk:Možnosti…
+tw:選項…
 :P&roperties
 am:Հ&ատկություններ
 ar:الخصائص
@@ -16636,7 +17077,7 @@ cn:前往第 ... 页(&G)
 co:Pa&gina…
 cy:&Tudalen...
 cz:Str&ana...
-de:&Seite...
+de:&Seite…
 dk:&Side
 el:Σελίδα
 es:Pá&gina...
@@ -17082,7 +17523,11 @@ uk:Документи PalmDoc
 uz:PalmDoc ho'jjatlari
 vn:Tài liệu PalmDoc
 :Pin Selected Document
+br:Fixar Documento Selecionado
+cn:固定所选文档
 pl:Przypnij zaznaczony dokument
+sk:Pripnúť vybraný dokument
+tw:釘選所選取的文件
 :Please close %s to proceed!
 am:Շարունակելուց առաջ փակեք %s-ը:
 ar: !المضي قدما %s الرجاء اغلاق
@@ -17159,7 +17604,7 @@ cn:请稍等，正在加载...
 co:Aspittate a fine di u caricamentu…
 cy:Arhoswch - wrthi'n llwytho...
 cz:Načítám soubor...
-de:Bitte auf das Laden warten...
+de:Bitte auf das Laden warten…
 dk:Vent venligst - indlæser
 el:Παρακαλώ περιμένετε - φόρτωση...
 es:Por favor, espere - cargando...
@@ -17212,7 +17657,7 @@ cn:请稍等，正在渲染...
 co:Aspittate per piacè ; trasfurmazione…
 cy:Arhoswch, wrthi'n cyflwyno...
 cz:Prosím čekejte, probíhá vykreslování...
-de:Bitte auf das Rendern warten...
+de:Bitte auf das Rendern warten…
 dk:Vent venligst - optegner ...
 el:Παρακαλώ περιμένετε - φόρτωση...
 es:Espere un momento mientras se carga la visualización...
@@ -17316,7 +17761,7 @@ ta:பலகோடு
 th:โพลีไลน์
 tl:Poly Line
 tr:Çoklu Çizgi
-tw:多線條
+tw:多段線
 uk:Ламана лінія
 uz:Ko‘p chiziqli shakl
 vn:Nhiều Dòng
@@ -17548,9 +17993,17 @@ uk:Презентація
 uz:Taqdimot
 vn:Trình Chiếu
 :Presentation Black Background
+br:Apresentação com Fundo Preto
+cn:演示模式：黑色背景
 pl:Czarne tło prezentacji
+sk:Čierne pozadie prezentácie
+tw:簡報模式：黑色背景
 :Presentation White Background
+br:Apresentação com Fundo Branco
+cn:演示模式：白色背景
 pl:Białe tło prezentacji
+sk:Biele pozadie prezentácie
+tw:簡報模式：白色背景
 :Previous Page
 af:Vorige Bladsy
 am:Նախորդ էջը
@@ -17624,7 +18077,12 @@ uk:Попередня сторінка
 uz:Oldingi bet
 vn:Trang trước
 :Previous Tab
+br:Aba Anterior
+cn:上一标签页
+de:Vorheriger Tab
 pl:Poprzednia karta
+sk:Predchádzajúca karta
+tw:上一個分頁
 :Print
 am:Տպել
 ar:طباعة
@@ -17694,7 +18152,12 @@ uk:Друк
 uz:Chop etish
 vn:In
 :Print Document...
+br:Imprimir Documento...
+cn:打印文档…
+de:Dokument drucken…
 pl:Drukuj dokument...
+sk:Tlač dokumentu…
+tw:列印文件…
 :Print range
 am:Տպելու կարգը
 ar:نطاق الطباعة
@@ -18172,7 +18635,7 @@ cn:属性...
 co:Pruprietà…
 cy:Priodweddau...
 cz:Vlastnosti...
-de:Eigenschaften...
+de:Eigenschaften…
 dk:Egenskaber
 el:Ιδιότητες...
 es:Propiedades...
@@ -18222,7 +18685,7 @@ cn:重命名(&N)...
 co:&Rinuminà…
 cy:&Ailenwi...
 cz:Pře&jmenovat...
-de:Umbe&nennen...
+de:Umbe&nennen…
 dk:&Omdøb
 el:Μετονομασία
 es:Re&nombrar...
@@ -18339,7 +18802,7 @@ br:Redigir
 by:Рэдагаваць
 ca-xv:Redacta
 ca:Redacta
-cn:编辑
+cn:标记密文
 co:Redige
 cy:Cuddio
 cz:Redigovat
@@ -18381,12 +18844,16 @@ ta:மறைதிருத்தஞ்செய்க
 th:แก้ไขข้อความ
 tl:I-Redact
 tr:Gözden Geçir
-tw:編輯
+tw:標記密文
 uk:Редагувати
 uz:Tahrirlash
 vn:Biên tập
 :Reload Document
+br:Recarregar Documento
+cn:重新加载文档
 pl:Załaduj ponownie dokument
+sk:Znovu načítať dokument
+tw:重新載入文件
 :Remember &opened files
 am:Հիշել &բացված ֆայլերը
 ar:تذكر الملفات المفتوحة
@@ -18454,7 +18921,11 @@ uk:Запам'ятати відкриті файли
 uz:&Ochilgan fayllarni eslab qolish
 vn:Nhớ các tập tin đã mở
 :Remove Selected Document From History
+br:Remover Documento Selecionado do Histórico
+cn:从历史记录中移除所选文档
 pl:Usuń zaznaczony dokument z historii
+sk:Odstrániť vybraný dokument z histórie
+tw:從歷程紀錄中移除被選取的文件
 :Remove from favorites
 af:Verwyder van gunstelinge
 am:Հեռացնել ընտրյալներից
@@ -18588,7 +19059,11 @@ uk:Видалити %s сторінку із закладок
 uz:%s betni tanlanganlardan o'chirish
 vn:Xoá trang %s khỏi Ưa thích
 :Rename File...
+br:Renomear Arquivo...
+cn:重命名文件…
 pl:Zmień nazwę pliku...
+sk:Premenovať súbor…
+tw:重新命名檔案…
 :Rename To
 af:Hernoem na
 am:Վերանվանել՝
@@ -18659,7 +19134,11 @@ uk:Перейменувати в
 uz:Yangi nom
 vn:Đổi tên thành
 :Reopen Last Closed
+br:Reabrir Último Fechado
+cn:重新打开上次关闭的文件
 pl:Otwórz ponownie ostatnio zamknięty
+sk:Znovu otvoriť naposledy zatvorené
+tw:重新開啟上次關閉的內容
 :Rotate &Left
 am:Պտտել &ձախ
 ar:دوّ&ر يسارا
@@ -18765,9 +19244,17 @@ uk:Повернути за годинниковою стрілкою
 uz:O‘ngga burish
 vn:Quay &Phải
 :Rotate Left
+br:Girar pra Esquerda
+cn:向左旋转
 pl:Obróć w lewo
+sk:Otočiť doľava
+tw:向左旋轉
 :Rotate Right
+br:Girar pra Direita
+cn:向右旋转
 pl:Obróć w prawo
+sk:Otočiť doprava
+tw:向右旋轉
 :S&election
 am:Ը&նտրում
 ar:ال&تحديد
@@ -18820,7 +19307,7 @@ ta:தேர்வு
 th:&การเลือก
 tl:S&election
 tr:S&eçim
-tw:選取範圍(&E)
+tw:選取内容 (&E)
 uk:Виділення
 uz:Tanlov
 vn:Chọn
@@ -18934,7 +19421,12 @@ uk:SVG документи
 uz:SVG hujjatlari
 vn:Các Tài Liệu SVG
 :Save Annotations to a new PDF
+br:Salvar Anotações em um PDF novo
+cn:将标注保存到新的 PDF 文件
+de:Anmerkungen in neuer PDF-Datei speichern
 pl:Zapisz adnotacje w nowym pliku PDF
+sk:Uložiť anotácie do nového súboru PDF
+tw:將註解儲存至新的 PDF 檔案
 :Save Annotations to existing PDF
 am:Պահել ծանոթագրությունը առկա PDF-ում
 ar:حفظ التوضيحات في ملف PDF الحالي
@@ -18943,7 +19435,7 @@ bg:Запази Обясненията в съществуващ PDF
 br:Salvar as Anotações no PDF Existente
 by:Захаваць анатацыі ў існуючы PDF
 ca:Desa les anotacions al fitxer PDF existent
-cn:将标注保存到当前 PDF
+cn:将标注保存到当前 PDF 文件
 co:Arregistrà l’annutazioni in u PDF esistente
 cy:Cadw Anodiadau i PDF presennol
 cz:Uložit poznámky do stávajícího PDF souboru
@@ -18984,7 +19476,7 @@ sv:Spara kommentarer till existerande PDF
 ta:குறிப்புரைகளை நடப்பிலுள்ள PDFஇல் சேமித்திடுக
 tl:I-Save ang Annotations sa existing PDF
 tr:Dipnotları geçerli PDF'ye kaydet
-tw:儲存註解到現有的 PDF
+tw:儲存註解到現有的 PDF 檔案
 uk:Збереження приміток до наявного PDF-файлу
 uz:Izohlarni mavjud PDF-ga saqlash
 vn:Lưu Chú Thích và thoát PDF
@@ -19052,7 +19544,7 @@ cn:保存嵌入式文件...
 co:Arregistrà u schedariu incurpuratu…
 cy:Cadw Ffeil wedi'i Mewnosod...
 cz:Uložit vložený soubor...
-de:Eingebettete Datei speichern...
+de:Eingebettete Datei speichern…
 dk:Gem integreret fil...
 el:Αποθήκευση ενσωματωμένου αρχείου...
 es:Guardar el archivo incrustado...
@@ -19096,7 +19588,12 @@ uk:Зберегти вкладений файл...
 uz:Ichki faylni saqlash...
 vn:Lưu Tập Đã Nhúng...
 :Save File As...
+br:Salvar Arquivo Como...
+cn:文件另存为…
+de:Datei speichern unter…
 pl:Zapisz plik jako...
+sk:Uložiť súbor ako…
+tw:將檔案另存新檔…
 :Save S&hortcut...
 am:Պահել դ&յուրանցումը...
 ar:احفظ الا&ختصار...
@@ -19109,7 +19606,7 @@ cn:保存快捷方式(&H)...
 co:Arregistrà l’&accurtatoghju…
 cy:Cadw &Llwybr Byr...
 cz:Uložit Z&ástupce
-de:Verknüpfung speichern...
+de:Verknüpfung speichern…
 dk:Gem gen&vej
 el:Αποθήκευση συντόμευσης
 es:Guardar A&tajo...
@@ -19382,7 +19879,7 @@ bg:Запазени анотации към '%s'
 br:Salvou as anotações em '%s'
 by:Анатацыі захаваныя ў «%s»
 ca:S'ha desat les anotacions a '%s'
-cn:保存注释到 '%s'
+cn:保存标注到 '%s'
 co:Annutazioni arregistrate nant’à « %s »
 cy:Cadwyd anodiadau i '%s'
 cz:Uložit poznámky do '%s'
@@ -19481,33 +19978,89 @@ uk:Не вдалося зберегти '%s' з допомогою: '%s'
 uz:'%s' ni saqlash muvaffaqiyatsiz tugadi: '%s'
 vn:Đang lưu '%s' lỗi với: '%s'
 :Scroll Down
+br:Rolar para Baixo
+cn:向下滚动
 pl:Przewiń w dół
+sk:Posunúť nadol
+tw:向下捲動
 :Scroll Down By Half Page
+br:Rolar para Baixo Meia Página
+cn:向下滚动半页
 pl:Przewiń w dół o pół strony
+sk:Posunúť o polovicu strany nadol
+tw:向下捲動半頁
 :Scroll Down By Page
+br:Rolar para Baixo Uma Página
+cn:向下滚动一页
 pl:Przewiń w dół o stronę
+sk:Posunúť o stranu nadol
+tw:向下捲動一頁
 :Scroll Left
+br:Rolar para a Esquerda
+cn:向左滚动
 pl:Przewiń w lewo
+sk:Posunúť doľava
+tw:向左捲動
 :Scroll Left By Page
+br:Rolar para a Esquerda Uma Página
+cn:向左滚动一页
 pl:Przewiń w lewo o stronę
+sk:Posunúť doľava na strane
+tw:向左捲動一頁
 :Scroll Right
+br:Rolar para a Direita
+cn:向右滚动
 pl:Przewiń w prawo
+sk:Posunúť doprava
+tw:向右捲動
 :Scroll Right By Page
+br:Rolar para a Direita Uma Página
+cn:向右滚动一页
 pl:Przewiń w prawo o stronę
+sk:Posunúť doprava na strane
+tw:向右捲動一頁
 :Scroll Up
+br:Rolar para Cima
+cn:向上滚动
 pl:Przewiń w górę
+sk:Posunúť hore
+tw:向上捲動
 :Scroll Up By Half Page
+br:Rolar para Cima Meia Página
+cn:向上滚动半页
 pl:Przewiń w górę o pół strony
+sk:Posunúť o polovicu strany hore
+tw:向上捲動半頁
 :Scroll Up By Page
+br:Rolar para Cima Uma Página
+cn:向上滚动一页
 pl:Przewiń w górę o stronę
+sk:Posúvať hore na strane
+tw:向上捲動一頁
 :Search Selection with Bing
+br:Procurar Seleção com Bing
+cn:使用 Bing 搜索所选内容
 pl:Szukaj zaznaczenia za pomocą Bing
+sk:Vyhľadať vybrané na Bingu
+tw:使用 Bing 搜尋選取內容
 :Search Selection with Google
+br:Procurar Seleção com Google
+cn:使用 Google 搜索所选内容
 pl:Szukaj zaznaczenia za pomocą Google
+sk:Vyhľadať vybrané na Googli
+tw:使用 Google 搜尋選取內容
 :Search Selection with Google Scholar
+br:Procurar Seleção com Google Scholar
+cn:使用 Google 学术搜索所选内容
 pl:Szukaj zaznaczenia za pomocą Google Scholar
+sk:Vyhľadať vybrané na Google Scholar
+tw:使用 Google 學術搜尋選取內容
 :Search Selection with Wikipedia
+br:Procurar Seleção com Wikipedia
+cn:使用 维基百科 搜索所选内容
 pl:Szukaj zaznaczenia za pomocą Wikipedii
+sk:Vyhľadať vybrané na Wikipédii
+tw:使用 維基百科 搜尋選取內容
 :Search With &Bing
 am:Որոնել &Bing-ով
 ar:بحث في &Bing
@@ -19830,7 +20383,12 @@ uk:Вибрати все
 uz:&Hammasini tanlash
 vn:Chọn hết
 :Select All
+br:Selecionar Tudo
+cn:全选
+de:Alles auswählen
 pl:Zaznacz wszystko
+sk:Vybrať všetko
+tw:選取全部
 :Select content with Ctrl+left mouse button
 am:Նշել ընտրվածը Ctrl+մկնիկի ձախ կոճակով
 ar:حدد المحتوى بالضغط على زر الفأرة الأيسر و Ctrl
@@ -19898,7 +20456,12 @@ uk:Виберіть вміст з допомогою Ctrl+ліва кнопка 
 uz:Ctrl va sichqonchaning chap tugmasini bosib tarkibini tanlang
 vn:Đánh dấu nội dung bằng Ctrl+phím chuột trái
 :Select next theme
+br:Selecionar próximo tema
+cn:选择下一个主题
+de:Nächstes Design auswählen
 pl:Wybierz następny motyw
+sk:Vybrať ďalší motív
+tw:選取下一個主題
 :Select the folder where SumatraPDF should be installed:
 am:Ընտրեք պանակ, որտեղ պետք է տեղադրվի SumatraPDF-ը՝
 ar:حدد المجلد الذي يجب أن يثبت فيه SumatraPDF:
@@ -20031,7 +20594,11 @@ uk:Виділення:
 uz:Tanlash:
 vn:Lựa chọn:
 :Send Document By Email...
+br:Enviar Documento por Email...
+cn:通过电子邮件发送文档…
 pl:Wyślij dokument e-mailem...
+sk:Odoslať dokument e-mailom…
+tw:以電子郵件傳送文件…
 :Send by &E-mail...
 am:Ուղարկել &էլ. փոստով
 ar:إرسال ب&البريد الإلكتروني
@@ -20116,7 +20683,7 @@ cn:设置反向搜索命令行
 co:Definisce a linea di cumanda di ricerca à l’arritrosa
 cy:Gosod linell-orchymyn chwilio gwrthdro
 cz:Nastavit inverzní vyhledávání z příkazového řádku
-de:Befehlszeile für die Inverssuche setzen
+de:Befehlszeile für Rückwärtssuche festlegen
 dk:Angiv omvendt søgekommandolinje
 el:Εμφάνιση γραμμής αντίστροφης αναζήτησης
 es:Configurar la línea de órdenes de la búsqueda inversa
@@ -20171,7 +20738,12 @@ uk:Установити зворотній пошук.
 uz:Teskari qidirish buyruq satrini moslash
 vn:Đặt dòng lệnh tìm kiếm ngược
 :Set theme
+br:Definir tema
+cn:设置主题
+de:Design festlegen
 pl:Ustaw motyw
+sk:Nastaviť motív
+tw:設定主題
 :Show &Bookmarks
 am:Ցուցադրել &Էջանիշերը
 ar:اظهار &قوائم العناوين
@@ -20372,7 +20944,7 @@ cn:显示滚动条(&S)
 co:&Affissà e barre di sfilarata
 cy:Dangos Barrau &Sgrolio
 cz:Zobrazit &posuvníky
-de:Scrollbalken anzeigen
+de:Bildlaufleisten anzeigen
 dk:Vis &rullepaneler
 el:Εμφάνιση μπαρών κύλισης
 es:Mostrar las &barras de desplazamiento
@@ -20489,7 +21061,11 @@ uk:Показати панель інструментів
 uz:&Asboblar panelini ko'rsatish
 vn:Hiện thanh công cụ
 :Show Annotations
+br:Exibir Anotações
+cn:显示标注
 pl:Pokaż adnotacje
+sk:Zobraziť anotácie
+tw:顯示註解
 :Show Book&marks
 am:Ցուցադրել էջա&նիշերը
 ar:إظهار ال&علامات
@@ -20542,7 +21118,11 @@ uk:Показати закладки
 uz:Belgilangan sahifalarni ko‘rsatish
 vn:Hiển thị Dấu &trang
 :Show Document Properties...
+br:Exibir Propriedades do Documento...
+cn:显示文档属性…
 pl:Pokaż właściwości dokumentu...
+sk:Zobraziť vlastnosti dokumentu…
+tw:顯示文件內容…
 :Show Favorites
 am:Ցուցադրել ընտրյալները
 ar:إظهار المفضلة
@@ -20610,9 +21190,17 @@ uk:Перелік закладок
 uz:Tanlanganlarni ko'rsatish
 vn:Hiện Ưa thích
 :Show File In Folder...
+br:Exibir Arquivo na Pasta...
+cn:在文件夹中显示文件…
 pl:Pokaż plik w folderze...
+sk:Zobraziť súbor v priečinku…
+tw:在資料夾中顯示檔案…
 :Show Logs
+br:Exibir Logs
+cn:显示日志
 pl:Pokaż dzienniki
+sk:Zobraziť logy
+tw:顯示記錄
 :Show Scr&ollbars
 am:Ցուցադրել ոլո&րագոտիները
 ar:إظهار أشرطة التمرير
@@ -20983,9 +21571,17 @@ uk:Одна сторінка
 uz:Bitta bet
 vn:Trang đơn
 :Single Page View
+br:Exibição de Página Única
+cn:单页视图
 pl:Widok pojedynczej strony
+sk:Zobrazenie jednej strany
+tw:單頁檢視
 :Smart Next Tab
+br:Próxima Aba Inteligente
+cn:智能切换到下一标签页
 pl:Następna karta inteligentnie
+sk:Inteligentné prepínanie kariet
+tw:智慧切換下一個分頁
 :Sorry, that shouldn't have happened!\n\nPlease press 'Cancel', if you want to help us fix the cause of this crash.
 am:Կներեք, սա չպետք է տեղի ունենար։\n\nՍեղմեք 'Չեղարկել'՝եթե ցանկանում եք օգնել մեզ վերացնելու այս սխալը։
 ar:الرجاء اضغط 'إلغاء الأمر'، إذا كنت ترغب في مساعدتنا على إصلاح هذا الحادث \n\n !آسف، أنه لا ينبغي أن يكون قد حدث
@@ -22332,7 +22928,7 @@ bs:Instaler je oštećen. Molimo da ga ponovo preuzmete.\nOprostite zbog neugodn
 by:Усталёўшчык пашкоджаны. Калі ласка спампуйце ізноўку.\nВыбачайце!
 ca-xv:L'instal·lador és malmés. Baixeu-lo una altra vegada.\nLamentem les molèsties!
 ca:L'instal·lador és malmès. Baixeu-lo una altra vegada.\nPerdoneu les molèsties!
-cn:抱歉安装程序损坏，请重新下载。
+cn:很抱歉，安装程序发生损坏，请重新下载。
 co:U stalladore hè statu alteratu. Ci vole à scaricallu torna.\nScusate per stu penseru !
 cy:Mae'r gosodwr yn llwgr. Llwythwch y ffeil i lawr eto. \n Ymddiheuriadau am yr anghyfleuster!
 cz:Instalační program byl nejspíše poškozen. Stáhněte si jej prosím znovu. \nOmlouváme se za způsobené nepříjemnosti!
@@ -22401,7 +22997,7 @@ cn:该文档使用了不支持的特性 (%s)，可能无法正确渲染。
 co:Stu ducumentu impiegheghja funzioni micca accettate (%s) è u risultatu puderia ùn esse cusì bè
 cy:Mae'r ddogfen hon yn defnyddio nodweddion sydd ddim yn cael eu cynnal (%s) ac efallai na fyddant yn rendro'n gywir
 cz:Tento dokument používá nepodporované funkce (%s) a tímto se nemusí vykreslit správně
-de:Dieses Dokument kann vermutlich nicht korrekt angezeigt werden wegen fehlender Unterstützung für %s
+de:Dieses Dokument verwendet nicht unterstützte Funktionen (%s) und wird möglicherweise nicht korrekt dargestellt
 dk:Dette dokument bruger funktioner, der ikke er understøttet (%s) og optegner måske ikke korrekt
 el:Αυτό το έγγραφο χρησιμοποιεί μη υποστηριζόμενες δυνατότητες (%s) και δεν θα μπορέσει να εμφανιστεί σωστά
 es:Este documento contiene algunos elementos incompatibles (%s) y puede que no se visualicen correctamente
@@ -22524,50 +23120,147 @@ uk:Заголовок:
 uz:Sarlavha:
 vn:Tựa đề
 :Toggle Anti-Alias Rendering
+br:Exibir/Ocultar Suavização de Imagens
+cn:切换抗锯齿渲染
+de:Anti-Aliasing-Rendering umschalten
 pl:Przełącz renderowanie antyaliasingowe
+sk:Prepnúť vykresľovanie s vyhladzovaním
+tw:切換消除鋸齒渲染
 :Toggle Bookmarks
+br:Ativar/Desativar Atalhos
+cn:切换书签
+de:Lesezeichen umschalten
 pl:Przełącz zakładki
+sk:Prepnúť záložky
+tw:切換書籤
 :Toggle Continuous View
+br:Ativar/Desativar Exibição Contínua
+cn:切换连续显示
+de:Fortlaufende Ansicht umschalten
 pl:Przełącz widok ciągły
+sk:Prepnúť priebežné zobrazenie
+tw:切換連續檢視
 :Toggle Cursor Position
+br:Exibir/Ocultar Posição do Cursor
+cn:切换光标位置显示
+de:Cursorposition umschalten
 pl:Przełącz pozycję kursora
+sk:Prepnúť polohu kurzora
+tw:切換游標位置顯示
 :Toggle Favorites
+br:Exibir/Ocultar Favoritos
+cn:切换收藏夹
+de:Favoriten umschalten
 pl:Przełącz ulubione
+sk:Prepnúť obľúbené
+tw:切換我的最愛
 :Toggle Frequently Read
+br:Exibir/Ocultar Lidos com Frequência
+cn:切换经常打开的文件
+de:Häufig gelesene anzeigen/ausblenden
 pl:Przełącz ostatnio otwierane
+sk:Prepnúť často čítané
+tw:切換經常開啟的檔案
 :Toggle Fullscreen
+br:Exibir/Ocultar Tela Cheia
+cn:切换全屏
+de:Vollbild umschalten
 pl:Przełącz tryb pełnoekranowy
+sk:Prepnúť zobrazenie na celú obrazovku
+tw:切換全螢幕
 :Toggle Inverse Search
+br:Ativar/Desativar Busca Invertida
+cn:切换逆向搜索
+de:Rückwärtssuche umschalten
 pl:Przełącz odwrotne wyszukiwanie
+sk:Prepnúť inverzné vyhľadávanie
+tw:切換反向搜尋
 :Toggle Manga Mode
+br:Exibir/Ocultar Modo Mangá
+cn:切换漫画模式
+de:Manga-Modus umschalten
 pl:Przełącz tryb mangi
+sk:Prepnúť režim Manga
+tw:切換漫畫模式
 :Toggle Match Case
 br:Diferenciar Maiúsculas/Minúsculas
+cn:切换区分大小写
 de:Groß-/Kleinschreibung umschalten
 nl:Schakel hoofdlettergebruik in/uit
 pl:Przełącz uwzględnianie wielkości liter
 sk:Prepnúť rozlišovanie veľkých/malých písmen
 tr:Büyük/Küçük Harfleri Değiştir
+tw:切換區分大小寫
 :Toggle Menu Bar
+br:Exibir/Ocultar Barra de Menus
+cn:切换菜单栏
+de:Menüleiste umschalten
 pl:Przełącz pasek menu
+sk:Prepnúť panel s ponukami
+tw:切換功能表列
 :Toggle Page Info
+br:Exibir/Ocultar Informações da Página
+cn:切换页面信息
+de:Seiteninfo umschalten
 pl:Przełącz informacje o stronie
+sk:Prepnúť informácie o strane
+tw:切換頁面資訊
 :Toggle Scrollbars
+br:Exibir/Ocultar Barras de Rolagem
+cn:切换滚动条
+de:Bildlaufleisten umschalten
 pl:Przełącz paski przewijania
+sk:Prepnúť posuvníky
+tw:切換捲軸
 :Toggle Show Annotations
+br:Exibir/Ocultar Anotações
+cn:切换显示标注
+de:Anmerkungen anzeigen/ausblenden
 pl:Przełącz pokazywanie adnotacji
+sk:Prepnúť Zobraziť anotácie
+tw:切換顯示註解
 :Toggle Show Links
+br:Exibir/Ocultar Links
+cn:切换显示链接
+de:Links anzeigen/ausblenden
 pl:Przełącz pokazywanie odnośników
+sk:Prepnúť Zobraziť odkazy
+tw:切換顯示連結
 :Toggle Table Of Contents
+br:Exibir/Ocultar Índice
+cn:切换目录
+de:Inhaltsverzeichnis umschalten
 pl:Przełącz spis treści
+sk:Prepnúť obsah
+tw:切換目錄
 :Toggle Toolbar
+br:Exibir/Ocultar Barra de Ferramentas
+cn:切换工具栏
+de:Werkzeugleiste umschalten
 pl:Przełącz pasek narzędzi
+sk:Prepnúť panel nástrojov
+tw:切換工具列
 :Toggle Zoom
+br:Ativar/Desativar Zoom
+cn:切换缩放
+de:Zoom umschalten
 pl:Przełącz powiększenie
+sk:Prepnúť zväčšenie
+tw:切換縮放
 :Translate Selection With DeepL
+br:Traduzir Seleção com DeepL
+cn:使用 DeepL 翻译所选内容
+de:Auswahl mit DeepL übersetzen
 pl:Przetłumacz zaznaczenie za pomocą DeepL
+sk:Preložiť výber pomocou DeepL
+tw:以 DeepL 翻譯選取內容
 :Translate Selection with Google
+br:Traduzir Seleção com Google
+cn:使用 Google 翻译所选内容
+de:Auswahl mit Google Translate übersetzen
 pl:Przetłumacz zaznaczenie za pomocą Google
+sk:Preložiť výber pomocou Google
+tw:以 Google 翻譯選取內容
 :Translate with &DeepL
 am:Թարգմանել &DeepL-ով
 ar:ترجمة في &DeepL
@@ -23137,9 +23830,18 @@ uk:Вигляд
 uz:Ko'rish
 vn:Hiển thị
 :View With Custom External Viewer
+br:Exibir com Visualizador Externo Configurado
+cn:通过自定义外部查看器查看
 pl:Widok za pomocą niestandardowej przeglądarki zewnętrznej
+sk:Zobraziť pomocou vlastného externého prehliadača
+tw:以自訂外部檢視器檢視
 :View: Presentation Mode
+br:Exibir: Modo Apresentação
+cn:视图：演示模式
+de:Ansicht: Präsentationsmodus
 pl:Widok: tryb prezentacji
+sk:Zobraziť: Režim prezentácie
+tw:檢視：簡報模式
 :Visit &Website
 af:&Besoek Webtuiste
 am:Ծրագրի &կայքը
@@ -23522,7 +24224,7 @@ br:Você tem a versão '%s' e a versão '%s' está disponível.\nVocê quer inst
 by:У вас устаноўлена версія '%s'. Даступна версія '%s'.\nХочаце ўстанавіць новую версію?
 ca-xv:Aquesta és la versió «%s». Està disponible la versió «%s».\nVoleu instal·lar la versió nova?
 ca:Aquesta és la versió «%s». Està disponible la versió «%s».\nVoleu instal·lar la versió nova?
-cn:您已安装 '%s' 版本，'%s' 版本已经发布。\n是否安装新版本？
+cn:您正在使用 '%s' 版本，'%s' 版本已经发布。\n是否安装新版本？
 co:Impiegate a versione « %s » è a versione « %s » hè dispunibule.\nVulete installà a versione nova ?
 cy:Mae fersiwn '%s' gennych ac mae fersiwn '%s' ar gael.\nHoffech chi osod y fersiwn newydd?
 cz:Používáte verzi '%s' a verze '%s' je k dispozici.\nChcete nainstalovat novou verzi?
@@ -23577,7 +24279,7 @@ br:Você está instalando o SumatraPDF de 32 bits num\nSO de 64 bits. Você gost
 by:Вы ўстанаўліваеце 32-бітную версію\nSumatraPDF на 64-бітную АС.\nСпампаваць64-бітную версію?
 ca-xv:Esteu instal·lant el SumatraPDF de 32 bits a un sistema operatiu de 64 bits. Voleu baixar la versió de 64 bits?
 ca:Esteu instal·lant el SumatraPDF de 32 bits a un sistema operatiu de 64 bits. Voleu baixar la versió de 64 bits?
-cn:您正在 64 位操作系统上安装 32 位 SumatraPDF。\n是否下载\n64 位版本？
+cn:您正在 64 位操作系统上安装 32 位 SumatraPDF。\n是否要下载 64 位版本？
 co:Avete da installà SumatraPDF 32-bit\nnant’à un sistema 64-bit.\nVulete scaricà a versione 64-bit ?
 cy:Rydych yn gosodSumatraPDF 32-did ar OS 64-did.\nHoffech chi lwytho i lawr y\nfersiwn 64-did?
 cz:Instalujete 32-bitovou verzi SumatraPDF na 64-bitový OS.\nChcete stáhnout\n64-bitovou verzi?
@@ -23904,45 +24606,138 @@ uk:Масштаб
 uz:Miqyos omili
 vn:Hệ số thu phóng
 :Zoom: 100%
+br:Zoom: 100%
+cn:缩放：100%
+de:Zoom: 100 %
 pl:Powiększenie: 100%
+sk:Zväčšiť: 100 %
+tw:縮放：100%
 :Zoom: 12.5%
+br:Zoom: 12.5%
+cn:缩放：12.5%
+de:Zoom: 12,5 %
 pl:Powiększenie: 12,5%
+sk:Zväčšiť: 12.5%
+tw:縮放：12.5%
 :Zoom: 125%
+br:Zoom: 125%
+cn:缩放：125%
+de:Zoom: 125 %
 pl:Powiększenie: 125%
+sk:Zväčšiť: 125%
+tw:縮放：125%
 :Zoom: 150%
+br:Zoom: 150%
+cn:缩放：150%
+de:Zoom: 150 %
 pl:Powiększenie: 150%
+sk:Zväčšiť: 150%
+tw:縮放：150%
 :Zoom: 1600%
+br:Zoom: 1600%
+cn:缩放：1600%
+de:Zoom: 1600 %
 pl:Powiększenie: 1600%
+sk:Zväčšiť: 1600%
+tw:縮放：1600%
 :Zoom: 200%
+br:Zoom: 200%
+cn:缩放：200%
+de:Zoom: 200 %
 pl:Powiększenie: 200%
+sk:Zväčšiť: 200%
+tw:縮放：200%
 :Zoom: 25%
+br:Zoom: 25%
+cn:缩放：25%
+de:Zoom: 25 %
 pl:Powiększenie: 25%
+sk:Zväčšiť: 25%
+tw:縮放：25%
 :Zoom: 3200%
+br:Zoom: 3200%
+cn:缩放：3200%
+de:Zoom: 3200 %
 pl:Powiększenie: 3200%
+sk:Zväčšiť: 3200%
+tw:縮放：3200%
 :Zoom: 400%
+br:Zoom: 400%
+cn:缩放：400%
+de:Zoom: 400 %
 pl:Powiększenie: 400%
+sk:Zväčšiť: 400%
+tw:縮放：400%
 :Zoom: 50%
+br:Zoom: 50%
+cn:缩放：50%
+de:Zoom: 50 %
 pl:Powiększenie: 50%
+sk:Zväčšiť: 50%
+tw:縮放：50%
 :Zoom: 6400%
+br:Zoom: 6400%
+cn:缩放：6400%
+de:Zoom: 6400 %
 pl:Powiększenie: 6400%
+sk:Zväčšiť: 6400%
+tw:縮放：6400%
 :Zoom: 8.33%
+br:Zoom: 8.33%
+cn:缩放：8.33%
+de:Zoom: 8,33 %
 pl:Powiększenie: 8,33%
+sk:Zväčšiť: 8.33%
+tw:縮放：8.33%
 :Zoom: 800%
+br:Zoom: 800%
+cn:缩放：800%
+de:Zoom: 800 %
 pl:Powiększenie: 800%
+sk:Zväčšiť: 800%
+tw:縮放：800%
 :Zoom: Actual Size
+br:Zoom: Tamanho Real
+cn:缩放：实际大小
 pl:Powiększenie: rozmiar rzeczywisty
+sk:Zväčšiť: Skutočná veľkosť
+tw:縮放：實際大小
 :Zoom: Custom...
+br:Zoom: Personalizado...
+cn:缩放：自定义…
 pl:Powiększenie: niestandardowe...
+sk:Zväčšiť: Vlastné…
+tw:縮放：自訂…
 :Zoom: Fit Content
+br:Zoom: Ajustar ao Conteúdo
+cn:缩放：适合内容
 pl:Powiększenie: dopasuj do zawartości
+sk:Zväčšiť: Prispôsobiť obsah
+tw:縮放：符合內容
 :Zoom: Fit Page
+br:Zoom: Ajustar à Página
+cn:缩放：适合页面
 pl:Powiększenie: dopasuj do całej strony
+sk:Zväčšiť: Prispôsobiť strane
+tw:縮放：符合頁面
 :Zoom: Fit Page and Single Page
+br:Zoom> Ajustar à Página e Página Única
+cn:缩放：适合页面且单页视图
 pl:Powiększenie: dopasuj do całej i pojedynczej strony
+sk:Zväčšiť: Prispôsobiť strane a jedna strana
+tw:縮放：符合頁面、單頁檢視
 :Zoom: Fit Width
+br:Zoom: Ajustar pela Largura
+cn:缩放：适合宽度
 pl:Powiększenie: dopasuj do szerokości strony
+sk:Zväčšiť: Prispôsobiť šírke
+tw:縮放：符合頁面寬度
 :Zoom: Fit Width And Continuous
+br:Zoom: Ajustar pela Largura e Contínua
+cn:缩放：适合宽度且连续显示
 pl:Powiększenie: dopasuj do szerokości i w układzie ciągłym
+sk:Zväčšiť: Prispôsobiť šírke a zobrazovať stránky priebežne
+tw:縮放：符合頁寬，連續顯示
 :[Changes detected; refreshing] %s
 am:[Հայտնաբերվել են փոփոխություններ, ընթանում է թարմացում] %s
 ar:%s [تغييرات إكتشفت؛ المنعش]
@@ -24081,7 +24876,13 @@ uk:копіювання тексту
 uz:matnni nusxa olish
 vn:đang chép văn bản
 :don't use
+br:não utilize
+cn:不使用
+co:ùn impiegà micca
+de:nicht verwenden
 pl:nie używaj
+sk:nepoužiť
+tw:不要使用
 :printing document
 am:Ֆայլը տպվում է
 ar:طباعة المستند
