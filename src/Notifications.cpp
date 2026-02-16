@@ -77,10 +77,13 @@ struct NotificationWnd : Wnd {
     Rect rProgress;
 };
 
-Vec<NotificationWnd*> gNotifs;
+constexpr int kMaxNotifs = 128;
+static NotificationWnd* gNotifs[kMaxNotifs];
+static int gNotifsCount = 0;
 
 static void GetForHwnd(HWND hwnd, Vec<NotificationWnd*>& v) {
-    for (auto* wnd : gNotifs) {
+    for (int i = 0; i < gNotifsCount; i++) {
+        auto* wnd = gNotifs[i];
         HWND parent = HwndGetParent(wnd->hwnd);
         if (parent == hwnd) {
             v.Append(wnd);
@@ -88,10 +91,13 @@ static void GetForHwnd(HWND hwnd, Vec<NotificationWnd*>& v) {
     }
 }
 
-// notification can be removed due to a timeout or manual closing
-bool IsNotificationValid(NotificationWnd* wnd) {
-    bool exists = gNotifs.Contains(wnd);
-    return exists;
+static int NotificationIndexOf(NotificationWnd* wnd) {
+    for (int i = 0; i < gNotifsCount; i++) {
+        if (gNotifs[i] == wnd) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 static void GetForSameHwnd(NotificationWnd* wnd, Vec<NotificationWnd*>& v) {
@@ -133,10 +139,15 @@ void RelayoutNotifications(HWND hwnd) {
 }
 
 static void NotifsRemoveNotification(NotificationWnd* wnd) {
-    int pos = gNotifs.Remove(wnd);
+    int pos = NotificationIndexOf(wnd);
     if (pos < 0) {
         return;
     }
+    gNotifsCount--;
+    if (pos < gNotifsCount) {
+        gNotifs[pos] = gNotifs[gNotifsCount];
+    }
+    gNotifs[gNotifsCount] = nullptr;
     RelayoutNotifications(wnd->hwnd);
     delete wnd;
 }
@@ -382,7 +393,7 @@ void NotificationWnd::UpdateMessage(const char* msg, int timeoutMs, bool highlig
 }
 
 bool UpdateNotificationProgress(NotificationWnd* wnd, const char* msg, int perc) {
-    if (!IsNotificationValid(wnd)) {
+    if (NotificationIndexOf(wnd) < 0) {
         return false;
     }
     ReportIf(perc < 0 || perc > 100);
@@ -484,20 +495,25 @@ static int NotifsRemoveForGroup(Vec<NotificationWnd*>& wnds, Kind groupId) {
     return toRemove.Size();
 }
 
-static void NotifsAdd(Vec<NotificationWnd*>& wnds, NotificationWnd* wnd, Kind groupId) {
+static bool NotifsAdd(Vec<NotificationWnd*>& wnds, NotificationWnd* wnd, Kind groupId) {
     bool skipRemove = (groupId == nullptr) || (groupId == kNotifAdHoc);
     if (!skipRemove) {
         NotifsRemoveForGroup(wnds, groupId);
     }
+    if (gNotifsCount >= kMaxNotifs) {
+        return false;
+    }
     wnd->groupId = groupId;
-    gNotifs.Append(wnd);
+    gNotifs[gNotifsCount] = wnd;
+    gNotifsCount++;
     RelayoutNotifications(wnd->hwnd);
+    return true;
 }
 
-static void NotifsAdd(NotificationWnd* wnd, Kind groupId) {
+static bool NotifsAdd(NotificationWnd* wnd, Kind groupId) {
     Vec<NotificationWnd*> wnds;
     GetForSameHwnd(wnd, wnds);
-    NotifsAdd(wnds, wnd, groupId);
+    return NotifsAdd(wnds, wnd, groupId);
 }
 
 NotificationWnd* NotifsGetForGroup(Vec<NotificationWnd*>& wnds, Kind groupId) {
@@ -522,7 +538,11 @@ NotificationWnd* ShowNotification(const NotificationCreateArgs& args) {
     if (wnd->delayTimerId == 0) {
         BringWindowToTop(wnd->hwnd);
     }
-    NotifsAdd(wnd, args.groupId);
+    bool ok = NotifsAdd(wnd, args.groupId);
+    if (!ok) {
+        delete wnd;
+        return nullptr;
+    }
     return wnd;
 }
 
