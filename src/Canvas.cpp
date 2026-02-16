@@ -814,6 +814,11 @@ static void OnMouseLeftButtonUp(MainWindow* win, int x, int y, WPARAM key) {
         return;
     }
 
+    if (tab->selectedAnnotation && win->annotationUnderCursor) {
+        SetSelectedAnnotation(tab, win->annotationUnderCursor);
+        return;
+    }
+
     if (link && link->GetRect().Contains(ptPage)) {
         /* follow an active link */
         IPageDestination* dest = link->AsLink();
@@ -1416,7 +1421,7 @@ static LRESULT OnSetCursorMouseNone(MainWindow* win, HWND hwnd) {
     }
 
     Annotation* annot = dm->GetAnnotationAtPos(pt, selected);
-    if (annot && (annot == selected) && AnnotationCanBeMoved(annot->type)) {
+    if (annot && selected) {
         SetCursorCached(IDC_HAND);
         return TRUE;
     }
