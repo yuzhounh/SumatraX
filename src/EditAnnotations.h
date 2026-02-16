@@ -3,16 +3,9 @@
 
 struct EditAnnotationsWindow;
 
-enum class InitialAction {
-    None,
-    FocusEdit,
-    FocusList,
-    SelectEdit,
-};
-
-void ShowEditAnnotationsWindow(WindowTab*);
+void ShowEditAnnotationsWindow(WindowTab*, Annotation*);
 bool CloseAndDeleteEditAnnotationsWindow(WindowTab*);
 void DeleteAnnotationAndUpdateUI(WindowTab*, Annotation*);
-void SetSelectedAnnotation(WindowTab*, Annotation*, InitialAction action = InitialAction::None);
+void SetSelectedAnnotation(WindowTab*, Annotation*);
 void UpdateAnnotationsList(EditAnnotationsWindow*);
 void NotifyAnnotationsChanged(EditAnnotationsWindow*);

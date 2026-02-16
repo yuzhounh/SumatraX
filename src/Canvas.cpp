@@ -810,8 +810,7 @@ static void OnMouseLeftButtonUp(MainWindow* win, int x, int y, WPARAM key) {
     }
 
     if (IsCtrlPressed() && win->annotationUnderCursor) {
-        ShowEditAnnotationsWindow(tab);
-        SetSelectedAnnotation(tab, win->annotationUnderCursor, InitialAction::FocusList);
+        ShowEditAnnotationsWindow(tab, win->annotationUnderCursor);
         return;
     }
 
@@ -889,16 +888,6 @@ static void OnMouseLeftButtonDblClk(MainWindow* win, int x, int y, WPARAM key) {
 
     int elementPageNo = -1;
     IPageElement* pageEl = dm->GetElementAtPos(mousePos, &elementPageNo);
-
-#if 0
-    WindowTab* tab = win->CurrentTab();
-    if (IsCtrlPressed() && win->annotationUnderCursor) {
-        ShowEditAnnotationsWindow(tab);
-        SetSelectedAnnotation(tab, win->annotationUnderCursor, InitialAction::SelectEdit);
-        return;
-    }
-#endif
-
     if (isOverText) {
         int pageNo = dm->GetPageNoByPoint(mousePos);
         if (win->ctrl->ValidPageNo(pageNo)) {

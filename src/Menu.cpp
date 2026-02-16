@@ -1857,13 +1857,22 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
         return;
     }
 
+
+    // handle in FrameOnCommand() in SumatraPDF.cpp
+    LPARAM lpArg = MAKELPARAM(x, y);
     AnnotationType annotType = CmdIdToAnnotationType(cmdId);
     if (annotType != AnnotationType::Unknown) {
-        // handle in FrameOnCommand() in SumatraPDF.cpp
-        LPARAM lpArg = MAKELPARAM(x, y);
         HwndSendCommand(win->hwndFrame, cmdId, lpArg);
         return;
     }
+    switch (cmdId) {
+        case CmdEditAnnotations:
+        case CmdDeleteAnnotation: {
+            HwndSendCommand(win->hwndFrame, cmdId, lpArg);
+            return;
+        }
+    }
+
     switch (cmdId) {
         case CmdCopySelection:
         case CmdTranslateSelectionWithGoogle:
@@ -1884,9 +1893,7 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
         case CmdSaveAnnotations:
         case CmdSaveAnnotationsNewFile:
         case CmdFavoriteAdd:
-        case CmdEditAnnotations:
-        case CmdToggleFullscreen:
-        case CmdDeleteAnnotation: {
+        case CmdToggleFullscreen: {
             // handle in FrameOnCommand() in SumatraPDF.cpp
             HwndSendCommand(win->hwndFrame, cmdId);
         } break;

@@ -2457,7 +2457,8 @@ bool SaveAnnotationsToExistingFile(WindowTab* tab) {
     bool hadEditAnnotations = CloseAndDeleteEditAnnotationsWindow(tab);
     ReloadDocument(tab->win, false);
     if (hadEditAnnotations) {
-        ShowEditAnnotationsWindow(tab);
+        // TODO: improve by remembering which annotation was selected and restoring it after reload
+        ShowEditAnnotationsWindow(tab, nullptr);
     }
 
     return true;
@@ -2542,7 +2543,9 @@ bool SaveAnnotationsToMaybeNewPdfFile(WindowTab* tab) {
 
     ShowSavedAnnotationsNotification(win->hwndCanvas, newPath);
     if (hadEditAnnotations) {
-        ShowEditAnnotationsWindow(tab);
+        // TODO: improve by remembering which annotation was selected and restoring it after reload
+        // could do it by index
+        ShowEditAnnotationsWindow(tab, nullptr);
     }
     return true;
 }
@@ -6086,28 +6089,29 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
 
         case CmdEditAnnotations: {
             if (!tab) return 0;
-            Annotation* annot = GetAnnotionUnderCursor(tab, nullptr);
-            if (!annot) {
-                ShowEditAnnotationsWindow(tab);
-                return 0;
+            Annotation* annot = nullptr;
+            Point pt = HwndGetCursorPos(win->hwndCanvas);
+            if (lp != 0) {
+                // when sending from Menu.cpp mouse position is encoded as LPARAM
+                pt.x = GET_X_LPARAM(lp);
+                pt.y = GET_Y_LPARAM(lp);
+                //MapWindowPoints(win->hwndCanvas, HWND_DESKTOP, &pt, 1);
             }
-            ShowEditAnnotationsWindow(tab);
-            SetSelectedAnnotation(tab, annot, InitialAction::FocusList);
-            break;
+            int pageNoUnderCursor = dm->GetPageNoByPoint(pt);
+            if (pageNoUnderCursor > 0) {
+                annot = dm->GetAnnotationAtPos(pt, nullptr);
+            }
+            ShowEditAnnotationsWindow(tab, annot);
+            return 0;
         }
 
         case CmdDeleteAnnotation: {
             if (!tab) return 0;
             Annotation* annot = tab->selectedAnnotation;
-            if (!annot) {
-                Point pt = HwndGetCursorPos(tab->win->hwndCanvas);
-                if (!pt.IsEmpty()) {
-                    annot = dm->GetAnnotationAtPos(pt, nullptr);
-                }
-            }
-            if (annot) {
-                DeleteAnnotationAndUpdateUI(tab, annot);
-            }
+            if (!annot) annot = GetAnnotionUnderCursor(tab, nullptr);
+            if (!annot) return 0;
+            DeleteAnnotationAndUpdateUI(tab, annot);
+            return 0;
         } break;
 
         case CmdCreateAnnotHighlight:
@@ -6210,13 +6214,11 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         return 0;
     }
     if (openAnnotationEdit) {
-        ShowEditAnnotationsWindow(tab);
-        SetSelectedAnnotation(tab, lastCreatedAnnot, InitialAction::SelectEdit);
+        ShowEditAnnotationsWindow(tab, lastCreatedAnnot);
         return 0;
     }
 
     // proper action for a given annotation type
-    InitialAction action = InitialAction::None;
     switch (lastCreatedAnnot->type) {
         case AnnotationType::Highlight:
         case AnnotationType::Squiggly:
@@ -6228,17 +6230,13 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         }
         case AnnotationType::FreeText: {
             // for FreeText you want to edit text so show edit window
-            openAnnotationEdit = true;
-            action = InitialAction::SelectEdit;
+            ShowEditAnnotationsWindow(tab, lastCreatedAnnot);
+            return 0;
         } break;
     }
 
-    if (openAnnotationEdit) {
-        ShowEditAnnotationsWindow(tab);
-        SetSelectedAnnotation(tab, lastCreatedAnnot, action);
-        return 0;
-    }
-    SetSelectedAnnotation(tab, lastCreatedAnnot, InitialAction::None);
+    // mark as selected so it can be moved / resized
+    SetSelectedAnnotation(tab, lastCreatedAnnot);
     return 0;
 }
 
