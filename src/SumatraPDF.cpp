@@ -6089,28 +6089,26 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         }
 
         case CmdEditAnnotations: {
-            if (tab) {
-                Annotation* annot = GetAnnotionUnderCursor(tab, nullptr);
-                ShowEditAnnotationsWindow(tab);
-                if (annot) {
-                    SetSelectedAnnotation(tab, annot, InitialAction::SelectEdit);
-                }
+            if (!tab) return 0;
+            Annotation* annot = GetAnnotionUnderCursor(tab, nullptr);
+            ShowEditAnnotationsWindow(tab);
+            if (annot) {
+                SetSelectedAnnotation(tab, annot, InitialAction::SelectEdit);
             }
             break;
         }
 
         case CmdDeleteAnnotation: {
-            if (tab) {
-                Annotation* annot = tab->selectedAnnotation;
-                if (!annot) {
-                    Point pt = HwndGetCursorPos(tab->win->hwndCanvas);
-                    if (!pt.IsEmpty()) {
-                        annot = dm->GetAnnotationAtPos(pt, nullptr);
-                    }
+            if (!tab) return 0;
+            Annotation* annot = tab->selectedAnnotation;
+            if (!annot) {
+                Point pt = HwndGetCursorPos(tab->win->hwndCanvas);
+                if (!pt.IsEmpty()) {
+                    annot = dm->GetAnnotationAtPos(pt, nullptr);
                 }
-                if (annot) {
-                    DeleteAnnotationAndUpdateUI(tab, annot);
-                }
+            }
+            if (annot) {
+                DeleteAnnotationAndUpdateUI(tab, annot);
             }
         } break;
 
@@ -6204,13 +6202,45 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         default:
             return DefWindowProc(hwnd, msg, wp, lp);
     }
-    if (lastCreatedAnnot) {
-        UpdateAnnotationsList(tab->editAnnotsWindow);
-        if (openAnnotationEdit && !win->isFullScreen) {
-            ShowEditAnnotationsWindow(tab);
-            SetSelectedAnnotation(tab, lastCreatedAnnot, InitialAction::SelectEdit);
-        }
+    if (!lastCreatedAnnot) {
+        return 0;
     }
+    UpdateAnnotationsList(tab->editAnnotsWindow);
+    if (win->isFullScreen) {
+        MainWindowRerender(win);
+        ToolbarUpdateStateForWindow(win, false);
+        return 0;
+    }
+    if (openAnnotationEdit) {
+        ShowEditAnnotationsWindow(tab);
+        SetSelectedAnnotation(tab, lastCreatedAnnot, InitialAction::SelectEdit);
+        return 0;
+    }
+
+    // proper action for a given annotation type
+    InitialAction action = InitialAction::None;
+    switch (lastCreatedAnnot->type) {
+        case AnnotationType::Highlight:
+        case AnnotationType::Squiggly:
+        case AnnotationType::StrikeOut:
+        case AnnotationType::Underline: {
+            MainWindowRerender(win);
+            ToolbarUpdateStateForWindow(win, false);
+            return 0;
+        }
+        case AnnotationType::FreeText: {
+            // for FreeText you want to edit text so show edit window
+            openAnnotationEdit = true;
+            action = InitialAction::SelectEdit;
+        } break;
+    }
+
+    if (openAnnotationEdit) {
+        ShowEditAnnotationsWindow(tab);
+        SetSelectedAnnotation(tab, lastCreatedAnnot, action);
+        return 0;
+    }
+    SetSelectedAnnotation(tab, lastCreatedAnnot, InitialAction::None);
     return 0;
 }
 
