@@ -1117,6 +1117,8 @@ static void GetGradientColor(COLORREF a, COLORREF b, float perc, TRIVERTEX* tv) 
 }
 
 // Draw a border around selected annotation
+static bool gDrawOldStyleAnnotationRect = false;
+
 NO_INLINE static void PaintCurrentEditAnnotationMark(WindowTab* tab, HDC hdc, DisplayModel* dm) {
     if (!tab) {
         return;
@@ -1139,17 +1141,21 @@ NO_INLINE static void PaintCurrentEditAnnotationMark(WindowTab* tab, HDC hdc, Di
         tab->didScrollToSelectedAnnotation = true;
     }
     rect.Inflate(4, 4);
-    // Gdiplus::Color col = GdiRgbFromCOLORREF(gCurrentTheme->window.backgroundColor);
-    Gdiplus::Color col = GdiRgbFromCOLORREF(0xff3333); // blue
-    // TODO: maybe make the rectangle a bit bigger and draw line
-    // using a pattern, using a brush pen
-    Gdiplus::Color colHatch2((Gdiplus::ARGB)Gdiplus::Color::Yellow);
 
-    Gdiplus::HatchBrush br(Gdiplus::HatchStyleCross, colHatch2, col);
-    // Gdiplus::Pen pen(col, 4);
-    Gdiplus::Pen pen(&br, 4);
     Gdiplus::Graphics gs(hdc);
-    gs.DrawRectangle(&pen, rect.x, rect.y, rect.dx, rect.dy);
+
+    if (gDrawOldStyleAnnotationRect) {
+        Gdiplus::Color col = GdiRgbFromCOLORREF(0xff3333); // blue
+        Gdiplus::Color colHatch2((Gdiplus::ARGB)Gdiplus::Color::Yellow);
+        Gdiplus::HatchBrush br(Gdiplus::HatchStyleCross, colHatch2, col);
+        Gdiplus::Pen pen(&br, 4);
+        gs.DrawRectangle(&pen, rect.x, rect.y, rect.dx, rect.dy);
+    } else {
+        Gdiplus::Color gray(180, 128, 128, 128);
+        Gdiplus::Pen pen(gray, 2);
+        pen.SetDashStyle(Gdiplus::DashStyleDot);
+        gs.DrawRectangle(&pen, rect.x, rect.y, rect.dx, rect.dy);
+    }
 
     if (!canResize) {
         return;
