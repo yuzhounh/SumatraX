@@ -57,6 +57,7 @@ struct NotificationWnd : Wnd {
     int timeoutMs = kNotifDefaultTimeOut; // 0 means no timeout
 
     bool highlight = false; // TODO: should really be a color
+    bool noClose = false;
 
     NotificationWndRemoved wndRemovedCb;
 
@@ -155,6 +156,8 @@ NotificationWnd::~NotificationWnd() {
 
 HWND NotificationWnd::Create(const NotificationCreateArgs& args) {
     highlight = args.warning;
+    noClose = args.noClose;
+    ReportIf(noClose && args.timeoutMs <= 0);
     shrinkLimit = args.shrinkLimit;
     if (shrinkLimit < 0.2f) {
         ReportIf(shrinkLimit < 0.2f);
@@ -226,12 +229,16 @@ void NotificationWnd::Layout(const char* message) {
     int dx = padX + szText.dx + padX;
     int dy = padY + szText.dy + padY;
     rTxt = {padX, padY, szText.dx, szText.dy};
-    int closeDx = DpiScale(hwnd, 16);
-    int leftMargin = DpiScale(hwnd, kCloseLeftMargin - padX);
-    rClose = {dx + leftMargin, padY, closeDx, closeDx + 2};
-
-    // close button
-    dx += leftMargin + closeDx + padX;
+    if (!noClose) {
+        int closeDx = DpiScale(hwnd, 16);
+        int leftMargin = DpiScale(hwnd, kCloseLeftMargin - padX);
+        rClose = {dx + leftMargin, padY, closeDx, closeDx + 2};
+        // close button
+        dx += leftMargin + closeDx + padX;
+    } else {
+        rClose = {};
+        dx += padX;
+    }
     int progressDy = DpiScale(hwnd, kProgressDy);
     rProgress = {padX, dy, szText.dx, progressDy};
     if (HasProgress()) {
@@ -260,7 +267,10 @@ void NotificationWnd::Layout(const char* message) {
 #endif
 
     // y-center close
-    rClose.y = ((dy - closeDx) / 2) + 1;
+    if (!noClose) {
+        int closeDx = rClose.dx;
+        rClose.y = ((dy - closeDx) / 2) + 1;
+    }
 
     if (dx == rCurr.dx && dy == rCurr.dy) {
         return;
@@ -320,12 +330,14 @@ void NotificationWnd::OnPaint(HDC hdcIn, PAINTSTRUCT* ps) {
     RECT rTmp = ToRECT(rTxt);
     HdcDrawText(hdc, text, &rTmp, format);
 
-    Point curPos = HwndGetCursorPos(hwnd);
-    DrawCloseButtonArgs args;
-    args.hdc = hdc;
-    args.r = rClose;
-    args.isHover = rClose.Contains(curPos);
-    DrawCloseButton(args);
+    if (!noClose) {
+        Point curPos = HwndGetCursorPos(hwnd);
+        DrawCloseButtonArgs args;
+        args.hdc = hdc;
+        args.r = rClose;
+        args.isHover = rClose.Contains(curPos);
+        DrawCloseButton(args);
+    }
 #if 0
     DrawCloseButtonArgs args;
     args.hdc = hdc;
@@ -412,7 +424,7 @@ void NotificationWnd::OnTimer(UINT_PTR timerId) {
 }
 
 LRESULT NotificationWnd::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
-    if (WM_SETCURSOR == msg) {
+    if (WM_SETCURSOR == msg && !noClose) {
         Point pt = HwndGetCursorPos(hwnd);
         if (!pt.IsEmpty() && rClose.Contains(pt)) {
             SetCursorCached(IDC_HAND);
@@ -428,7 +440,7 @@ LRESULT NotificationWnd::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     if (WM_MOUSEMOVE == msg) {
         HwndScheduleRepaint(hwnd);
 
-        if (IsMouseOverRect(hwnd, rClose)) {
+        if (!noClose && IsMouseOverRect(hwnd, rClose)) {
             TrackMouseLeave(hwnd);
         }
         goto DoDefault;
@@ -441,7 +453,7 @@ LRESULT NotificationWnd::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
 
     if (WM_LBUTTONUP) {
         Point pt = Point(GET_X_LPARAM(lp), GET_Y_LPARAM(lp));
-        if (rClose.Contains(pt)) {
+        if (!noClose && rClose.Contains(pt)) {
             // TODO a better way to delete myself
             if (wndRemovedCb.IsValid()) {
                 auto fn = MkFunc0<NotificationWnd>(NotifRemove, this);

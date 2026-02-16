@@ -18,8 +18,9 @@ struct NotificationCreateArgs {
     HFONT font = nullptr;
     Kind groupId = kNotifActionResponse;
     bool warning = false;
-    int timeoutMs = 0; // if 0 => persists until closed manually
-    int delayInMs = 0; // if > 0 => create hidden, show after delay
+    bool noClose = false; // if true, no close button; must have timeoutMs > 0
+    int timeoutMs = 0;    // if 0 => persists until closed manually
+    int delayInMs = 0;    // if > 0 => create hidden, show after delay
     float shrinkLimit = 1.0f;
     const char* msg = nullptr;
     NotificationWndRemoved onRemoved;
