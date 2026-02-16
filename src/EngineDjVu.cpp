@@ -148,8 +148,9 @@ struct DjVuContext {
         EnterCriticalSection(&lock);
         ReportIf(refCount <= 0);
         --refCount;
+        int res = refCount;
         LeaveCriticalSection(&lock);
-        return refCount;
+        return res;
     }
 
     ~DjVuContext() {
@@ -911,6 +912,9 @@ PageText EngineDjVu::ExtractPageText(int pageNo) {
 Vec<IPageElement*> EngineDjVu::GetElements(int pageNo) {
     ReportIf(pageNo < 1 || pageNo > PageCount());
     auto pi = pages[pageNo - 1];
+
+    ScopedCritSec scope(&gDjVuContext->lock);
+
     if (pi->gotAllElements) {
         return pi->allElements;
     }
@@ -918,7 +922,6 @@ Vec<IPageElement*> EngineDjVu::GetElements(int pageNo) {
     auto& els = pi->allElements;
 
     if (pi->annos == miniexp_dummy) {
-        ScopedCritSec scope(&gDjVuContext->lock);
         while (pi->annos == miniexp_dummy) {
             pi->annos = ddjvu_document_get_pageanno(doc, pageNo - 1);
             if (pi->annos == miniexp_dummy) {
@@ -930,8 +933,6 @@ Vec<IPageElement*> EngineDjVu::GetElements(int pageNo) {
     if (!pi->annos) {
         return els;
     }
-
-    ScopedCritSec scope(&gDjVuContext->lock);
 
     Rect page = PageMediabox(pageNo).Round();
 
