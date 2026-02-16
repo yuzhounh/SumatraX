@@ -1445,6 +1445,10 @@ void ShowEditAnnotationsWindow(WindowTab* tab, Annotation* annot) {
     if (ew) {
         bool isNew = annot != ew->tab->win->annotationUnderCursor;
         HwndMakeVisible(ew->hwnd);
+        SetForegroundWindow(ew->hwnd);
+        if (ew->listBox && ew->listBox->model->ItemsCount() > 0) {
+            HwndSetFocus(ew->listBox->hwnd);
+        }
         if (!annot) return;
         SetSelectedAnnotation(tab, annot, isNew);
         return;
