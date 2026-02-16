@@ -670,11 +670,12 @@ RenderedBitmap* EngineDjVu::RenderPage(RenderPageArgs& args) {
 }
 
 RectF EngineDjVu::PageContentBox(int pageNo, RenderTarget) {
-    ScopedCritSec scope(&gDjVuContext->lock);
+    EnterCriticalSection(&gDjVuContext->lock);
 
     RectF pageRc = PageMediabox(pageNo);
     ddjvu_page_t* page = ddjvu_page_create_by_pageno(doc, pageNo - 1);
     if (!page) {
+        LeaveCriticalSection(&gDjVuContext->lock);
         return pageRc;
     }
 
@@ -682,17 +683,14 @@ RectF EngineDjVu::PageContentBox(int pageNo, RenderTarget) {
         gDjVuContext->SpinMessageLoopWithUnlock();
     }
     if (ddjvu_page_decoding_error(page)) {
+        LeaveCriticalSection(&gDjVuContext->lock);
+        ddjvu_page_release(page);
         return pageRc;
     }
     ddjvu_page_set_rotation(page, DDJVU_ROTATE_0);
 
     // render the page in 8-bit grayscale up to 250x250 px in size
     ddjvu_format_t* fmt = ddjvu_format_create(DDJVU_FORMAT_GREY8, 0, nullptr);
-
-    defer {
-        ddjvu_format_release(fmt);
-        ddjvu_page_release(page);
-    };
 
     ddjvu_format_set_row_order(fmt, /* top_to_bottom */ TRUE);
     float zoom = std::min(std::min(250.0f / pageRc.dx, 250.0f / pageRc.dy), 1.0f);
@@ -702,11 +700,20 @@ RectF EngineDjVu::PageContentBox(int pageNo, RenderTarget) {
 
     char* bmpData = AllocArrayTemp<char>(full.dx * full.dy + 1);
     if (!bmpData) {
+        // release the lock before releasing djvu objects to avoid deadlock:
+        // ddjvu_page_release can trigger DjVuFile::~DjVuFile -> GMonitor::~GMonitor
+        // which acquires libdjvu internal locks
+        LeaveCriticalSection(&gDjVuContext->lock);
+        ddjvu_format_release(fmt);
+        ddjvu_page_release(page);
         return pageRc;
     }
 
     int ok = ddjvu_page_render(page, DDJVU_RENDER_MASKONLY, &prect, &rrect, fmt, full.dx, bmpData);
     if (!ok) {
+        LeaveCriticalSection(&gDjVuContext->lock);
+        ddjvu_format_release(fmt);
+        ddjvu_page_release(page);
         return pageRc;
     }
 
@@ -745,6 +752,13 @@ RectF EngineDjVu::PageContentBox(int pageNo, RenderTarget) {
         content.dy /= zoom;
         pageRc = ToRectF(content.Round());
     }
+
+    // release the lock before releasing djvu objects to avoid deadlock:
+    // ddjvu_page_release can trigger DjVuFile::~DjVuFile -> GMonitor::~GMonitor
+    // which acquires libdjvu internal locks
+    LeaveCriticalSection(&gDjVuContext->lock);
+    ddjvu_format_release(fmt);
+    ddjvu_page_release(page);
 
     return pageRc;
 }
