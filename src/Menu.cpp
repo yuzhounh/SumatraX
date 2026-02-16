@@ -1857,7 +1857,6 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
         return;
     }
 
-
     // handle in FrameOnCommand() in SumatraPDF.cpp
     LPARAM lpArg = MAKELPARAM(x, y);
     AnnotationType annotType = CmdIdToAnnotationType(cmdId);

@@ -830,7 +830,7 @@ static void UpdateUIForSelectedAnnotation(EditAnnotationsWindow* ew, Annotation*
 
         if (isNew && annot->type == AnnotationType::FreeText) {
             HwndSetFocus(ew->editContents->hwnd);
-            //ew->editContents->SetCursorPositionAtEnd();
+            // ew->editContents->SetCursorPositionAtEnd();
             ew->editContents->SelectAll();
         } else {
             HwndSetFocus(ew->listBox->hwnd);

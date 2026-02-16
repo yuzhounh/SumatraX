@@ -6095,7 +6095,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
                 // when sending from Menu.cpp mouse position is encoded as LPARAM
                 pt.x = GET_X_LPARAM(lp);
                 pt.y = GET_Y_LPARAM(lp);
-                //MapWindowPoints(win->hwndCanvas, HWND_DESKTOP, &pt, 1);
+                // MapWindowPoints(win->hwndCanvas, HWND_DESKTOP, &pt, 1);
             }
             int pageNoUnderCursor = dm->GetPageNoByPoint(pt);
             if (pageNoUnderCursor > 0) {

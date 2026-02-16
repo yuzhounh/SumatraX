@@ -710,7 +710,19 @@ static void OnMouseLeftButtonDown(MainWindow* win, int x, int y, WPARAM key) {
 
     WindowTab* tab = win->CurrentTab();
     Annotation* annot = dm->GetAnnotationAtPos(pt, tab->selectedAnnotation);
-    bool isMoveableAnnot = annot && (annot == tab->selectedAnnotation) && AnnotationCanBeMoved(annot->type);
+    bool isMoveableAnnot = annot && AnnotationCanBeMoved(annot->type);
+    if (isMoveableAnnot) {
+        if (annot == tab->selectedAnnotation) {
+            // dragging the selected annotation. do nothing here, just start dragging in mouse move
+        } else if (tab->editAnnotsWindow || tab->selectedAnnotation) {
+            // clicking on a different annotation while edit annotations window is open. or
+            // other annotation is selected, select the clicked annotation and start dragging yet
+            SetSelectedAnnotation(tab, annot);
+        } else {
+            isMoveableAnnot = false;
+        }
+    }
+
     // Check if we're clicking on a resize handle of the selected annotation
     // must check selectedAnnotation directly (not annot) because resize handles
     // extend beyond annotation bounds and GetAnnotationAtPos() won't find them
