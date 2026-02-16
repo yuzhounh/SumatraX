@@ -4279,13 +4279,9 @@ static bool ChmForwardKey(WPARAM key) {
 
 static Annotation* GetAnnotionUnderCursor(WindowTab* tab, Annotation* annot) {
     DisplayModel* dm = tab->AsFixed();
-    if (!dm) {
-        return nullptr;
-    }
+    if (!dm) return nullptr;
     Point pt = HwndGetCursorPos(tab->win->hwndCanvas);
-    if (pt.IsEmpty()) {
-        return nullptr;
-    }
+    if (pt.IsEmpty()) return nullptr;
     int pageNoUnderCursor = dm->GetPageNoByPoint(pt);
     if (pageNoUnderCursor <= 0) {
         return nullptr;
@@ -6091,10 +6087,12 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         case CmdEditAnnotations: {
             if (!tab) return 0;
             Annotation* annot = GetAnnotionUnderCursor(tab, nullptr);
-            ShowEditAnnotationsWindow(tab);
-            if (annot) {
-                SetSelectedAnnotation(tab, annot, InitialAction::SelectEdit);
+            if (!annot) {
+                ShowEditAnnotationsWindow(tab);
+                return 0;
             }
+            ShowEditAnnotationsWindow(tab);
+            SetSelectedAnnotation(tab, annot, InitialAction::FocusList);
             break;
         }
 
