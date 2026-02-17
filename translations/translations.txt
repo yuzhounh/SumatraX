@@ -1,5 +1,5 @@
 AppTranslator: SumatraPDF
-471152e2b9288d77844edc1ac17213c6f44a2fe8
+9af9b6de7d04788441b52205edb33237b4f756e1
 :%s annotation. Ctrl+click to edit.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
 ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
@@ -1097,7 +1097,7 @@ ar:ابحث عن&:
 az:&Axtarılan sətir:
 bg:&Търсене на:
 bn:কি &খুঁজছেন
-br:&Localiz&ar o quê:
+br:&Achar o quê:
 bs:&Traži:
 by:&Узор:
 ca-xv:&Cerca el què:
@@ -1765,7 +1765,7 @@ ar:&التعليمات
 az:&Təlimat
 bg:&Ръководство
 bn:নির্দেশ নথিপত্র
-br:&Manual (em inglês)
+br:&Manual
 bs:Korisnički priručnik
 by:&Кіраўніцтва
 ca-xv:&Manual
@@ -4316,7 +4316,7 @@ cn:添加到收藏夹
 co:Aghjunghje à i favuriti
 cy:Ychwanegu i'r ffefrynnau
 cz:Přidat k oblíbeným
-de:Zu Favoriten hinzufügen…
+de:&Zu Favoriten hinzufügen…
 dk:Føj til foretrukne
 el:Προσθήκη στα αγαπημένα
 es:Añadir a favoritos
@@ -8666,7 +8666,7 @@ uk:Створити анотацію з виділеного
 uz:Tanlovdan izoh yaratish
 vn:Thêm Chú Thích Từ Phần Được Chọn
 :Create Caret Annotation
-br:Criar Anotação Circunflexo
+br:Criar Anotação do Circunflexo
 cn:创建插入符标注
 co:Creà un’annutazione di barra d’inserzione
 de:Caret‑Anmerkung erstellen
@@ -8674,7 +8674,7 @@ pl:Utwórz adnotację karetą
 sk:Vytvoriť anotáciu so vsuvkou
 tw:建立插入符號註解
 :Create Circle Annotation
-br:Criar Anotação Círculo
+br:Criar Anotação do Círculo
 cn:创建圆圈标注
 co:Creà un’annutazione circulare
 de:Kreis-Anmerkung erstellen
@@ -8682,7 +8682,7 @@ pl:Utwórz adnotację okręgiem
 sk:Vytvoriť kruhovú anotáciu
 tw:建立圓圈註解
 :Create File Attachment Annotation
-br:Criar Anotação Arquivo Anexado
+br:Criar Anotação do Arquivo Anexado
 cn:创建文件附件标注
 co:Creà un’annutazione di pezza ghjunta
 de:Dateianhang-Anmerkung erstellen
@@ -8690,7 +8690,7 @@ pl:Utwórz adnotację załącznikem pliku
 sk:Vytvoriť anotáciu k prílohe súboru
 tw:建立檔案附件註解
 :Create Free Text Annotation
-br:Criar Anotação Texto Livre
+br:Criar Anotação do Texto Livre
 cn:创建自由文本标注
 co:Creà un’annutazione di testu liberu
 de:Freitext-Anmerkung erstellen
@@ -8698,7 +8698,7 @@ pl:Utwórz adnotację dowolnym tekstem
 sk:Vytvoriť anotáciu s voľným textom
 tw:建立自由文字註解
 :Create Highlight Annotation
-br:Criar Anotação Destacar
+br:Criar Anotação do Destaque
 cn:创建高亮标注
 co:Creà un’annutazione di messa in evidenza
 de:Hervorhebungsanmerkung erstellen
@@ -8706,7 +8706,7 @@ pl:Utwórz adnotację wyróżnieniem
 sk:Vytvoriť zvýraznenú anotáciu
 tw:建立螢光標示註解
 :Create Ink Annotation
-br:Criar Anotação Tinta
+br:Criar Anotação da Tinta
 cn:创建墨迹标注
 co:Creà un’annutazione lnk
 de:Freihandanmerkung erstellen
@@ -8714,7 +8714,7 @@ pl:Utwórz adnotację atramentem
 sk:Vytvoriť anotáciu atramentom
 tw:建立筆跡註解
 :Create Line Annotation
-br:Criar Anotação Linha
+br:Criar Anotação da Linha
 cn:创建线条标注
 co:Creà un’annutazione di linea
 de:Zeilenanmerkung erstellen
@@ -8722,7 +8722,7 @@ pl:Utwórz adnotację linią
 sk:Vytvoriť anotáciu čiarou
 tw:建立線條註解
 :Create Link Annotation
-br:Criar Anotação Link
+br:Criar Anotação do Link
 cn:创建链接注释
 co:Creà un’annutazione di liame
 de:Link-Anmerkung erstellen
@@ -8730,7 +8730,7 @@ pl:Utwórz adnotację odnośnikiem
 sk:Vytvoriť anotáciu s odkazom
 tw:建立連結註解
 :Create Poly Line Annotation
-br:Criar Anotação Poli-Linha
+br:Criar Anotação da Poli-Linha
 cn:创建折线标注
 co:Creà un’annutazione di linea tronca
 de:Polylinien-Anmerkung erstellen
@@ -8738,7 +8738,7 @@ pl:Utwórz adnotację polilinią
 sk:Vytvoriť anotáciu lomenou čiarou
 tw:建立多段線註解
 :Create Polygon Annotation
-br:Criar Anotação Polígono
+br:Criar Anotação do Polígono
 cn:创建多边形标注
 co:Creà un’annutazione di poligonu
 de:Polygon-Anmerkung erstellen
@@ -8746,7 +8746,7 @@ pl:Utwórz adnotację wielokątem
 sk:Vytvoriť mnohouholníkovú anotáciu
 tw:建立多邊形註解
 :Create Popup Annotation
-br:Criar Anotação Popup
+br:Criar Anotação do Popup
 cn:创建弹出式标注
 co:Creà un’annutazione di finestrinu
 de:Einblendbare Anmerkung erstellen
@@ -8754,7 +8754,7 @@ pl:Utwórz adnotację wyskakującym okienkiem
 sk:Vytvoriť vyskakovaciu anotáciu
 tw:建立彈出式註解
 :Create Redact Annotation
-br:Criar Anotação Redigir
+br:Criar Anotação da Redação
 cn:创建密文标注
 co:Creà un’annutazione di redazzione
 de:Schwärzungsanmerkung erstellen
@@ -8762,7 +8762,7 @@ pl:Utwórz adnotację redagowaniem
 sk:Vytvoriť redigovanú poznámku
 tw:建立密文註解
 :Create Square Annotation
-br:Criar Anotação Quadrado
+br:Criar Anotação do Quadrado
 cn:创建矩形标注
 co:Creà un’annutazione quadrata
 de:Quadratische Anmerkung erstellen
@@ -8770,7 +8770,7 @@ pl:Utwórz adnotację kwadratem
 sk:Vytvoriť štvorcovú anotáciu
 tw:建立矩形註解
 :Create Squiggly Annotation
-br:Criar Anotação Ondulado
+br:Criar Anotação do Ondulado
 cn:创建波浪线标注
 co:Creà un’annutazione undulata
 de:Geschwungene Anmerkung erstellen
@@ -8778,7 +8778,7 @@ pl:Utwórz adnotację falowaniem
 sk:Vytvoriť vlnovkovú anotáciu
 tw:建立波浪線註解
 :Create Stamp Annotation
-br:Criar Anotação Carimbo
+br:Criar Anotação do Carimbo
 cn:创建图章标注
 co:Creà un’annutazione di stampaghjolu
 de:Stempelanmerkung erstellen
@@ -8786,7 +8786,7 @@ pl:Utwórz adnotację pieczęcią
 sk:Vytvoriť anotáciu s pečiatkou
 tw:建立印章註解
 :Create Strike Out Annotation
-br:Criar Anotação Riscado
+br:Criar Anotação Riscada
 cn:创建删除线标注
 co:Creà un’annutazione di linea rigata
 de:Streichungsanmerkung erstellen
@@ -8794,7 +8794,7 @@ pl:Utwórz adnotację skreśleniem
 sk:Vytvoriť prečiarknutú anotáciu
 tw:建立刪除線註解
 :Create Text Annotation
-br:Criar Anotação Texto
+br:Criar Anotação do Texto
 cn:创建文本注释
 co:Creà un’annutazione di testu
 de:Textanmerkung erstellen
@@ -9263,7 +9263,7 @@ uk:Дата:
 uz:Sana:
 vn:Ngày:
 :Debug: Corrupt Memory
-br:Depuração: Memória Corrompida
+br:Debug: Memória Corrompida
 cn:调试：损坏内存
 co:Spannatura : Memoria alterata
 de:Debug: Beschädigter Speicher
@@ -9271,7 +9271,7 @@ pl:Debugowanie: uszkodź pamięć
 sk:Ladenie: Poškodená pamäť
 tw:除錯：損毀記憶體
 :Debug: Crash Me
-br:Depuração: Trave-me
+br:Debug: Faça Eu Causar um Crash
 cn:调试：使程序崩溃
 co:Spannatura : Tombami
 de:Debug: Absturz provozieren
@@ -9279,7 +9279,7 @@ pl:Debugowanie: zawieś mnie
 sk:Ladenie: Pád aplikácie
 tw:除錯：讓程式當機
 :Debug: Download Symbols
-br:Depuração: Baixar Símbolos
+br:Debug: Baixar Símbolos
 cn:调试：下载符号
 co:Spannatura : Scaricà i simbuli
 de:Debug: Symbole herunterladen
@@ -9287,7 +9287,7 @@ pl:Debugowanie: pobierz symbole
 sk:Ladenie: Stiahnuť symboly
 tw:除錯：下載符號
 :Debug: Show Notification
-br:Depuração: Mostrar Notificação
+br:Debug: Mostrar Notificação
 cn:调试：显示通知
 co:Spannatura : Affissà a nutificazione
 de:Debug: Benachrichtigung anzeigen
@@ -9295,7 +9295,7 @@ pl:Debugowanie: pokaż powiadomienie
 sk:Ladenie: Zobraziť upozornenie
 tw:除錯：顯示通知
 :Debug: Start Stress Test
-br:Depuração: Iniciar Teste de Stress
+br:Debug: Iniciar Teste de Stress
 cn:调试：开始压力测试
 co:Spannatura : Lancià una prova di custrizzione
 de:Debug: Stresstest starten
@@ -9303,7 +9303,7 @@ pl:Debugowanie: rozpocznij test obciążeniowy
 sk:Ladenie: Spustiť záťažový test
 tw:除錯：開始壓力測試
 :Debug: Test App
-br:Depuração: Testar Aplicação
+br:Debug: Testar Aplicativo
 cn:调试：测试应用
 co:Spannatura : Appiecazione di prova
 de:Debug: App testen
@@ -9311,7 +9311,7 @@ pl:Debugowanie: testuj aplikację
 sk:Ladenie: Testovať aplikáciu
 tw:除錯：測試應用程式
 :Debug: Toggle Predictive Rendering
-br:Depuração: Ativar/Desativar Renderização Preditiva
+br:Debug: Alternar Renderização Preditiva
 cn:调试：切换预测性渲染
 co:Spannatura : Attivà o disattivà a restituzione di predizzione
 de:Debug: Vorschau-Rendering umschalten
@@ -9319,7 +9319,7 @@ pl:Debugowanie: przełącz renderowanie predykcyjne
 sk:Ladenie: Prepnúť prediktívne vykresľovanie
 tw:除錯：切換預測性渲染
 :Debug: Toggle Rtl
-br:Depuração: Ativar/Desativar Rtl
+br:Debug: Alternar Rtl
 cn:调试：切换从右向左模式
 co:Spannatura : Attivà o disattivà Rtl
 de:Debug: RTL umschalten
@@ -10505,7 +10505,7 @@ pl:Uruchom program
 sk:Spustiť program
 tw:執行程式
 :Exit Application
-br:Sair
+br:Sair do Aplicativo
 cn:退出应用程序
 co:Esce da l’appiecazione
 de:Anwendung beenden
@@ -11295,7 +11295,7 @@ am:FictionBook փաստաթղթեր
 ar:مستندات FictionBook
 az:FictionBook sənədləri
 bg:Документи FictionBook
-br:Documentos FictionBook
+br:Documentos do FictionBook
 bs:FictionBook dokumenti
 by:Дакумент FictionBook
 ca-xv:Documents FictionBook
@@ -11628,7 +11628,7 @@ am:Գտն&ել...
 ar:ال&بحث...
 az:A&xtar...
 bg:&Търси
-br:Localiza&r...
+br:Acha&r...
 by:&Знайсці…
 ca:&Troba...
 cn:查找(&D)...
@@ -11680,7 +11680,7 @@ ar:بحث
 az:Axtar
 bg:Търсене
 bn:খুজুন
-br:Localizar
+br:Achar
 bs:Traži
 by:Знайсці
 ca-xv:Cerca
@@ -11751,7 +11751,7 @@ ar:بحث عن التالي
 az:Sonrakını tap
 bg:Намиране на следващото съвпадение
 bn:পরবর্তী অনুসন্ধান
-br:Localizar Próximo
+br:Achar o Próximo
 bs:Nađi sljedeće
 by:Найти следующее
 ca-xv:Cerca següent
@@ -11818,7 +11818,7 @@ uk:Знайти наступне
 uz:Keyingisini qidirish
 vn:Tìm xuống
 :Find Next Selection
-br:Localizar Próximo
+br:Achar a Seleção Seguinte
 cn:查找下一个所选内容
 co:Truvà a selezzione seguente
 de:Nächste Auswahl suchen
@@ -11832,7 +11832,7 @@ ar:البحث عن السابق
 az:Əvvəlkini tap
 bg:Намиране на предишното съвпадение
 bn:পূর্ববর্তী অনুসন্ধান
-br:Localizar Anterior
+br:Achar o Anterior
 bs:Nađi prethodno
 by:Знайсці папярэдняе
 ca-xv:Cerca anterior
@@ -11899,7 +11899,7 @@ uk:Знайти попереднє
 uz:Oldingisini qidirish
 vn:Tìm lên
 :Find Previous Selection
-br:Localizar Anterior
+br:Achar a Seleção Anterior
 cn:查找上一个所选内容
 co:Truvà a selezzione precedente
 de:Vorherige Auswahl suchen
@@ -11913,7 +11913,7 @@ ar:بحث
 az:Axtar:
 bg:Търсене:
 bn:অনুসন্ধান:
-br:Localizar:
+br:Achar:
 bs:Traži:
 by:Знайсці:
 ca-xv:Cerca:
@@ -11980,7 +11980,7 @@ uk:Знайти:
 uz:Qidirish:
 vn:Tìm kiếm:
 :Find: Toggle Match Case
-br:Localizar: Diferenciar Maiúsculas/Minúsculas
+br:Achar: Diferenciar Maiúsculas/Minúsculas
 cn:查找：切换区分大小写
 co:Circà : Attivà o disattivà u rispettu di a cassa
 de:Suchen: Groß-/Kleinschreibung umschalten
@@ -12972,7 +12972,7 @@ pl:Pomoc: o programie SumatraPDF
 sk:Pomoc: O programe SumatraPDF
 tw:說明：關於 SumatraPDF
 :Help: Keyboard Shortcuts
-br:Ajuda: Atalhos de Teclado
+br:Ajuda: Atalhos do Teclado
 cn:帮助：键盘快捷键
 co:Aiutu : Accurtatoghji di tastera
 de:Hilfe: Tastenkombinationen
@@ -13939,6 +13939,7 @@ vn:Màu Bên Trong:
 :Invert Colors
 br:Inverter Cores
 cn:反转颜色
+co:Invertisce i culori
 de:Farben umkehren
 pl:Odwróć kolory
 sk:Invertovať farby
@@ -14033,7 +14034,7 @@ pl:Ostatnia strona
 sk:Posledná strana
 tw:最後一頁
 :Launch a browser or run command with selection
-br:Abrir Navegador ou executar comando com seleção
+br:Executar um navegador ou executar comando com seleção
 cn:对选中内容启动浏览器或运行命令
 co:Lancià un navigatore o una cumanda cù a selezzione
 de:Browser starten oder Befehl mit Auswahl ausführen
@@ -14841,7 +14842,7 @@ uk:Змінено:
 uz:O'zgartirilgan:
 vn:Ngày chỉnh sửa
 :Move Frame Focus
-br:Mover o Quadro de Foco
+br:Mover o Foco do Frame
 cn:移动框架焦点
 co:Dispiazzà u puntu fucale di a vista
 de:Rahmenfokus verschieben
@@ -14849,7 +14850,7 @@ pl:Przenieś uaktywnienie ramki
 sk:Presunúť zameranie rámca
 tw:移動框架焦點
 :Move Tab Left
-br:Mover Aba para a Esquerda
+br:Mover a Aba pra Esquerda
 cn:左移标签页
 co:Dispiazzà l’unghjetta à manu manca
 de:Tab nach links verschieben
@@ -14857,7 +14858,7 @@ pl:Przesuń kartę w lewo
 sk:Presunúť kartu doľava
 tw:向左移動分頁
 :Move Tab Right
-br:Mover Aba para a Direita
+br:Mover a Aba pra Direita
 cn:右移标签页
 co:Dispiazzà l’unghjetta à manu diritta
 de:Tab nach rechts verschieben
@@ -14865,7 +14866,7 @@ pl:Przesuń kartę w prawo
 sk:Presunúť kartu doprava
 tw:向右移動分頁
 :Navigate Back
-br:Navegar para Trás
+br:Navegar pra Trás
 cn:向后导航
 co:Navigazione in daretu
 de:Zurück
@@ -14873,7 +14874,7 @@ pl:Nawiguj wstecz
 sk:Prejsť späť
 tw:向後巡覽
 :Navigate Forward
-br:Navegar para a Frente
+br:Navegar pra Frente
 cn:向前导航
 co:Navigazione in avanti
 de:Weiter
@@ -16175,6 +16176,7 @@ uz:Yangi oynada ochish
 :Open New SumatraPDF Window
 br:Abrir Nova Janela do SumatraPDF
 cn:打开新的 SumatraPDF 窗口
+co:Apre una finestra nova di SumatraPDF
 de:Neues SumatraPDF-Fenster öffnen
 pl:Otwórz nowe okno SumatraPDF
 sk:Otvoriť nové okno SumatraPDF
@@ -16258,6 +16260,7 @@ uz:Papkadagi oldingi faylni ochish
 :Open Selected Document
 br:Abrir Documento Selecionado
 cn:打开选中的文档
+co:Apre u ducumentu selezziunatu
 de:Ausgewähltes Dokument öffnen
 pl:Otwórz zaznaczony dokument
 sk:Otvoriť vybraný dokument
@@ -16265,6 +16268,7 @@ tw:開啟選取的文件
 :Open With Pdf&Djvu Bookmarker
 br:Abrir com Pdf&Djvu Bookmarker
 cn:使用 Pdf&Djvu Bookmarker 打开
+co:Apre cù Pdf&Djvu Bookmarker
 de:Mit Pdf & DjVu Bookmarker öffnen
 pl:Otwórz za pomocą PDF & DjVu Bookmarkera
 sk:Otvoriť pomocou Pdf&Djvu Bookmarker
@@ -16604,7 +16608,7 @@ uk:Відкрити у Microsoft XPS-Viewer
 uz:Microsoft XPS-Viewerda ochish
 vn:Mở bằng Microsoft XPS-Viewer
 :Open in Adobe Acrobat
-br:Abrir com Adobe Acrobat
+br:Abrir no Adobe Acrobat
 cn:在 Adobe Acrobat 中打开
 co:Apre cù Adobe Reader
 de:In Adobe Acrobat öffnen
@@ -16684,13 +16688,15 @@ tw:在 Microsoft HTML 說明中開啟
 :Open in Microsoft Xps Viewer
 br:Abrir no Microsoft Xps Viewer
 cn:在 Microsoft XPS Viewer 中打开
+co:Apre cù Microsoft Xps Viewer
 de:In Microsoft XPS Viewer öffnen
 pl:Otwórz w Microsoft XPS Viewer
 sk:Otvoriť v Microsoft Xps Viewer
 tw:在 Microsoft XPS Viewer 中開啟
 :Open in PDF-XChange
-br:Abrir No PDF-XChange
+br:Abrir no PDF-XChange
 cn:在 PDF-XChange 中打开
+co:Apre cù PDF-XChange
 de:In PDF-XChange öffnen
 pl:Otwórz w PDF-XChange
 sk:Otvoriť v PDF-XChange
@@ -16698,6 +16704,7 @@ tw:在 PDF-XChange 中開啟
 :Options...
 br:Opções...
 cn:选项…
+co:Ozzioni…
 de:Optionen…
 pl:Opcje...
 sk:Možnosti…
@@ -17565,6 +17572,7 @@ vn:Tài liệu PalmDoc
 :Pin Selected Document
 br:Fixar Documento Selecionado
 cn:固定所选文档
+co:Spirlà u ducumentu selezziunatu
 de:Ausgewähltes Dokument anheften
 pl:Przypnij zaznaczony dokument
 sk:Pripnúť vybraný dokument
@@ -18036,6 +18044,7 @@ vn:Trình Chiếu
 :Presentation Black Background
 br:Apresentação com Fundo Preto
 cn:演示模式：黑色背景
+co:Presentazione cù un sfondulu neru
 de:Präsentation mit schwarzem Hintergrund
 pl:Czarne tło prezentacji
 sk:Čierne pozadie prezentácie
@@ -18043,6 +18052,7 @@ tw:簡報模式：黑色背景
 :Presentation White Background
 br:Apresentação com Fundo Branco
 cn:演示模式：白色背景
+co:Presentazione cù un sfondulu biancu
 de:Präsentation mit weißem Hintergrund
 pl:Białe tło prezentacji
 sk:Biele pozadie prezentácie
@@ -18122,6 +18132,7 @@ vn:Trang trước
 :Previous Tab
 br:Aba Anterior
 cn:上一标签页
+co:Unghjetta precedente
 de:Vorheriger Tab
 pl:Poprzednia karta
 sk:Predchádzajúca karta
@@ -18197,6 +18208,7 @@ vn:In
 :Print Document...
 br:Imprimir Documento...
 cn:打印文档…
+co:Stampà u schedariu…
 de:Dokument drucken…
 pl:Drukuj dokument...
 sk:Tlač dokumentu…
@@ -18894,6 +18906,7 @@ vn:Biên tập
 :Reload Document
 br:Recarregar Documento
 cn:重新加载文档
+co:Ricaricà u ducumentu
 de:Dokument neu laden
 pl:Załaduj ponownie dokument
 sk:Znovu načítať dokument
@@ -18967,6 +18980,7 @@ vn:Nhớ các tập tin đã mở
 :Remove Selected Document From History
 br:Remover Documento Selecionado do Histórico
 cn:从历史记录中移除所选文档
+co:Caccià da a cronolugia u ducumentu selezziunatu
 de:Ausgewähltes Dokument aus dem Verlauf entfernen
 pl:Usuń zaznaczony dokument z historii
 sk:Odstrániť vybraný dokument z histórie
@@ -18987,7 +19001,7 @@ cn:从收藏夹删除
 co:&Caccià da i favuriti
 cy:Tynnu o'r ffefrynnau
 cz:Odebrat z oblíbených
-de:Aus Favoriten entfernen
+de:&Aus Favoriten entfernen
 dk:Fjern fra bogmærker
 el:Αφαίρεση από τα αγαπημένα
 es:Eliminar de los favoritos
@@ -19106,6 +19120,7 @@ vn:Xoá trang %s khỏi Ưa thích
 :Rename File...
 br:Renomear Arquivo...
 cn:重命名文件…
+co:Rinuminà u schedariu…
 de:Datei umbenennen…
 pl:Zmień nazwę pliku...
 sk:Premenovať súbor…
@@ -19182,6 +19197,7 @@ vn:Đổi tên thành
 :Reopen Last Closed
 br:Reabrir Último Fechado
 cn:重新打开上次关闭的文件
+co:Riapre l’ultimu chosu
 de:Zuletzt geschlossene erneut öffnen
 pl:Otwórz ponownie ostatnio zamknięty
 sk:Znovu otvoriť naposledy zatvorené
@@ -19293,6 +19309,7 @@ vn:Quay &Phải
 :Rotate Left
 br:Girar pra Esquerda
 cn:向左旋转
+co:Girà à manca
 de:Nach links drehen
 pl:Obróć w lewo
 sk:Otočiť doľava
@@ -19300,6 +19317,7 @@ tw:向左旋轉
 :Rotate Right
 br:Girar pra Direita
 cn:向右旋转
+co:Girà à diritta
 de:Nach rechts drehen
 pl:Obróć w prawo
 sk:Otočiť doprava
@@ -19317,7 +19335,7 @@ cn:选择(&E)
 co:S&elezzione
 cy:&Dewis
 cz:V&ýběr
-de:&Auswahl
+de:Aus&wahl
 dk:&Markering
 el:Επιλογή
 es:S&elección
@@ -19472,6 +19490,7 @@ vn:Các Tài Liệu SVG
 :Save Annotations to a new PDF
 br:Salvar Anotações em um PDF novo
 cn:将标注保存到新的 PDF 文件
+co:Arregistrà l’annutazioni in un PDF novu
 de:Anmerkungen in neuer PDF-Datei speichern
 pl:Zapisz adnotacje w nowym pliku PDF
 sk:Uložiť anotácie do nového súboru PDF
@@ -19639,6 +19658,7 @@ vn:Lưu Tập Đã Nhúng...
 :Save File As...
 br:Salvar Arquivo Como...
 cn:文件另存为…
+co:Arregistrà u schedariu cù u nome…
 de:Datei speichern unter…
 pl:Zapisz plik jako...
 sk:Uložiť súbor ako…
@@ -20029,6 +20049,7 @@ vn:Đang lưu '%s' lỗi với: '%s'
 :Scroll Down
 br:Rolar para Baixo
 cn:向下滚动
+co:Fà sfilà inghjò
 de:Nach unten scrollen
 pl:Przewiń w dół
 sk:Posunúť nadol
@@ -20036,6 +20057,7 @@ tw:向下捲動
 :Scroll Down By Half Page
 br:Rolar para Baixo Meia Página
 cn:向下滚动半页
+co:Fà sfilà inghjò d’una mezapagina
 de:Eine halbe Seite nach unten scrollen
 pl:Przewiń w dół o pół strony
 sk:Posunúť o polovicu strany nadol
@@ -20043,13 +20065,15 @@ tw:向下捲動半頁
 :Scroll Down By Page
 br:Rolar para Baixo Uma Página
 cn:向下滚动一页
+co:Fà sfilà inghjò d’una pagina
 de:Seitenweise nach unten scrollen
 pl:Przewiń w dół o stronę
 sk:Posunúť o stranu nadol
 tw:向下捲動一頁
 :Scroll Left
-br:Rolar para a Esquerda
+br:Rolar pra Esquerda
 cn:向左滚动
+co:Fà sfilà à manca
 de:Nach links scrollen
 pl:Przewiń w lewo
 sk:Posunúť doľava
@@ -20057,6 +20081,7 @@ tw:向左捲動
 :Scroll Left By Page
 br:Rolar para a Esquerda Uma Página
 cn:向左滚动一页
+co:Fà sfilà à manca d’una pagina
 de:Seitenweise nach links scrollen
 pl:Przewiń w lewo o stronę
 sk:Posunúť doľava na strane
@@ -20064,6 +20089,7 @@ tw:向左捲動一頁
 :Scroll Right
 br:Rolar para a Direita
 cn:向右滚动
+co:Fà sfilà à diritta
 de:Nach rechts scrollen
 pl:Przewiń w prawo
 sk:Posunúť doprava
@@ -20071,6 +20097,7 @@ tw:向右捲動
 :Scroll Right By Page
 br:Rolar para a Direita Uma Página
 cn:向右滚动一页
+co:Fà sfilà à diritta d’una pagina
 de:Seitenweise nach rechts scrollen
 pl:Przewiń w prawo o stronę
 sk:Posunúť doprava na strane
@@ -20078,6 +20105,7 @@ tw:向右捲動一頁
 :Scroll Up
 br:Rolar para Cima
 cn:向上滚动
+co:Fà sfilà insù
 de:Nach oben scrollen
 pl:Przewiń w górę
 sk:Posunúť hore
@@ -20085,6 +20113,7 @@ tw:向上捲動
 :Scroll Up By Half Page
 br:Rolar para Cima Meia Página
 cn:向上滚动半页
+co:Fà sfilà insù d’una mezapagina
 de:Eine halbe Seite nach oben scrollen
 pl:Przewiń w górę o pół strony
 sk:Posunúť o polovicu strany hore
@@ -20092,6 +20121,7 @@ tw:向上捲動半頁
 :Scroll Up By Page
 br:Rolar para Cima Uma Página
 cn:向上滚动一页
+co:Fà sfilà insù d’una pagina
 de:Seitenweise nach oben scrollen
 pl:Przewiń w górę o stronę
 sk:Posúvať hore na strane
@@ -20099,6 +20129,7 @@ tw:向上捲動一頁
 :Search Selection with Bing
 br:Procurar Seleção com Bing
 cn:使用 Bing 搜索所选内容
+co:Ricerca di a selezzione cù Bing
 de:Auswahl mit Bing suchen
 pl:Szukaj zaznaczenia za pomocą Bing
 sk:Vyhľadať vybrané na Bingu
@@ -20106,6 +20137,7 @@ tw:使用 Bing 搜尋選取內容
 :Search Selection with Google
 br:Procurar Seleção com Google
 cn:使用 Google 搜索所选内容
+co:Ricerca di a selezzione cù Google
 de:Auswahl mit Google suchen
 pl:Szukaj zaznaczenia za pomocą Google
 sk:Vyhľadať vybrané na Googli
@@ -20113,6 +20145,7 @@ tw:使用 Google 搜尋選取內容
 :Search Selection with Google Scholar
 br:Procurar Seleção com Google Scholar
 cn:使用 Google 学术搜索所选内容
+co:Ricerca di a selezzione cù Google Scholar
 de:Auswahl mit Google Scholar suchen
 pl:Szukaj zaznaczenia za pomocą Google Scholar
 sk:Vyhľadať vybrané na Google Scholar
@@ -20120,6 +20153,7 @@ tw:使用 Google 學術搜尋選取內容
 :Search Selection with Wikipedia
 br:Procurar Seleção com Wikipedia
 cn:使用 维基百科 搜索所选内容
+co:Ricerca di a selezzione cù Wikipedia
 de:Auswahl mit Wikipedia suchen
 pl:Szukaj zaznaczenia za pomocą Wikipedii
 sk:Vyhľadať vybrané na Wikipédii
@@ -20246,7 +20280,7 @@ cn:谷歌学术搜索(&G)
 co:Circà cù Google &Scholar
 cy:Chwilio gyda &Google Scholar
 cz:Vyhledat pomocí &Google Scholar
-de:Suche mit &Google Scholar
+de:Mit &Google Scholar suchen
 dk:Søg med &Google Scholar
 el:Αναζήτηση με &Google Scholar
 es:Buscar con &Google Scholar
@@ -20285,7 +20319,7 @@ cn:维基百科搜索(&W)
 co:Circà cù &Wikipedia
 cy:Chwilio gyda Wicipedia
 cz:Vyhledat na &Wikipedii
-de:Suche mit &Wikipedia
+de:Mit &Wikipedia suchen
 dk:Søg med &Wikipedia
 el:Αναζήτηση με &Wikipedia
 es:Buscar con &Wikipedia
@@ -20448,6 +20482,7 @@ vn:Chọn hết
 :Select All
 br:Selecionar Tudo
 cn:全选
+co:Tuttu selezziunà
 de:Alles auswählen
 pl:Zaznacz wszystko
 sk:Vybrať všetko
@@ -20457,7 +20492,7 @@ am:Նշել ընտրվածը Ctrl+մկնիկի ձախ կոճակով
 ar:حدد المحتوى بالضغط على زر الفأرة الأيسر و Ctrl
 az:Məzmunu Ctrl+sol siçan düyməsi ilə seç
 bg:Изберете съдържание с Ctrl и левия бутон на мишката
-br:Selecionar o conteúdo com Ctrl+botão esquerdo do mouse
+br:Selecionar o conteúdo com Ctrl + botão esquerdo do mouse
 bs:Izaberi sadržaj pomoću Ctrl+lijeva tipka miša
 by:Выбраць змест з Ctrl+левая кнопка мышы
 ca-xv:Seleccioneu contigut amb la combinació Ctrl+botó secundari del ratolí
@@ -20521,6 +20556,7 @@ vn:Đánh dấu nội dung bằng Ctrl+phím chuột trái
 :Select next theme
 br:Selecionar próximo tema
 cn:选择下一个主题
+co:Selezziunà u tema prossimu
 de:Nächstes Design auswählen
 pl:Wybierz następny motyw
 sk:Vybrať ďalší motív
@@ -20659,6 +20695,7 @@ vn:Lựa chọn:
 :Send Document By Email...
 br:Enviar Documento por Email...
 cn:通过电子邮件发送文档…
+co:Mandà u ducumentu da messaghju elettronicu…
 de:Dokument per E-Mail senden…
 pl:Wyślij dokument e-mailem...
 sk:Odoslať dokument e-mailom…
@@ -20804,6 +20841,7 @@ vn:Đặt dòng lệnh tìm kiếm ngược
 :Set theme
 br:Definir tema
 cn:设置主题
+co:Definisce u tema
 de:Design festlegen
 pl:Ustaw motyw
 sk:Nastaviť motív
@@ -21000,7 +21038,7 @@ am:Ցուցադրել &ոլորգոտիները
 ar:إظهار شريط التمرير
 az:&Sürüşdürmə zolaqlarını göstər
 bg:Покажи &лентите за превъртане (Scrollbars)
-br:Mostrar as &barras de rolagem
+br:Mostrar as &Barras de Rolagem
 by:Паказваць &палоскі пракруткі
 ca-xv:Mostra les barres de &desplaçament
 ca:Mostra les barres de &desplaçament
@@ -21125,8 +21163,9 @@ uk:Показати панель інструментів
 uz:&Asboblar panelini ko'rsatish
 vn:Hiện thanh công cụ
 :Show Annotations
-br:Exibir Anotações
+br:Mostrar Anotações
 cn:显示标注
+co:Affissà l’annutazioni
 de:Anmerkungen anzeigen
 pl:Pokaż adnotacje
 sk:Zobraziť anotácie
@@ -21183,8 +21222,9 @@ uk:Показати закладки
 uz:Belgilangan sahifalarni ko‘rsatish
 vn:Hiển thị Dấu &trang
 :Show Document Properties...
-br:Exibir Propriedades do Documento...
+br:Mostrar as Propriedades do Documento...
 cn:显示文档属性…
+co:Affissà i pruprietà di u ducumentu…
 de:Dokumenteigenschaften anzeigen…
 pl:Pokaż właściwości dokumentu...
 sk:Zobraziť vlastnosti dokumentu…
@@ -21256,15 +21296,17 @@ uk:Перелік закладок
 uz:Tanlanganlarni ko'rsatish
 vn:Hiện Ưa thích
 :Show File In Folder...
-br:Exibir Arquivo na Pasta...
+br:Mostrar Arquivo na Pasta...
 cn:在文件夹中显示文件…
+co:Affissà u schedariu in u cartulare…
 de:Datei im Ordner anzeigen…
 pl:Pokaż plik w folderze...
 sk:Zobraziť súbor v priečinku…
 tw:在資料夾中顯示檔案…
 :Show Logs
-br:Exibir Logs
+br:Mostrar Registros
 cn:显示日志
+co:Affissà i ghjurnali di messaghji
 de:Protokolle anzeigen
 pl:Pokaż dzienniki
 sk:Zobraziť logy
@@ -21639,8 +21681,9 @@ uk:Одна сторінка
 uz:Bitta bet
 vn:Trang đơn
 :Single Page View
-br:Exibição de Página Única
+br:Visualização de Página Única
 cn:单页视图
+co:Affissà da una pagina
 de:Einzelseitenansicht
 pl:Widok pojedynczej strony
 sk:Zobrazenie jednej strany
@@ -21648,6 +21691,7 @@ tw:單頁檢視
 :Smart Next Tab
 br:Próxima Aba Inteligente
 cn:智能切换到下一标签页
+co:Frizzulà l’unghjetta seguente
 de:Intelligenter nächster Tab
 pl:Następna karta inteligentnie
 sk:Inteligentné prepínanie kariet
@@ -23190,22 +23234,25 @@ uk:Заголовок:
 uz:Sarlavha:
 vn:Tựa đề
 :Toggle Anti-Alias Rendering
-br:Exibir/Ocultar Suavização de Imagens
+br:Ativar/Desativar a Renderização com Anti-Aliasing
 cn:切换抗锯齿渲染
+co:Attivà o disattivà a restituzione antimerlata
 de:Anti-Aliasing-Rendering umschalten
 pl:Przełącz renderowanie antyaliasingowe
 sk:Prepnúť vykresľovanie s vyhladzovaním
 tw:切換消除鋸齒渲染
 :Toggle Bookmarks
-br:Ativar/Desativar Atalhos
+br:Ativar/Desativar Favoritos
 cn:切换书签
+co:Attivà o disattivà l’indette
 de:Lesezeichen umschalten
 pl:Przełącz zakładki
 sk:Prepnúť záložky
 tw:切換書籤
 :Toggle Continuous View
-br:Ativar/Desativar Exibição Contínua
+br:Ativar/Desativar a Visualização Contínua
 cn:切换连续显示
+co:Attivà o disattivà a vista in cuntinuu
 de:Fortlaufende Ansicht umschalten
 pl:Przełącz widok ciągły
 sk:Prepnúť priebežné zobrazenie
@@ -23213,6 +23260,7 @@ tw:切換連續檢視
 :Toggle Cursor Position
 br:Exibir/Ocultar Posição do Cursor
 cn:切换光标位置显示
+co:Attivà o disattivà a pusizione di u cursore
 de:Cursorposition umschalten
 pl:Przełącz pozycję kursora
 sk:Prepnúť polohu kurzora
@@ -23220,27 +23268,31 @@ tw:切換游標位置顯示
 :Toggle Favorites
 br:Exibir/Ocultar Favoritos
 cn:切换收藏夹
+co:Attivà o disattivà i favuriti
 de:Favoriten umschalten
 pl:Przełącz ulubione
 sk:Prepnúť obľúbené
 tw:切換我的最愛
 :Toggle Frequently Read
-br:Exibir/Ocultar Lidos com Frequência
+br:Exibir/Ocultar Lidos Frequentemente
 cn:切换经常打开的文件
+co:Attivà o disattivà i ducumenti letti aspessu
 de:Häufig gelesene anzeigen/ausblenden
 pl:Przełącz ostatnio otwierane
 sk:Prepnúť často čítané
 tw:切換經常開啟的檔案
 :Toggle Fullscreen
-br:Exibir/Ocultar Tela Cheia
+br:Ativar/Desativar a Tela Cheia
 cn:切换全屏
+co:Attivà o disattivà u screnu sanu
 de:Vollbild umschalten
 pl:Przełącz tryb pełnoekranowy
 sk:Prepnúť zobrazenie na celú obrazovku
 tw:切換全螢幕
 :Toggle Inverse Search
-br:Ativar/Desativar Busca Invertida
+br:Ativar/Desativar a Busca Invertida
 cn:切换逆向搜索
+co:Attivà o disattivà a ricerca à l’arritrosa
 de:Rückwärtssuche umschalten
 pl:Przełącz odwrotne wyszukiwanie
 sk:Prepnúť inverzné vyhľadávanie
@@ -23248,13 +23300,15 @@ tw:切換反向搜尋
 :Toggle Manga Mode
 br:Exibir/Ocultar Modo Mangá
 cn:切换漫画模式
+co:Attivà o disattivà u mode Manga
 de:Manga-Modus umschalten
 pl:Przełącz tryb mangi
 sk:Prepnúť režim Manga
 tw:切換漫畫模式
 :Toggle Match Case
-br:Diferenciar Maiúsculas/Minúsculas
+br:Ativar/Desativar Maiúsculas/Minúsculas
 cn:切换区分大小写
+co:Attivà o disattivà u rispettu di a cassa
 de:Groß-/Kleinschreibung umschalten
 nl:Schakel hoofdlettergebruik in/uit
 pl:Przełącz uwzględnianie wielkości liter
@@ -23262,8 +23316,9 @@ sk:Prepnúť rozlišovanie veľkých/malých písmen
 tr:Büyük/Küçük Harfleri Değiştir
 tw:切換區分大小寫
 :Toggle Menu Bar
-br:Exibir/Ocultar Barra de Menus
+br:Ativar/Desativar a Barra do Menu
 cn:切换菜单栏
+co:Attivà o disattivà a barra di listinu
 de:Menüleiste umschalten
 pl:Przełącz pasek menu
 sk:Prepnúť panel s ponukami
@@ -23271,6 +23326,7 @@ tw:切換功能表列
 :Toggle Page Info
 br:Exibir/Ocultar Informações da Página
 cn:切换页面信息
+co:Attivà o disattivà l’infurmazione nant’à a pagina
 de:Seiteninfo umschalten
 pl:Przełącz informacje o stronie
 sk:Prepnúť informácie o strane
@@ -23278,34 +23334,39 @@ tw:切換頁面資訊
 :Toggle Scrollbars
 br:Exibir/Ocultar Barras de Rolagem
 cn:切换滚动条
+co:Attivà o disattivà e barre di sfilarata
 de:Bildlaufleisten umschalten
 pl:Przełącz paski przewijania
 sk:Prepnúť posuvníky
 tw:切換捲軸
 :Toggle Show Annotations
-br:Exibir/Ocultar Anotações
+br:Ativar/Desativar a Mostra de Anotações
 cn:切换显示标注
+co:Attivà o disattivà l’affissera di l’annutazioni
 de:Anmerkungen anzeigen/ausblenden
 pl:Przełącz pokazywanie adnotacji
 sk:Prepnúť Zobraziť anotácie
 tw:切換顯示註解
 :Toggle Show Links
-br:Exibir/Ocultar Links
+br:Ativar/Desativar a Mostra de Links
 cn:切换显示链接
+co:Attivà o disattivà l’affissera di i liami
 de:Links anzeigen/ausblenden
 pl:Przełącz pokazywanie odnośników
 sk:Prepnúť Zobraziť odkazy
 tw:切換顯示連結
 :Toggle Table Of Contents
-br:Exibir/Ocultar Índice
+br:Ativar/Desativar a Tabela de Conteúdos
 cn:切换目录
+co:Attivà o disattivà a tavula di cuntenutu
 de:Inhaltsverzeichnis umschalten
 pl:Przełącz spis treści
 sk:Prepnúť obsah
 tw:切換目錄
 :Toggle Toolbar
-br:Exibir/Ocultar Barra de Ferramentas
+br:Ativar/Desativar a Barra de Ferramentas
 cn:切换工具栏
+co:Attivà o disattivà a barra d’attrezzi
 de:Werkzeugleiste umschalten
 pl:Przełącz pasek narzędzi
 sk:Prepnúť panel nástrojov
@@ -23313,20 +23374,23 @@ tw:切換工具列
 :Toggle Zoom
 br:Ativar/Desativar Zoom
 cn:切换缩放
+co:Attivà o disattivà l’ingrandamentu
 de:Zoom umschalten
 pl:Przełącz powiększenie
 sk:Prepnúť zväčšenie
 tw:切換縮放
 :Translate Selection With DeepL
-br:Traduzir Seleção com DeepL
+br:Traduzir a Seleção com o DeepL
 cn:使用 DeepL 翻译所选内容
+co:Traduce a selezzione cù DeepL
 de:Auswahl mit DeepL übersetzen
 pl:Przetłumacz zaznaczenie za pomocą DeepL
 sk:Preložiť výber pomocou DeepL
 tw:以 DeepL 翻譯選取內容
 :Translate Selection with Google
-br:Traduzir Seleção com Google
+br:Traduzir a Seleção com o Google
 cn:使用 Google 翻译所选内容
+co:Traduce a selezzione cù Google
 de:Auswahl mit Google Translate übersetzen
 pl:Przetłumacz zaznaczenie za pomocą Google
 sk:Preložiť výber pomocou Google
@@ -23900,15 +23964,17 @@ uk:Вигляд
 uz:Ko'rish
 vn:Hiển thị
 :View With Custom External Viewer
-br:Exibir com Visualizador Externo Configurado
+br:Visualizar com o Visualizador Externo Personalizado
 cn:通过自定义外部查看器查看
+co:Affissà cù un lettore esternu persunalizatu
 de:Mit benutzerdefiniertem externen Betrachter anzeigen
 pl:Widok za pomocą niestandardowej przeglądarki zewnętrznej
 sk:Zobraziť pomocou vlastného externého prehliadača
 tw:以自訂外部檢視器檢視
 :View: Presentation Mode
-br:Exibir: Modo Apresentação
+br:Visualizar: Modo de Apresentação
 cn:视图：演示模式
+co:Vista : Modu di presentazione
 de:Ansicht: Präsentationsmodus
 pl:Widok: tryb prezentacji
 sk:Zobraziť: Režim prezentácie
@@ -24679,6 +24745,7 @@ vn:Hệ số thu phóng
 :Zoom: 100%
 br:Zoom: 100%
 cn:缩放：100%
+co:Ingrandamentu : 100%
 de:Zoom: 100 %
 pl:Powiększenie: 100%
 sk:Zväčšiť: 100 %
@@ -24686,6 +24753,7 @@ tw:縮放：100%
 :Zoom: 12.5%
 br:Zoom: 12.5%
 cn:缩放：12.5%
+co:Ingrandamentu : 12,5%
 de:Zoom: 12,5 %
 pl:Powiększenie: 12,5%
 sk:Zväčšiť: 12.5%
@@ -24693,6 +24761,7 @@ tw:縮放：12.5%
 :Zoom: 125%
 br:Zoom: 125%
 cn:缩放：125%
+co:Ingrandamentu : 125%
 de:Zoom: 125 %
 pl:Powiększenie: 125%
 sk:Zväčšiť: 125%
@@ -24700,6 +24769,7 @@ tw:縮放：125%
 :Zoom: 150%
 br:Zoom: 150%
 cn:缩放：150%
+co:Ingrandamentu : 150%
 de:Zoom: 150 %
 pl:Powiększenie: 150%
 sk:Zväčšiť: 150%
@@ -24707,6 +24777,7 @@ tw:縮放：150%
 :Zoom: 1600%
 br:Zoom: 1600%
 cn:缩放：1600%
+co:Ingrandamentu : 1600%
 de:Zoom: 1600 %
 pl:Powiększenie: 1600%
 sk:Zväčšiť: 1600%
@@ -24714,6 +24785,7 @@ tw:縮放：1600%
 :Zoom: 200%
 br:Zoom: 200%
 cn:缩放：200%
+co:Ingrandamentu : 200%
 de:Zoom: 200 %
 pl:Powiększenie: 200%
 sk:Zväčšiť: 200%
@@ -24721,6 +24793,7 @@ tw:縮放：200%
 :Zoom: 25%
 br:Zoom: 25%
 cn:缩放：25%
+co:Ingrandamentu : 25%
 de:Zoom: 25 %
 pl:Powiększenie: 25%
 sk:Zväčšiť: 25%
@@ -24728,6 +24801,7 @@ tw:縮放：25%
 :Zoom: 3200%
 br:Zoom: 3200%
 cn:缩放：3200%
+co:Ingrandamentu : 3200%
 de:Zoom: 3200 %
 pl:Powiększenie: 3200%
 sk:Zväčšiť: 3200%
@@ -24735,6 +24809,7 @@ tw:縮放：3200%
 :Zoom: 400%
 br:Zoom: 400%
 cn:缩放：400%
+co:Ingrandamentu : 400%
 de:Zoom: 400 %
 pl:Powiększenie: 400%
 sk:Zväčšiť: 400%
@@ -24742,6 +24817,7 @@ tw:縮放：400%
 :Zoom: 50%
 br:Zoom: 50%
 cn:缩放：50%
+co:Ingrandamentu : 50%
 de:Zoom: 50 %
 pl:Powiększenie: 50%
 sk:Zväčšiť: 50%
@@ -24749,6 +24825,7 @@ tw:縮放：50%
 :Zoom: 6400%
 br:Zoom: 6400%
 cn:缩放：6400%
+co:Ingrandamentu : 6400%
 de:Zoom: 6400 %
 pl:Powiększenie: 6400%
 sk:Zväčšiť: 6400%
@@ -24756,6 +24833,7 @@ tw:縮放：6400%
 :Zoom: 8.33%
 br:Zoom: 8.33%
 cn:缩放：8.33%
+co:Ingrandamentu : 8,33%
 de:Zoom: 8,33 %
 pl:Powiększenie: 8,33%
 sk:Zväčšiť: 8.33%
@@ -24763,6 +24841,7 @@ tw:縮放：8.33%
 :Zoom: 800%
 br:Zoom: 800%
 cn:缩放：800%
+co:Ingrandamentu : 800%
 de:Zoom: 800 %
 pl:Powiększenie: 800%
 sk:Zväčšiť: 800%
@@ -24770,6 +24849,7 @@ tw:縮放：800%
 :Zoom: Actual Size
 br:Zoom: Tamanho Real
 cn:缩放：实际大小
+co:Ingrandamentu : dimensione attuate
 de:Zoom: Tatsächliche Größe
 pl:Powiększenie: rozmiar rzeczywisty
 sk:Zväčšiť: Skutočná veľkosť
@@ -24777,6 +24857,7 @@ tw:縮放：實際大小
 :Zoom: Custom...
 br:Zoom: Personalizado...
 cn:缩放：自定义…
+co:Ingrandamentu : persunalizatu…
 de:Zoom: Benutzerdefiniert…
 pl:Powiększenie: niestandardowe...
 sk:Zväčšiť: Vlastné…
@@ -24784,6 +24865,7 @@ tw:縮放：自訂…
 :Zoom: Fit Content
 br:Zoom: Ajustar ao Conteúdo
 cn:缩放：适合内容
+co:Ingrandamentu : adattà à u cuntenutu
 de:Zoom: An Inhalt anpassen
 pl:Powiększenie: dopasuj do zawartości
 sk:Zväčšiť: Prispôsobiť obsah
@@ -24791,6 +24873,7 @@ tw:縮放：符合內容
 :Zoom: Fit Page
 br:Zoom: Ajustar à Página
 cn:缩放：适合页面
+co:Ingrandamentu : adattà à a pagina
 de:Zoom: An Seite anpassen
 pl:Powiększenie: dopasuj do całej strony
 sk:Zväčšiť: Prispôsobiť strane
@@ -24798,6 +24881,7 @@ tw:縮放：符合頁面
 :Zoom: Fit Page and Single Page
 br:Zoom> Ajustar à Página e Página Única
 cn:缩放：适合页面且单页视图
+co:Ingrandamentu : adattà à a pagina è à a pagina sana
 de:Zoom: Seite anpassen und Einzelseite
 pl:Powiększenie: dopasuj do całej i pojedynczej strony
 sk:Zväčšiť: Prispôsobiť strane a jedna strana
@@ -24805,6 +24889,7 @@ tw:縮放：符合頁面、單頁檢視
 :Zoom: Fit Width
 br:Zoom: Ajustar pela Largura
 cn:缩放：适合宽度
+co:Ingrandamentu : adattà à a larghezza
 de:Zoom: An Fensterbreite anpassen
 pl:Powiększenie: dopasuj do szerokości strony
 sk:Zväčšiť: Prispôsobiť šírke
@@ -24812,6 +24897,7 @@ tw:縮放：符合頁面寬度
 :Zoom: Fit Width And Continuous
 br:Zoom: Ajustar pela Largura e Contínua
 cn:缩放：适合宽度且连续显示
+co:Ingrandamentu : adattà à a larghezza è lettura in cuntinuu
 de:Zoom: Fortlaufend an Fensterbreite anpassen
 pl:Powiększenie: dopasuj do szerokości i w układzie ciągłym
 sk:Zväčšiť: Prispôsobiť šírke a zobrazovať stránky priebežne
@@ -24954,7 +25040,7 @@ uk:копіювання тексту
 uz:matnni nusxa olish
 vn:đang chép văn bản
 :don't use
-br:não utilize
+br:Não use
 cn:不使用
 co:ùn impiegà micca
 de:nicht verwenden
