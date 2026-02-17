@@ -606,7 +606,6 @@ void DrawAboutPage(MainWindow* win, HDC hdc) {
 
 /* alternate static page to display when no document is loaded */
 
-constexpr int kOpenDocumentYShift = 4;
 constexpr int kThumbsMaxCols = 5;
 constexpr int kThumbsSeparatorDy = 2;
 constexpr int kThumbsBorderDx = 1;
@@ -698,6 +697,8 @@ static Promote* ParsePromote(const char* s) {
     delete root;
     return first;
 }
+
+constexpr int kOpenDocumentYShift = 7;
 
 void LayoutHomePage(HomePageLayout& l) {
     l.promote = ParsePromote(promoteBuiltIn);
