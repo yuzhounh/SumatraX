@@ -522,7 +522,15 @@ void CommandPaletteWnd::CollectStrings(MainWindow* mainWin) {
     for (int i = 0; i < nTabs; i++) {
         WindowTab* t = mainWin->GetTab(i);
         if (t->IsAboutTab()) {
-            ReportIf(i > 0);
+            if (i > 0) {
+                logf("CommandPaletteWnd::CollectStrings: unexpeted about tab at idx: %d out of %d\n", i, nTabs);
+                for (int j = 0; j < nTabs; j++) {
+                    if (!t->IsAboutTab()) {
+                        logf("i: %d path: %s\n", j, t->filePath ? t->filePath : "");
+                    }
+                }
+                ReportIf(i > 0);
+            }
             nFirstDocTab = 1;
             continue;
         }
