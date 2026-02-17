@@ -611,6 +611,13 @@ static void UpdateWindowRtlLayout(MainWindow* win) {
     HwndSetRtl(win->hwndFrame, isRTL);
     EnumChildWindows(win->hwndFrame, SetRtlCallback, (LPARAM)isRTL);
 
+    // https://github.com/sumatrapdfreader/sumatrapdf/issues/5326
+    // Rtl reverses mouse positions on x-axis which messes up
+    // identification of elements on page
+    // I could 1. UnmirrorRtl() or 2. make canvas always non-rtl
+    // for now chose 2
+    HwndSetRtl(win->hwndCanvas, false);
+
     bool tocVisible = win->tocVisible;
     bool favVisible = gGlobalPrefs->showFavorites;
     if (tocVisible || favVisible) {
