@@ -1,5 +1,5 @@
 AppTranslator: SumatraPDF
-9af9b6de7d04788441b52205edb33237b4f756e1
+e0d1eddbecc559057f22235cf1ec843379baa0e7
 :%s annotation. Ctrl+click to edit.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
 ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
@@ -322,7 +322,7 @@ cn:上一视图(&B)
 co:&Precedente
 cy:&Nôl
 cz:&Zpět
-de:&Vorherige Ansicht
+de:V&orherige Ansicht
 dk:Til&bage
 el:Πίσω
 es:&Atrás
@@ -1608,7 +1608,7 @@ cn:快捷键(&A)
 co:Accurtatoghji di &tastera
 cy:&Llwybrau Byr Bysellfwrdd
 cz:&Klávesové zkratky
-de:Tasten&kombinationen
+de:&Tastenkombinationen
 dk:&keyboard genveje
 el:Συντομεύσεις πληκτρολογίου
 es:Atajos de teclado
@@ -3381,7 +3381,7 @@ cn:主题(&T)
 co:&Temu
 cy:&Thema
 cz:&Motiv
-de:De&sign
+de:&Design
 dk:Tema
 el:&Θέμα
 es:&Tema
@@ -6048,7 +6048,7 @@ cn:更改语言
 co:Cambià di lingua (Change Language)
 cy:Newid Iaith (Change Language)
 cz:Změnit jazyk... (Change Language)
-de:Sprache ändern… (Change Language)
+de:&Sprache ändern… (Change Language)
 dk:Skift sprog (Change Language)
 el:Αλλαγή γλώσσας (Change Language)
 es:Cambiar idioma
@@ -6137,7 +6137,7 @@ cn:检查更新(&U)
 co:&Cuntrollà e messe à livellu
 cy:Gwirio am &Ddiweddariadau
 cz:&Zkontrolovat aktualizace
-de:Nach &neuer Version suchen
+de:&Nach neuer Version suchen
 dk:Tjek efter &opdateringer
 el:Έ&λεγχος για νέα έκδοση
 es:Buscar &actualizaciones
@@ -10649,7 +10649,7 @@ cn:下一视图(&O)
 co:&Dopu
 cy:&Ymlaen
 cz:V&před
-de:&Nächste Ansicht
+de:N&ächste Ansicht
 dk:&Frem
 el:Εμπρός
 es:A&delante
@@ -12842,7 +12842,7 @@ cn:显示字体信息
 co:Ottene infurmazioni di grafie
 cy:Derbyn Manylion Ffontiau
 cz:Použitá písma
-de:Schriftarten-Infos erhalten
+de:Schriftarten-Infos abrufen
 dk:Få skrifttype information
 el:Πληροφορίες γραμματοσειρών
 es:Información sobre las fuentes
@@ -14675,7 +14675,7 @@ cn:在线手册
 co:Manuale nant’à u situ web
 cy:Llawlyfr ar y wefan
 cz:Manuál na webové stránce
-de:Handbuch im Internet
+de:H&andbuch im Internet
 dk:Manual på hjemmeside
 el:Εγχειρίδιο στον ιστότοπο
 es:Manual en la Web
