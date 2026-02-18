@@ -4501,7 +4501,7 @@ uz:Qo'shimcha
 vn:Nâng cao
 :Advanced Options...
 af:Gevorderde Opsies...
-am:Ընդլայնված ընտրանքներ..
+am:Ընդլայնված ընտրանքներ...
 ar:خيارات متقدمة
 az:Əlavə seçimlər...
 bg:Разширени опции
@@ -4574,7 +4574,7 @@ uz:Qo'shimcha parametrlar...
 vn:Tùy Chọn Nâng Cao...
 :Advanced Settings...
 af:Gevorderde Instellings...
-am:የላቀ ቅንብሮች...
+am:Ընդլայնված կարգավորումներ...
 ar:الإعدادات المتقدمة...
 az:Qabaqcıl Parametrlər...
 bg:Разширени настройки...
@@ -6396,7 +6396,7 @@ uz:Tilni o'zgartirish (Change Language)
 vn:Đổi ngôn ngữ (Change Language)
 :Change Language...
 af:Verander Taal...
-am:ቋንቋ ለውጥ...
+am:Փոխել լեզուն...
 ar:تغيير اللغة...
 az:Dili Dəyişdir...
 bg:Смяна на езика...
@@ -6469,7 +6469,7 @@ uz:Tilni o'zgartirish...
 vn:Thay đổi ngôn ngữ...
 :Check For Updates
 af:Kyk vir Bywerkings
-am:ማሻሻያዎችን ፈትሽ
+am:Ստուգել թարմացումները
 ar:التحقق من التحديثات
 az:Yeniləmələri Yoxla
 bg:Проверка за актуализации
@@ -6760,7 +6760,7 @@ uz:Doira
 vn:Vòng tròn
 :Clear History
 af:Wis Geskiedenis
-am:ታሪክ አጥፋ
+am:Մաքրել պատմությունը
 ar:مسح السجل
 az:Tarixçəni Təmizlə
 bg:Изчистване на историята
@@ -7125,7 +7125,7 @@ uz:Barcha yorliqlarni yopish
 vn:Đóng tất cả các tab
 :Close Current Document
 af:Sluit Huidige Dokument
-am:የአሁኑን ሰነድ ዝጋ
+am:Փակել ընթացիկ փաստաթուղթը
 ar:إغلاق المستند الحالي
 az:Cari Sənədi Bağla
 bg:Затваряне на текущия документ
@@ -7198,7 +7198,7 @@ uz:Joriy hujjatni yopish
 vn:Đóng tài liệu hiện tại
 :Close Document
 af:Sluit Dokument
-am:ሰነድ ዝጋ
+am:Փակել փաստաթուղթը
 ar:إغلاق المستند
 az:Sənədi Bağla
 bg:Затваряне на документа
@@ -8572,7 +8572,7 @@ uz:Fayl yo‘lini nusxalash
 vn:Sao chép đường dẫn tệp
 :Copy Image
 af:Kopieer Beeld
-am:Պատճենել Նկարը
+am:Պատճենել պատկերը
 ar:نسخ الصورة
 az:Şəkli kopyala
 bg:Копиране на изображението
@@ -8645,7 +8645,7 @@ uz:Rasmni nusxa olish
 vn:Sao chép hình ảnh
 :Copy Link Target
 af:Kopieer Skakelteiken
-am:የአገናኝ ዒላማ ቅዳ
+am:Պատճենել հղման թիրախը
 ar:نسخ هدف الرابط
 az:Keçid Hədəfini Kopyala
 bg:Копиране на целта на връзката
@@ -8718,7 +8718,7 @@ uz:Havola manzilini nusxalash
 vn:Sao chép đích liên kết
 :Copy Selection
 af:Kopieer Seleksie
-am:Պատճենել նշվածը
+am:Պատճենել ընտրվածքը
 ar:نسخ المحدد
 az:Seçilmiş sahəni kopyala
 bg:Копиране на избраното
@@ -9813,7 +9813,7 @@ uz:%s diskka yozib bo'lmadi
 vn:Không thể ghi %s vào đĩa
 :Create .lnk Shortcut
 af:Skep .lnk Kortpad
-am:.lnk አቋራጭ ፍጠር
+am:Ստեղծել .lnk դյուրանցում
 ar:إنشاء اختصار .lnk
 az:.lnk Qısayolu Yarat
 bg:Създаване на .lnk пряк път
@@ -10016,7 +10016,7 @@ uz:Tanlovdan izoh yaratish
 vn:Thêm Chú Thích Từ Phần Được Chọn
 :Create Caret Annotation
 af:Skep Karet-annotasie
-am:የካሬት ማብራሪያ ፍጠር
+am:Ստեղծել ստեղնային նշում
 ar:إنشاء تعليق توضيحي للإقحام
 az:Karet Annotasiyası Yarat
 bg:Създаване на анотация със знак за вмъкване
@@ -10089,7 +10089,7 @@ uz:Karet izoh yaratish
 vn:Tạo chú thích dấu mũ
 :Create Circle Annotation
 af:Skep Sirkel-annotasie
-am:የክብ ማብራሪያ ፍጠር
+am:Ստեղծել շրջանակի նշում
 ar:إنشاء تعليق توضيحي دائري
 az:Dairə Annotasiyası Yarat
 bg:Създаване на анотация с кръг
@@ -10162,7 +10162,7 @@ uz:Doira izoh yaratish
 vn:Tạo chú thích hình tròn
 :Create File Attachment Annotation
 af:Skep Lêeraanhegsel-annotasie
-am:የፋይል አባሪ ማብራሪያ ፍጠር
+am:Ստեղծեք ֆայլի կցորդի նշում
 ar:إنشاء تعليق توضيحي لمرفق ملف
 az:Fayl Əlavəsi Annotasiyası Yarat
 bg:Създаване на анотация с прикачен файл
@@ -10235,7 +10235,7 @@ uz:Fayl qo'shimchasi izoh yaratish
 vn:Tạo chú thích đính kèm tệp
 :Create Free Text Annotation
 af:Skep Vrye Teks-annotasie
-am:ነፃ የጽሑፍ ማብራሪያ ፍጠር
+am:Ստեղծեք անվճար տեքստային ծանոթագրություն
 ar:إنشاء تعليق توضيحي نصي حر
 az:Sərbəst Mətn Annotasiyası Yarat
 bg:Създаване на анотация със свободен текст
@@ -10308,7 +10308,7 @@ uz:Erkin matn izoh yaratish
 vn:Tạo chú thích văn bản tự do
 :Create Highlight Annotation
 af:Skep Uitlig-annotasie
-am:ማድመቂያ ማብራሪያ ፍጠር
+am:Ստեղծել կարևորագույն նշում
 ar:إنشاء تعليق توضيحي للتمييز
 az:Vurğulama Annotasiyası Yarat
 bg:Създаване на анотация с маркиране
@@ -10381,7 +10381,7 @@ uz:Ta'kidlash izoh yaratish
 vn:Tạo chú thích đánh dấu
 :Create Ink Annotation
 af:Skep Ink-annotasie
-am:የቀለም ማብራሪያ ፍጠር
+am:Ստեղծել թանաքային նշում
 ar:إنشاء تعليق توضيحي بالحبر
 az:Mürəkkəb Annotasiyası Yarat
 bg:Създаване на анотация с мастило
@@ -10454,7 +10454,7 @@ uz:Siyoh izoh yaratish
 vn:Tạo chú thích mực
 :Create Line Annotation
 af:Skep Lyn-annotasie
-am:የመስመር ማብራሪያ ፍጠር
+am:Ստեղծել տողային նշում
 ar:إنشاء تعليق توضيحي خطي
 az:Xətt Annotasiyası Yarat
 bg:Създаване на анотация с линия
@@ -10527,7 +10527,7 @@ uz:Chiziq izoh yaratish
 vn:Tạo chú thích đường thẳng
 :Create Link Annotation
 af:Skep Skakel-annotasie
-am:የአገናኝ ማብራሪያ ፍጠር
+am:Ստեղծել հղման ծանոթագրություն
 ar:إنشاء تعليق توضيحي للرابط
 az:Keçid Annotasiyası Yarat
 bg:Създаване на анотация с връзка
@@ -10600,7 +10600,7 @@ uz:Havola izoh yaratish
 vn:Tạo chú thích liên kết
 :Create Poly Line Annotation
 af:Skep Polilyn-annotasie
-am:ፖሊ መስመር ማብራሪያ ፍጠር
+am:Ստեղծել PolyLine ծանոթագրություն
 ar:إنشاء تعليق توضيحي متعدد الخطوط
 az:Çox Xətt Annotasiyası Yarat
 bg:Създаване на анотация с множество линии
@@ -10673,7 +10673,7 @@ uz:Ko'p chiziqli izoh yaratish
 vn:Tạo chú thích đa đường
 :Create Polygon Annotation
 af:Skep Poligoon-annotasie
-am:ፖሊጎን ማብራሪያ ፍጠር
+am:Ստեղծել բազմանկյունային ծանոթագրություն
 ar:إنشاء تعليق توضيحي متعدد الأضلاع
 az:Çoxbucaqlı Annotasiya Yarat
 bg:Създаване на анотация с многоъгълник
@@ -10746,7 +10746,7 @@ uz:Ko'pburchak izoh yaratish
 vn:Tạo chú thích đa giác
 :Create Popup Annotation
 af:Skep Opspring-annotasie
-am:ፖፕአፕ ማብራሪያ ፍጠር
+am:Ստեղծել ելնող պատուհանի նշում
 ar:إنشاء تعليق توضيحي منبثق
 az:Açılan Pəncərə Annotasiyası Yarat
 bg:Създаване на изскачаща анотация
@@ -10819,7 +10819,7 @@ uz:Qalqib chiquvchi izoh yaratish
 vn:Tạo chú thích bật lên
 :Create Redact Annotation
 af:Skep Redigeer-annotasie
-am:የማስወገጃ ማብራሪያ ፍጠር
+am:Ստեղծել խմբագրված ծանոթագրություն
 ar:إنشاء تعليق توضيحي للحذف
 az:Redaktə Annotasiyası Yarat
 bg:Създаване на анотация за редактиране
@@ -10892,7 +10892,7 @@ uz:Tahrirlash izoh yaratish
 vn:Tạo chú thích biên tập
 :Create Square Annotation
 af:Skep Vierkant-annotasie
-am:የካሬ ማብራሪያ ፍጠር
+am:Ստեղծել քառակուսի անոտացիա
 ar:إنشاء تعليق توضيحي مربع
 az:Dördbucaq Annotasiyası Yarat
 bg:Създаване на анотация с квадрат
@@ -10965,7 +10965,7 @@ uz:Kvadrat izoh yaratish
 vn:Tạo chú thích hình vuông
 :Create Squiggly Annotation
 af:Skep Krullerige-annotasie
-am:ማዞሪያ ማብራሪያ ፍጠር
+am:Ստեղծեք ալիքավոր նշում
 ar:إنشاء تعليق توضيحي متعرج
 az:Dalğalı Xətt Annotasiyası Yarat
 bg:Създаване на анотация с вълниста линия
@@ -11038,7 +11038,7 @@ uz:To'lqinsimon izoh yaratish
 vn:Tạo chú thích gạch lượn sóng
 :Create Stamp Annotation
 af:Skep Stempel-annotasie
-am:የማኅተም ማብራሪያ ፍጠር
+am:Ստեղծեք դրոշմանիշի նշում
 ar:إنشاء تعليق توضيحي للختم
 az:Möhür Annotasiyası Yarat
 bg:Създаване на анотация с печат
@@ -11111,7 +11111,7 @@ uz:Muhr izoh yaratish
 vn:Tạo chú thích đóng dấu
 :Create Strike Out Annotation
 af:Skep Deurhaal-annotasie
-am:የማስወገጃ መስመር ማብራሪያ ፍጠር
+am:Ստեղծել գծիկային նշում
 ar:إنشاء تعليق توضيحي للشطب
 az:Üstündən Xətt Çəkmə Annotasiyası Yarat
 bg:Създаване на анотация със зачеркване
@@ -11184,7 +11184,7 @@ uz:Chizib tashlash izoh yaratish
 vn:Tạo chú thích gạch bỏ
 :Create Text Annotation
 af:Skep Teks-annotasie
-am:የጽሑፍ ማብራሪያ ፍጠር
+am:Ստեղծել տեքստային ծանոթագրություն
 ar:إنشاء تعليق توضيحي نصي
 az:Mətn Annotasiyası Yarat
 bg:Създаване на текстова анотация
@@ -11257,7 +11257,7 @@ uz:Matn izoh yaratish
 vn:Tạo chú thích văn bản
 :Create Underline Annotation
 af:Skep Onderstreep-annotasie
-am:የስር መስመር ማብራሪያ ፍጠር
+am:Ստեղծել ընդգծված ծանոթագրություն
 ar:إنشاء تعليق توضيحي للتسطير
 az:Altından Xətt Çəkmə Annotasiyası Yarat
 bg:Създаване на анотация с подчертаване
@@ -11820,7 +11820,7 @@ uz:Sana:
 vn:Ngày:
 :Debug: Corrupt Memory
 af:Ontfout: Korrupteer Geheue
-am:ማረም፡ ማህደረ ትውስታ አበላሽ
+am:Վրիպազերծում. վնասված հիշողություն
 ar:تصحيح: إتلاف الذاكرة
 az:Sazlama: Yaddaşı Pozma
 bg:Отстраняване на грешки: Повреждане на паметта
@@ -11893,7 +11893,7 @@ uz:Nosozlik: Xotirani buzish
 vn:Gỡ lỗi: Hỏng bộ nhớ
 :Debug: Crash Me
 af:Ontfout: Laat My Inmekaar Stort
-am:ማረም፡ አበላሽ
+am:Վրիպազերծում. Ջարդիր ինձ
 ar:تصحيح: تعطلني
 az:Sazlama: Çökdürmə
 bg:Отстраняване на грешки: Сринване
@@ -11966,7 +11966,7 @@ uz:Nosozlik: Ishdan chiqarish
 vn:Gỡ lỗi: Làm tôi sập
 :Debug: Download Symbols
 af:Ontfout: Laai Simbole Af
-am:ማረም፡ ምልክቶችን አውርድ
+am:Վրիպազերծում. Ներբեռնել նշաներ
 ar:تصحيح: تنزيل الرموز
 az:Sazlama: Simvolları Endir
 bg:Отстраняване на грешки: Изтегляне на символи
@@ -12039,7 +12039,7 @@ uz:Nosozlik: Belgilarni yuklab olish
 vn:Gỡ lỗi: Tải xuống ký hiệu
 :Debug: Show Notification
 af:Ontfout: Wys Kennisgewing
-am:ማረም፡ ማሳወቂያ አሳይ
+am:Վրիպազերծում. Ցուցադրել ծանուցումը
 ar:تصحيح: إظهار الإشعار
 az:Sazlama: Bildiriş Göstər
 bg:Отстраняване на грешки: Показване на известие
@@ -12112,7 +12112,7 @@ uz:Nosozlik: Bildirishnoma ko'rsatish
 vn:Gỡ lỗi: Hiển thị thông báo
 :Debug: Start Stress Test
 af:Ontfout: Begin Strestoets
-am:ማረም፡ የጭንቀት ሙከራ ጀምር
+am:Վրիպազերծում. Սկսել սթրեսի թեստը
 ar:تصحيح: بدء اختبار الإجهاد
 az:Sazlama: Stress Testini Başlat
 bg:Отстраняване на грешки: Стартиране на стрес тест
@@ -12185,7 +12185,7 @@ uz:Nosozlik: Stress testni boshlash
 vn:Gỡ lỗi: Bắt đầu kiểm tra căng thẳng
 :Debug: Test App
 af:Ontfout: Toets Toep
-am:ማረም፡ መተግበሪያ ሞክር
+am:Վրիպազերծում. Փորձարկել հավելված
 ar:تصحيح: اختبار التطبيق
 az:Sazlama: Tətbiqi Test Et
 bg:Отстраняване на грешки: Тестване на приложението
@@ -12258,7 +12258,7 @@ uz:Nosozlik: Ilovani sinash
 vn:Gỡ lỗi: Kiểm tra ứng dụng
 :Debug: Toggle Predictive Rendering
 af:Ontfout: Wissel Voorspellende Weergawe
-am:ማረም፡ የትንበያ መስራት ቀይር
+am:Վրիպազերծում. Միացնել/անջատել կանխատեսող արտապատկերումը
 ar:تصحيح: تبديل العرض التنبؤي
 az:Sazlama: Proqnozlaşdırılan Renderinqi Aç/Bağla
 bg:Отстраняване на грешки: Превключване на предвидимо изобразяване
@@ -12331,7 +12331,7 @@ uz:Nosozlik: Bashoratli renderingni almashtirish
 vn:Gỡ lỗi: Bật/tắt kết xuất dự đoán
 :Debug: Toggle Rtl
 af:Ontfout: Wissel Rtl
-am:ማረም፡ Rtl ቀይር
+am:Վրիպազերծում. աջից անջատել/անջատել
 ar:تصحيح: تبديل من اليمين لليسار
 az:Sazlama: Rtl-i Aç/Bağla
 bg:Отстраняване на грешки: Превключване на RTL
@@ -12554,7 +12554,7 @@ cn:删除
 co:Squassà
 cy:Dileu
 cz:Vymazat
-de:Löschen
+de:&Löschen
 dk:Slet
 el:Διαγραφή
 es:Eliminar
@@ -12686,7 +12686,7 @@ uz:Izohni o‘chirish
 vn:Xóa chú thích
 :Delete Favorite
 af:Vee Gunsteling Uit
-am:ተወዳጅ ሰርዝ
+am:Ջնջել ընտրյալը
 ar:حذف المفضلة
 az:Seçilmişi Sil
 bg:Изтриване на любим
@@ -12759,7 +12759,7 @@ uz:Sevimlilardan o'chirish
 vn:Xóa yêu thích
 :Delete File
 af:Vee Lêer Uit
-am:ፋይል ሰርዝ
+am:Ջնջել ֆայլը
 ar:حذف الملف
 az:Faylı Sil
 bg:Изтриване на файл
@@ -12978,7 +12978,7 @@ uz:DjVu hujjatlari
 vn:Tập tin DjVu
 :Do nothing
 af:Moenie iets doen nie
-am:ምንም አታድርግ
+am:Ոչինչ մի՛ արա
 ar:عدم القيام بأي شيء
 az:Heç nə etmə
 bg:Не прави нищо
@@ -13965,7 +13965,7 @@ uz:%s yuklab olish xatosi
 vn:Không mở %s được
 :Execute a program
 af:Voer 'n program uit
-am:ፕሮግራም አሂድ
+am:Կատարել ծրագիր
 ar:تنفيذ برنامج
 az:Proqramı icra et
 bg:Изпълнение на програма
@@ -14038,7 +14038,7 @@ uz:Dasturni ishga tushirish
 vn:Thực thi một chương trình
 :Exit Application
 af:Sluit Toepassing Af
-am:ከመተግበሪያ ውጣ
+am:Ելք ծրագրից
 ar:الخروج من التطبيق
 az:Tətbiqdən Çıx
 bg:Изход от приложението
@@ -14426,7 +14426,7 @@ uz:Ikkita betdan
 vn:Trang kép
 :Facing View
 af:Oorkantste Bladsy Aansig
-am:ፊት ለፊት እይታ
+am:Դեմքով տեսարան
 ar:عرض متقابل
 az:Üzbəüz Görünüş
 bg:Двустранен изглед
@@ -15572,7 +15572,7 @@ uz:Keyingisini qidirish
 vn:Tìm xuống
 :Find Next Selection
 af:Vind Volgende Seleksie
-am:ቀጣይ ምርጫ አግኝ
+am:Գտնել հաջորդ ընտրությունը
 ar:البحث عن التحديد التالي
 az:Növbəti Seçimi Tap
 bg:Намери следващо съвпадение
@@ -15718,7 +15718,7 @@ uz:Oldingisini qidirish
 vn:Tìm lên
 :Find Previous Selection
 af:Vind Vorige Seleksie
-am:ቀዳሚ ምርጫ አግኝ
+am:Գտնել նախորդ ընտրությունը
 ar:البحث عن التحديد السابق
 az:Əvvəlki Seçimi Tap
 bg:Намери предишно съвпадение
@@ -15864,7 +15864,7 @@ uz:Qidirish:
 vn:Tìm kiếm:
 :Find: Toggle Match Case
 af:Vind: Skakel Hooflettergevoelig
-am:አግኝ፡ ጉዳይ ማዛመድ ቀይር
+am:Գտնել. Միացնել/անջատել համապատասխանումը
 ar:بحث: تبديل مطابقة حالة الأحرف
 az:Tap: Böyük/Kiçik Hərf Uyğunluğunu Aç/Bağla
 bg:Търсене: Съвпадение на регистъра
@@ -16966,7 +16966,7 @@ uz:Shriftlar haqida ma’lumot olish
 vn:Lấy Thông Tin Fonts
 :Go to Page...
 af:Gaan na Bladsy...
-am:ወደ ገጽ ሂድ...
+am:Անցնել էջին...
 ar:الانتقال إلى الصفحة...
 az:Səhifəyə Get...
 bg:Отиди на страница...
@@ -17112,7 +17112,7 @@ uz:Betga o'tish
 vn:Nhảy đến trang
 :Help: About SumatraPDF
 af:Hulp: Aangaande SumatraPDF
-am:እገዛ፡ ስለ SumatraPDF
+am:Օգնություն՝ SumatraPDF-ի մասին
 ar:مساعدة: حول SumatraPDF
 az:Kömək: SumatraPDF Haqqında
 bg:Помощ: За SumatraPDF
@@ -17185,7 +17185,7 @@ uz:Yordam: SumatraPDF haqida
 vn:Trợ giúp: Giới thiệu về SumatraPDF
 :Help: Keyboard Shortcuts
 af:Hulp: Sleutelbord Kortpaaie
-am:እገዛ፡ የቁልፍ ሰሌዳ አቋራጮች
+am:Օգնություն՝ Ստեղնաշարի կարճ ստեղներ
 ar:مساعدة: اختصارات لوحة المفاتيح
 az:Kömək: Klaviatura Qısayolları
 bg:Помощ: Клавишни комбинации
@@ -17258,7 +17258,7 @@ uz:Yordam: Klaviatura tugmalari
 vn:Trợ giúp: Phím tắt
 :Help: Manual
 af:Hulp: Handleiding
-am:እገዛ፡ መመሪያ
+am:Օգնություն։ Ձեռնարկ
 ar:مساعدة: الدليل
 az:Kömək: Təlimat
 bg:Помощ: Ръководство
@@ -17331,7 +17331,7 @@ uz:Yordam: Qo'llanma
 vn:Trợ giúp: Hướng dẫn sử dụng
 :Help: Manual On Website
 af:Hulp: Handleiding Op Webwerf
-am:እገዛ፡ በድረ-ገጽ ላይ መመሪያ
+am:Օգնություն. Ձեռնարկը կայքում
 ar:مساعدة: الدليل على الموقع
 az:Kömək: Veb Saytda Təlimat
 bg:Помощ: Ръководство в уебсайта
@@ -17404,7 +17404,7 @@ uz:Yordam: Veb-saytdagi qo'llanma
 vn:Trợ giúp: Hướng dẫn sử dụng trên trang web
 :Help: SumatraPDF Website
 af:Hulp: SumatraPDF Webwerf
-am:እገዛ: SumatraPDF ድረ-ገጽ
+am:Օգնություն՝ SumatraPDF-ի կայք
 ar:مساعدة: موقع SumatraPDF
 az:Kömək: SumatraPDF Veb Saytı
 bg:Помощ: Уебсайт на SumatraPDF
@@ -17543,7 +17543,7 @@ uz:&Parametrlarni yashirish
 vn:Thiết lập ẩn và tùy chọn
 :Hide Annotations
 af:Versteek Annotasies
-am:ማብራሪያዎችን ደብቅ
+am:Թաքցնել ծանոթագրությունները
 ar:إخفاء التعليقات التوضيحية
 az:Qeydləri Gizlət
 bg:Скрий анотациите
@@ -18631,7 +18631,7 @@ uz:Ichki rangi:
 vn:Màu Bên Trong:
 :Invert Colors
 af:Keer Kleure Om
-am:ቀለሞችን ተቃራኒ አድርግ
+am:Գույների շրջում
 ar:عكس الألوان
 az:Rəngləri Tərsinə Çevir
 bg:Обърни цветовете
@@ -18704,7 +18704,7 @@ uz:Ranglarni teskari qilish
 vn:Đảo ngược màu sắc
 :Invoke Inverse Search
 af:Roep Omgekeerde Soektog aan
-am:ተቃራኒ ፍለጋ ጀምር
+am:Կանչել հակադարձ որոնումը
 ar:تنفيذ البحث العكسي
 az:Tərs Axtarışı İşə Sal
 bg:Извикай обратно търсене
@@ -18923,7 +18923,7 @@ uz:Oxirgi sahifa
 vn:Trang Cuối
 :Launch a browser or run command with selection
 af:Begin 'n blaaier of voer bevel uit met seleksie
-am:አሳሽ ክፈት ወይም ትእዛዝ አሂድ ከምርጫ ጋር
+am:Գործարկեք դիտարկիչը կամ գործարկեք հրամանը ընտրության միջոցով
 ar:تشغيل متصفح أو تنفيذ أمر مع التحديد
 az:Brauzer aç və ya seçimlə əmr icra et
 bg:Стартирай браузър или изпълни команда с избраното
@@ -19921,7 +19921,7 @@ uz:O'zgartirilgan:
 vn:Ngày chỉnh sửa
 :Move Frame Focus
 af:Skuif Raam Fokus
-am:የፍሬም ትኩረት አንቀሳቅስ
+am:Տեղափոխել կադրի ֆոկուսը
 ar:نقل تركيز الإطار
 az:Çərçivə Fokusunu Keçir
 bg:Премести фокуса на рамката
@@ -19994,7 +19994,7 @@ uz:Ramka fokusini ko'chirish
 vn:Di chuyển tiêu điểm khung
 :Move Tab Left
 af:Skuif Oortjie Links
-am:ትርን ወደ ግራ አንቀሳቅስ
+am:Տեղափոխել ներդիրը ձախ
 ar:نقل علامة التبويب لليسار
 az:Vərəqi Sola Keçir
 bg:Премести раздела наляво
@@ -20067,7 +20067,7 @@ uz:Yorliqni chapga ko'chirish
 vn:Di chuyển tab sang trái
 :Move Tab Right
 af:Skuif Oortjie Regs
-am:ትርን ወደ ቀኝ አንቀሳቅስ
+am:Տեղափոխել ներդիրը աջ
 ar:نقل علامة التبويب لليمين
 az:Vərəqi Sağa Keçir
 bg:Премести раздела надясно
@@ -20140,7 +20140,7 @@ uz:Yorliqni o'ngga ko'chirish
 vn:Di chuyển tab sang phải
 :Navigate Back
 af:Navigeer Terug
-am:ወደ ኋላ ሂድ
+am:Հետ գնալ
 ar:التنقل للخلف
 az:Geri Get
 bg:Навигация назад
@@ -20213,7 +20213,7 @@ uz:Orqaga o'tish
 vn:Điều hướng lùi
 :Navigate Forward
 af:Navigeer Vorentoe
-am:ወደ ፊት ሂድ
+am:Առաջ գնալ
 ar:التنقل للأمام
 az:İrəli Get
 bg:Навигация напред
@@ -20485,7 +20485,7 @@ uz:Keyingi bet
 vn:Trang sau
 :Next Tab
 af:Volgende Oortjie
-am:ቀጣይ ትር
+am:Հաջորդ ներդիրը
 ar:علامة التبويب التالية
 az:Növbəti Vərəq
 bg:Следващ раздел
@@ -21300,7 +21300,7 @@ cn:在 PDF-XChange 中打开(&I)
 co:Apre cù &PDF-XChange
 cy:&Agor yn PDF-XChange
 cz:Otevřít v programu PDF-XChange
-de:Mit PDF-&XChange öffnen
+de:Mit PDF-&XChange Editor öffnen
 dk:Åbn med PDF-XChange
 el:Άνοιγμα με PDF-XChange
 es:Abr&ir con PDF-XChange
@@ -21427,7 +21427,7 @@ uz:Ilovani ochish
 vn:Mở tệp đính kèm
 :Open Current Document In New Tab
 af:Open Huidige Dokument In Nuwe Oortjie
-am:የአሁኑን ሰነድ በአዲስ ትር ክፈት
+am:Բացել ընթացիկ փաստաթուղթը նոր ներդիրում
 ar:فتح المستند الحالي في علامة تبويب جديدة
 az:Cari Sənədi Yeni Vərəqdə Aç
 bg:Отвори текущия документ в нов раздел
@@ -21500,7 +21500,7 @@ uz:Joriy hujjatni yangi yorliqda ochish
 vn:Mở tài liệu hiện tại trong tab mới
 :Open Current Document In New Window
 af:Open Huidige Dokument In Nuwe Venster
-am:የአሁኑን ሰነድ በአዲስ መስኮት ክፈት
+am:Բացել ընթացիկ փաստաթուղթը նոր պատուհանում
 ar:فتح المستند الحالي في نافذة جديدة
 az:Cari Sənədi Yeni Pəncərədə Aç
 bg:Отвори текущия документ в нов прозорец
@@ -21573,7 +21573,7 @@ uz:Joriy hujjatni yangi oynada ochish
 vn:Mở tài liệu hiện tại trong cửa sổ mới
 :Open Directory In Directory Opus
 af:Open Gids In Directory Opus
-am:ማውጫን በDirectory Opus ክፈት
+am:Բաց տեղեկատու Opus-ի տեղեկատուում
 ar:فتح المجلد في Directory Opus
 az:Qovluğu Directory Opus-da Aç
 bg:Отвори директория в Directory Opus
@@ -21646,7 +21646,7 @@ uz:Katalogni Directory Opus da ochish
 vn:Mở thư mục trong Directory Opus
 :Open Directory In Double Commander
 af:Open Gids In Double Commander
-am:ማውጫን በDouble Commander ክፈት
+am:Բաց տեղեկատու Double Commander-ում
 ar:فتح المجلد في Double Commander
 az:Qovluğu Double Commander-də Aç
 bg:Отвори директория в Double Commander
@@ -21719,7 +21719,7 @@ uz:Katalogni Double Commander da ochish
 vn:Mở thư mục trong Double Commander
 :Open Directory In Explorer
 af:Open Gids In Explorer
-am:ማውጫን በExplorer ክፈት
+am:Բացել գրացուցակը Explorer-ում
 ar:فتح المجلد في المستكشف
 az:Qovluğu Explorer-də Aç
 bg:Отвори директория в Explorer
@@ -21792,7 +21792,7 @@ uz:Katalogni Explorer da ochish
 vn:Mở thư mục trong Explorer
 :Open Directory In Total Commander
 af:Open Gids In Total Commander
-am:ማውጫን በTotal Commander ክፈት
+am:Բաց տեղեկատու Total Commander-ում
 ar:فتح المجلد في Total Commander
 az:Qovluğu Total Commander-də Aç
 bg:Отвори директория в Total Commander
@@ -22131,7 +22131,7 @@ uz:Ichki PDF faylini ochish
 vn:Mở PDF Đã Nhúng
 :Open File...
 af:Open Lêer...
-am:ፋይል ክፈት...
+am:Բացել ֆայլը...
 ar:فتح ملف...
 az:Faylı Aç...
 bg:Отвори файл...
@@ -22277,7 +22277,7 @@ uz:Yangi oynada ochish
 vn:Mở trong cửa sổ mới
 :Open New SumatraPDF Window
 af:Open Nuwe SumatraPDF Venster
-am:አዲስ SumatraPDF መስኮት ክፈት
+am:Բացել նոր SumatraPDF պատուհանը
 ar:فتح نافذة SumatraPDF جديدة
 az:Yeni SumatraPDF Pəncərəsi Aç
 bg:Отвори нов прозорец на SumatraPDF
@@ -22496,7 +22496,7 @@ uz:Papkadagi oldingi faylni ochish
 vn:Mở tệp trước đó trong thư mục
 :Open Selected Document
 af:Open Geselekteerde Dokument
-am:የተመረጠውን ሰነድ ክፈት
+am:Բացել ընտրված փաստաթուղթը
 ar:فتح المستند المحدد
 az:Seçilmiş Sənədi Aç
 bg:Отвори избрания документ
@@ -22568,6 +22568,7 @@ uk:Відкрити виділений документ
 uz:Tanlangan hujjatni ochish
 vn:Mở tài liệu đã chọn
 :Open With Pdf&Djvu Bookmarker
+am:Բացել PDF և Djvu էջանիշով
 br:Abrir com Pdf&Djvu Bookmarker
 cn:使用 Pdf&Djvu Bookmarker 打开
 co:Apre cù Pdf&Djvu Bookmarker
@@ -22923,7 +22924,7 @@ uz:Microsoft XPS-Viewerda ochish
 vn:Mở bằng Microsoft XPS-Viewer
 :Open in Adobe Acrobat
 af:Open in Adobe Acrobat
-am:በAdobe Acrobat ክፈት
+am:Բացել Adobe Acrobat-ում
 ar:فتح في Adobe Acrobat
 az:Adobe Acrobat-da Aç
 bg:Отвори в Adobe Acrobat
@@ -22996,7 +22997,7 @@ uz:Adobe Acrobat da ochish
 vn:Mở trong Adobe Acrobat
 :Open in Foxit PhantomPDF
 af:Open in Foxit PhantomPDF
-am:በFoxit PhantomPDF ክፈት
+am:Բացել Foxit PhantomPDF-ում
 ar:فتح في Foxit PhantomPDF
 az:Foxit PhantomPDF-də Aç
 bg:Отвори в Foxit PhantomPDF
@@ -23188,7 +23189,7 @@ tw:在 Microsoft HTML 說明中開啟(&H)
 uz:Microsoft &HTML Help’da ochish
 :Open in Microsoft HTML Help
 af:Open in Microsoft HTML Help
-am:Բացել Microsoft HTML Օգնությունում
+am:Բացել Microsoft HTML Help-ում
 ar:افتح في برنامج مساعدة HTML مايكروسوفت
 az:Microsoft HTML Help-də aç
 bg:Отвори в Microsoft HTML Help
@@ -23261,7 +23262,7 @@ uz:Microsoft HTML Help’da ochish
 vn:Mở trong Microsoft HTML Help
 :Open in Microsoft Xps Viewer
 af:Open in Microsoft Xps Viewer
-am:በMicrosoft Xps Viewer ክፈት
+am:Բացել Microsoft Xps Viewer-ում
 ar:فتح في Microsoft Xps Viewer
 az:Microsoft Xps Viewer-də Aç
 bg:Отвори в Microsoft Xps Viewer
@@ -24401,7 +24402,7 @@ uz:PalmDoc ho'jjatlari
 vn:Tài liệu PalmDoc
 :Pin Selected Document
 af:Speld Geselekteerde Dokument Vas
-am:የተመረጠውን ሰነድ ሰካ
+am:Ամրացնել ընտրված փաստաթուղթը
 ar:تثبيت المستند المحدد
 az:Seçilmiş Sənədi Sancaqla
 bg:Закачи избрания документ
@@ -25036,7 +25037,7 @@ uz:Taqdimot
 vn:Trình Chiếu
 :Presentation Black Background
 af:Aanbieding Swart Agtergrond
-am:የአቀራረብ ጥቁር ዳራ
+am:Ներկայացման սև խորք
 ar:عرض تقديمي بخلفية سوداء
 az:Təqdimat Qara Fon
 bg:Презентация с черен фон
@@ -25109,7 +25110,7 @@ uz:Taqdimot qora fonli
 vn:Trình chiếu nền đen
 :Presentation White Background
 af:Aanbieding Wit Agtergrond
-am:የአቀራረብ ነጭ ዳራ
+am:Ներկայացման սպիտակ խորք
 ar:عرض تقديمي بخلفية بيضاء
 az:Təqdimat Ağ Fon
 bg:Презентация с бял фон
@@ -25255,7 +25256,7 @@ uz:Oldingi bet
 vn:Trang trước
 :Previous Tab
 af:Vorige Oortjie
-am:ቀዳሚ ትር
+am:Նախորդ ներդիր
 ar:علامة التبويب السابقة
 az:Əvvəlki Vərəq
 bg:Предишен раздел
@@ -25401,7 +25402,7 @@ uz:Chop etish
 vn:In
 :Print Document...
 af:Druk Dokument...
-am:ሰነድ አትም...
+am:Տպել փաստաթուղթը...
 ar:طباعة المستند...
 az:Sənədi Çap Et...
 bg:Печат на документ...
@@ -26110,7 +26111,7 @@ uz:Qayta &nomlash...
 vn:Đổi &Tên
 :Recently Opened
 af:Onlangs Geopen
-am:በቅርቡ የተከፈቱ
+am:Վերջերս բացված
 ar:المفتوحة مؤخراً
 az:Son Açılanlar
 bg:Последно отваряни
@@ -26329,7 +26330,7 @@ uz:Tahrirlash
 vn:Biên tập
 :Reload Document
 af:Herlaai Dokument
-am:ሰነድ እንደገና ጫን
+am:Վերաբեռնել փաստաթուղթը
 ar:إعادة تحميل المستند
 az:Sənədi Yenidən Yüklə
 bg:Презареди документа
@@ -26468,7 +26469,7 @@ uz:&Ochilgan fayllarni eslab qolish
 vn:Nhớ các tập tin đã mở
 :Remove Selected Document From History
 af:Verwyder Geselekteerde Dokument Uit Geskiedenis
-am:የተመረጠውን ሰነድ ከታሪክ አስወግድ
+am:Հեռացնել ընտրված փաստաթուղթը պատմությունից
 ar:إزالة المستند المحدد من السجل
 az:Seçilmiş Sənədi Tarixçədən Sil
 bg:Премахни избрания документ от историята
@@ -26687,7 +26688,7 @@ uz:%s betni tanlanganlardan o'chirish
 vn:Xoá trang %s khỏi Ưa thích
 :Rename File...
 af:Hernoem Lêer...
-am:ፋይልን እንደገና ሰይም...
+am:Վերանվանել ֆայլը...
 ar:إعادة تسمية الملف...
 az:Faylın Adını Dəyişdir...
 bg:Преименуване на файл...
@@ -26833,7 +26834,7 @@ uz:Yangi nom
 vn:Đổi tên thành
 :Reopen Last Closed
 af:Heropen Laaste Gesluit
-am:መጨረሻ የተዘጋውን እንደገና ክፈት
+am:Վերաբացել վերջին փակվածը
 ar:إعادة فتح آخر مغلق
 az:Son Bağlananı Yenidən Aç
 bg:Отвори последно затворения
@@ -27338,7 +27339,7 @@ uz:SVG hujjatlari
 vn:Các Tài Liệu SVG
 :Save Annotations to a new PDF
 af:Stoor Annotasies na 'n nuwe PDF
-am:ማብራሪያዎችን ወደ አዲስ PDF አስቀምጥ
+am:Պահպանեք ծանոթագրությունները նոր PDF ֆայլում
 ar:حفظ التعليقات التوضيحية في ملف PDF جديد
 az:Qeydləri yeni PDF-ə saxla
 bg:Запазване на анотациите в нов PDF
@@ -27425,7 +27426,7 @@ cn:将标注保存到当前 PDF 文件
 co:Arregistrà l’annutazioni in u PDF esistente
 cy:Cadw Anodiadau i PDF presennol
 cz:Uložit poznámky do stávajícího PDF souboru
-de:Anmerkungen in bestehende PDF-Dateien speichern
+de:Anmerkungen in bestehender PDF-Datei speichern
 dk:Gem kommentarer til eksisterende PDF
 el:Αποθήκευση Σχολιασμών σε υπάρχον PDF
 es:Guardar anotaciones en PDF existente
@@ -27630,7 +27631,7 @@ uz:Ichki faylni saqlash...
 vn:Lưu Tập Đã Nhúng...
 :Save File As...
 af:Stoor Lêer As...
-am:ፋይል አስቀምጥ እንደ...
+am:Պահպանել ֆայլը որպես...
 ar:حفظ الملف باسم...
 az:Faylı Fərqli Saxla...
 bg:Запазване на файл като...
@@ -27841,7 +27842,7 @@ cn:另存为新的 PDF 文件
 co:Arregistrà i cambiamenti in un PDF novu
 cy:Cadw newidiadau i PDF newydd
 cz:Uložit změny do nového PDF souboru
-de:Änderungen in einer neuen PDF-Datei speichern
+de:Änderungen in neuer PDF-Datei speichern
 dk:Gem ændringer til en ny PDF
 el:Αποθήκευση αλλαγών σε νέο PDF
 es:Guardar los cambios en un nuevo PDF
@@ -27914,7 +27915,7 @@ cn:保存至当前 PDF 文件
 co:Arregistrà i cambiamenti in u PDF esistente
 cy:Cadw newidiadau i PDF presennol
 cz:Uložit změny do stávajícího PDF souboru
-de:Änderungen an vorhandener PDF speichern
+de:Änderungen an vorhandener PDF-Datei speichern
 dk:Gem ændringer til eksisterende PDF
 el:Αποθήκευση αλλαγών σε υπάρχον PDF
 es:Guardar los cambios en un PDF existente
@@ -28175,7 +28176,7 @@ uz:'%s' ni saqlash muvaffaqiyatsiz tugadi: '%s'
 vn:Đang lưu '%s' lỗi với: '%s'
 :Scroll Down
 af:Rol Af
-am:ወደ ታች አሸብልል
+am:Գլորել ներքև
 ar:التمرير لأسفل
 az:Aşağı Sürüşdür
 bg:Превъртане надолу
@@ -28248,7 +28249,7 @@ uz:Pastga aylantirish
 vn:Cuộn xuống
 :Scroll Down By Half Page
 af:Rol Af met Half Bladsy
-am:በግማሽ ገጽ ወደ ታች አሸብልል
+am:Գլորել ներքև կես էջով
 ar:التمرير لأسفل بمقدار نصف صفحة
 az:Yarım Səhifə Aşağı Sürüşdür
 bg:Превъртане надолу с половин страница
@@ -28321,7 +28322,7 @@ uz:Yarim sahifa pastga aylantirish
 vn:Cuộn xuống nửa trang
 :Scroll Down By Page
 af:Rol Af met Bladsy
-am:በገጽ ወደ ታች አሸብልል
+am:Գլորել ներքև ըստ էջի
 ar:التمرير لأسفل بمقدار صفحة
 az:Səhifə Aşağı Sürüşdür
 bg:Превъртане надолу със страница
@@ -28394,7 +28395,7 @@ uz:Sahifa bo'yicha pastga aylantirish
 vn:Cuộn xuống một trang
 :Scroll Left
 af:Rol Links
-am:ወደ ግራ አሸብልል
+am:Գլորել ձախ
 ar:التمرير لليسار
 az:Sola Sürüşdür
 bg:Превъртане наляво
@@ -28467,7 +28468,7 @@ uz:Chapga aylantirish
 vn:Cuộn sang trái
 :Scroll Left By Page
 af:Rol Links met Bladsy
-am:በገጽ ወደ ግራ አሸብልል
+am:Գլորել ձախ էջով
 ar:التمرير لليسار بمقدار صفحة
 az:Səhifə Sola Sürüşdür
 bg:Превъртане наляво със страница
@@ -28540,7 +28541,7 @@ uz:Sahifa bo'yicha chapga aylantirish
 vn:Cuộn sang trái một trang
 :Scroll Right
 af:Rol Regs
-am:ወደ ቀኝ አሸብልል
+am:Գլորել աջ
 ar:التمرير لليمين
 az:Sağa Sürüşdür
 bg:Превъртане надясно
@@ -28613,7 +28614,7 @@ uz:O'ngga aylantirish
 vn:Cuộn sang phải
 :Scroll Right By Page
 af:Rol Regs met Bladsy
-am:በገጽ ወደ ቀኝ አሸብልል
+am:Էջ առ էջ աջ ոլորել
 ar:التمرير لليمين بمقدار صفحة
 az:Səhifə Sağa Sürüşdür
 bg:Превъртане надясно със страница
@@ -28686,7 +28687,7 @@ uz:Sahifa bo'yicha o'ngga aylantirish
 vn:Cuộn sang phải một trang
 :Scroll Up
 af:Rol Op
-am:ወደ ላይ አሸብልል
+am:Վերև գլորել
 ar:التمرير لأعلى
 az:Yuxarı Sürüşdür
 bg:Превъртане нагоре
@@ -28759,7 +28760,7 @@ uz:Yuqoriga aylantirish
 vn:Cuộn lên
 :Scroll Up By Half Page
 af:Rol Op met Half Bladsy
-am:በግማሽ ገጽ ወደ ላይ አሸብልል
+am:Գլորել վերև կես էջով
 ar:التمرير لأعلى بمقدار نصف صفحة
 az:Yarım Səhifə Yuxarı Sürüşdür
 bg:Превъртане нагоре с половин страница
@@ -28832,7 +28833,7 @@ uz:Yarim sahifa yuqoriga aylantirish
 vn:Cuộn lên nửa trang
 :Scroll Up By Page
 af:Rol Op met Bladsy
-am:በገጽ ወደ ላይ አሸብልል
+am:Վերև գլորել ըստ էջի
 ar:التمرير لأعلى بمقدار صفحة
 az:Səhifə Yuxarı Sürüşdür
 bg:Превъртане нагоре със страница
@@ -28905,7 +28906,7 @@ uz:Sahifa bo'yicha yuqoriga aylantirish
 vn:Cuộn lên một trang
 :Search Selection with Bing
 af:Soek Seleksie met Bing
-am:ምርጫን በBing ፈልግ
+am:Որոնել ընտրումը Bing-ի միջոցով
 ar:البحث عن التحديد باستخدام Bing
 az:Seçimi Bing ilə Axtar
 bg:Търсене на селекцията с Bing
@@ -28978,7 +28979,7 @@ uz:Tanlanganini Bing bilan qidirish
 vn:Tìm kiếm lựa chọn với Bing
 :Search Selection with Google
 af:Soek Seleksie met Google
-am:ምርጫን በGoogle ፈልግ
+am:Որոնման ընտրումը Google-ում
 ar:البحث عن التحديد باستخدام Google
 az:Seçimi Google ilə Axtar
 bg:Търсене на селекцията с Google
@@ -29051,7 +29052,7 @@ uz:Tanlanganini Google bilan qidirish
 vn:Tìm kiếm lựa chọn với Google
 :Search Selection with Google Scholar
 af:Soek Seleksie met Google Scholar
-am:ምርጫን በGoogle Scholar ፈልግ
+am:Որոնել ընտրվածը Google Scholar-ի միջոցով
 ar:البحث عن التحديد باستخدام Google Scholar
 az:Seçimi Google Scholar ilə Axtar
 bg:Търсене на селекцията с Google Scholar
@@ -29124,7 +29125,7 @@ uz:Tanlanganini Google Scholar bilan qidirish
 vn:Tìm kiếm lựa chọn với Google Scholar
 :Search Selection with Wikipedia
 af:Soek Seleksie met Wikipedia
-am:ምርጫውን በዊኪፔዲያ ፈልግ
+am:Որոնել ընտրվածը Վիքիպեդիայի միջոցով
 ar:البحث في التحديد باستخدام ويكيبيديا
 az:Seçimi Wikipedia ilə Axtar
 bg:Търсене на селекцията с Wikipedia
@@ -29472,7 +29473,7 @@ cn:全选(&A)
 co:&Tuttu selezziunà
 cy:Dewis &Popeth
 cz:Vybrat &vše
-de:Alles &markieren\tStrg+A
+de:&Alles markieren\tStrg+A
 dk:Marker &alt
 el:Επιλογή ό&λων
 es:Seleccionar &todo
@@ -29525,7 +29526,7 @@ uz:&Hammasini tanlash
 vn:Chọn hết
 :Select All
 af:Selekteer Alles
-am:Նշել բոլորը
+am:Ընտրել բոլորը
 ar:حدد الكل
 az:Hamısını seç
 bg:Избери всичко
@@ -29671,7 +29672,7 @@ uz:Ctrl va sichqonchaning chap tugmasini bosib tarkibini tanlang
 vn:Đánh dấu nội dung bằng Ctrl+phím chuột trái
 :Select next theme
 af:Kies volgende tema
-am:ቀጣዩን ገጽታ ምረጥ
+am:Ընտրեք հաջորդ թեման
 ar:اختيار السمة التالية
 az:Növbəti mövzunu seç
 bg:Избиране на следваща тема
@@ -29890,7 +29891,7 @@ uz:Tanlash:
 vn:Lựa chọn:
 :Send Document By Email...
 af:Stuur Dokument per E-pos...
-am:ሰነድ በኢሜይል ላክ...
+am:Ուղարկել փաստաթուղթը էլ. փոստով...
 ar:إرسال المستند بالبريد الإلكتروني...
 az:Sənədi E-poçt ilə Göndər...
 bg:Изпращане на документ по имейл...
@@ -30104,7 +30105,7 @@ uz:Teskari qidirish buyruq satrini moslash
 vn:Đặt dòng lệnh tìm kiếm ngược
 :Set theme
 af:Stel tema
-am:ገጽታ አዘጋጅ
+am:Սահմանել ոճը
 ar:تعيين السمة
 az:Mövzu seç
 bg:Задаване на тема
@@ -30493,7 +30494,7 @@ uz:&Asboblar panelini ko'rsatish
 vn:Hiện thanh công cụ
 :Show Annotations
 af:Wys Annotasies
-am:ማስተያየቶችን አሳይ
+am:Ցուցադրել ծանոթագրությունները
 ar:إظهار التعليقات التوضيحية
 az:Qeydləri Göstər
 bg:Показване на анотации
@@ -30617,7 +30618,7 @@ uz:Belgilangan sahifalarni ko‘rsatish
 vn:Hiển thị Dấu &trang
 :Show Document Properties...
 af:Wys Dokument Eienskappe...
-am:የሰነድ ባህሪያት አሳይ...
+am:Ցուցադրել փաստաթղթի հատկությունները...
 ar:إظهار خصائص المستند...
 az:Sənəd Xüsusiyyətlərini Göstər...
 bg:Показване на свойствата на документа...
@@ -30763,7 +30764,7 @@ uz:Tanlanganlarni ko'rsatish
 vn:Hiện Ưa thích
 :Show File In Folder...
 af:Wys Lêer in Vouer...
-am:ፋይሉን በአቃፊ ውስጥ አሳይ...
+am:Ցուցադրել ֆայլը թղթապանակում...
 ar:إظهار الملف في المجلد...
 az:Faylı Qovluqda Göstər...
 bg:Показване на файла в папката...
@@ -30836,7 +30837,7 @@ uz:Faylni papkada ko'rsatish...
 vn:Hiển thị tệp trong thư mục...
 :Show Logs
 af:Wys Logboeke
-am:ምዝግቦችን አሳይ
+am:Ցուցադրել գրանցամատյանները
 ar:إظهار السجلات
 az:Qeydləri Göstər
 bg:Показване на логове
@@ -31309,7 +31310,7 @@ uz:Bitta bet
 vn:Trang đơn
 :Single Page View
 af:Enkel Bladsy Aansig
-am:ነጠላ ገጽ እይታ
+am:Մեկ էջի դիտում
 ar:عرض صفحة واحدة
 az:Tək Səhifə Görünüşü
 bg:Изглед на една страница
@@ -31382,7 +31383,7 @@ uz:Bitta sahifa ko'rinishi
 vn:Chế độ xem một trang
 :Smart Next Tab
 af:Slim Volgende Oortjie
-am:ብልህ ቀጣይ ትር
+am:Խելացի հաջորդ ներդիր
 ar:علامة التبويب التالية الذكية
 az:Ağıllı Növbəti Tab
 bg:Интелигентен следващ раздел
@@ -33207,7 +33208,7 @@ uz:Sarlavha:
 vn:Tựa đề
 :Toggle Anti-Alias Rendering
 af:Wissel Anti-Alias Weergawe
-am:አንቲ-አሊያስ መስራትን ቀይር
+am:Միացնել/անջատել հակաալիասի ռենդերինգը
 ar:تبديل العرض المنعم
 az:Hamarlaşdırma Renderi Aç/Bağla
 bg:Превключване на изглаждане
@@ -33280,7 +33281,7 @@ uz:Silliqlashni yoqish/o'chirish
 vn:Bật/tắt kết xuất khử răng cưa
 :Toggle Bookmarks
 af:Wissel Boekmerke
-am:ዕልባቶችን ቀይር
+am:Միացնել/անջատել էջանիշները
 ar:تبديل الإشارات المرجعية
 az:Əlfəcinləri Aç/Bağla
 bg:Превключване на отметки
@@ -33353,7 +33354,7 @@ uz:Xatcho'plarni yoqish/o'chirish
 vn:Bật/tắt dấu trang
 :Toggle Continuous View
 af:Wissel Deurlopende Aansig
-am:ቀጣይ እይታን ቀይር
+am:Անընդհատ դիտման միացում/անջատում
 ar:تبديل العرض المستمر
 az:Davamlı Görünüşü Aç/Bağla
 bg:Превключване на непрекъснат изглед
@@ -33426,7 +33427,7 @@ uz:Uzluksiz ko'rinishni yoqish/o'chirish
 vn:Bật/tắt chế độ xem liên tục
 :Toggle Cursor Position
 af:Wissel Wyser Posisie
-am:የአመልካች ቦታን ቀይር
+am:Ցուցիչի դիրքի փոխարկում
 ar:تبديل موضع المؤشر
 az:Kursor Mövqeyini Aç/Bağla
 bg:Превключване на позицията на курсора
@@ -33499,7 +33500,7 @@ uz:Kursor holatini yoqish/o'chirish
 vn:Bật/tắt vị trí con trỏ
 :Toggle Favorites
 af:Wissel Gunstelinge
-am:ተወዳጆችን ቀይር
+am:Միացնել/անջատել ընտրյալները
 ar:تبديل المفضلة
 az:Sevimlilər Aç/Bağla
 bg:Превключване на любими
@@ -33572,7 +33573,7 @@ uz:Sevimlilarni yoqish/o'chirish
 vn:Bật/tắt yêu thích
 :Toggle Frequently Read
 af:Wissel Gereeld Gelees
-am:ብዙ ጊዜ የተነበቡትን ቀይር
+am:Միացնել/անջատել հաճախակի ընթերցվածները
 ar:تبديل المقروء بشكل متكرر
 az:Tez-tez Oxunanları Aç/Bağla
 bg:Превключване на често четени
@@ -33645,7 +33646,7 @@ uz:Tez-tez o'qilganlarni yoqish/o'chirish
 vn:Bật/tắt đọc thường xuyên
 :Toggle Fullscreen
 af:Wissel Volskerm
-am:ሙሉ ስክሪንን ቀይር
+am:Միացնել/անջատել լիաէկրանը
 ar:تبديل ملء الشاشة
 az:Tam Ekranı Aç/Bağla
 bg:Превключване на цял екран
@@ -33718,7 +33719,7 @@ uz:To'liq ekranni yoqish/o'chirish
 vn:Bật/tắt toàn màn hình
 :Toggle Inverse Search
 af:Wissel Omgekeerde Soektog
-am:የተገላቢጥ ፍለጋን ቀይር
+am:Միացնել/անջատել հակադարձ որոնումը
 ar:تبديل البحث العكسي
 az:Tərs Axtarışı Aç/Bağla
 bg:Превключване на обратно търсене
@@ -33791,7 +33792,7 @@ uz:Teskari qidiruvni yoqish/o'chirish
 vn:Bật/tắt tìm kiếm ngược
 :Toggle Manga Mode
 af:Wissel Manga Modus
-am:የማንጋ ሁኔታን ቀይር
+am:Միացնել/անջատել մանգայի ռեժիմը
 ar:تبديل وضع المانجا
 az:Manqa Rejimini Aç/Bağla
 bg:Превключване на манга режим
@@ -33864,7 +33865,7 @@ uz:Manga rejimini yoqish/o'chirish
 vn:Bật/tắt chế độ Manga
 :Toggle Match Case
 af:Wissel Pas Hoofletters
-am:ፊደል መመሳሰልን ቀይር
+am:Միացնել/անջատել համապատասխանեցումը
 ar:تبديل مطابقة حالة الأحرف
 az:Böyük/Kiçik Hərfə Uyğunluğu Aç/Bağla
 bg:Превключване на съвпадение на регистъра
@@ -33937,7 +33938,7 @@ uz:Katta-kichik harflarni yoqish/o'chirish
 vn:Bật/tắt phân biệt chữ hoa/thường
 :Toggle Menu Bar
 af:Wissel Kieslysbalk
-am:የምናሌ አሞሌን ቀይር
+am:Ցանկի վահանակի միացում/անջատում
 ar:تبديل شريط القوائم
 az:Menyu Panelini Aç/Bağla
 bg:Превключване на лентата с меню
@@ -34010,7 +34011,7 @@ uz:Menyu panelini yoqish/o'chirish
 vn:Bật/tắt thanh menu
 :Toggle Page Info
 af:Wissel Bladsy Inligting
-am:የገጽ መረጃን ቀይር
+am:Ցուցադրել/թաքցնել էջի տեղեկությունները
 ar:تبديل معلومات الصفحة
 az:Səhifə Məlumatını Aç/Bağla
 bg:Превключване на информация за страницата
@@ -34083,7 +34084,7 @@ uz:Sahifa ma'lumotlarini yoqish/o'chirish
 vn:Bật/tắt thông tin trang
 :Toggle Scrollbars
 af:Wissel Rolbalke
-am:የማሸብለያ አሞሌዎችን ቀይር
+am:Միացնել/անջատել սահող գոտիները
 ar:تبديل أشرطة التمرير
 az:Sürüşdürmə Zolaqlarını Aç/Bağla
 bg:Превключване на плъзгачи
@@ -34156,7 +34157,7 @@ uz:Aylantirish panellarini yoqish/o'chirish
 vn:Bật/tắt thanh cuộn
 :Toggle Show Annotations
 af:Wissel Wys Annotasies
-am:ማስተያየቶች ማሳየትን ቀይር
+am:Ցուցադրել/անջատել ծանոթագրությունները
 ar:تبديل إظهار التعليقات التوضيحية
 az:Qeydlərin Göstərilməsini Aç/Bağla
 bg:Превключване на показване на анотации
@@ -34229,7 +34230,7 @@ uz:Izohlarni ko'rsatishni yoqish/o'chirish
 vn:Bật/tắt hiển thị chú thích
 :Toggle Show Links
 af:Wissel Wys Skakels
-am:አገናኞች ማሳየትን ቀይር
+am:Ցուցադրել/անջատել հղումները
 ar:تبديل إظهار الروابط
 az:Keçidlərin Göstərilməsini Aç/Bağla
 bg:Превключване на показване на връзки
@@ -34302,7 +34303,7 @@ uz:Havolalarni ko'rsatishni yoqish/o'chirish
 vn:Bật/tắt hiển thị liên kết
 :Toggle Table Of Contents
 af:Wissel Inhoudsopgawe
-am:የይዘቶች ሰንጠረዥን ቀይር
+am:Բովանդակության ցանկը միացնել/անջատել
 ar:تبديل جدول المحتويات
 az:Mündəricatı Aç/Bağla
 bg:Превключване на съдържание
@@ -34375,7 +34376,7 @@ uz:Mundarijani yoqish/o'chirish
 vn:Bật/tắt mục lục
 :Toggle Toolbar
 af:Wissel Nutsbalk
-am:የመሣሪያ አሞሌን ቀይር
+am:Գործիքագոտու միացում/անջատում
 ar:تبديل شريط الأدوات
 az:Alətlər Panelini Aç/Bağla
 bg:Превключване на лента с инструменти
@@ -34448,7 +34449,7 @@ uz:Asboblar panelini yoqish/o'chirish
 vn:Bật/tắt thanh công cụ
 :Toggle Zoom
 af:Wissel Zoem
-am:ማጉላትን ቀይር
+am:Միացնել/անջատել դիտափոխումը
 ar:تبديل التكبير
 az:Böyütməni Aç/Bağla
 bg:Превключване на мащабиране
@@ -34521,7 +34522,7 @@ uz:Masshtabni yoqish/o'chirish
 vn:Bật/tắt thu phóng
 :Translate Selection With DeepL
 af:Vertaal Seleksie Met DeepL
-am:ምርጫውን በDeepL ተርጉም
+am:Թարգմանել ընտրվածը DeepL-ով
 ar:ترجمة التحديد باستخدام DeepL
 az:Seçimi DeepL ilə Tərcümə et
 bg:Превод на селекцията с DeepL
@@ -34594,7 +34595,7 @@ uz:Tanlangan matnni DeepL orqali tarjima qilish
 vn:Dịch lựa chọn với DeepL
 :Translate Selection with Google
 af:Vertaal Seleksie met Google
-am:ምርጫውን በጉግል ተርጉም
+am:Թարգմանել ընտրվածը Google-ով
 ar:ترجمة التحديد باستخدام جوجل
 az:Seçimi Google ilə Tərcümə et
 bg:Превод на селекцията с Google
@@ -35299,7 +35300,7 @@ uz:Ko'rish
 vn:Hiển thị
 :View With Custom External Viewer
 af:Bekyk Met Aangepaste Eksterne Kyker
-am:በብጁ ውጫዊ ተመልካች እይ
+am:Դիտել հատուկ արտաքին դիտակով
 ar:العرض باستخدام عارض خارجي مخصص
 az:Xarici Seçilmiş Proqramla Görüntülə
 bg:Преглед с персонализиран външен преглед
@@ -35372,7 +35373,7 @@ uz:Maxsus tashqi ko'ruvchi bilan ko'rish
 vn:Xem bằng trình xem ngoài tùy chỉnh
 :View: Presentation Mode
 af:Aansig: Aanbieding Modus
-am:እይታ: የአቀራረብ ሁኔታ
+am:Դիտել՝ Ներկայացման ռեժիմ
 ar:العرض: وضع العرض التقديمي
 az:Görünüş: Təqdimat Rejimi
 bg:Изглед: Режим на презентация
@@ -35459,7 +35460,7 @@ cn:访问网站(&W)
 co:&Visità u situ web
 cy:&Ymweld â'r Wefan
 cz:Navštívit &webovou stránku
-de:SumatraPDF im &Internet
+de:&SumatraPDF im Internet
 dk:Besøg &internetside
 el:&Ιστοσελίδα προγράμματος
 es:Visitar el sitio &web
@@ -36320,7 +36321,7 @@ uz:Miqyos omili
 vn:Hệ số thu phóng
 :Zoom: 100%
 af:Zoom: 100%
-am:ማጉላት: 100%
+am:Դիտափոխում՝ 100%
 ar:التكبير: 100%
 az:Böyütmə: 100%
 bg:Мащаб: 100%
@@ -36393,7 +36394,7 @@ uz:Masshtab: 100%
 vn:Thu phóng: 100%
 :Zoom: 12.5%
 af:Zoom: 12,5%
-am:ማጉላት: 12.5%
+am:Դիտափոխում՝ 12.5%
 ar:التكبير: 12.5%
 az:Böyütmə: 12,5%
 bg:Мащаб: 12.5%
@@ -36466,7 +36467,7 @@ uz:Masshtab: 12.5%
 vn:Thu phóng: 12.5%
 :Zoom: 125%
 af:Zoom: 125%
-am:ማጉላት: 125%
+am:Դիտափոխում՝ 125%
 ar:التكبير: 125%
 az:Böyütmə: 125%
 bg:Мащаб: 125%
@@ -36539,7 +36540,7 @@ uz:Masshtab: 125%
 vn:Thu phóng: 125%
 :Zoom: 150%
 af:Zoom: 150%
-am:ማጉላት: 150%
+am:Դիտափոխում՝ 150%
 ar:التكبير: 150%
 az:Böyütmə: 150%
 bg:Мащаб: 150%
@@ -36612,7 +36613,7 @@ uz:Masshtab: 150%
 vn:Thu phóng: 150%
 :Zoom: 1600%
 af:Zoom: 1600%
-am:ማጉላት: 1600%
+am:Դիտափոխում՝ 1600%
 ar:التكبير: 1600%
 az:Böyütmə: 1600%
 bg:Мащаб: 1600%
@@ -36685,7 +36686,7 @@ uz:Masshtab: 1600%
 vn:Thu phóng: 1600%
 :Zoom: 200%
 af:Zoom: 200%
-am:ማጉላት: 200%
+am:Դիտափոխում՝ 200%
 ar:التكبير: 200%
 az:Böyütmə: 200%
 bg:Мащаб: 200%
@@ -36758,7 +36759,7 @@ uz:Masshtab: 200%
 vn:Thu phóng: 200%
 :Zoom: 25%
 af:Zoom: 25%
-am:ማጉላት: 25%
+am:Դիտափոխում՝ 25%
 ar:التكبير: 25%
 az:Böyütmə: 25%
 bg:Мащаб: 25%
@@ -36831,7 +36832,7 @@ uz:Masshtab: 25%
 vn:Thu phóng: 25%
 :Zoom: 3200%
 af:Zoom: 3200%
-am:ማጉላት: 3200%
+am:Դիտափոխում՝ 3200%
 ar:التكبير: 3200%
 az:Böyütmə: 3200%
 bg:Мащаб: 3200%
@@ -36904,7 +36905,7 @@ uz:Masshtab: 3200%
 vn:Thu phóng: 3200%
 :Zoom: 400%
 af:Zoom: 400%
-am:ማጉላት: 400%
+am:Դիտափոխում՝ 400%
 ar:التكبير: 400%
 az:Böyütmə: 400%
 bg:Мащаб: 400%
@@ -36977,7 +36978,7 @@ uz:Masshtab: 400%
 vn:Thu phóng: 400%
 :Zoom: 50%
 af:Zoom: 50%
-am:ማጉላት: 50%
+am:Դիտափոխում՝ 50%
 ar:التكبير: 50%
 az:Böyütmə: 50%
 bg:Мащаб: 50%
@@ -37050,7 +37051,7 @@ uz:Masshtab: 50%
 vn:Thu phóng: 50%
 :Zoom: 6400%
 af:Zoom: 6400%
-am:ማጉላት: 6400%
+am:Դիտափոխում՝ 6400%
 ar:التكبير: 6400%
 az:Miqyas: 6400%
 bg:Мащаб: 6400%
@@ -37123,7 +37124,7 @@ uz:Masshtab: 6400%
 vn:Thu phóng: 6400%
 :Zoom: 8.33%
 af:Zoom: 8,33%
-am:ማጉላት: 8.33%
+am:Դիտափոխում՝ 8,33%
 ar:التكبير: 8.33%
 az:Miqyas: 8.33%
 bg:Мащаб: 8.33%
@@ -37196,7 +37197,7 @@ uz:Masshtab: 8.33%
 vn:Thu phóng: 8.33%
 :Zoom: 800%
 af:Zoom: 800%
-am:ማጉላት: 800%
+am:Դիտափոխում՝ 800%
 ar:التكبير: 800%
 az:Miqyas: 800%
 bg:Мащаб: 800%
@@ -37269,7 +37270,7 @@ uz:Masshtab: 800%
 vn:Thu phóng: 800%
 :Zoom: Actual Size
 af:Zoom: Werklike Grootte
-am:ማጉላት: ትክክለኛ መጠን
+am:Դիտափոխում՝ իրական չափը
 ar:التكبير: الحجم الفعلي
 az:Miqyas: Faktiki Ölçü
 bg:Мащаб: Действителен размер
@@ -37342,7 +37343,7 @@ uz:Masshtab: Haqiqiy o'lchami
 vn:Thu phóng: Kích thước thực
 :Zoom: Custom...
 af:Zoom: Aangepas...
-am:ማጉላት: ብጁ...
+am:Դիտափոխում՝ հարմարեցված...
 ar:التكبير: مخصص...
 az:Miqyas: Fərdi...
 bg:Мащаб: Персонализиран...
@@ -37415,7 +37416,7 @@ uz:Masshtab: Boshqa...
 vn:Thu phóng: Tùy chỉnh...
 :Zoom: Fit Content
 af:Zoom: Pas Inhoud
-am:ማጉላት: ይዘትን አስማማ
+am:Դիտափոխում՝ հարմարեցնել բովանդակությանը
 ar:التكبير: ملاءمة المحتوى
 az:Miqyas: Məzmuna Uyğunlaşdır
 bg:Мащаб: Побиране на съдържанието
@@ -37488,7 +37489,7 @@ uz:Masshtab: Tarkibga moslashtirish
 vn:Thu phóng: Vừa nội dung
 :Zoom: Fit Page
 af:Zoom: Pas Bladsy
-am:አጉላ: ገጽ አስማማ
+am:Դիտափոխում՝ հարմարեցնել էջին
 ar:تكبير/تصغير: ملاءمة الصفحة
 az:Miqyas: Səhifəyə Uyğunlaşdır
 bg:Мащаб: Побиране на страницата
@@ -37561,7 +37562,7 @@ uz:Masshtab: Sahifaga moslashtirish
 vn:Thu phóng: Vừa trang
 :Zoom: Fit Page and Single Page
 af:Zoom: Pas Bladsy en Enkele Bladsy
-am:አጉላ: ገጽ አስማማ እና ነጠላ ገጽ
+am:Դիտափոխում՝ հարմարեցնել էջին և միակ էջին
 ar:تكبير/تصغير: ملاءمة الصفحة وصفحة واحدة
 az:Miqyas: Səhifəyə və Tək Səhifəyə Uyğunlaşdır
 bg:Мащаб: Побиране на страницата и единична страница
@@ -37634,7 +37635,7 @@ uz:Masshtab: Sahifaga moslashtirish va bitta sahifa
 vn:Thu phóng: Vừa trang và trang đơn
 :Zoom: Fit Width
 af:Zoom: Pas Wydte
-am:አጉላ: ስፋት አስማማ
+am:Դիտափոխում՝ հարմարեցնել լայնությանը
 ar:تكبير/تصغير: ملاءمة العرض
 az:Miqyas: Enə Uyğunlaşdır
 bg:Мащаб: Побиране по ширина
@@ -37707,7 +37708,7 @@ uz:Masshtab: Kenglikka moslashtirish
 vn:Thu phóng: Vừa chiều rộng
 :Zoom: Fit Width And Continuous
 af:Zoom: Pas Wydte en Deurlopend
-am:አጉላ: ስፋት አስማማ እና ቀጣይ
+am:Դիտափոխում՝ հարմարեցնել լայնությանը և շարունակական
 ar:تكبير/تصغير: ملاءمة العرض ومستمر
 az:Miqyas: Enə Uyğunlaşdır və Davamlı
 bg:Мащаб: Побиране по ширина и непрекъснато
@@ -37926,7 +37927,7 @@ uz:matnni nusxa olish
 vn:đang chép văn bản
 :don't use
 af:moenie gebruik nie
-am:አትጠቀም
+am:մի՛ օգտագործեք
 ar:لا تستخدم
 az:istifadə etmə
 bg:не използвай
