@@ -691,6 +691,12 @@ const globalPrefs: Field[] = [
     ),
     "3.6",
   ),
+  mkField(
+    "PreventSleepInFullscreen",
+    Bool,
+    true,
+    "if true, prevents the screen from turning off when in fullscreen or presentation mode",
+  ),
   mkField("TabWidth", Int, 300, "maximum width of a single tab"),
   setDoc(
     setVersion(mkField("Theme", Str, "", "the name of the theme to use"), "3.5"),

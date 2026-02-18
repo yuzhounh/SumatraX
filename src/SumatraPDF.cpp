@@ -4141,11 +4141,19 @@ void EnterFullScreen(MainWindow* win, bool presentation) {
     HwndSetFocus(win->hwndFrame);
     // restore gGlobalPrefs->showFavorites changed by SetSidebarVisibility()
     gGlobalPrefs->showFavorites = showFavoritesTmp;
+
+    if (gGlobalPrefs->preventSleepInFullscreen) {
+        SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
+    }
 }
 
 void ExitFullScreen(MainWindow* win) {
     if (!win->isFullScreen && !win->presentation) {
         return;
+    }
+
+    if (gGlobalPrefs->preventSleepInFullscreen) {
+        SetThreadExecutionState(ES_CONTINUOUS);
     }
 
     bool wasPresentation = PM_DISABLED != win->presentation;

@@ -128,6 +128,10 @@ SmoothScroll = false
 ; (introduced in version 3.6)
 FastScrollOverScrollbar = false
 
+; if true, prevents the screen from turning off when in fullscreen or
+; presentation mode
+PreventSleepInFullscreen = true
+
 ; maximum width of a single tab
 TabWidth = 300
 

@@ -426,6 +426,9 @@ struct GlobalPrefs {
     // if true, mouse wheel scrolling is faster when mouse is over a
     // scrollbar
     bool fastScrollOverScrollbar;
+    // if true, prevents the screen from turning off when in fullscreen or
+    // presentation mode
+    bool preventSleepInFullscreen;
     // maximum width of a single tab
     int tabWidth;
     // the name of the theme to use
@@ -789,6 +792,7 @@ static const FieldInfo gGlobalPrefsFields[] = {
     {offsetof(GlobalPrefs, scrollbarInSinglePage), SettingType::Bool, false},
     {offsetof(GlobalPrefs, smoothScroll), SettingType::Bool, false},
     {offsetof(GlobalPrefs, fastScrollOverScrollbar), SettingType::Bool, false},
+    {offsetof(GlobalPrefs, preventSleepInFullscreen), SettingType::Bool, true},
     {offsetof(GlobalPrefs, tabWidth), SettingType::Int, 300},
     {offsetof(GlobalPrefs, theme), SettingType::String, (intptr_t)""},
     {offsetof(GlobalPrefs, tocDy), SettingType::Int, 0},
@@ -839,16 +843,16 @@ static const FieldInfo gGlobalPrefsFields[] = {
     {(size_t)-1, SettingType::Comment, (intptr_t)"Settings below are not recognized by the current version"},
 };
 static const StructInfo gGlobalPrefsInfo = {
-    sizeof(GlobalPrefs), 77, gGlobalPrefsFields,
+    sizeof(GlobalPrefs), 78, gGlobalPrefsFields,
     "\0\0CheckForUpdates\0CustomScreenDPI\0DefaultDisplayMode\0DefaultZoom\0EnableTeXEnhancements\0EscToExit\0FullPathI"
     "nTitle\0InverseSearchCmdLine\0LazyLoading\0MainWindowBackground\0NoHomeTab\0HomePageSortByFrequentlyRead\0ReloadMo"
     "difiedDocuments\0RememberOpenedFiles\0RememberStatePerDocument\0RestoreSession\0ReuseInstance\0ShowMenubar\0ShowTo"
     "olbar\0ShowFavorites\0ShowToc\0ShowLinks\0ShowStartPage\0SidebarDx\0ScrollbarInSinglePage\0SmoothScroll\0FastScrol"
-    "lOverScrollbar\0TabWidth\0Theme\0TocDy\0ToolbarSize\0TreeFontName\0TreeFontSize\0UIFontSize\0DisableAntiAlias\0Use"
-    "SysColors\0UseTabs\0ZoomLevels\0ZoomIncrement\0\0FixedPageUI\0\0EBookUI\0\0ComicBookUI\0\0ChmUI\0\0Annotations\0\0"
-    "ExternalViewers\0\0ForwardSearch\0\0PrinterDefaults\0\0SelectionHandlers\0\0Shortcuts\0\0Themes\0\0\0DefaultPasswo"
-    "rds\0UiLanguage\0VersionToSkip\0WindowState\0WindowPos\0FileStates\0SessionData\0ReopenOnce\0TimeOfLastUpdateCheck"
-    "\0OpenCountWeek\0\0"};
+    "lOverScrollbar\0PreventSleepInFullscreen\0TabWidth\0Theme\0TocDy\0ToolbarSize\0TreeFontName\0TreeFontSize\0UIFontS"
+    "ize\0DisableAntiAlias\0UseSysColors\0UseTabs\0ZoomLevels\0ZoomIncrement\0\0FixedPageUI\0\0EBookUI\0\0ComicBookUI\0"
+    "\0ChmUI\0\0Annotations\0\0ExternalViewers\0\0ForwardSearch\0\0PrinterDefaults\0\0SelectionHandlers\0\0Shortcuts\0"
+    "\0Themes\0\0\0DefaultPasswords\0UiLanguage\0VersionToSkip\0WindowState\0WindowPos\0FileStates\0SessionData\0Reopen"
+    "Once\0TimeOfLastUpdateCheck\0OpenCountWeek\0\0"};
 static const FieldInfo gTheme_1_Fields[] = {
     {offsetof(Theme, name), SettingType::String, (intptr_t)""},
     {offsetof(Theme, textColor), SettingType::Color, (intptr_t)""},
