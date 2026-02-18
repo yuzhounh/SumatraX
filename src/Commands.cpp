@@ -703,7 +703,8 @@ CustomCommand* CreateCommandFromDefinition(const char* definition) {
         float zoomVal = ZoomFromString(firstArg->strVal, 0);
         if (0 == zoomVal) {
             FreeCommandArgs(firstArg);
-            MaybeDelayedWarningNotification("CreateCommandFromDefinition: failed to parse arguments in '%s'\n", definition);
+            MaybeDelayedWarningNotification("CreateCommandFromDefinition: failed to parse arguments in '%s'\n",
+                                            definition);
             return nullptr;
         }
         firstArg->type = CommandArg::Type::Float;

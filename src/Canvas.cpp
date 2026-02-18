@@ -437,7 +437,8 @@ static RectF CalculateResizedRect(MainWindow* win, int x, int y);
 
 static void OnMouseMove(MainWindow* win, int x, int y, WPARAM) {
     DisplayModel* dm = win->AsFixed();
-    ReportIf(!dm);
+    // ReportIf(!dm); // can happen if reload fails, we delete DisplayModel
+    if (!dm) return;
 
     if (win->InPresentation()) {
         if (PM_BLACK_SCREEN == win->presentation || PM_WHITE_SCREEN == win->presentation) {
