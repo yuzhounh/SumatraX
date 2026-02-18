@@ -772,6 +772,13 @@ void HighlightTab(MainWindow* win, WindowTab* tab) {
     win->tabsCtrl->SetHighlighted(idx);
 }
 
+HWND GetHwndForNotification() {
+    if (gWindows.Size() == 0) {
+        return nullptr;
+    }
+    return gWindows[0]->hwndCanvas;
+}
+
 bool AppIsValidHWND(HWND hwnd) {
     MainWindow* win = FindMainWindowByHwnd(hwnd);
     return win && !win->isBeingClosed;

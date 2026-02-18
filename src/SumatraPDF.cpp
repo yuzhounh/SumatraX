@@ -1569,6 +1569,7 @@ static MainWindow* CreateMainWindow() {
     }
 
     gWindows.Append(win);
+    ShowMaybeDelayedNotifications(win->hwndCanvas);
     // needed for RTL languages
     UpdateWindowRtlLayout(win);
     UpdateToolbarSidebarText(win);

@@ -27,6 +27,16 @@ using Gdiplus::Graphics;
 using Gdiplus::Pen;
 using Gdiplus::SolidBrush;
 
+// defined in MainWindow.cpp
+HWND GetHwndForNotification();
+
+struct StrNode {
+    StrNode* next;
+    const char* s;
+};
+
+static StrNode* gDelayedNotifications = nullptr;
+
 Kind kNotifCursorPos = "cursorPosHelper";
 Kind kNotifActionResponse = "responseToAction";
 Kind kNotifPageInfo = "pageInfoHelper";
@@ -593,4 +603,43 @@ NotificationWnd* GetNotificationForGroup(HWND hwnd, Kind kind) {
     NotificationWnd* wnds[kMaxNotifs];
     int nWnds = GetForHwnd(hwnd, wnds);
     return NotifsGetForGroup(wnds, nWnds, kind);
+}
+
+static StrNode* AllocStrNode(const char* s) {
+    size_t n = str::Len(s) + 1;
+    size_t cbAlloc = sizeof(StrNode) + n;
+    auto* node = (StrNode*)malloc(cbAlloc);
+    char* dst = (char*)node + sizeof(StrNode);
+    memcpy(dst, s, n);
+    node->next = nullptr;
+    node->s = dst;
+    return node;
+}
+
+void MaybeDelayedWarningNotification(const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    char* msg = str::FmtV(fmt, args);
+    va_end(args);
+
+    HWND hwnd = GetHwndForNotification();
+    if (hwnd) {
+        ShowWarningNotification(hwnd, msg, kNotifDefaultTimeOut);
+    } else {
+        StrNode* node = AllocStrNode(msg);
+        ListInsertFront(&gDelayedNotifications, node);
+    }
+    str::Free(msg);
+}
+
+void ShowMaybeDelayedNotifications(HWND hwndParent) {
+    // reverse so notifications show in the order they were added
+    ListReverse(&gDelayedNotifications);
+    StrNode* curr = gDelayedNotifications;
+    while (curr) {
+        ShowWarningNotification(hwndParent, curr->s, kNotifDefaultTimeOut);
+        curr = curr->next;
+    }
+    ListDelete(gDelayedNotifications);
+    gDelayedNotifications = nullptr;
 }
