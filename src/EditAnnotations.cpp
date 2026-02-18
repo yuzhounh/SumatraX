@@ -395,9 +395,67 @@ static void ButtonSaveToCurrentPDFHandler(EditAnnotationsWindow* ew) {
     SaveAnnotationsToExistingFile(ew->tab);
 }
 
+constexpr int kMaxControls = 18;
+
+static void AdvanceFocus(EditAnnotationsWindow* ew, bool forward) {
+    HWND controls[kMaxControls];
+    int n = 0;
+    auto addIfVisible = [&](HWND h) {
+        if (h && IsWindowVisible(h)) {
+            ReportIf(n >= kMaxControls);
+            controls[n++] = h;
+        }
+    };
+
+    addIfVisible(ew->listBox->hwnd);
+    addIfVisible(ew->editContents->hwnd);
+    addIfVisible(ew->dropDownTextAlignment->hwnd);
+    addIfVisible(ew->dropDownTextFont->hwnd);
+    addIfVisible(ew->trackbarTextSize->hwnd);
+    addIfVisible(ew->dropDownTextColor->hwnd);
+    addIfVisible(ew->dropDownLineStart->hwnd);
+    addIfVisible(ew->dropDownLineEnd->hwnd);
+    addIfVisible(ew->dropDownIcon->hwnd);
+    addIfVisible(ew->trackbarBorder->hwnd);
+    addIfVisible(ew->dropDownColor->hwnd);
+    addIfVisible(ew->dropDownInteriorColor->hwnd);
+    addIfVisible(ew->trackbarOpacity->hwnd);
+    addIfVisible(ew->buttonSaveAttachment->hwnd);
+    addIfVisible(ew->buttonEmbedAttachment->hwnd);
+    addIfVisible(ew->buttonDelete->hwnd);
+    addIfVisible(ew->buttonSaveToCurrentFile->hwnd);
+    addIfVisible(ew->buttonSaveToNewFile->hwnd);
+
+    if (n == 0) {
+        return;
+    }
+
+    HWND focused = ::GetFocus();
+    int idx = -1;
+    for (int i = 0; i < n; i++) {
+        if (controls[i] == focused || ::IsChild(controls[i], focused)) {
+            idx = i;
+            break;
+        }
+    }
+
+    int next;
+    if (forward) {
+        next = (idx + 1) % n;
+    } else {
+        next = (idx <= 0) ? n - 1 : idx - 1;
+    }
+    HwndSetFocus(controls[next]);
+}
+
 bool EditAnnotationsWindow::PreTranslateMessage(MSG& msg) {
     if (msg.message == WM_KEYDOWN) {
         int key = (int)msg.wParam;
+        if (key == VK_TAB) {
+            bool forward = !IsShiftPressed();
+            AdvanceFocus(this, forward);
+            return true;
+        }
         if (key == VK_DELETE) {
             if (IsCtrlPressed()) {
                 DeleteSelectedAnnotation(this);
