@@ -6229,8 +6229,16 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         return 0;
     }
     UpdateAnnotationsList(tab->editAnnotsWindow);
+
+    EditAnnotFocus focusTarget = EditAnnotFocus::Default;
+    if (GetCommandBoolArg(cmd, kCmdArgFocusEdit, false)) {
+        focusTarget = EditAnnotFocus::Edit;
+    } else if (GetCommandBoolArg(cmd, kCmdArgFocusList, false)) {
+        focusTarget = EditAnnotFocus::List;
+    }
+
     if (openAnnotationEdit) {
-        ShowEditAnnotationsWindow(tab, lastCreatedAnnot);
+        ShowEditAnnotationsWindow(tab, lastCreatedAnnot, focusTarget);
         return 0;
     }
 
@@ -6246,7 +6254,7 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         }
         case AnnotationType::FreeText: {
             // for FreeText you want to edit text so show edit window
-            ShowEditAnnotationsWindow(tab, lastCreatedAnnot);
+            ShowEditAnnotationsWindow(tab, lastCreatedAnnot, focusTarget);
             return 0;
         } break;
     }

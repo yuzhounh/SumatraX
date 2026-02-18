@@ -855,7 +855,8 @@ static void OpacityChanging(EditAnnotationsWindow* ew, Trackbar::PositionChangin
 }
 
 // TODO: maybe use ew->tab->selectedAnnotation instead of annot
-static void UpdateUIForSelectedAnnotation(EditAnnotationsWindow* ew, Annotation* annot, bool isNew = false) {
+static void UpdateUIForSelectedAnnotation(EditAnnotationsWindow* ew, Annotation* annot, bool isNew = false,
+                                          EditAnnotFocus focus = EditAnnotFocus::Default) {
     HidePerAnnotControls(ew);
     if (annot) {
         int itemNo = ew->annotations.Find(annot);
@@ -886,7 +887,12 @@ static void UpdateUIForSelectedAnnotation(EditAnnotationsWindow* ew, Annotation*
         ew->listBox->SetCurrentSelection(itemNo);
         ew->buttonDelete->SetIsVisible(true);
 
-        if (isNew && annot->type == AnnotationType::FreeText) {
+        if (focus == EditAnnotFocus::Edit) {
+            HwndSetFocus(ew->editContents->hwnd);
+            ew->editContents->SelectAll();
+        } else if (focus == EditAnnotFocus::List) {
+            HwndSetFocus(ew->listBox->hwnd);
+        } else if (isNew && annot->type == AnnotationType::FreeText) {
             HwndSetFocus(ew->editContents->hwnd);
             // ew->editContents->SetCursorPositionAtEnd();
             ew->editContents->SelectAll();
@@ -944,7 +950,7 @@ static void ButtonEmbedAttachment(EditAnnotationsWindow* ew) {
     MessageBoxNYI(ew->hwnd);
 }
 
-void SetSelectedAnnotation(WindowTab* tab, Annotation* annot, bool isNew) {
+void SetSelectedAnnotation(WindowTab* tab, Annotation* annot, bool isNew, EditAnnotFocus focus) {
     // when we delete an annotation we automatically pick one to
     // set as selected and it might end up as currently selected
     // we still want to redraw to not show deleted annotation
@@ -961,7 +967,7 @@ void SetSelectedAnnotation(WindowTab* tab, Annotation* annot, bool isNew) {
     auto ew = tab->editAnnotsWindow;
     // go to page with a given annotations before triggering repaint
     if (ew) {
-        UpdateUIForSelectedAnnotation(ew, annot, isNew);
+        UpdateUIForSelectedAnnotation(ew, annot, isNew, focus);
         HwndMakeVisible(ew->hwnd);
     }
     MainWindowRerender(win);
@@ -1491,7 +1497,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
     HidePerAnnotControls(ew);
 }
 
-void ShowEditAnnotationsWindow(WindowTab* tab, Annotation* annot) {
+void ShowEditAnnotationsWindow(WindowTab* tab, Annotation* annot, EditAnnotFocus focus) {
     if (!tab) return;
     auto engine = tab->GetEngine();
     auto canAnnotate = EngineSupportsAnnotations(engine);
@@ -1508,7 +1514,7 @@ void ShowEditAnnotationsWindow(WindowTab* tab, Annotation* annot) {
             HwndSetFocus(ew->listBox->hwnd);
         }
         if (!annot) return;
-        SetSelectedAnnotation(tab, annot, isNew);
+        SetSelectedAnnotation(tab, annot, isNew, focus);
         return;
     }
     ew = new EditAnnotationsWindow();
@@ -1572,7 +1578,7 @@ void ShowEditAnnotationsWindow(WindowTab* tab, Annotation* annot) {
     ew->skipGoToPage = (annot != nullptr);
     if (annot) {
         bool isNew = annot != ew->tab->win->annotationUnderCursor;
-        SetSelectedAnnotation(tab, annot, isNew);
+        SetSelectedAnnotation(tab, annot, isNew, focus);
     }
     if (UseDarkModeLib()) {
         DarkMode::setDarkWndNotifySafe(ew->hwnd);

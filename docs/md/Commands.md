@@ -392,6 +392,8 @@ Arguments for `CmdCreateAnnotHighlight` plus:
 - `borderwidth` : border width, 1 if not given
 - `opacity` : opacity of annotation, 0 - fully transparent (i.e. invisible), 100 - fully opaque (default if not given)
 - `interiorcolor` : interior color for circle, square etc. annotations, fully transparent if not given
+- `focusedit` : boolean, when annotation edit window opens, focus the contents edit control
+- `focuslist` : boolean, when annotation edit window opens, focus the annotations list
 
 ## `CmdZoomCustom`
 

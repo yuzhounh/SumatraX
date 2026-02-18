@@ -211,3 +211,5 @@ constexpr const char* kCmdArgMode = "mode";
 constexpr const char* kCmdArgTheme = "theme";
 constexpr const char* kCmdArgCommandLine = "cmdline";
 constexpr const char* kCmdArgToolbarText = "toolbartext";
+constexpr const char* kCmdArgFocusEdit = "focusedit";
+constexpr const char* kCmdArgFocusList = "focuslist";

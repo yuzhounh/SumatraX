@@ -3,9 +3,15 @@
 
 struct EditAnnotationsWindow;
 
-void ShowEditAnnotationsWindow(WindowTab*, Annotation*);
+enum class EditAnnotFocus {
+    Default,
+    Edit,
+    List,
+};
+
+void ShowEditAnnotationsWindow(WindowTab*, Annotation*, EditAnnotFocus focus = EditAnnotFocus::Default);
 bool CloseAndDeleteEditAnnotationsWindow(WindowTab*);
 void DeleteAnnotationAndUpdateUI(WindowTab*, Annotation*);
-void SetSelectedAnnotation(WindowTab*, Annotation*, bool isNew = false);
+void SetSelectedAnnotation(WindowTab*, Annotation*, bool isNew = false, EditAnnotFocus focus = EditAnnotFocus::Default);
 void UpdateAnnotationsList(EditAnnotationsWindow*);
 void NotifyAnnotationsChanged(EditAnnotationsWindow*);
