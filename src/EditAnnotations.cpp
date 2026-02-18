@@ -1171,7 +1171,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
     }
 
     {
-        auto w = CreateStatic(parent, "Text Font:");
+        auto w = CreateStatic(parent, _TRA("Text Font:"));
         w->SetInsetsPt(8, 0, 0, 0);
         ew->staticTextFont = w;
         vbox->AddChild(w);
@@ -1398,7 +1398,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
     {
         Button::CreateArgs args;
         args.parent = parent;
-        args.text = "Save...";
+        args.text = _TRA("Save...");
         args.font = fnt;
         args.isRtl = IsUIRtl();
 
@@ -1415,7 +1415,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
     {
         Button::CreateArgs args;
         args.parent = parent;
-        args.text = "Embed...";
+        args.text = _TRA("Embed...");
         args.font = fnt;
         args.isRtl = IsUIRtl();
 
@@ -1432,7 +1432,7 @@ static void CreateMainLayout(EditAnnotationsWindow* ew) {
     {
         Button::CreateArgs args;
         args.parent = parent;
-        args.text = _TRN("Delete Annotation");
+        args.text = _TRA("Delete Annotation");
         args.font = fnt;
         args.isRtl = IsUIRtl();
 

@@ -248,7 +248,7 @@ static bool IsCmdEnabled(MainWindow* win, int cmdId) {
     }
 }
 
-static TBBUTTON TbButtonFromButtonInfo(const ToolbarButtonInfo& bi) {
+static TBBUTTON TbButtonFromButtonInfo(const ToolbarButtonInfo& bi, bool noTranslate = false) {
     TBBUTTON b{};
     b.idCommand = bi.cmdId;
     if (SkipBuiltInButton(bi)) {
@@ -266,7 +266,7 @@ static TBBUTTON TbButtonFromButtonInfo(const ToolbarButtonInfo& bi) {
         b.fsStyle |= BTNS_SHOWTEXT;
         b.fsStyle |= BTNS_AUTOSIZE;
     }
-    auto s = trans::GetTranslation(bi.toolTip);
+    auto s = noTranslate ? bi.toolTip : trans::GetTranslation(bi.toolTip);
     b.iString = (INT_PTR)ToWStrTemp(s);
     return b;
 }
@@ -1123,7 +1123,7 @@ void CreateToolbar(MainWindow* win) {
     TBBUTTON* buttons = AllocArrayTemp<TBBUTTON>(gCustomButtonsCount);
     for (int i = 0; i < gCustomButtonsCount; i++) {
         ToolbarButtonInfo& tbi = gCustomButtons[i];
-        buttons[i] = TbButtonFromButtonInfo(tbi);
+        buttons[i] = TbButtonFromButtonInfo(tbi, true);
     }
     SendMessageW(hwndToolbar, TB_ADDBUTTONS, gCustomButtonsCount, (LPARAM)buttons);
     SendMessageW(hwndToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(iconSize, iconSize));

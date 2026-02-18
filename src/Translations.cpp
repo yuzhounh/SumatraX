@@ -126,7 +126,7 @@ static void ParseTranslationsTxt(const StrSpan& d, const char* langCode) {
     }
 }
 
-// don't free
+// don't free the result
 const char* GetTranslation(const char* s) {
     if (gCurrLangIdx == 0) {
         // 0 is english, no translation needed
@@ -145,6 +145,12 @@ const char* GetTranslation(const char* s) {
             if (!tr) {
                 logf("Didn't find translation for '%s'\n", s);
                 return s;
+            }
+            // special case of "Change Language"
+            // if we accidentally change language, we want be able to
+            // change it back so add ("Change Language") to translation
+            if (str::ContainsI(s, "Change Language") && !str::ContainsI(tr, "Change Language")) {
+                tr = (char*)str::JoinTemp(tr, " (Change Language)");
             }
             return tr;
         }

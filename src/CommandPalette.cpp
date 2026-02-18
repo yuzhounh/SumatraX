@@ -33,6 +33,7 @@
 #include "FileHistory.h"
 #include "DarkModeSubclass.h"
 #include "Notifications.h"
+#include "Translations.h"
 
 #include "utils/Log.h"
 
@@ -523,7 +524,7 @@ void CommandPaletteWnd::CollectStrings(MainWindow* mainWin) {
         WindowTab* t = mainWin->GetTab(i);
         if (t->IsAboutTab()) {
             if (i > 0) {
-                logf("CommandPaletteWnd::CollectStrings: unexpeted about tab at idx: %d out of %d\n", i, nTabs);
+                logf("CommandPaletteWnd::CollectStrings: unexpected about tab at idx: %d out of %d\n", i, nTabs);
                 for (int j = 0; j < nTabs; j++) {
                     if (!t->IsAboutTab()) {
                         logf("i: %d path: %s\n", j, t->filePath ? t->filePath : "");
@@ -582,7 +583,7 @@ void CommandPaletteWnd::CollectStrings(MainWindow* mainWin) {
             ItemDataCP data;
             data.tab = tab;
             if (tab->IsAboutTab()) {
-                tabs.Append("Home", data);
+                tabs.Append(_TRA("Home"), data);
                 continue;
             }
             auto name = path::GetBaseNameTemp(tab->filePath);
@@ -612,7 +613,8 @@ void CommandPaletteWnd::CollectStrings(MainWindow* mainWin) {
             ReportIf(str::Leni(name) == 0);
             ItemDataCP data;
             data.cmdId = (i32)cmdId;
-            auto nameUpdated = UpdateCommandNameTemp(mainWin, cmdId, (TempStr)name);
+            auto nameTranslated = trans::GetTranslation(name);
+            auto nameUpdated = UpdateCommandNameTemp(mainWin, cmdId, (TempStr)nameTranslated);
             tempCommands.Append(nameUpdated, data);
         }
     }
@@ -1235,28 +1237,28 @@ bool CommandPaletteWnd::Create(MainWindow* win, const char* prefix, int smartTab
         hbox->alignCross = CrossAxisAlign::CrossCenter;
         auto pad = Insets{0, 8, 0, 8};
         {
-            auto c = CreateStatic(hwnd, font, "# File History");
+            auto c = CreateStatic(hwnd, font, _TRA("# File History"));
             c->SetColors(colTxt, colBg);
             c->onClick = MkFunc0Method<CommandPaletteWnd, &CommandPaletteWnd::SwitchToFileHistory>(this);
             auto p = new Padding(c, pad);
             hbox->AddChild(p);
         }
         {
-            auto c = CreateStatic(hwnd, font, "> Commands");
+            auto c = CreateStatic(hwnd, font, _TRA("> Commands"));
             c->SetColors(colTxt, colBg);
             c->onClick = MkFunc0Method<CommandPaletteWnd, &CommandPaletteWnd::SwitchToCommands>(this);
             auto p = new Padding(c, pad);
             hbox->AddChild(p);
         }
         {
-            auto c = CreateStatic(hwnd, font, "@ Tabs");
+            auto c = CreateStatic(hwnd, font, _TRA("@ Tabs"));
             c->SetColors(colTxt, colBg);
             c->onClick = MkFunc0Method<CommandPaletteWnd, &CommandPaletteWnd::SwitchToTabs>(this);
             auto p = new Padding(c, pad);
             hbox->AddChild(p);
         }
         {
-            auto c = CreateStatic(hwnd, font, ": Everything");
+            auto c = CreateStatic(hwnd, font, _TRA(": Everything"));
             c->SetColors(colTxt, colBg);
             c->onClick = MkFunc0Method<CommandPaletteWnd, &CommandPaletteWnd::SwitchToTabs>(this);
             auto p = new Padding(c, pad);

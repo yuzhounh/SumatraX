@@ -189,7 +189,7 @@ void CreateThemeCommands() {
         const char* themeName = theme->name;
         auto args = NewStringArg(kCmdArgTheme, themeName);
         cmd = CreateCustomCommand(themeName, CmdSetTheme, args);
-        cmd->name = str::Format("Set theme '%s'", themeName);
+        cmd->name = str::Format(_TRA("Set theme '%s'"), themeName);
         if (i == 0) {
             gFirstSetThemeCmdId = cmd->id;
         } else if (i == gThemeCount - 1) {

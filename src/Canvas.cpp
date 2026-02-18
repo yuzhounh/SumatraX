@@ -506,7 +506,8 @@ static void OnMouseMove(MainWindow* win, int x, int y, WPARAM) {
                         args.delayInMs = 1000;
                         args.noClose = true;
                         TempStr name = annot ? AnnotationReadableNameTemp(annot->type) : (TempStr) "none";
-                        args.msg = str::FormatTemp(_TRN("%s annotation. Ctrl+click to edit."), name);
+                        const char* fmt = _TRA("%s annotation. Ctrl+click to edit.");
+                        args.msg = str::FormatTemp(fmt, name);
                         ShowNotification(args);
                     }
                 }

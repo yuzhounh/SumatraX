@@ -1,5 +1,78 @@
 AppTranslator: SumatraPDF
 AppTranslator: SumatraPDF
+:# File History
+af:# Lêergeskiedenis
+am:# የፋይል ታሪክ
+ar:# سجل الملفات
+az:# Fayl Tarixçəsi
+bg:# История на файла
+bn:# ফাইল ইতিহাস
+br:# Istor ar restr
+bs:# Historija datoteke
+by:# Гісторыя файла
+ca:# Historial de fitxers
+ca-xv:# Historial de fitxers
+cn:# 文件历史
+co:# Storica di u Schedariu
+cy:# Hanes Ffeil
+cz:# Historie souborů
+de:# Dateiverlauf
+dk:# Filhistorik
+el:# Ιστορικό Αρχείου
+es:# Historial de archivos
+et:# Failiajalugu
+eu:# Fitxategiaren historia
+fa:# تاریخچه فایل
+fi:# Tiedostohistoria
+fo:# Fílasøga
+fr:# Historique des fichiers
+fy-nl:# Triemskiednis
+ga:# Stair Comhaid
+gl:# Historial de ficheiros
+he:# היסטוריית קבצים
+hi:# फ़ाइल इतिहास
+hr:# Povijest datoteka
+hu:# Fájlelőzmények
+id:# Riwayat File
+it:# Cronologia File
+ja:# ファイル履歴
+jv:# Riwayat Berkas
+ka:# ფაილის ისტორია
+kr:# 파일 기록
+ku:# Dîroka Pelan
+kw:# Istori Restren
+lt:# Failų istorija
+lv:# Failu vēsture
+mk:# Историја на датотеки
+ml:# ഫയൽ ചരിത്രം
+mm:# ဖိုင်မှတ်တမ်း
+my:# ဖိုင်မှတ်တမ်း
+ne:# फाइल इतिहास
+nl:# Bestandsgeschiedenis
+nn:# Filhistorikk
+no:# Filhistorikk
+pa:# ਫਾਈਲ ਇਤਿਹਾਸ
+pl:# Historia plików
+pt:# Histórico de Arquivos
+ro:# Istoric fișiere
+ru:# История файлов
+sat:# ᱨᱮᱫ ᱱᱟᱜᱟᱢ
+si:# ගොනු ඉතිහාසය
+sk:# História súborov
+sl:# Zgodovina datotek
+sn:# Nhoroondo Yefaira
+sp-rs:# Istorija fajlova
+sq:# Historiku i Skedarëve
+sr-rs:# Istorija fajla
+sv:# Filhistorik
+ta:# கோப்பு வரலாறு
+th:# ประวัติไฟล์
+tl:# Kasaysayan ng File
+tr:# Dosya Geçmişi
+tw:# 檔案歷史記錄
+uk:# Історія файлів
+uz:# Fayl tarixi
+vn:# Lịch sử Tệp
 :%s annotation. Ctrl+click to edit.
 af:%s annotasie. Ctrl+klik om te wysig.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
@@ -2949,7 +3022,7 @@ cn:保存到当前 PDF 文件(&S)
 co:&Arregistrà in u PDF esistente
 cy:Cadw i PDF &presennol
 cz:&Uložit do stávajícího PDF souboru
-de:In bestehendes PDF &speichern
+de:In bestehende PDF-Datei &speichern
 dk:&Gem i eksisterende PDF
 el:Αποθήκευση σε υπάρχον PDF
 es:&Guardar en un PDF existente
@@ -4061,6 +4134,225 @@ tw:(第 %s 頁)
 uk:(сторінка %s)
 uz:(bet %s)
 vn:(trang %s)
+:: Everything
+af:: Alles
+am:: ሁሉም ነገር
+ar:: كل شيء
+az:: Hər şey
+bg:: Всичко
+bn:: সবকিছু
+br:: Pep tra
+bs:: Sve
+by:: Усё
+ca:: Tot
+ca-xv:: Tot
+cn:: 全部内容
+co:: Tuttu
+cy:: Popeth
+cz:: Vše
+de:: Alles
+dk:: Alt
+el:: Όλα
+es:: Todo
+et:: Kõik
+eu:: Dena
+fa:: همه چیز
+fi:: Kaikki
+fo:: Allt
+fr:: Tout
+fy-nl:: Alles
+ga:: Gach Rud
+gl:: Todo
+he:: הכל
+hi:: सब कुछ
+hr:: Sve
+hu:: Minden
+id:: Semua
+it:: Tutto
+ja:: すべて
+jv:: Kabèh
+ka:: ყველაფერი
+kr:: 모두
+ku:: Her tişt
+kw:: Puptra
+lt:: Viskas
+lv:: Viss
+mk:: Сè
+ml:: എല്ലാം
+mm:: အားလုံး
+my:: အားလုံး
+ne:: सबै कुरा
+nl:: Alles
+nn:: Alt
+no:: Alt
+pa:: ਸਭ ਕੁਝ
+pl:: Wszystko
+pt:: Tudo
+ro:: Tot
+ru:: Всё
+sat:: ᱡᱷᱚᱛᱚ
+si:: සියල්ල
+sk:: Všetko
+sl:: Vse
+sn:: Zvese
+sp-rs:: Sve
+sq:: Gjithçka
+sr-rs:: Sve
+sv:: Allt
+ta:: எல்லாம்
+th:: ทุกอย่าง
+tl:: Lahat
+tr:: Her Şey
+tw:: 全部
+uk:: Все
+uz:: Hamma narsa
+vn:: Mọi thứ
+:> Commands
+af:> Bevele
+am:> ትዕዛዞች
+ar:> الأوامر
+az:> Əmrlər
+bg:> Команди
+bn:> কমান্ড
+br:> Urzhiadoù
+bs:> Komande
+by:> Каманды
+ca:> Ordres
+ca-xv:> Ordres
+cn:> 命令
+co:> Cumandamenti
+cy:> Gorchmynion
+cz:> Příkazy
+de:> Befehle
+dk:> Kommandoer
+el:> Εντολές
+es:> Comandos
+et:> Käsud
+eu:> Komandoak
+fa:> دستورات
+fi:> Komennot
+fo:> Boð
+fr:> Commandes
+fy-nl:> Kommando's
+ga:> Orduithe
+gl:> Comandos
+he:> פקודות
+hi:> कमांड
+hr:> Naredbe
+hu:> Parancsok
+id:> Perintah
+it:> Comandi
+ja:> コマンド
+jv:> Piranti
+ka:> ბრძანებები
+kr:> 명령
+ku:> Ferman
+kw:> Gordhyansow
+lt:> Komandos
+lv:> Komandas
+mk:> Команди
+ml:> കമാൻഡുകൾ
+mm:> အမိန့်များ
+my:> ညွှန်ကြားချက်များ
+ne:> आदेशहरू
+nl:> Opdrachten
+nn:> Kommandoar
+no:> Kommandoer
+pa:> ਕਮਾਂਡਾਂ
+pl:> Polecenia
+pt:> Comandos
+ro:> Comenzi
+ru:> Команды
+sat:> ᱩᱫᱩᱜ ᱠᱚ
+si:> විධාන
+sk:> Príkazy
+sl:> Ukazi
+sn:> Mirairo
+sp-rs:> Komande
+sq:> Komandat
+sr-rs:> Komande
+sv:> Kommandon
+ta:> கட்டளைகள்
+th:> คำสั่ง
+tl:> Mga Utos
+tr:> Komutlar
+tw:> 命令
+uk:> Команди
+uz:> Buyruqlar
+vn:> Lệnh
+:@ Tabs
+af:@ Oortjies
+am:@ ትሮች
+ar:@ علامات التبويب
+az:@ Tablar
+bg:@ Табове
+bn:@ ট্যাব
+br:@ Ivinelloù
+bs:@ Kartice
+by:@ Укладкі
+ca:@ Pestanyes
+ca-xv:@ Pestanyes
+cn:@ 标签页
+co:@ Schede
+cy:@ Tabiau
+cz:@ Karty
+de:@ Tabs
+dk:@ Faner
+el:@ Καρτέλες
+es:@ Pestañas
+et:@ Vahekaardid
+eu:@ Fitxak
+fa:@ زبانه‌ها
+fi:@ Välilehdet
+fo:@ Flikar
+fr:@ Onglets
+fy-nl:@ Ljepblêden
+ga:@ Cluaisíní
+gl:@ Pestanas
+he:@ כרטיסיות
+hi:@ टैब
+hr:@ Kartice
+hu:@ Lapok
+id:@ Tab
+it:@ Schede
+ja:@ タブ
+jv:@ Tab
+ka:@ ჩანართები
+kr:@ 탭
+ku:@ Hilpekîn
+kw:@ Tabmow
+lt:@ Kortelės
+lv:@ Cilnes
+mk:@ Јазичиња
+ml:@ ടാബുകൾ
+mm:@ တက်ဘ်များ
+my:@ တက်ဘ်များ
+ne:@ ट्याबहरू
+nl:@ Tabbladen
+nn:@ Faner
+no:@ Faner
+pa:@ ਟੈਬਾਂ
+pl:@ Karty
+pt:@ Abas
+ro:@ File
+ru:@ Вкладки
+sat:@ ᱴᱮᱵᱽ ᱠᱚ
+si:@ ටැබ්
+sk:@ Karty
+sl:@ Zavihki
+sn:@ Matab
+sp-rs:@ Tabovi
+sq:@ Skedat
+sr-rs:@ Tabovi
+sv:@ Flikar
+ta:@ தாவிகள்
+th:@ แท็บ
+tl:@ Mga Tab
+tr:@ Sekmeler
+tw:@ 分頁
+uk:@ Вкладки
+uz:@ Varaqlar
+vn:@ Thẻ
 :About SumatraPDF
 af:Omtrent SumatraPDF
 am:SumatraPDF-ի մասին
@@ -13598,6 +13890,79 @@ tw:編輯註解
 uk:Змінити анотації
 uz:Izohlarni tahrirlash
 vn:Chỉnh Sửa Chú Thích
+:Embed...
+af:Insluit...
+am:አካትት...
+ar:تضمين...
+az:Yerləşdir...
+bg:Вграждане...
+bn:এম্বেড করুন...
+br:Enframmañ...
+bs:Ugradi...
+by:Убудаваць...
+ca:Incrusta...
+ca-xv:Incrusta...
+cn:嵌入...
+co:Incorpurà...
+cy:Mewnblannu...
+cz:Vložit...
+de:Einbetten...
+dk:Integrer...
+el:Ενσωμάτωση...
+es:Insertar...
+et:Manusta...
+eu:Txertatu...
+fa:جاسازی...
+fi:Upota...
+fo:Innset...
+fr:Intégrer...
+fy-nl:Ynsluitsje...
+ga:Leabaigh...
+gl:Incrustar...
+he:הטמע...
+hi:एम्बेड करें...
+hr:Ugradi...
+hu:Beágyazás...
+id:Sematkan...
+it:Incorpora...
+ja:埋め込み...
+jv:Selapake...
+ka:ჩასმა...
+kr:삽입...
+ku:Bicîkirin...
+kw:Omselma...
+lt:Įdėti...
+lv:Iegult...
+mk:Вметни...
+ml:ഉൾച്ചേർക്കുക...
+mm:မြှုပ်သွင်းရန်...
+my:မြှုပ်နှံရန်...
+ne:इम्बेड गर्नुहोस्...
+nl:Insluiten...
+nn:Bygg inn...
+no:Integrer...
+pa:ਏਮਬੈੱਡ...
+pl:Osadź...
+pt:Incorporar...
+ro:Încorporează...
+ru:Встроить...
+sat:ᱟᱝᱜᱩᱨ...
+si:එබ්බෙද් කරන්න...
+sk:Vložiť...
+sl:Vdelaj...
+sn:Dzika...
+sp-rs:Ugradi...
+sq:Integroni...
+sr-rs:Уграђивање...
+sv:Bädda in...
+ta:உட்பொதி...
+th:ฝัง...
+tl:Isama...
+tr:Göm...
+tw:嵌入...
+uk:Вбудувати...
+uz:Joylashtirish...
+vn:Nhúng...
 :Enter password
 af:Tik Wagwoord In
 am:Գրեք գաղտնաբառը
@@ -17760,6 +18125,79 @@ tw:提示: 按 F3 重新尋找。
 uk:Підказка: Для повторного пошуку натисніть F3
 uz:Eslatma: qayta qidirish uchun F3 tugmasini bosing
 vn:Gợi ý: Nhấn phím F3 để tìm lại
+:Home
+af:Tuis
+am:መነሻ
+ar:الرئيسية
+az:Ana səhifə
+bg:Начало
+bn:হোম
+br:Degemer
+bs:Početna
+by:Галоўная
+ca:Inici
+ca-xv:Inici
+cn:首页
+co:Accolta
+cy:Cartref
+cz:Domů
+de:Startseite
+dk:Hjem
+el:Αρχική
+es:Inicio
+et:Avaleht
+eu:Hasiera
+fa:خانه
+fi:Koti
+fo:Heim
+fr:Accueil
+fy-nl:Thús
+ga:Baile
+gl:Inicio
+he:בית
+hi:होम
+hr:Početna
+hu:Kezdőlap
+id:Beranda
+it:Home
+ja:ホーム
+jv:Omah
+ka:მთავარი
+kr:홈
+ku:Serrûpel
+kw:Tre
+lt:Pradžia
+lv:Sākums
+mk:Дома
+ml:ഹോം
+mm:ပင်မ
+my:ပင်မ
+ne:गृहपृष्ठ
+nl:Home
+nn:Heim
+no:Hjem
+pa:ਘਰ
+pl:Strona główna
+pt:Início
+ro:Acasă
+ru:Главная
+sat:ᱚᱲᱟᱜ
+si:මුල් පිටුව
+sk:Domov
+sl:Domov
+sn:Musha
+sp-rs:Početna
+sq:Ballina
+sr-rs:Početna
+sv:Hem
+ta:முகப்பு
+th:หน้าแรก
+tl:Home
+tr:Ana Sayfa
+tw:首頁
+uk:Головна
+uz:Bosh sahifa
+vn:Trang chủ
 :Icon:
 af:Ikoon:
 am:Պատկերակ.
@@ -25708,7 +26146,7 @@ cn:正在打印中，要中止并退出吗？
 co:Stampa sempre in corsu. Interrompe è esce ?
 cy:Dal wrthi'n argraffu. Hepgor a gadael?
 cz:Tisk stále probíhá. Přerušit a odejít?
-de:Bestehenden Druckvorgang abbrechen und Fenster schließen?
+de:Druckvorgang abbrechen und Fenster schließen?
 dk:Udskrift er stadig i gang. Afbryd og afslut?
 el:Η εκτύπωση είναι ακόμα σε εξέλιξη. Ακύρωση και έξοδος;
 es:Aún se está imprimiendo. ¿Cancelar y salir?
@@ -25781,7 +26219,7 @@ cn:正在打印中，要中止并重新开始吗？
 co:Stampa sempre in corsu. Interrompe è principià torna ?
 cy:Dal wrthi'n argraffu. Hepgor a chychwyn eto?
 cz:Tisk je stále probíhá. Přerušit a začít znovu?
-de:Bestehenden Druckvorgang abbrechen und neu beginnen?
+de:Druckvorgang abbrechen und neu starten?
 dk:Udskrift pågår stadig. Afbryd og start forfra?
 el:Η εκτύπωση βρίσκεται σε εξέλιξη. Να ακυρωθεί και να ξεκινήσει πάλι;
 es:Aún se está imprimiendo. ¿Cancelar y empezar desde cero?
@@ -27985,7 +28423,7 @@ cn:保存至新的 PDF 文件(&N)
 co:Arregistrà in un PDF &novu
 cy:Cadw i PDF &newydd
 cz:Uložit do &nového PDF souboru
-de:In &neue PDF speichern
+de:Als &neue PDF-Datei speichern
 dk:Gem som &ny PDF
 el:Αποθήκευση σε νέο PDF
 es:Guardar en un PDF &nuevo
@@ -28028,6 +28466,79 @@ tw:儲存到新的 PDF 檔(&N)
 uk:Зберегти в новому PDF-файлі
 uz:Yangi PDF-ga saqlash
 vn:Lưu &PDF mới
+:Save...
+af:Stoor...
+am:አስቀምጥ...
+ar:حفظ...
+az:Saxla...
+bg:Запазване...
+bn:সংরক্ষণ করুন...
+br:Enrollañ...
+bs:Sačuvaj...
+by:Захаваць...
+ca:Desa...
+ca-xv:Desa...
+cn:保存...
+co:Salvà...
+cy:Cadw...
+cz:Uložit...
+de:Speichern...
+dk:Gem...
+el:Αποθήκευση...
+es:Guardar...
+et:Salvesta...
+eu:Gorde...
+fa:ذخیره...
+fi:Tallenna...
+fo:Goym...
+fr:Enregistrer...
+fy-nl:Bewarje...
+ga:Sábháil...
+gl:Gardar...
+he:שמור...
+hi:सहेजें...
+hr:Spremi...
+hu:Mentés...
+id:Simpan...
+it:Salva...
+ja:保存...
+jv:Simpen...
+ka:შენახვა...
+kr:저장...
+ku:Tomar bike...
+kw:Gwitha...
+lt:Išsaugoti...
+lv:Saglabāt...
+mk:Зачувај...
+ml:സംരക്ഷിക്കുക...
+mm:သိမ်းဆည်းရန်...
+my:သိမ်းဆည်းရန်...
+ne:बचत गर्नुहोस्...
+nl:Opslaan...
+nn:Lagre...
+no:Lagre...
+pa:ਸੇਵ ਕਰੋ...
+pl:Zapisz...
+pt:Guardar...
+ro:Salvează...
+ru:Сохранить...
+sat:ᱥᱟᱧᱪᱟᱣ...
+si:සුරකින්න...
+sk:Uložiť...
+sl:Shrani...
+sn:Chengetedza...
+sp-rs:Sačuvaj...
+sq:Ruaj...
+sr-rs:Сачувај...
+sv:Spara...
+ta:சேமி...
+th:บันทึก...
+tl:I-save...
+tr:Kaydet...
+tw:儲存...
+uk:Зберегти...
+uz:Saqlash...
+vn:Lưu...
 :Saved annotations to '%s'
 af:Annotasies gestoor na '%s'
 am:Պահված մեկնաբանություններ '%s'-ում
@@ -30176,6 +30687,79 @@ tw:設定主題
 uk:Встановити тему
 uz:Mavzuni o'rnatish
 vn:Đặt chủ đề
+:Set theme '%s'
+af:Stel tema '%s' in
+am:ገጽታ '%s' ያቀናብሩ
+ar:تعيين السمة '%s'
+az:Temanı '%s' olaraq təyin et
+bg:Задаване на тема '%s'
+bn:থিম '%s' সেট করুন
+br:Arventennañ an tem '%s'
+bs:Postavi temu '%s'
+by:Усталяваць тэму '%s'
+ca:Estableix el tema '%s'
+ca-xv:Estableix el tema «%s»
+cn:设置主题 '%s'
+co:Definisce u tema '%s'
+cy:Gosod thema '%s'
+cz:Nastavit motiv '%s'
+de:Design '%s' festlegen
+dk:Indstil tema '%s'
+el:Ορισμός θέματος '%s'
+es:Establecer tema '%s'
+et:Määra teema '%s'
+eu:'%s' gaia ezarri
+fa:تنظیم پوسته '%s'
+fi:Aseta teema '%s'
+fo:Set tema '%s'
+fr:Définir le thème '%s'
+fy-nl:Tema '%s' ynstelle
+ga:Socraigh téama '%s'
+gl:Establecer tema '%s'
+he:הגדר ערכת נושא '%s'
+hi:थीम '%s' सेट करें
+hr:Postavi temu '%s'
+hu:Téma beállítása: '%s'
+id:Atur tema '%s'
+it:Imposta tema '%s'
+ja:テーマ '%s' を設定
+jv:Setel tema '%s'
+ka:თემის დაყენება '%s'
+kr:테마 '%s' 설정
+ku:Dirba '%s' saz bike
+kw:Settya tema '%s'
+lt:Nustatyti temą '%s'
+lv:Iestatīt tēmu '%s'
+mk:Постави тема '%s'
+ml:തീം '%s' സജ്ജമാക്കുക
+mm:အပြင်အဆင် '%s' သတ်မှတ်ရန်
+my:အပြင်အဆင် '%s' သတ်မှတ်ရန်
+ne:थिम '%s' सेट गर्नुहोस्
+nl:Thema '%s' instellen
+nn:Vel tema '%s'
+no:Angi tema '%s'
+pa:ਥੀਮ '%s' ਸੈੱਟ ਕਰੋ
+pl:Ustaw motyw '%s'
+pt:Definir tema '%s'
+ro:Setează tema '%s'
+ru:Установить тему '%s'
+sat:ᱛᱷᱤᱢ '%s' ᱥᱮᱴ ᱢᱮ
+si:තේමාව '%s' සකසන්න
+sk:Nastaviť tému '%s'
+sl:Nastavi temo '%s'
+sn:Isa dingindira '%s'
+sp-rs:Postavi temu '%s'
+sq:Vendos temën '%s'
+sr-rs:Postavi temu '%s'
+sv:Ange tema '%s'
+ta:தீம் '%s' அமை
+th:ตั้งค่าธีม '%s'
+tl:Itakda ang tema '%s'
+tr:'%s' temasını ayarla
+tw:設定佈景主題「%s」
+uk:Встановити тему '%s'
+uz:'%s' mavzusini o'rnatish
+vn:Đặt giao diện '%s'
 :Show &Bookmarks
 am:Ցուցադրել &Էջանիշերը
 ar:اظهار &قوائم العناوين
@@ -32622,6 +33206,79 @@ tw:文字顏色:
 uk:Колір тексту:
 uz:Matn rangi:
 vn:Màu Sắc:
+:Text Font:
+af:Tekslettertipe:
+am:የጽሑፍ ቅርጸ ቁምፊ:
+ar:خط النص:
+az:Mətn Şrifti:
+bg:Шрифт на текста:
+bn:টেক্সট ফন্ট:
+br:Nodrezh an destenn:
+bs:Font teksta:
+by:Шрыфт тэксту:
+ca:Tipus de lletra del text:
+ca-xv:Tipus de lletra del text:
+cn:文本字体：
+co:Carattere di u testu:
+cy:Ffont Testun:
+cz:Písmo textu:
+de:Textschrift:
+dk:Tekstskrift:
+el:Γραμματοσειρά Κειμένου:
+es:Fuente de texto:
+et:Teksti font:
+eu:Testu-letra-tipoa:
+fa:قلم متن:
+fi:Tekstin fontti:
+fo:Tekstsnið:
+fr:Police du texte :
+fy-nl:Tekstlettertype:
+ga:Cló Téacs:
+gl:Tipo de letra do texto:
+he:גופן טקסט:
+hi:पाठ फ़ॉन्ट:
+hr:Font teksta:
+hu:Szöveg betűtípusa:
+id:Font Teks:
+it:Font del testo:
+ja:テキストフォント:
+jv:Font Teks:
+ka:ტექსტის შრიფტი:
+kr:텍스트 폰트:
+ku:فۆنتی دەق:
+kw:Fount Tekst:
+lt:Teksto šriftas:
+lv:Teksta fonts:
+mk:Фонт на текст:
+ml:ടെക്സ്റ്റ് ഫോണ്ട്:
+mm:စာသား ဖောင့်:
+my:စာသား ဖောင့်:
+ne:पाठ फन्ट:
+nl:Tekstlettertype:
+nn:Tekstskrift:
+no:Tekstfont:
+pa:ਟੈਕਸਟ ਫੌਂਟ:
+pl:Czcionka tekstu:
+pt:Fonte do Texto:
+ro:Font text:
+ru:Шрифт текста:
+sat:ᱚᱞ ᱪᱤᱠᱤ:
+si:පාඨ අකුරු:
+sk:Písmo textu:
+sl:Pisava besedila:
+sn:Fonti Yezvinyorwa:
+sp-rs:Font teksta:
+sq:Fonti i Tekstit:
+sr-rs:Фонт текста:
+sv:Texttypsnitt:
+ta:உரை எழுத்துரு:
+th:แบบอักษรข้อความ:
+tl:Font ng Teksto:
+tr:Metin Yazı Tipi:
+tw:文字字型：
+uk:Шрифт тексту:
+uz:Matn shrifti:
+vn:Phông chữ:
 :Text Size:
 af:Teks Grootte:
 am:Գրվածքի չափ.

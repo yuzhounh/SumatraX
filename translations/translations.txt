@@ -1,5 +1,7 @@
 AppTranslator: SumatraPDF
-dab0d0a34a8c3b671eacdc393546713aad812afd
+3e866bb19716708e80e2f50d15b2a8d133dd1902
+:# File History
+pl:# Historia plików
 :%s annotation. Ctrl+click to edit.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
 ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
@@ -2919,7 +2921,7 @@ cn:保存到当前 PDF 文件(&S)
 co:&Arregistrà in u PDF esistente
 cy:Cadw i PDF &presennol
 cz:&Uložit do stávajícího PDF souboru
-de:In bestehendes PDF &speichern
+de:In bestehende PDF-Datei &speichern
 dk:&Gem i eksisterende PDF
 el:Αποθήκευση σε υπάρχον PDF
 es:&Guardar en un PDF existente
@@ -4016,6 +4018,12 @@ tw:(第 %s 頁)
 uk:(сторінка %s)
 uz:(bet %s)
 vn:(trang %s)
+:: Everything
+pl:: Wszystko
+:> Commands
+pl:> Polecenia
+:@ Tabs
+pl:@ Karty
 :About SumatraPDF
 af:Omtrent SumatraPDF
 am:SumatraPDF-ի մասին
@@ -10218,6 +10226,8 @@ tw:編輯註解
 uk:Змінити анотації
 uz:Izohlarni tahrirlash
 vn:Chỉnh Sửa Chú Thích
+:Embed...
+pl:Osadź...
 :Enter password
 af:Tik Wagwoord In
 am:Գրեք գաղտնաբառը
@@ -13266,6 +13276,7 @@ tw:提示: 按 F3 重新尋找。
 uk:Підказка: Для повторного пошуку натисніть F3
 uz:Eslatma: qayta qidirish uchun F3 tugmasini bosing
 vn:Gợi ý: Nhấn phím F3 để tìm lại
+:Home
 :Icon:
 am:Պատկերակ.
 ar:الأيقونة:
@@ -18513,7 +18524,7 @@ cn:正在打印中，要中止并退出吗？
 co:Stampa sempre in corsu. Interrompe è esce ?
 cy:Dal wrthi'n argraffu. Hepgor a gadael?
 cz:Tisk stále probíhá. Přerušit a odejít?
-de:Bestehenden Druckvorgang abbrechen und Fenster schließen?
+de:Druckvorgang abbrechen und Fenster schließen?
 dk:Udskrift er stadig i gang. Afbryd og afslut?
 el:Η εκτύπωση είναι ακόμα σε εξέλιξη. Ακύρωση και έξοδος;
 es:Aún se está imprimiendo. ¿Cancelar y salir?
@@ -18578,7 +18589,7 @@ cn:正在打印中，要中止并重新开始吗？
 co:Stampa sempre in corsu. Interrompe è principià torna ?
 cy:Dal wrthi'n argraffu. Hepgor a chychwyn eto?
 cz:Tisk je stále probíhá. Přerušit a začít znovu?
-de:Bestehenden Druckvorgang abbrechen und neu beginnen?
+de:Druckvorgang abbrechen und neu starten?
 dk:Udskrift pågår stadig. Afbryd og start forfra?
 el:Η εκτύπωση βρίσκεται σε εξέλιξη. Να ακυρωθεί και να ξεκινήσει πάλι;
 es:Aún se está imprimiendo. ¿Cancelar y empezar desde cero?
@@ -19993,7 +20004,7 @@ cn:保存至新的 PDF 文件(&N)
 co:Arregistrà in un PDF &novu
 cy:Cadw i PDF &newydd
 cz:Uložit do &nového PDF souboru
-de:In &neue PDF speichern
+de:Als &neue PDF-Datei speichern
 dk:Gem som &ny PDF
 el:Αποθήκευση σε νέο PDF
 es:Guardar en un PDF &nuevo
@@ -20036,6 +20047,8 @@ tw:儲存到新的 PDF 檔(&N)
 uk:Зберегти в новому PDF-файлі
 uz:Yangi PDF-ga saqlash
 vn:Lưu &PDF mới
+:Save...
+pl:Zapisz...
 :Saved annotations to '%s'
 am:Պահված մեկնաբանություններ '%s'-ում
 ar:حفظت الشروحات في '%s'
@@ -20960,6 +20973,7 @@ de:Design festlegen
 pl:Ustaw motyw
 sk:Nastaviť motív
 tw:設定主題
+:Set theme '%s'
 :Show &Bookmarks
 am:Ցուցադրել &Էջանիշերը
 ar:اظهار &قوائم العناوين
@@ -22843,6 +22857,8 @@ tw:文字顏色:
 uk:Колір тексту:
 uz:Matn rangi:
 vn:Màu Sắc:
+:Text Font:
+pl:Czcionka tekstu:
 :Text Size:
 am:Գրվածքի չափ.
 ar:حجم النص:

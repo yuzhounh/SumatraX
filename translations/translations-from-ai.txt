@@ -26454,3 +26454,1299 @@ vn:Thu phóng: Vừa chiều rộng và liên tục
 vn:không sử dụng
 :Create Ink Annotation
 sat:इंक एनोटेशन तैयार करे
+:Embed...
+am:አካትት...
+:Save...
+am:አስቀምጥ...
+:Embed...
+ar:تضمين...
+:Save...
+ar:حفظ...
+:Embed...
+az:Yerləşdir...
+:Save...
+az:Saxla...
+:Embed...
+br:Enframmañ...
+:Save...
+br:Enrollañ...
+:Embed...
+by:Убудаваць...
+:Save...
+by:Захаваць...
+:Embed...
+ca:Incrusta...
+:Save...
+ca:Desa...
+:Embed...
+cn:嵌入...
+:Save...
+cn:保存...
+:Embed...
+co:Incorpurà...
+:Save...
+co:Salvà...
+:Embed...
+cy:Mewnblannu...
+:Save...
+cy:Cadw...
+:Embed...
+cz:Vložit...
+:Save...
+cz:Uložit...
+:Embed...
+de:Einbetten...
+:Save...
+de:Speichern...
+:Embed...
+el:Ενσωμάτωση...
+:Save...
+el:Αποθήκευση...
+:Embed...
+es:Insertar...
+:Save...
+es:Guardar...
+:Embed...
+fa:جاسازی...
+:Save...
+fa:ذخیره...
+:Embed...
+fi:Upota...
+:Save...
+fi:Tallenna...
+:Embed...
+fo:Innset...
+:Save...
+fo:Goym...
+:Embed...
+fr:Intégrer...
+:Save...
+fr:Enregistrer...
+:Embed...
+ga:Leabaigh...
+:Save...
+ga:Sábháil...
+:Embed...
+gl:Incrustar...
+:Save...
+gl:Gardar...
+:Embed...
+he:הטמע...
+:Save...
+he:שמור...
+:Embed...
+hi:एम्बेड करें...
+:Save...
+hi:सहेजें...
+:Embed...
+hu:Beágyazás...
+:Save...
+hu:Mentés...
+:Embed...
+id:Sematkan...
+:Save...
+id:Simpan...
+:Embed...
+it:Incorpora...
+:Save...
+it:Salva...
+:Embed...
+ja:埋め込み...
+:Save...
+ja:保存...
+:Embed...
+kr:삽입...
+:Save...
+kr:저장...
+:Embed...
+lv:Iegult...
+:Save...
+lv:Saglabāt...
+:Embed...
+my:မြှုပ်နှံရန်...
+:Save...
+my:သိမ်းဆည်းရန်...
+:Embed...
+nl:Insluiten...
+:Save...
+nl:Opslaan...
+:Embed...
+pl:Osadź...
+:Save...
+pl:Zapisz...
+:Embed...
+pt:Incorporar...
+:Save...
+pt:Guardar...
+:Embed...
+ro:Încorporează...
+:Save...
+ro:Salvează...
+:Embed...
+ru:Встроить...
+:Save...
+ru:Сохранить...
+:Embed...
+sat:ᱟᱝᱜᱩᱨ...
+:Save...
+sat:ᱥᱟᱧᱪᱟᱣ...
+:Embed...
+sk:Vložiť...
+:Save...
+sk:Uložiť...
+:Embed...
+sl:Vdelaj...
+:Save...
+sl:Shrani...
+:Embed...
+sr-rs:Уграђивање...
+:Save...
+sr-rs:Сачувај...
+:Embed...
+sv:Bädda in...
+:Save...
+sv:Spara...
+:Embed...
+ta:உட்பொதி...
+:Save...
+ta:சேமி...
+:Embed...
+tr:Göm...
+:Save...
+tr:Kaydet...
+:Embed...
+tw:嵌入...
+:Save...
+tw:儲存...
+:Embed...
+uz:Joylashtirish...
+:Save...
+uz:Saqlash...
+:Embed...
+af:Insluit...
+:Save...
+af:Stoor...
+:Embed...
+bg:Вграждане...
+:Save...
+bg:Запазване...
+:Embed...
+bn:এম্বেড করুন...
+:Save...
+bn:সংরক্ষণ করুন...
+:Embed...
+bs:Ugradi...
+:Save...
+bs:Sačuvaj...
+:Embed...
+ca-xv:Incrusta...
+:Save...
+ca-xv:Desa...
+:Embed...
+dk:Integrer...
+:Save...
+dk:Gem...
+:Embed...
+et:Manusta...
+:Save...
+et:Salvesta...
+:Embed...
+eu:Txertatu...
+:Save...
+eu:Gorde...
+:Embed...
+fy-nl:Ynsluitsje...
+:Save...
+fy-nl:Bewarje...
+:Embed...
+hr:Ugradi...
+:Save...
+hr:Spremi...
+:Embed...
+jv:Selapake...
+:Save...
+jv:Simpen...
+:Embed...
+ka:ჩასმა...
+:Save...
+ka:შენახვა...
+:Embed...
+ku:Bicîkirin...
+:Save...
+ku:Tomar bike...
+:Embed...
+kw:Omselma...
+:Save...
+kw:Gwitha...
+:Embed...
+lt:Įdėti...
+:Save...
+lt:Išsaugoti...
+:Embed...
+mk:Вметни...
+:Save...
+mk:Зачувај...
+:Embed...
+ml:ഉൾച്ചേർക്കുക...
+:Save...
+ml:സംരക്ഷിക്കുക...
+:Embed...
+mm:မြှုပ်သွင်းရန်...
+:Save...
+mm:သိမ်းဆည်းရန်...
+:Embed...
+ne:इम्बेड गर्नुहोस्...
+:Save...
+ne:बचत गर्नुहोस्...
+:Embed...
+nn:Bygg inn...
+:Save...
+nn:Lagre...
+:Embed...
+no:Integrer...
+:Save...
+no:Lagre...
+:Embed...
+pa:ਏਮਬੈੱਡ...
+:Save...
+pa:ਸੇਵ ਕਰੋ...
+:Embed...
+si:එබ්බෙද් කරන්න...
+:Save...
+si:සුරකින්න...
+:Embed...
+sn:Dzika...
+:Save...
+sn:Chengetedza...
+:Embed...
+sp-rs:Ugradi...
+:Save...
+sp-rs:Sačuvaj...
+:Embed...
+sq:Integroni...
+:Save...
+sq:Ruaj...
+:Embed...
+th:ฝัง...
+:Save...
+th:บันทึก...
+:Embed...
+tl:Isama...
+:Save...
+tl:I-save...
+:Embed...
+uk:Вбудувати...
+:Save...
+uk:Зберегти...
+:Embed...
+vn:Nhúng...
+:Save...
+vn:Lưu...
+:# File History
+am:# የፋይል ታሪክ
+:: Everything
+am:: ሁሉም ነገር
+:> Commands
+am:> ትዕዛዞች
+:@ Tabs
+am:@ ትሮች
+:# File History
+ar:# سجل الملفات
+:: Everything
+ar:: كل شيء
+:> Commands
+ar:> الأوامر
+:@ Tabs
+ar:@ علامات التبويب
+:# File History
+az:# Fayl Tarixçəsi
+:: Everything
+az:: Hər şey
+:> Commands
+az:> Əmrlər
+:@ Tabs
+az:@ Tablar
+:# File History
+br:# Istor ar restr
+:: Everything
+br:: Pep tra
+:> Commands
+br:> Urzhiadoù
+:@ Tabs
+br:@ Ivinelloù
+:# File History
+by:# Гісторыя файла
+:: Everything
+by:: Усё
+:> Commands
+by:> Каманды
+:@ Tabs
+by:@ Укладкі
+:# File History
+ca:# Historial de fitxers
+:: Everything
+ca:: Tot
+:> Commands
+ca:> Ordres
+:@ Tabs
+ca:@ Pestanyes
+:# File History
+cn:# 文件历史
+:: Everything
+cn:: 全部内容
+:> Commands
+cn:> 命令
+:@ Tabs
+cn:@ 标签页
+:# File History
+co:# Storica di u Schedariu
+:: Everything
+co:: Tuttu
+:> Commands
+co:> Cumandamenti
+:@ Tabs
+co:@ Schede
+:# File History
+cy:# Hanes Ffeil
+:: Everything
+cy:: Popeth
+:> Commands
+cy:> Gorchmynion
+:@ Tabs
+cy:@ Tabiau
+:# File History
+cz:# Historie souborů
+:: Everything
+cz:: Vše
+:> Commands
+cz:> Příkazy
+:@ Tabs
+cz:@ Karty
+:# File History
+de:# Dateiverlauf
+:: Everything
+de:: Alles
+:> Commands
+de:> Befehle
+:@ Tabs
+de:@ Tabs
+:# File History
+el:# Ιστορικό Αρχείου
+:: Everything
+el:: Όλα
+:> Commands
+el:> Εντολές
+:@ Tabs
+el:@ Καρτέλες
+:# File History
+es:# Historial de archivos
+:: Everything
+es:: Todo
+:> Commands
+es:> Comandos
+:@ Tabs
+es:@ Pestañas
+:# File History
+fa:# تاریخچه فایل
+:: Everything
+fa:: همه چیز
+:> Commands
+fa:> دستورات
+:@ Tabs
+fa:@ زبانه‌ها
+:# File History
+fi:# Tiedostohistoria
+:: Everything
+fi:: Kaikki
+:> Commands
+fi:> Komennot
+:@ Tabs
+fi:@ Välilehdet
+:# File History
+fo:# Fílasøga
+:: Everything
+fo:: Allt
+:> Commands
+fo:> Boð
+:@ Tabs
+fo:@ Flikar
+:# File History
+fr:# Historique des fichiers
+:: Everything
+fr:: Tout
+:> Commands
+fr:> Commandes
+:@ Tabs
+fr:@ Onglets
+:# File History
+ga:# Stair Comhaid
+:: Everything
+ga:: Gach Rud
+:> Commands
+ga:> Orduithe
+:@ Tabs
+ga:@ Cluaisíní
+:# File History
+gl:# Historial de ficheiros
+:: Everything
+gl:: Todo
+:> Commands
+gl:> Comandos
+:@ Tabs
+gl:@ Pestanas
+:# File History
+he:# היסטוריית קבצים
+:: Everything
+he:: הכל
+:> Commands
+he:> פקודות
+:@ Tabs
+he:@ כרטיסיות
+:# File History
+hi:# फ़ाइल इतिहास
+:: Everything
+hi:: सब कुछ
+:> Commands
+hi:> कमांड
+:@ Tabs
+hi:@ टैब
+:# File History
+hu:# Fájlelőzmények
+:: Everything
+hu:: Minden
+:> Commands
+hu:> Parancsok
+:@ Tabs
+hu:@ Lapok
+:# File History
+id:# Riwayat File
+:: Everything
+id:: Semua
+:> Commands
+id:> Perintah
+:@ Tabs
+id:@ Tab
+:# File History
+it:# Cronologia File
+:: Everything
+it:: Tutto
+:> Commands
+it:> Comandi
+:@ Tabs
+it:@ Schede
+:# File History
+ja:# ファイル履歴
+:: Everything
+ja:: すべて
+:> Commands
+ja:> コマンド
+:@ Tabs
+ja:@ タブ
+:# File History
+kr:# 파일 기록
+:: Everything
+kr:: 모두
+:> Commands
+kr:> 명령
+:@ Tabs
+kr:@ 탭
+:# File History
+lv:# Failu vēsture
+:: Everything
+lv:: Viss
+:> Commands
+lv:> Komandas
+:@ Tabs
+lv:@ Cilnes
+:# File History
+my:# ဖိုင်မှတ်တမ်း
+:: Everything
+my:: အားလုံး
+:> Commands
+my:> ညွှန်ကြားချက်များ
+:@ Tabs
+my:@ တက်ဘ်များ
+:# File History
+nl:# Bestandsgeschiedenis
+:: Everything
+nl:: Alles
+:> Commands
+nl:> Opdrachten
+:@ Tabs
+nl:@ Tabbladen
+:# File History
+pl:# Historia plików
+:: Everything
+pl:: Wszystko
+:> Commands
+pl:> Polecenia
+:@ Tabs
+pl:@ Karty
+:# File History
+pt:# Histórico de Arquivos
+:: Everything
+pt:: Tudo
+:> Commands
+pt:> Comandos
+:@ Tabs
+pt:@ Abas
+:# File History
+ro:# Istoric fișiere
+:: Everything
+ro:: Tot
+:> Commands
+ro:> Comenzi
+:@ Tabs
+ro:@ File
+:# File History
+ru:# История файлов
+:: Everything
+ru:: Всё
+:> Commands
+ru:> Команды
+:@ Tabs
+ru:@ Вкладки
+:# File History
+sat:# ᱨᱮᱫ ᱱᱟᱜᱟᱢ
+:: Everything
+sat:: ᱡᱷᱚᱛᱚ
+:> Commands
+sat:> ᱩᱫᱩᱜ ᱠᱚ
+:@ Tabs
+sat:@ ᱴᱮᱵᱽ ᱠᱚ
+:# File History
+sk:# História súborov
+:: Everything
+sk:: Všetko
+:> Commands
+sk:> Príkazy
+:@ Tabs
+sk:@ Karty
+:# File History
+sl:# Zgodovina datotek
+:: Everything
+sl:: Vse
+:> Commands
+sl:> Ukazi
+:@ Tabs
+sl:@ Zavihki
+:# File History
+sr-rs:# Istorija fajla
+:: Everything
+sr-rs:: Sve
+:> Commands
+sr-rs:> Komande
+:@ Tabs
+sr-rs:@ Tabovi
+:# File History
+sv:# Filhistorik
+:: Everything
+sv:: Allt
+:> Commands
+sv:> Kommandon
+:@ Tabs
+sv:@ Flikar
+:# File History
+ta:# கோப்பு வரலாறு
+:: Everything
+ta:: எல்லாம்
+:> Commands
+ta:> கட்டளைகள்
+:@ Tabs
+ta:@ தாவிகள்
+:# File History
+tr:# Dosya Geçmişi
+:: Everything
+tr:: Her Şey
+:> Commands
+tr:> Komutlar
+:@ Tabs
+tr:@ Sekmeler
+:# File History
+tw:# 檔案歷史記錄
+:: Everything
+tw:: 全部
+:> Commands
+tw:> 命令
+:@ Tabs
+tw:@ 分頁
+:# File History
+uz:# Fayl tarixi
+:: Everything
+uz:: Hamma narsa
+:> Commands
+uz:> Buyruqlar
+:@ Tabs
+uz:@ Varaqlar
+:# File History
+af:# Lêergeskiedenis
+:: Everything
+af:: Alles
+:> Commands
+af:> Bevele
+:@ Tabs
+af:@ Oortjies
+:# File History
+bg:# История на файла
+:: Everything
+bg:: Всичко
+:> Commands
+bg:> Команди
+:@ Tabs
+bg:@ Табове
+:# File History
+bn:# ফাইল ইতিহাস
+:: Everything
+bn:: সবকিছু
+:> Commands
+bn:> কমান্ড
+:@ Tabs
+bn:@ ট্যাব
+:# File History
+bs:# Historija datoteke
+:: Everything
+bs:: Sve
+:> Commands
+bs:> Komande
+:@ Tabs
+bs:@ Kartice
+:# File History
+ca-xv:# Historial de fitxers
+:: Everything
+ca-xv:: Tot
+:> Commands
+ca-xv:> Ordres
+:@ Tabs
+ca-xv:@ Pestanyes
+:# File History
+dk:# Filhistorik
+:: Everything
+dk:: Alt
+:> Commands
+dk:> Kommandoer
+:@ Tabs
+dk:@ Faner
+:# File History
+et:# Failiajalugu
+:: Everything
+et:: Kõik
+:> Commands
+et:> Käsud
+:@ Tabs
+et:@ Vahekaardid
+:# File History
+eu:# Fitxategiaren historia
+:: Everything
+eu:: Dena
+:> Commands
+eu:> Komandoak
+:@ Tabs
+eu:@ Fitxak
+:# File History
+fy-nl:# Triemskiednis
+:: Everything
+fy-nl:: Alles
+:> Commands
+fy-nl:> Kommando's
+:@ Tabs
+fy-nl:@ Ljepblêden
+:# File History
+hr:# Povijest datoteka
+:: Everything
+hr:: Sve
+:> Commands
+hr:> Naredbe
+:@ Tabs
+hr:@ Kartice
+:# File History
+jv:# Riwayat Berkas
+:: Everything
+jv:: Kabèh
+:> Commands
+jv:> Piranti
+:@ Tabs
+jv:@ Tab
+:# File History
+ka:# ფაილის ისტორია
+:: Everything
+ka:: ყველაფერი
+:> Commands
+ka:> ბრძანებები
+:@ Tabs
+ka:@ ჩანართები
+:# File History
+ku:# Dîroka Pelan
+:: Everything
+ku:: Her tişt
+:> Commands
+ku:> Ferman
+:@ Tabs
+ku:@ Hilpekîn
+:# File History
+kw:# Istori Restren
+:: Everything
+kw:: Puptra
+:> Commands
+kw:> Gordhyansow
+:@ Tabs
+kw:@ Tabmow
+:# File History
+lt:# Failų istorija
+:: Everything
+lt:: Viskas
+:> Commands
+lt:> Komandos
+:@ Tabs
+lt:@ Kortelės
+:# File History
+mk:# Историја на датотеки
+:: Everything
+mk:: Сè
+:> Commands
+mk:> Команди
+:@ Tabs
+mk:@ Јазичиња
+:# File History
+ml:# ഫയൽ ചരിത്രം
+:: Everything
+ml:: എല്ലാം
+:> Commands
+ml:> കമാൻഡുകൾ
+:@ Tabs
+ml:@ ടാബുകൾ
+:# File History
+mm:# ဖိုင်မှတ်တမ်း
+:: Everything
+mm:: အားလုံး
+:> Commands
+mm:> အမိန့်များ
+:@ Tabs
+mm:@ တက်ဘ်များ
+:# File History
+ne:# फाइल इतिहास
+:: Everything
+ne:: सबै कुरा
+:> Commands
+ne:> आदेशहरू
+:@ Tabs
+ne:@ ट्याबहरू
+:# File History
+nn:# Filhistorikk
+:: Everything
+nn:: Alt
+:> Commands
+nn:> Kommandoar
+:@ Tabs
+nn:@ Faner
+:# File History
+no:# Filhistorikk
+:: Everything
+no:: Alt
+:> Commands
+no:> Kommandoer
+:@ Tabs
+no:@ Faner
+:# File History
+pa:# ਫਾਈਲ ਇਤਿਹਾਸ
+:: Everything
+pa:: ਸਭ ਕੁਝ
+:> Commands
+pa:> ਕਮਾਂਡਾਂ
+:@ Tabs
+pa:@ ਟੈਬਾਂ
+:# File History
+si:# ගොනු ඉතිහාසය
+:: Everything
+si:: සියල්ල
+:> Commands
+si:> විධාන
+:@ Tabs
+si:@ ටැබ්
+:# File History
+sn:# Nhoroondo Yefaira
+:: Everything
+sn:: Zvese
+:> Commands
+sn:> Mirairo
+:@ Tabs
+sn:@ Matab
+:# File History
+sp-rs:# Istorija fajlova
+:: Everything
+sp-rs:: Sve
+:> Commands
+sp-rs:> Komande
+:@ Tabs
+sp-rs:@ Tabovi
+:# File History
+sq:# Historiku i Skedarëve
+:: Everything
+sq:: Gjithçka
+:> Commands
+sq:> Komandat
+:@ Tabs
+sq:@ Skedat
+:# File History
+th:# ประวัติไฟล์
+:: Everything
+th:: ทุกอย่าง
+:> Commands
+th:> คำสั่ง
+:@ Tabs
+th:@ แท็บ
+:# File History
+tl:# Kasaysayan ng File
+:: Everything
+tl:: Lahat
+:> Commands
+tl:> Mga Utos
+:@ Tabs
+tl:@ Mga Tab
+:# File History
+uk:# Історія файлів
+:: Everything
+uk:: Все
+:> Commands
+uk:> Команди
+:@ Tabs
+uk:@ Вкладки
+:# File History
+vn:# Lịch sử Tệp
+:: Everything
+vn:: Mọi thứ
+:> Commands
+vn:> Lệnh
+:@ Tabs
+vn:@ Thẻ
+:Home
+am:መነሻ
+:Home
+ar:الرئيسية
+:Home
+az:Ana səhifə
+:Home
+br:Degemer
+:Home
+by:Галоўная
+:Home
+ca:Inici
+:Home
+cn:首页
+:Home
+co:Accolta
+:Home
+cy:Cartref
+:Home
+cz:Domů
+:Home
+de:Startseite
+:Home
+el:Αρχική
+:Home
+es:Inicio
+:Home
+fa:خانه
+:Home
+fi:Koti
+:Home
+fo:Heim
+:Home
+fr:Accueil
+:Home
+ga:Baile
+:Home
+gl:Inicio
+:Home
+he:בית
+:Home
+hi:होम
+:Home
+hu:Kezdőlap
+:Home
+id:Beranda
+:Home
+it:Home
+:Home
+ja:ホーム
+:Home
+kr:홈
+:Home
+lv:Sākums
+:Home
+my:ပင်မ
+:Home
+nl:Home
+:Home
+pl:Strona główna
+:Home
+pt:Início
+:Home
+ro:Acasă
+:Home
+ru:Главная
+:Home
+sat:ᱚᱲᱟᱜ
+:Home
+sk:Domov
+:Home
+sl:Domov
+:Home
+sr-rs:Početna
+:Home
+sv:Hem
+:Home
+ta:முகப்பு
+:Home
+tr:Ana Sayfa
+:Home
+tw:首頁
+:Home
+uz:Bosh sahifa
+:Home
+af:Tuis
+:Home
+bg:Начало
+:Home
+bn:হোম
+:Home
+bs:Početna
+:Home
+ca-xv:Inici
+:Home
+dk:Hjem
+:Home
+et:Avaleht
+:Home
+eu:Hasiera
+:Home
+fy-nl:Thús
+:Home
+hr:Početna
+:Home
+jv:Omah
+:Home
+ka:მთავარი
+:Home
+ku:Serrûpel
+:Home
+kw:Tre
+:Home
+lt:Pradžia
+:Home
+mk:Дома
+:Home
+ml:ഹോം
+:Home
+mm:ပင်မ
+:Home
+ne:गृहपृष्ठ
+:Home
+nn:Heim
+:Home
+no:Hjem
+:Home
+pa:ਘਰ
+:Home
+si:මුල් පිටුව
+:Home
+sn:Musha
+:Home
+sp-rs:Početna
+:Home
+sq:Ballina
+:Home
+th:หน้าแรก
+:Home
+tl:Home
+:Home
+uk:Головна
+:Home
+vn:Trang chủ
+:Text Font:
+am:የጽሑፍ ቅርጸ ቁምፊ:
+:Text Font:
+ar:خط النص:
+:Text Font:
+az:Mətn Şrifti:
+:Text Font:
+br:Nodrezh an destenn:
+:Text Font:
+by:Шрыфт тэксту:
+:Text Font:
+ca:Tipus de lletra del text:
+:Text Font:
+cn:文本字体：
+:Text Font:
+co:Carattere di u testu:
+:Text Font:
+cy:Ffont Testun:
+:Text Font:
+cz:Písmo textu:
+:Text Font:
+de:Textschrift:
+:Text Font:
+el:Γραμματοσειρά Κειμένου:
+:Text Font:
+es:Fuente de texto:
+:Text Font:
+fa:قلم متن:
+:Text Font:
+fi:Tekstin fontti:
+:Text Font:
+fo:Tekstsnið:
+:Text Font:
+fr:Police du texte :
+:Text Font:
+ga:Cló Téacs:
+:Text Font:
+gl:Tipo de letra do texto:
+:Text Font:
+he:גופן טקסט:
+:Text Font:
+hi:पाठ फ़ॉन्ट:
+:Text Font:
+hu:Szöveg betűtípusa:
+:Text Font:
+id:Font Teks:
+:Text Font:
+it:Font del testo:
+:Text Font:
+ja:テキストフォント:
+:Text Font:
+kr:텍스트 폰트:
+:Text Font:
+lv:Teksta fonts:
+:Text Font:
+my:စာသား ဖောင့်:
+:Text Font:
+nl:Tekstlettertype:
+:Text Font:
+pl:Czcionka tekstu:
+:Text Font:
+pt:Fonte do Texto:
+:Text Font:
+ro:Font text:
+:Text Font:
+ru:Шрифт текста:
+:Text Font:
+sat:ᱚᱞ ᱪᱤᱠᱤ:
+:Text Font:
+sk:Písmo textu:
+:Text Font:
+sl:Pisava besedila:
+:Text Font:
+sr-rs:Фонт текста:
+:Text Font:
+sv:Texttypsnitt:
+:Text Font:
+ta:உரை எழுத்துரு:
+:Text Font:
+tr:Metin Yazı Tipi:
+:Text Font:
+tw:文字字型：
+:Text Font:
+uz:Matn shrifti:
+:Text Font:
+af:Tekslettertipe:
+:Text Font:
+bg:Шрифт на текста:
+:Text Font:
+bn:টেক্সট ফন্ট:
+:Text Font:
+bs:Font teksta:
+:Text Font:
+ca-xv:Tipus de lletra del text:
+:Text Font:
+dk:Tekstskrift:
+:Text Font:
+et:Teksti font:
+:Text Font:
+eu:Testu-letra-tipoa:
+:Text Font:
+fy-nl:Tekstlettertype:
+:Text Font:
+hr:Font teksta:
+:Text Font:
+jv:Font Teks:
+:Text Font:
+ka:ტექსტის შრიფტი:
+:Text Font:
+ku:فۆنتی دەق:
+:Text Font:
+kw:Fount Tekst:
+:Text Font:
+lt:Teksto šriftas:
+:Text Font:
+mk:Фонт на текст:
+:Text Font:
+ml:ടെക്സ്റ്റ് ഫോണ്ട്:
+:Text Font:
+mm:စာသား ဖောင့်:
+:Text Font:
+ne:पाठ फन्ट:
+:Text Font:
+nn:Tekstskrift:
+:Text Font:
+no:Tekstfont:
+:Text Font:
+pa:ਟੈਕਸਟ ਫੌਂਟ:
+:Text Font:
+si:පාඨ අකුරු:
+:Text Font:
+sn:Fonti Yezvinyorwa:
+:Text Font:
+sp-rs:Font teksta:
+:Text Font:
+sq:Fonti i Tekstit:
+:Text Font:
+th:แบบอักษรข้อความ:
+:Text Font:
+tl:Font ng Teksto:
+:Text Font:
+uk:Шрифт тексту:
+:Text Font:
+vn:Phông chữ:
+:Set theme '%s'
+pl:Ustaw motyw '%s'
+:Set theme '%s'
+am:ገጽታ '%s' ያቀናብሩ
+:Set theme '%s'
+ar:تعيين السمة '%s'
+:Set theme '%s'
+az:Temanı '%s' olaraq təyin et
+:Set theme '%s'
+br:Arventennañ an tem '%s'
+:Set theme '%s'
+by:Усталяваць тэму '%s'
+:Set theme '%s'
+ca:Estableix el tema '%s'
+:Set theme '%s'
+cn:设置主题 '%s'
+:Set theme '%s'
+co:Definisce u tema '%s'
+:Set theme '%s'
+cy:Gosod thema '%s'
+:Set theme '%s'
+cz:Nastavit motiv '%s'
+:Set theme '%s'
+de:Design '%s' festlegen
+:Set theme '%s'
+el:Ορισμός θέματος '%s'
+:Set theme '%s'
+es:Establecer tema '%s'
+:Set theme '%s'
+fa:تنظیم پوسته '%s'
+:Set theme '%s'
+fi:Aseta teema '%s'
+:Set theme '%s'
+fo:Set tema '%s'
+:Set theme '%s'
+fr:Définir le thème '%s'
+:Set theme '%s'
+ga:Socraigh téama '%s'
+:Set theme '%s'
+gl:Establecer tema '%s'
+:Set theme '%s'
+he:הגדר ערכת נושא '%s'
+:Set theme '%s'
+hi:थीम '%s' सेट करें
+:Set theme '%s'
+hu:Téma beállítása: '%s'
+:Set theme '%s'
+id:Atur tema '%s'
+:Set theme '%s'
+it:Imposta tema '%s'
+:Set theme '%s'
+ja:テーマ '%s' を設定
+:Set theme '%s'
+kr:테마 '%s' 설정
+:Set theme '%s'
+lv:Iestatīt tēmu '%s'
+:Set theme '%s'
+my:အပြင်အဆင် '%s' သတ်မှတ်ရန်
+:Set theme '%s'
+nl:Thema '%s' instellen
+:Set theme '%s'
+pt:Definir tema '%s'
+:Set theme '%s'
+ro:Setează tema '%s'
+:Set theme '%s'
+ru:Установить тему '%s'
+:Set theme '%s'
+sat:ᱛᱷᱤᱢ '%s' ᱥᱮᱴ ᱢᱮ
+:Set theme '%s'
+sk:Nastaviť tému '%s'
+:Set theme '%s'
+sl:Nastavi temo '%s'
+:Set theme '%s'
+sr-rs:Postavi temu '%s'
+:Set theme '%s'
+sv:Ange tema '%s'
+:Set theme '%s'
+ta:தீம் '%s' அமை
+:Set theme '%s'
+tr:'%s' temasını ayarla
+:Set theme '%s'
+tw:設定佈景主題「%s」
+:Set theme '%s'
+uz:'%s' mavzusini o'rnatish
+:Set theme '%s'
+af:Stel tema '%s' in
+:Set theme '%s'
+bg:Задаване на тема '%s'
+:Set theme '%s'
+bn:থিম '%s' সেট করুন
+:Set theme '%s'
+bs:Postavi temu '%s'
+:Set theme '%s'
+ca-xv:Estableix el tema «%s»
+:Set theme '%s'
+dk:Indstil tema '%s'
+:Set theme '%s'
+et:Määra teema '%s'
+:Set theme '%s'
+eu:'%s' gaia ezarri
+:Set theme '%s'
+fy-nl:Tema '%s' ynstelle
+:Set theme '%s'
+hr:Postavi temu '%s'
+:Set theme '%s'
+jv:Setel tema '%s'
+:Set theme '%s'
+ka:თემის დაყენება '%s'
+:Set theme '%s'
+ku:Dirba '%s' saz bike
+:Set theme '%s'
+kw:Settya tema '%s'
+:Set theme '%s'
+mk:Постави тема '%s'
+:Set theme '%s'
+ml:തീം '%s' സജ്ജമാക്കുക
+:Set theme '%s'
+mm:အပြင်အဆင် '%s' သတ်မှတ်ရန်
+:Set theme '%s'
+ne:थिम '%s' सेट गर्नुहोस्
+:Set theme '%s'
+nn:Vel tema '%s'
+:Set theme '%s'
+no:Angi tema '%s'
+:Set theme '%s'
+pa:ਥੀਮ '%s' ਸੈੱਟ ਕਰੋ
+:Set theme '%s'
+si:තේමාව '%s' සකසන්න
+:Set theme '%s'
+sn:Isa dingindira '%s'
+:Set theme '%s'
+sp-rs:Postavi temu '%s'
+:Set theme '%s'
+sq:Vendos temën '%s'
+:Set theme '%s'
+th:ตั้งค่าธีม '%s'
+:Set theme '%s'
+tl:Itakda ang tema '%s'
+:Set theme '%s'
+uk:Встановити тему '%s'
+:Set theme '%s'
+vn:Đặt giao diện '%s'
+:Set theme '%s'
+lt:Nustatyti temą '%s'

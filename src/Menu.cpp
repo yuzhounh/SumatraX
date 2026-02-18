@@ -1806,7 +1806,7 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
         // change from generic "Edit Annotations" to more specific
         // "Edit ${annotType} Annotation"
         TempStr t = AnnotationReadableNameTemp(ctx->annotationUnderCursor->type);
-        TempStr s = str::FormatTemp(_TRN("Edit %s Annotation"), t);
+        TempStr s = str::FormatTemp(_TRA("Edit %s Annotation"), t);
         MenuSetText(popup, CmdEditAnnotations, s);
     }
 
