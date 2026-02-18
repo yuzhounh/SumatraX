@@ -622,9 +622,11 @@ void MaybeDelayedWarningNotification(const char* fmt, ...) {
     char* msg = str::FmtV(fmt, args);
     va_end(args);
 
+    log(msg, false /* always */);
+
     HWND hwnd = GetHwndForNotification();
     if (hwnd) {
-        ShowWarningNotification(hwnd, msg, kNotifDefaultTimeOut);
+        ShowWarningNotification(hwnd, msg, kNotifNoTimeout);
     } else {
         StrNode* node = AllocStrNode(msg);
         ListInsertFront(&gDelayedNotifications, node);
@@ -637,7 +639,7 @@ void ShowMaybeDelayedNotifications(HWND hwndParent) {
     ListReverse(&gDelayedNotifications);
     StrNode* curr = gDelayedNotifications;
     while (curr) {
-        ShowWarningNotification(hwndParent, curr->s, kNotifDefaultTimeOut);
+        ShowWarningNotification(hwndParent, curr->s, kNotifNoTimeout);
         curr = curr->next;
     }
     ListDelete(gDelayedNotifications);

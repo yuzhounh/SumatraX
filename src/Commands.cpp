@@ -7,6 +7,7 @@
 #include "Settings.h"
 #include "GlobalPrefs.h"
 #include "DisplayMode.h"
+#include "Notifications.h"
 
 #include "utils/Log.h"
 
@@ -604,8 +605,7 @@ CustomCommand* CreateCommandFromDefinition(const char* definition) {
     const char* cmd = parts[0];
     int cmdId = GetCommandIdByName(cmd);
     if (cmdId < 0) {
-        // TODO: make it a notification
-        logf("CreateCommandFromDefinition: unknown cmd name in '%s'\n", definition);
+        MaybeDelayedWarningNotification("Error parsing Shortcuts: unknown cmd name in '%s'\n", definition);
         return nullptr;
     }
     if (parts.Size() == 1) {
@@ -651,7 +651,7 @@ CustomCommand* CreateCommandFromDefinition(const char* definition) {
         int id = argSpecs[i].cmdId;
         if (id == CmdNone) {
             // the command doesn't accept any arguments
-            logf("CreateCommandFromDefinition: cmd '%s' doesn't accept arguments\n", definition);
+            MaybeDelayedWarningNotification("Error parsing Shortcuts: cmd '%s' doesn't accept arguments\n", definition);
             return CreateCustomCommand(definition, cmdId, nullptr);
         }
         if (id != argCmdId) {
@@ -682,7 +682,7 @@ CustomCommand* CreateCommandFromDefinition(const char* definition) {
         }
     }
     if (!firstArg) {
-        logf("CreateCommandFromDefinition: failed to parse arguments for '%s'\n", definition);
+        MaybeDelayedWarningNotification("Error parsing Shortcuts: failed to parse arguments for '%s'\n", definition);
         return nullptr;
     }
 
@@ -703,7 +703,7 @@ CustomCommand* CreateCommandFromDefinition(const char* definition) {
         float zoomVal = ZoomFromString(firstArg->strVal, 0);
         if (0 == zoomVal) {
             FreeCommandArgs(firstArg);
-            logf("CreateCommandFromDefinition: failed to parse arguments in '%s'\n", definition);
+            MaybeDelayedWarningNotification("CreateCommandFromDefinition: failed to parse arguments in '%s'\n", definition);
             return nullptr;
         }
         firstArg->type = CommandArg::Type::Float;

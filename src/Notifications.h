@@ -12,6 +12,7 @@ using NotificationWndRemoved = Func1<NotificationWnd*>;
 
 constexpr const int kNotifDefaultTimeOut = 1000 * 3; // 3 seconds
 constexpr const int kNotif5SecsTimeOut = 1000 * 5;
+constexpr const int kNotifNoTimeout = 0;
 
 struct NotificationCreateArgs {
     HWND hwndParent = nullptr;
