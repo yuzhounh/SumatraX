@@ -1,5 +1,5 @@
 AppTranslator: SumatraPDF
-3e866bb19716708e80e2f50d15b2a8d133dd1902
+c23fa75d80c83a31bf6676208571436692c0e710
 :# File History
 pl:# Historia plików
 :%s annotation. Ctrl+click to edit.
@@ -13277,6 +13277,7 @@ uk:Підказка: Для повторного пошуку натисніть
 uz:Eslatma: qayta qidirish uchun F3 tugmasini bosing
 vn:Gợi ý: Nhấn phím F3 để tìm lại
 :Home
+pl:Startowa
 :Icon:
 am:Պատկերակ.
 ar:الأيقونة:
@@ -25226,6 +25227,7 @@ de:nicht verwenden
 pl:nie używaj
 sk:nepoužiť
 tw:不要使用
+:page %d, 
 :printing document
 am:Ֆայլը տպվում է
 ar:طباعة المستند
