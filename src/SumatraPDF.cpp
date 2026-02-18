@@ -6229,11 +6229,6 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         return 0;
     }
     UpdateAnnotationsList(tab->editAnnotsWindow);
-    if (win->isFullScreen) {
-        MainWindowRerender(win);
-        ToolbarUpdateStateForWindow(win, false);
-        return 0;
-    }
     if (openAnnotationEdit) {
         ShowEditAnnotationsWindow(tab, lastCreatedAnnot);
         return 0;
