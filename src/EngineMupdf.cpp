@@ -1599,11 +1599,23 @@ struct ContextThreadID {
 
 static Vec<ContextThreadID>* gPerThreadContexts;
 static CRITICAL_SECTION gPerThreadContextsCs;
+static AtomicInt gEngineCount = 0;
 
-void InitializeEngineMupdf() {
+static void InitializeEngineMupdf() {
+    auto n = AtomicIntInc(&gEngineCount);
+    if (n != 1) return;
     ReportIf(gPerThreadContexts);
     InitializeCriticalSection(&gPerThreadContextsCs);
     gPerThreadContexts = new Vec<ContextThreadID>();
+}
+
+static void DeInitializeEngineMupdf() {
+    auto n = AtomicIntDec(&gEngineCount);
+    if (n > 0) return;
+    ReportIf(n < 0);
+    DeleteCriticalSection(&gPerThreadContextsCs);
+    delete gPerThreadContexts;
+    gPerThreadContexts = nullptr;
 }
 
 fz_context* GetOrClonePerThreadContext(EngineMupdf* engine, fz_context* ctx) {
@@ -1667,6 +1679,7 @@ static void ReleaseAllPerThreadContexts(EngineMupdf* engine) {
 }
 
 EngineMupdf::EngineMupdf() {
+    InitializeEngineMupdf();
     kind = kindEngineMupdf;
     defaultExt = str::Dup(".pdf");
     fileDPI = 72.0f;
@@ -1733,6 +1746,8 @@ EngineMupdf::~EngineMupdf() {
     }
     LeaveCriticalSection(&pagesAccess);
     DeleteCriticalSection(&pagesAccess);
+
+    DeInitializeEngineMupdf();
 }
 
 class PasswordCloner : public PasswordUI {

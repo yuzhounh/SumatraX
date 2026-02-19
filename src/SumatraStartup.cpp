@@ -2359,9 +2359,6 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR, _
     gRenderCache->textColor = ThemeDocumentColors(gRenderCache->backgroundColor);
     // logfa("retrieved doc colors in WinMain: 0x%x 0x%x\n", gRenderCache->textColor, gRenderCache->backgroundColor);
 
-    extern void InitializeEngineMupdf();
-    InitializeEngineMupdf();
-
     gIsStartup = true;
     if (!RegisterWinClass()) {
         goto Exit;
