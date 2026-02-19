@@ -1,7 +1,8 @@
 AppTranslator: SumatraPDF
-c23fa75d80c83a31bf6676208571436692c0e710
+494b5dc83f60d560d5b1a9d888f602eeda9fdaf3
 :# File History
 pl:# Historia plików
+sk:# História súboru
 :%s annotation. Ctrl+click to edit.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
 ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
@@ -4020,10 +4021,13 @@ uz:(bet %s)
 vn:(trang %s)
 :: Everything
 pl:: Wszystko
+sk:: Všetko
 :> Commands
 pl:> Polecenia
+sk:> Príkazy
 :@ Tabs
 pl:@ Karty
+sk:@ Karty
 :About SumatraPDF
 af:Omtrent SumatraPDF
 am:SumatraPDF-ի մասին
@@ -10228,6 +10232,7 @@ uz:Izohlarni tahrirlash
 vn:Chỉnh Sửa Chú Thích
 :Embed...
 pl:Osadź...
+sk:Vložiť…
 :Enter password
 af:Tik Wagwoord In
 am:Գրեք գաղտնաբառը
@@ -13278,6 +13283,7 @@ uz:Eslatma: qayta qidirish uchun F3 tugmasini bosing
 vn:Gợi ý: Nhấn phím F3 để tìm lại
 :Home
 pl:Startowa
+sk:Domov
 :Icon:
 am:Պատկերակ.
 ar:الأيقونة:
@@ -20050,6 +20056,7 @@ uz:Yangi PDF-ga saqlash
 vn:Lưu &PDF mới
 :Save...
 pl:Zapisz...
+sk:Uložiť…
 :Saved annotations to '%s'
 am:Պահված մեկնաբանություններ '%s'-ում
 ar:حفظت الشروحات في '%s'
@@ -20975,6 +20982,8 @@ pl:Ustaw motyw
 sk:Nastaviť motív
 tw:設定主題
 :Set theme '%s'
+pl:Ustaw motyw „%s”
+sk:Nastaviť motív '%s'
 :Show &Bookmarks
 am:Ցուցադրել &Էջանիշերը
 ar:اظهار &قوائم العناوين
@@ -22860,6 +22869,7 @@ uz:Matn rangi:
 vn:Màu Sắc:
 :Text Font:
 pl:Czcionka tekstu:
+sk:Písmo textu:
 :Text Size:
 am:Գրվածքի չափ.
 ar:حجم النص:
