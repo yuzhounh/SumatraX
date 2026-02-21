@@ -1,5 +1,5 @@
 AppTranslator: SumatraPDF
-2042eba73ed5b19fa7cd9f0a8139a33ab08400c2
+67010342d8b616793df256f70d29fdc2c29dfcc5
 :# File History
 br:# Histórico de Arquivos
 de:# Dateiverlauf
@@ -10,7 +10,7 @@ sk:# História súboru
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
 ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
 az:Qeyd %s. Düzəliş etmək üçün Ctrl+düyməyə basın.
-br:Anotação %s. Ctrl+clique pra editar.
+br:Anotação %s. Ctrl + clique pra editar.
 by:%s анатацыя. Ctrl+клік, каб рэдагаваць.
 ca:Anotació %s. Ctrl+clic per editar.
 cn:%s 标注。按下 Ctrl 并单击以编辑。
@@ -8589,7 +8589,7 @@ uz:%s diskka yozib bo'lmadi
 vn:Không thể ghi %s vào đĩa
 :Create .lnk Shortcut
 am:Ստեղծել .lnk դյուրանցում
-br:Criar Atalho
+br:Criar Atalho .lnk
 cn:创建 .lnk 快捷方式
 co:Creà un accurtatoghju .lnk
 de:LNK-Verknüpfung erstellen
@@ -8885,7 +8885,7 @@ sk:Vytvoriť textovú anotáciu
 tw:建立文字註解
 :Create Underline Annotation
 am:Ստեղծել ընդգծված ծանոթագրություն
-br:Criar Anotação Sublinhado
+br:Criar Anotação do Sublinhado
 cn:创建下划线标注
 co:Creà un’annutazione sottulineata
 de:Unterstrichene Anmerkung erstellen
@@ -9358,7 +9358,7 @@ sk:Ladenie: Poškodená pamäť
 tw:除錯：損毀記憶體
 :Debug: Crash Me
 am:Վրիպազերծում. Ջարդիր ինձ
-br:Debug: Faça Eu Causar um Crash
+br:Debug: Cause um Crash em Mim
 cn:调试：使程序崩溃
 co:Spannatura : Tombami
 de:Debug: Absturz provozieren
@@ -10284,7 +10284,7 @@ uk:Змінити анотації
 uz:Izohlarni tahrirlash
 vn:Chỉnh Sửa Chú Thích
 :Embed...
-br:Encaixar...
+br:Enbutir...
 de:Einbetten…
 nl:Insluiten...
 pl:Osadź...
@@ -15873,7 +15873,7 @@ am:Բացել PDF-XChange-ում
 ar:فتح في PDF-XChange
 az:PD&F-XChange-də aç
 bg:Отворяне с PDF-XChange
-br:Abrir no PDF-XChange
+br:Abrir &no PDF-XChange
 bs:Otvori u PDF-XChange
 by:Адкрыць у PDF-XChange
 ca-xv:Obre amb el PDF-XChange
@@ -19413,7 +19413,7 @@ uz:Yangi nom
 vn:Đổi tên thành
 :Reopen Last Closed
 am:Վերաբացել վերջին փակվածը
-br:Reabrir Último Fechado
+br:Re-abrir o Último Fechado
 cn:重新打开上次关闭的文件
 co:Riapre l’ultimu chosu
 de:Zuletzt geschlossene erneut öffnen
@@ -20291,7 +20291,7 @@ sk:Posunúť nadol
 tw:向下捲動
 :Scroll Down By Half Page
 am:Գլորել ներքև կես էջով
-br:Rolar para Baixo Meia Página
+br:Rolar Meia Página pra Baixo
 cn:向下滚动半页
 co:Fà sfilà inghjò d’una mezapagina
 de:Eine halbe Seite nach unten scrollen
@@ -20301,7 +20301,7 @@ sk:Posunúť o polovicu strany nadol
 tw:向下捲動半頁
 :Scroll Down By Page
 am:Գլորել ներքև ըստ էջի
-br:Rolar para Baixo Uma Página
+br:Rolar Baixo Uma Página pra Baixo
 cn:向下滚动一页
 co:Fà sfilà inghjò d’una pagina
 de:Seitenweise nach unten scrollen
@@ -23548,7 +23548,7 @@ sk:Prepnúť priebežné zobrazenie
 tw:切換連續檢視
 :Toggle Cursor Position
 am:Ցուցիչի դիրքի փոխարկում
-br:Exibir/Ocultar Posição do Cursor
+br:Exibir/Ocultar a Posição do Cursor
 cn:切换光标位置显示
 co:Attivà o disattivà a pusizione di u cursore
 de:Cursorposition umschalten
@@ -23557,7 +23557,7 @@ sk:Prepnúť polohu kurzora
 tw:切換游標位置顯示
 :Toggle Favorites
 am:Միացնել/անջատել ընտրյալները
-br:Exibir/Ocultar Favoritos
+br:Exibir/Ocultar os Favoritos
 cn:切换收藏夹
 co:Attivà o disattivà i favuriti
 de:Favoriten umschalten
@@ -23593,7 +23593,7 @@ sk:Prepnúť inverzné vyhľadávanie
 tw:切換反向搜尋
 :Toggle Manga Mode
 am:Միացնել/անջատել մանգայի ռեժիմը
-br:Exibir/Ocultar Modo Mangá
+br:Exibir/Ocultar o Modo Mangá
 cn:切换漫画模式
 co:Attivà o disattivà u mode Manga
 de:Manga-Modus umschalten
@@ -24844,7 +24844,7 @@ ar:تكبير
 az:Böyüt
 bg:Увеличаване
 bn:বড় করুন
-br:Aumentar zoom
+br:Aumentar Zoom
 bs:Uvećaj
 by:Павялічыць
 ca-xv:Apropa't
@@ -24917,7 +24917,7 @@ ar:تصغير
 az:Kiçilt
 bg:Намаляне
 bn:ছোট করুন
-br:Diminuir zoom
+br:Diminuir Zoom
 bs:Umanji
 by:Паменьшыць
 ca-xv:Allunya't

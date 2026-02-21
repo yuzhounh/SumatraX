@@ -80,7 +80,7 @@ ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
 az:Qeyd %s. Düzəliş etmək üçün Ctrl+düyməyə basın.
 bg:%s анотация. Ctrl+клик за редактиране.
 bn:%s টীকা। সম্পাদনা করতে Ctrl+ক্লিক করুন।
-br:Anotação %s. Ctrl+clique pra editar.
+br:Anotação %s. Ctrl + clique pra editar.
 bs:%s anotacija. Ctrl+klik za uređivanje.
 by:%s анатацыя. Ctrl+клік, каб рэдагаваць.
 ca:Anotació %s. Ctrl+clic per editar.
@@ -10110,7 +10110,7 @@ ar:إنشاء اختصار .lnk
 az:.lnk Qısayolu Yarat
 bg:Създаване на .lnk пряк път
 bn:.lnk শর্টকাট তৈরি করুন
-br:Criar Atalho
+br:Criar Atalho .lnk
 bs:Kreiraj .lnk prečicu
 by:Стварыць .lnk ярлык
 ca:Crea una drecera .lnk
@@ -11554,7 +11554,7 @@ ar:إنشاء تعليق توضيحي للتسطير
 az:Altından Xətt Çəkmə Annotasiyası Yarat
 bg:Създаване на анотация с подчертаване
 bn:আন্ডারলাইন টীকা তৈরি করুন
-br:Criar Anotação Sublinhado
+br:Criar Anotação do Sublinhado
 bs:Kreiraj anotaciju podvlačenja
 by:Стварыць анатацыю-падкрэсліванне
 ca:Crea una anotació de subratllat
@@ -12190,7 +12190,7 @@ ar:تصحيح: تعطلني
 az:Sazlama: Çökdürmə
 bg:Отстраняване на грешки: Сринване
 bn:ডিবাগ: আমাকে ক্র্যাশ করুন
-br:Debug: Faça Eu Causar um Crash
+br:Debug: Cause um Crash em Mim
 bs:Debug: Pad programa
 by:Адладка: Выклікаць збой
 ca:Depuració: Provoca un error
@@ -13897,7 +13897,7 @@ ar:تضمين...
 az:Yerləşdir...
 bg:Вграждане...
 bn:এম্বেড করুন...
-br:Encaixar...
+br:Enbutir...
 bs:Ugradi...
 by:Убудаваць...
 ca:Incrusta...
@@ -21729,7 +21729,7 @@ am:Բացել PDF-XChange-ում
 ar:فتح في PDF-XChange
 az:PD&F-XChange-də aç
 bg:Отворяне с PDF-XChange
-br:Abrir no PDF-XChange
+br:Abrir &no PDF-XChange
 bs:Otvori u PDF-XChange
 by:Адкрыць у PDF-XChange
 ca:Obre amb el PDF-&XChange
@@ -27278,7 +27278,7 @@ ar:إعادة فتح آخر مغلق
 az:Son Bağlananı Yenidən Aç
 bg:Отвори последно затворения
 bn:শেষ বন্ধ করা পুনরায় খুলুন
-br:Reabrir Último Fechado
+br:Re-abrir o Último Fechado
 bs:Ponovo otvori zadnje zatvoreno
 by:Адкрыць апошні зачынены
 ca:Reobre l'últim tancat
@@ -28766,7 +28766,7 @@ ar:التمرير لأسفل بمقدار نصف صفحة
 az:Yarım Səhifə Aşağı Sürüşdür
 bg:Превъртане надолу с половин страница
 bn:অর্ধ পৃষ্ঠা নিচে স্ক্রল করুন
-br:Rolar para Baixo Meia Página
+br:Rolar Meia Página pra Baixo
 bs:Klizaj dolje za pola stranice
 by:Пракруціць уніз на паўстаронкі
 ca:Desplaça avall mitja pàgina
@@ -28839,7 +28839,7 @@ ar:التمرير لأسفل بمقدار صفحة
 az:Səhifə Aşağı Sürüşdür
 bg:Превъртане надолу със страница
 bn:পৃষ্ঠা অনুযায়ী নিচে স্ক্রল করুন
-br:Rolar para Baixo Uma Página
+br:Rolar Baixo Uma Página pra Baixo
 bs:Klizaj dolje za stranicu
 by:Пракруціць уніз на старонку
 ca:Desplaça avall una pàgina
@@ -34090,7 +34090,7 @@ ar:تبديل موضع المؤشر
 az:Kursor Mövqeyini Aç/Bağla
 bg:Превключване на позицията на курсора
 bn:কার্সার অবস্থান টগল করুন
-br:Exibir/Ocultar Posição do Cursor
+br:Exibir/Ocultar a Posição do Cursor
 bs:Uključi/isključi poziciju kursora
 by:Пераключыць пазіцыю курсора
 ca:Commuta la posició del cursor
@@ -34163,7 +34163,7 @@ ar:تبديل المفضلة
 az:Sevimlilər Aç/Bağla
 bg:Превключване на любими
 bn:প্রিয় টগল করুন
-br:Exibir/Ocultar Favoritos
+br:Exibir/Ocultar os Favoritos
 bs:Uključi/isključi favorite
 by:Пераключыць абранае
 ca:Commuta els preferits
@@ -34455,7 +34455,7 @@ ar:تبديل وضع المانجا
 az:Manqa Rejimini Aç/Bağla
 bg:Превключване на манга режим
 bn:মাঙ্গা মোড টগল করুন
-br:Exibir/Ocultar Modo Mangá
+br:Exibir/Ocultar o Modo Mangá
 bs:Uključi/isključi manga režim
 by:Пераключыць рэжым мангі
 ca:Commuta el mode manga
@@ -36765,7 +36765,7 @@ ar:تكبير
 az:Böyüt
 bg:Увеличаване
 bn:বড় করুন
-br:Aumentar zoom
+br:Aumentar Zoom
 bs:Uvećaj
 by:Павялічыць
 ca:Amplia
@@ -36838,7 +36838,7 @@ ar:تصغير
 az:Kiçilt
 bg:Намаляне
 bn:ছোট করুন
-br:Diminuir zoom
+br:Diminuir Zoom
 bs:Umanji
 by:Паменьшыць
 ca:Redueix
