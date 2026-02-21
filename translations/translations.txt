@@ -1,5 +1,5 @@
 AppTranslator: SumatraPDF
-67010342d8b616793df256f70d29fdc2c29dfcc5
+8ac149114eed8d5eebdd3ab828bd6ba69b2dabc1
 :# File History
 br:# Histórico de Arquivos
 de:# Dateiverlauf
@@ -25377,7 +25377,7 @@ nl:niet gebruiken
 pl:nie używaj
 sk:nepoužiť
 tw:不要使用
-:page %d, 
+:page %d,
 :printing document
 am:Ֆայլը տպվում է
 ar:طباعة المستند

@@ -351,9 +351,9 @@ static void RebuildAnnotationsListBox(EditAnnotationsWindow* ew) {
     for (int i = 0; i < n; i++) {
         auto annot = ew->annotations.at(i);
         s.Reset();
-        s.AppendFmt(_TRA("page %d, "), annot->pageNo);
+        s.AppendFmt(_TRA("page %d,"), annot->pageNo);
         TempStr name = AnnotationReadableNameTemp(annot->type);
-        s.Append(name);
+        s.AppendFmt(" %s", name);
         model->strings.Append(s.Get());
     }
 
