@@ -570,7 +570,9 @@ bool OnInverseSearch(MainWindow* win, int x, int y) {
     if (!inverseSearch) {
         Vec<TextEditor*> editors;
         DetectTextEditors(editors);
-        inverseSearch = str::DupTemp(editors[0]->openFileCmd);
+        if (editors.Size() > 0) {
+            inverseSearch = str::DupTemp(editors[0]->openFileCmd);
+        }
     }
 
     AutoFreeStr cmdLine;
