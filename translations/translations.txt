@@ -1,11 +1,14 @@
 AppTranslator: SumatraPDF
-8ac149114eed8d5eebdd3ab828bd6ba69b2dabc1
+b941a86f891a3a5a5a72a34f24b970f04ac19072
 :# File History
 br:# Histórico de Arquivos
+cn:# 文件历史记录
+co:# Cronolugia di schedariu
 de:# Dateiverlauf
 nl:# Bestandsgeschiedenis
 pl:# Historia plików
 sk:# História súboru
+tw:# 檔案歷程記錄
 :%s annotation. Ctrl+click to edit.
 am:%s մեկնաբանություն: Ctrl+քլիք՝ խմբագրելու համար:
 ar:شرح %s. مفتاح التحكم Ctrl مع النقر للتحرير.
@@ -4024,22 +4027,31 @@ uz:(bet %s)
 vn:(trang %s)
 :: Everything
 br:: Tudo
+cn:: 所有
+co:: Tuttu
 de:: Alles
 nl:: Alles
 pl:: Wszystko
 sk:: Všetko
+tw:: 全部
 :> Commands
 br:> Comandos
+cn:> 命令
+co:> Cumande
 de:> Befehle
 nl:> Commando's
 pl:> Polecenia
 sk:> Príkazy
+tw:> 命令
 :@ Tabs
 br:@ Abas
+cn:@ 标签页
+co:@ Unghjette
 de:@ Tabs
 nl:@ Tabs
 pl:@ Karty
 sk:@ Karty
+tw:@ 索引標籤
 :About SumatraPDF
 af:Omtrent SumatraPDF
 am:SumatraPDF-ի մասին
@@ -10284,11 +10296,14 @@ uk:Змінити анотації
 uz:Izohlarni tahrirlash
 vn:Chỉnh Sửa Chú Thích
 :Embed...
-br:Enbutir...
+br:Embutir...
+cn:嵌入…
+co:@ Unghjette
 de:Einbetten…
 nl:Insluiten...
 pl:Osadź...
 sk:Vložiť…
+tw:内嵌…
 :Enter password
 af:Tik Wagwoord In
 am:Գրեք գաղտնաբառը
@@ -13010,7 +13025,7 @@ uz:Shriftlar haqida ma’lumot olish
 vn:Lấy Thông Tin Fonts
 :Go to Page...
 am:Անցնել էջին...
-br:Ir para Página...
+br:Ir para a Página...
 cn:转到页面…
 co:Andà à a pagina…
 de:Zu Seite gehen…
@@ -13353,10 +13368,13 @@ uz:Eslatma: qayta qidirish uchun F3 tugmasini bosing
 vn:Gợi ý: Nhấn phím F3 để tìm lại
 :Home
 br:Início
+cn:主页
+co:Accolta
 de:Startseite
 nl:Thuis
 pl:Startowa
 sk:Domov
+tw:首頁
 :Icon:
 am:Պատկերակ.
 ar:الأيقونة:
@@ -20169,10 +20187,13 @@ uz:Yangi PDF-ga saqlash
 vn:Lưu &PDF mới
 :Save...
 br:Salvar...
+cn:保存…
+co:Arregistrà…
 de:Speichern…
 nl:Opslaan...
 pl:Zapisz...
 sk:Uložiť…
+tw:儲存…
 :Saved annotations to '%s'
 am:Պահված մեկնաբանություններ '%s'-ում
 ar:حفظت الشروحات في '%s'
@@ -21117,10 +21138,13 @@ sk:Nastaviť motív
 tw:設定主題
 :Set theme '%s'
 br:Definir tema '%s'
+cn:设置为 '%s' 主题
+co:Definisce u tema « %s »
 de:Design '%s' festlegen
 nl:Stel thema '%s' in
 pl:Ustaw motyw „%s”
 sk:Nastaviť motív '%s'
+tw:設定成 '%s' 主題
 :Show &Bookmarks
 am:Ցուցադրել &Էջանիշերը
 ar:اظهار &قوائم العناوين
@@ -21443,6 +21467,7 @@ br:Mostrar Anotações
 cn:显示标注
 co:Affissà l’annutazioni
 de:Anmerkungen anzeigen
+nl:Toon Notaties
 pl:Pokaż adnotacje
 sk:Zobraziť anotácie
 tw:顯示註解
@@ -21503,6 +21528,7 @@ br:Mostrar as Propriedades do Documento...
 cn:显示文档属性…
 co:Affissà i pruprietà di u ducumentu…
 de:Dokumenteigenschaften anzeigen…
+nl:Toon Document Eigenschappen...
 pl:Pokaż właściwości dokumentu...
 sk:Zobraziť vlastnosti dokumentu…
 tw:顯示文件內容…
@@ -21578,6 +21604,7 @@ br:Mostrar Arquivo na Pasta...
 cn:在文件夹中显示文件…
 co:Affissà u schedariu in u cartulare…
 de:Datei im Ordner anzeigen…
+nl:Toon Bestand in Map
 pl:Pokaż plik w folderze...
 sk:Zobraziť súbor v priečinku…
 tw:在資料夾中顯示檔案…
@@ -21587,6 +21614,7 @@ br:Mostrar Registros
 cn:显示日志
 co:Affissà i ghjurnali di messaghji
 de:Protokolle anzeigen
+nl:Toon Log's
 pl:Pokaż dzienniki
 sk:Zobraziť logy
 tw:顯示記錄
@@ -21965,6 +21993,7 @@ br:Visualização de Página Única
 cn:单页视图
 co:Affissà da una pagina
 de:Einzelseitenansicht
+nl:Weergave van één pagina
 pl:Widok pojedynczej strony
 sk:Zobrazenie jednej strany
 tw:單頁檢視
@@ -21974,6 +22003,7 @@ br:Próxima Aba Inteligente
 cn:智能切换到下一标签页
 co:Frizzulà l’unghjetta seguente
 de:Intelligenter nächster Tab
+nl:Slimme Volgende Tab
 pl:Następna karta inteligentnie
 sk:Inteligentné prepínanie kariet
 tw:智慧切換下一個分頁
@@ -23006,9 +23036,13 @@ uz:Matn rangi:
 vn:Màu Sắc:
 :Text Font:
 br:Fonte do Texto
+cn:文本字体：
+co:Grafia di testu :
 de:Schriftart:
+nl:Tekst Lettertype:
 pl:Czcionka tekstu:
 sk:Písmo textu:
+tw:文字字型：
 :Text Size:
 am:Գրվածքի չափ.
 ar:حجم النص:
@@ -23525,6 +23559,7 @@ br:Ativar/Desativar a Renderização com Anti-Aliasing
 cn:切换抗锯齿渲染
 co:Attivà o disattivà a restituzione antimerlata
 de:Anti-Aliasing-Rendering umschalten
+nl:Anti Aliasing IN-/UIT Schakelen
 pl:Przełącz renderowanie antyaliasingowe
 sk:Prepnúť vykresľovanie s vyhladzovaním
 tw:切換消除鋸齒渲染
@@ -23534,6 +23569,7 @@ br:Ativar/Desativar Favoritos
 cn:切换书签
 co:Attivà o disattivà l’indette
 de:Lesezeichen umschalten
+nl:Bladwijzers IN/UIT Schakelen
 pl:Przełącz zakładki
 sk:Prepnúť záložky
 tw:切換書籤
@@ -23543,6 +23579,7 @@ br:Ativar/Desativar a Visualização Contínua
 cn:切换连续显示
 co:Attivà o disattivà a vista in cuntinuu
 de:Fortlaufende Ansicht umschalten
+nl:Continue Tonen IN/UIT Schakelen
 pl:Przełącz widok ciągły
 sk:Prepnúť priebežné zobrazenie
 tw:切換連續檢視
@@ -23552,6 +23589,7 @@ br:Exibir/Ocultar a Posição do Cursor
 cn:切换光标位置显示
 co:Attivà o disattivà a pusizione di u cursore
 de:Cursorposition umschalten
+nl:Cursor Positie Wisselen
 pl:Przełącz pozycję kursora
 sk:Prepnúť polohu kurzora
 tw:切換游標位置顯示
@@ -23561,6 +23599,7 @@ br:Exibir/Ocultar os Favoritos
 cn:切换收藏夹
 co:Attivà o disattivà i favuriti
 de:Favoriten umschalten
+nl:Favorieten IN/UIT Schakelen
 pl:Przełącz ulubione
 sk:Prepnúť obľúbené
 tw:切換我的最愛
@@ -23570,6 +23609,7 @@ br:Exibir/Ocultar Lidos Frequentemente
 cn:切换经常打开的文件
 co:Attivà o disattivà i ducumenti letti aspessu
 de:Häufig gelesene anzeigen/ausblenden
+nl:Veelgelezen Berichten Tonen/Verbergen
 pl:Przełącz ostatnio otwierane
 sk:Prepnúť často čítané
 tw:切換經常開啟的檔案
@@ -23579,6 +23619,7 @@ br:Ativar/Desativar a Tela Cheia
 cn:切换全屏
 co:Attivà o disattivà u screnu sanu
 de:Vollbild umschalten
+nl:Volledig Scherm IN\UIT Schakelen
 pl:Przełącz tryb pełnoekranowy
 sk:Prepnúť zobrazenie na celú obrazovku
 tw:切換全螢幕
@@ -23588,6 +23629,7 @@ br:Ativar/Desativar a Busca Invertida
 cn:切换逆向搜索
 co:Attivà o disattivà a ricerca à l’arritrosa
 de:Rückwärtssuche umschalten
+nl:Omgekeerd Zoeken IN/UIT Schakelen
 pl:Przełącz odwrotne wyszukiwanie
 sk:Prepnúť inverzné vyhľadávanie
 tw:切換反向搜尋
@@ -23597,6 +23639,7 @@ br:Exibir/Ocultar o Modo Mangá
 cn:切换漫画模式
 co:Attivà o disattivà u mode Manga
 de:Manga-Modus umschalten
+nl:Manga Modus IN/UIT Schakelen
 pl:Przełącz tryb mangi
 sk:Prepnúť režim Manga
 tw:切換漫畫模式
@@ -23617,6 +23660,7 @@ br:Ativar/Desativar a Barra do Menu
 cn:切换菜单栏
 co:Attivà o disattivà a barra di listinu
 de:Menüleiste umschalten
+nl:Menubalk Tonen/Verbergen
 pl:Przełącz pasek menu
 sk:Prepnúť panel s ponukami
 tw:切換功能表列
@@ -23626,6 +23670,7 @@ br:Exibir/Ocultar Informações da Página
 cn:切换页面信息
 co:Attivà o disattivà l’infurmazione nant’à a pagina
 de:Seiteninfo umschalten
+nl:Pagina Info Tonen/Verbergen
 pl:Przełącz informacje o stronie
 sk:Prepnúť informácie o strane
 tw:切換頁面資訊
@@ -23635,6 +23680,7 @@ br:Exibir/Ocultar Barras de Rolagem
 cn:切换滚动条
 co:Attivà o disattivà e barre di sfilarata
 de:Bildlaufleisten umschalten
+nl:Schuifbalken IN/UIT Schakelen
 pl:Przełącz paski przewijania
 sk:Prepnúť posuvníky
 tw:切換捲軸
@@ -23644,6 +23690,7 @@ br:Ativar/Desativar a Mostra de Anotações
 cn:切换显示标注
 co:Attivà o disattivà l’affissera di l’annutazioni
 de:Anmerkungen anzeigen/ausblenden
+nl:Notaties Tonen/Verbergen
 pl:Przełącz pokazywanie adnotacji
 sk:Prepnúť Zobraziť anotácie
 tw:切換顯示註解
@@ -23653,6 +23700,7 @@ br:Ativar/Desativar a Mostra de Links
 cn:切换显示链接
 co:Attivà o disattivà l’affissera di i liami
 de:Links anzeigen/ausblenden
+nl:Links Tonen/Verbergen
 pl:Przełącz pokazywanie odnośników
 sk:Prepnúť Zobraziť odkazy
 tw:切換顯示連結
@@ -23662,6 +23710,7 @@ br:Ativar/Desativar a Tabela de Conteúdos
 cn:切换目录
 co:Attivà o disattivà a tavula di cuntenutu
 de:Inhaltsverzeichnis umschalten
+nl:Inhoudsopgave Tonen/Verbergen
 pl:Przełącz spis treści
 sk:Prepnúť obsah
 tw:切換目錄
@@ -23671,6 +23720,7 @@ br:Ativar/Desativar a Barra de Ferramentas
 cn:切换工具栏
 co:Attivà o disattivà a barra d’attrezzi
 de:Werkzeugleiste umschalten
+nl:Werkbalk Tonen/Verbergen
 pl:Przełącz pasek narzędzi
 sk:Prepnúť panel nástrojov
 tw:切換工具列
@@ -23680,6 +23730,7 @@ br:Ativar/Desativar Zoom
 cn:切换缩放
 co:Attivà o disattivà l’ingrandamentu
 de:Zoom umschalten
+nl:Zoom IN/UIT Schakelen
 pl:Przełącz powiększenie
 sk:Prepnúť zväčšenie
 tw:切換縮放
@@ -23689,6 +23740,7 @@ br:Traduzir a Seleção com o DeepL
 cn:使用 DeepL 翻译所选内容
 co:Traduce a selezzione cù DeepL
 de:Auswahl mit DeepL übersetzen
+nl:Vertaal Selectie Met DeepL
 pl:Przetłumacz zaznaczenie za pomocą DeepL
 sk:Preložiť výber pomocou DeepL
 tw:以 DeepL 翻譯選取內容
@@ -23698,6 +23750,7 @@ br:Traduzir a Seleção com o Google
 cn:使用 Google 翻译所选内容
 co:Traduce a selezzione cù Google
 de:Auswahl mit Google Translate übersetzen
+nl:Vertaal Selectie Met Google
 pl:Przetłumacz zaznaczenie za pomocą Google
 sk:Preložiť výber pomocou Google
 tw:以 Google 翻譯選取內容
@@ -24275,6 +24328,7 @@ br:Visualizar com o Visualizador Externo Personalizado
 cn:通过自定义外部查看器查看
 co:Affissà cù un lettore esternu persunalizatu
 de:Mit benutzerdefiniertem externen Betrachter anzeigen
+nl:Bekijken Met Aangepaste Externe Viewer
 pl:Widok za pomocą niestandardowej przeglądarki zewnętrznej
 sk:Zobraziť pomocou vlastného externého prehliadača
 tw:以自訂外部檢視器檢視
@@ -24284,6 +24338,7 @@ br:Visualizar: Modo de Apresentação
 cn:视图：演示模式
 co:Vista : Modu di presentazione
 de:Ansicht: Präsentationsmodus
+nl:Toon: Presentatie Modus
 pl:Widok: tryb prezentacji
 sk:Zobraziť: Režim prezentácie
 tw:檢視：簡報模式
@@ -25056,6 +25111,7 @@ br:Zoom: 100%
 cn:缩放：100%
 co:Ingrandamentu : 100%
 de:Zoom: 100 %
+nl:Zoom: 100%
 pl:Powiększenie: 100%
 sk:Zväčšiť: 100 %
 tw:縮放：100%
@@ -25065,6 +25121,7 @@ br:Zoom: 12.5%
 cn:缩放：12.5%
 co:Ingrandamentu : 12,5%
 de:Zoom: 12,5 %
+nl:Zoom: 12.5%
 pl:Powiększenie: 12,5%
 sk:Zväčšiť: 12.5%
 tw:縮放：12.5%
@@ -25074,6 +25131,7 @@ br:Zoom: 125%
 cn:缩放：125%
 co:Ingrandamentu : 125%
 de:Zoom: 125 %
+nl:Zoom: 125%
 pl:Powiększenie: 125%
 sk:Zväčšiť: 125%
 tw:縮放：125%
@@ -25083,6 +25141,7 @@ br:Zoom: 150%
 cn:缩放：150%
 co:Ingrandamentu : 150%
 de:Zoom: 150 %
+nl:Zoom: 150%
 pl:Powiększenie: 150%
 sk:Zväčšiť: 150%
 tw:縮放：150%
@@ -25092,6 +25151,7 @@ br:Zoom: 1600%
 cn:缩放：1600%
 co:Ingrandamentu : 1600%
 de:Zoom: 1600 %
+nl:Zoom: 1600%
 pl:Powiększenie: 1600%
 sk:Zväčšiť: 1600%
 tw:縮放：1600%
@@ -25101,6 +25161,7 @@ br:Zoom: 200%
 cn:缩放：200%
 co:Ingrandamentu : 200%
 de:Zoom: 200 %
+nl:Zoom: 200%
 pl:Powiększenie: 200%
 sk:Zväčšiť: 200%
 tw:縮放：200%
@@ -25110,6 +25171,7 @@ br:Zoom: 25%
 cn:缩放：25%
 co:Ingrandamentu : 25%
 de:Zoom: 25 %
+nl:Zoom: 25%
 pl:Powiększenie: 25%
 sk:Zväčšiť: 25%
 tw:縮放：25%
@@ -25119,6 +25181,7 @@ br:Zoom: 3200%
 cn:缩放：3200%
 co:Ingrandamentu : 3200%
 de:Zoom: 3200 %
+nl:Zoom: 3200%
 pl:Powiększenie: 3200%
 sk:Zväčšiť: 3200%
 tw:縮放：3200%
@@ -25128,6 +25191,7 @@ br:Zoom: 400%
 cn:缩放：400%
 co:Ingrandamentu : 400%
 de:Zoom: 400 %
+nl:Zoom: 400%
 pl:Powiększenie: 400%
 sk:Zväčšiť: 400%
 tw:縮放：400%
@@ -25137,6 +25201,7 @@ br:Zoom: 50%
 cn:缩放：50%
 co:Ingrandamentu : 50%
 de:Zoom: 50 %
+nl:Zoom: 50%
 pl:Powiększenie: 50%
 sk:Zväčšiť: 50%
 tw:縮放：50%
@@ -25146,6 +25211,7 @@ br:Zoom: 6400%
 cn:缩放：6400%
 co:Ingrandamentu : 6400%
 de:Zoom: 6400 %
+nl:Zoom: 6400%
 pl:Powiększenie: 6400%
 sk:Zväčšiť: 6400%
 tw:縮放：6400%
@@ -25155,6 +25221,7 @@ br:Zoom: 8.33%
 cn:缩放：8.33%
 co:Ingrandamentu : 8,33%
 de:Zoom: 8,33 %
+nl:Zoom: 8.33%
 pl:Powiększenie: 8,33%
 sk:Zväčšiť: 8.33%
 tw:縮放：8.33%
@@ -25164,6 +25231,7 @@ br:Zoom: 800%
 cn:缩放：800%
 co:Ingrandamentu : 800%
 de:Zoom: 800 %
+nl:Zoom: 800%
 pl:Powiększenie: 800%
 sk:Zväčšiť: 800%
 tw:縮放：800%
@@ -25173,6 +25241,7 @@ br:Zoom: Tamanho Real
 cn:缩放：实际大小
 co:Ingrandamentu : dimensione attuate
 de:Zoom: Tatsächliche Größe
+nl:Zoom: Werkelijke Grootte
 pl:Powiększenie: rozmiar rzeczywisty
 sk:Zväčšiť: Skutočná veľkosť
 tw:縮放：實際大小
@@ -25182,6 +25251,7 @@ br:Zoom: Personalizado...
 cn:缩放：自定义…
 co:Ingrandamentu : persunalizatu…
 de:Zoom: Benutzerdefiniert…
+nl:Zoom: Aangepast...
 pl:Powiększenie: niestandardowe...
 sk:Zväčšiť: Vlastné…
 tw:縮放：自訂…
@@ -25191,6 +25261,7 @@ br:Zoom: Ajustar ao Conteúdo
 cn:缩放：适合内容
 co:Ingrandamentu : adattà à u cuntenutu
 de:Zoom: An Inhalt anpassen
+nl:Zoom: Inhoud Aanpassen
 pl:Powiększenie: dopasuj do zawartości
 sk:Zväčšiť: Prispôsobiť obsah
 tw:縮放：符合內容
@@ -25200,6 +25271,7 @@ br:Zoom: Ajustar à Página
 cn:缩放：适合页面
 co:Ingrandamentu : adattà à a pagina
 de:Zoom: An Seite anpassen
+nl:Zoom: Pagina Passend
 pl:Powiększenie: dopasuj do całej strony
 sk:Zväčšiť: Prispôsobiť strane
 tw:縮放：符合頁面
@@ -25209,6 +25281,7 @@ br:Zoom> Ajustar à Página e Página Única
 cn:缩放：适合页面且单页视图
 co:Ingrandamentu : adattà à a pagina è à a pagina sana
 de:Zoom: Seite anpassen und Einzelseite
+nl:Zoom: Pagina Passend en Enkele Pagina
 pl:Powiększenie: dopasuj do całej i pojedynczej strony
 sk:Zväčšiť: Prispôsobiť strane a jedna strana
 tw:縮放：符合頁面、單頁檢視
@@ -25218,6 +25291,7 @@ br:Zoom: Ajustar pela Largura
 cn:缩放：适合宽度
 co:Ingrandamentu : adattà à a larghezza
 de:Zoom: An Fensterbreite anpassen
+nl:Zoom: Breedte Aanpassen
 pl:Powiększenie: dopasuj do szerokości strony
 sk:Zväčšiť: Prispôsobiť šírke
 tw:縮放：符合頁面寬度
@@ -25227,6 +25301,7 @@ br:Zoom: Ajustar pela Largura e Contínua
 cn:缩放：适合宽度且连续显示
 co:Ingrandamentu : adattà à a larghezza è lettura in cuntinuu
 de:Zoom: Fortlaufend an Fensterbreite anpassen
+nl:Zoom: Breedte Aangepast en Doorlopend
 pl:Powiększenie: dopasuj do szerokości i w układzie ciągłym
 sk:Zväčšiť: Prispôsobiť šírke a zobrazovať stránky priebežne
 tw:縮放：符合頁寬，連續顯示
@@ -25378,6 +25453,15 @@ pl:nie używaj
 sk:nepoužiť
 tw:不要使用
 :page %d,
+br:página %d,
+cn:第 %d 页，
+co:pagina %d,
+de:Seite %d,
+ga:leathanach %d,
+nl:pagina %d,
+pl:strona %d,
+sk:stranu %d,
+tw:第 %d 頁，
 :printing document
 am:Ֆայլը տպվում է
 ar:طباعة المستند
