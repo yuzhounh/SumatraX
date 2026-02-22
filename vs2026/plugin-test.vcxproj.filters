@@ -7,7 +7,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\CrashHandlerNoOp.cpp" />
-    <ClCompile Include="..\src\tools\signfile.cpp">
+    <ClCompile Include="..\src\tools\plugin-test.cpp">
       <Filter>tools</Filter>
     </ClCompile>
   </ItemGroup>

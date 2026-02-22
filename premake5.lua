@@ -137,16 +137,6 @@ function optimized_conf()
   filter {}
 end
 
--- TODO: temporary, create 2022 project in 2026
--- directory and then needs manual retarget in vs2026
--- in premake5 beta 8 (not yet released) vs2026 action
--- is supported and we'll be able to switch to that
-function conf_2026()
-  filter { "options:with-2026" }
-    location "vs2026"
-  filter {}
-end
-
 -- per-workspace setting that differ in clang-cl.exe vs cl.exe builds
 function clang_conf()
   filter "options:with-clang"
@@ -224,9 +214,11 @@ workspace "SumatraPDF"
     location "vs2022"
   filter {}
 
+  filter "action:vs2026"
+    location "vs2026"
+  filter {}
 
   clang_conf()
-  conf_2026()
 
   filter {"platforms:x86", "configurations:Release"}
     targetdir "out/rel32"
@@ -939,8 +931,11 @@ workspace "MakeLZSA"
     location "vs2022"
   filter {}
 
+  filter "action:vs2026"
+    location "vs2026"
+  filter {}
+
   clang_conf()
-  conf_2026()
 
   filter {"platforms:x86", "configurations:Release"}
     targetdir "out/rel32"

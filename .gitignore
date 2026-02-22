@@ -15,6 +15,8 @@ out/
 builds/
 mupdf/generated/
 vs2022/.vs/
+vs2026/.vs/
+vs2022-clang/
 vs2022-clang/.vs/
 .vscode/db/
 .vscode/ipch/
@@ -49,8 +51,6 @@ docs/md/.obsidian/workspace.json
 # must be done in every checkout
 docs/manual.dat
 
-vs2022-clang/
-vs2026/
 .claude/settings.local.json
 pipe-preview-results
 nul
