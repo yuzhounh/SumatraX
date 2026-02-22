@@ -560,27 +560,63 @@ workspace "SumatraPDF"
       "mupdf/resources/fonts/noto/NotoSerif-Regular.otf",
     }
 
-    filter {'files:**.cff'}
-       buildmessage  '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_cff %{cfg.architecture}'
+    filter {'files:**.cff', 'platforms:x86'}
+       buildmessage  'bin2coff %{file.basename}.cff (x86)'
        buildoutputs { '%{cfg.objdir}/%{file.basename}.obj' }
        buildcommands {
-          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_cff %{cfg.architecture}'
+          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_cff x86'
+       }
+    filter {'files:**.cff', 'platforms:x64 or x64_asan'}
+       buildmessage  'bin2coff %{file.basename}.cff (x64)'
+       buildoutputs { '%{cfg.objdir}/%{file.basename}.obj' }
+       buildcommands {
+          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_cff x86_64'
+       }
+    filter {'files:**.cff', 'platforms:arm64'}
+       buildmessage  'bin2coff %{file.basename}.cff (arm64)'
+       buildoutputs { '%{cfg.objdir}/%{file.basename}.obj' }
+       buildcommands {
+          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_cff ARM64'
        }
     filter {}
 
-    filter {'files:**.ttf'}
-       buildmessage '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_ttf %{cfg.architecture}'
+    filter {'files:**.ttf', 'platforms:x86'}
+       buildmessage 'bin2coff %{file.basename}.ttf (x86)'
        buildoutputs { '%{cfg.objdir}/%{file.basename}.obj' }
        buildcommands {
-          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_ttf %{cfg.architecture}'
+          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_ttf x86'
+       }
+    filter {'files:**.ttf', 'platforms:x64 or x64_asan'}
+       buildmessage 'bin2coff %{file.basename}.ttf (x64)'
+       buildoutputs { '%{cfg.objdir}/%{file.basename}.obj' }
+       buildcommands {
+          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_ttf x86_64'
+       }
+    filter {'files:**.ttf', 'platforms:arm64'}
+       buildmessage 'bin2coff %{file.basename}.ttf (arm64)'
+       buildoutputs { '%{cfg.objdir}/%{file.basename}.obj' }
+       buildcommands {
+          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_ttf ARM64'
        }
     filter {}
 
-    filter {'files:**.otf'}
-       buildmessage '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_otf %{cfg.architecture}'
+    filter {'files:**.otf', 'platforms:x86'}
+       buildmessage 'bin2coff %{file.basename}.otf (x86)'
        buildoutputs { '%{cfg.objdir}/%{file.basename}.obj' }
        buildcommands {
-          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_otf %{cfg.architecture}'
+          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_otf x86'
+       }
+    filter {'files:**.otf', 'platforms:x64 or x64_asan'}
+       buildmessage 'bin2coff %{file.basename}.otf (x64)'
+       buildoutputs { '%{cfg.objdir}/%{file.basename}.obj' }
+       buildcommands {
+          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_otf x86_64'
+       }
+    filter {'files:**.otf', 'platforms:arm64'}
+       buildmessage 'bin2coff %{file.basename}.otf (arm64)'
+       buildoutputs { '%{cfg.objdir}/%{file.basename}.obj' }
+       buildcommands {
+          '..\\bin\\bin2coff.exe "%{file.relpath}" "%{cfg.objdir}/%{file.basename}.obj" _binary_%{file.basename}_otf ARM64'
        }
     filter {}
   end
