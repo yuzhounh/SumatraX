@@ -61,12 +61,6 @@ newoption {
    description = "use clang-cl.exe instead of cl.exe"
 }
 
--- TODO: won't be needed with premake5 beta 8
-newoption {
-   trigger = "with-2026",
-   description = "use vs2026 directory"
-}
-
 -- TODO: test this option
 -- usestandardpreprocessor 'On'
 
@@ -82,7 +76,7 @@ include("premake5.files.lua")
 -- setup WebView2 paths
 function webview_conf()
   includedirs { "packages/Microsoft.Web.WebView2.1.0.992.28/build/native/include" }
-  filter "platforms:x32"
+  filter "platforms:x86"
     libdirs { "packages/Microsoft.Web.WebView2.1.0.992.28/build/native/x86" }
   filter "platforms:x64 or x64_asan"
     libdirs { "packages/Microsoft.Web.WebView2.1.0.992.28/build/native/x64" }
@@ -112,7 +106,7 @@ function mixed_dbg_rel_conf()
     optimize "Size"
 
   -- asan builds: no ltcg
-  filter { "configurations:Release*", "platforms:x32 or x64 or arm64" }
+  filter { "configurations:Release*", "platforms:x86 or x64 or arm64" }
     linktimeoptimization "On"
   filter {}
 end
@@ -138,7 +132,7 @@ function optimized_conf()
     defines { "NDEBUG" }
   filter {}
 
-  filter { "configurations:Release*", "platforms:x32 or x64 or arm64" }
+  filter { "configurations:Release*", "platforms:x86 or x64 or arm64" }
     linktimeoptimization "On"
   filter {}
 end
@@ -197,10 +191,10 @@ end
 
 workspace "SumatraPDF"
   configurations { "Debug", "DebugFull", "Release", "ReleaseAnalyze", }
-  platforms { "x32", "x64", "arm64", "x64_asan" }
+  platforms { "x86", "x64", "arm64", "x64_asan" }
   startproject "SumatraPDF"
 
-  filter "platforms:x32"
+  filter "platforms:x86"
      architecture "x86"
   filter {}
 
@@ -234,13 +228,13 @@ workspace "SumatraPDF"
   clang_conf()
   conf_2026()
 
-  filter {"platforms:x32", "configurations:Release"}
+  filter {"platforms:x86", "configurations:Release"}
     targetdir "out/rel32"
-  filter {"platforms:x32", "configurations:ReleaseAnalyze"}
+  filter {"platforms:x86", "configurations:ReleaseAnalyze"}
     targetdir "out/rel32_prefast"
-  filter {"platforms:x32", "configurations:Debug"}
+  filter {"platforms:x86", "configurations:Debug"}
     targetdir "out/dbg32"
-  filter {"platforms:x32", "configurations:DebugFull"}
+  filter {"platforms:x86", "configurations:DebugFull"}
     targetdir "out/dbgfull32"
 
   filter {"platforms:x64", "configurations:Release"}
@@ -386,7 +380,7 @@ workspace "SumatraPDF"
     language "C"
     optimized_conf()
     defines { "_CRT_SECURE_NO_WARNINGS" }
-    filter {'platforms:x32'}
+    filter {'platforms:x86'}
       defines { "ARCH_X86_32=1", "ARCH_X86_64=0", "__SSE2__" }
     filter {'platforms:x64 or x64_asan'}
       defines { "ARCH_X86_32=0", "ARCH_X86_64=1" }
@@ -397,7 +391,7 @@ workspace "SumatraPDF"
     -- -I .\ext\libjpeg-turbo\win\ -f win32
     -- -o .\obj-rel\jpegturbo\jsimdcpu.obj
     -- .\ext\libjpeg-turbo\simd\jsimdcpu.asm
-    filter {'files:**.asm', 'platforms:x32'}
+    filter {'files:**.asm', 'platforms:x86'}
        buildmessage '%{file.relpath}'
        buildoutputs { '%{cfg.objdir}/%{file.basename}_asm.obj' }
        buildcommands {
@@ -413,7 +407,7 @@ workspace "SumatraPDF"
     filter {}
 
     dav1d_files()
-    filter {'platforms:x32 or x64 or x64_asan'}
+    filter {'platforms:x86 or x64 or x64_asan'}
     dav1d_x68_files()
     filter {}
 
@@ -445,7 +439,7 @@ workspace "SumatraPDF"
     -- -I .\ext\libjpeg-turbo\win\ -f win32
     -- -o .\obj-rel\jpegturbo\jsimdcpu.obj
     -- .\ext\libjpeg-turbo\simd\jsimdcpu.asm
-    filter {'files:**.asm', 'platforms:x32'}
+    filter {'files:**.asm', 'platforms:x86'}
        buildmessage '%{file.relpath}'
        buildoutputs { '%{cfg.objdir}/%{file.basename}.obj' }
        buildcommands {
@@ -927,10 +921,10 @@ workspace "SumatraPDF"
 
 workspace "MakeLZSA"
   configurations { "Debug", "Release" }
-  platforms { "x32", "x64", "arm64", "x64_asan" }
+  platforms { "x86", "x64", "arm64", "x64_asan" }
   startproject "MakeLZSA"
 
-  filter "platforms:x32"
+  filter "platforms:x86"
       architecture "x86"
   filter {}
 
@@ -951,9 +945,9 @@ workspace "MakeLZSA"
   clang_conf()
   conf_2026()
 
-  filter {"platforms:x32", "configurations:Release"}
+  filter {"platforms:x86", "configurations:Release"}
     targetdir "out/rel32"
-  filter {"platforms:x32", "configurations:Debug"}
+  filter {"platforms:x86", "configurations:Debug"}
     targetdir "out/dbg32"
   filter {}
 

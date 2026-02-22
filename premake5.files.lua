@@ -562,7 +562,7 @@ function libjpeg_turbo_files()
   filter { 'platforms:arm64' }
   files { "ext/libjpeg-turbo/jsimd_none.c" }
 
-  filter { 'platforms:x32' }
+  filter { 'platforms:x86' }
   files_in_dir("ext/libjpeg-turbo/simd", {
     "jsimdcpu.asm", "jccolmmx.asm", "jcgrammx.asm", "jdcolmmx.asm",
     "jcsammmx.asm", "jdsammmx.asm", "jdmermmx.asm", "jcqntmmx.asm",
