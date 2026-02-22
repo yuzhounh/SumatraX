@@ -201,7 +201,7 @@ workspace "SumatraPDF"
   filter "platforms:x64_asan"
     sanitize { "Address" }
     defines { "ASAN_BUILD=1" }
-    flags { "NoIncrementalLink" }
+    incrementallink("Off")
     editandcontinue "Off"
     -- disablewarnings { "4731" }
   filter {}
@@ -278,11 +278,8 @@ workspace "SumatraPDF"
 
   staticruntime  "On"
   -- https://github.com/premake/premake-core/wiki/flags
-  flags {
-    "MultiProcessorCompile",
-    "Maps", -- generate map file
-    -- "Unicode", TODO: breaks libdjuv?
-  }
+  multiprocessorcompile ("On")
+  mapfile ("On")
   rtti "Off"
 
   defines {
@@ -802,7 +799,7 @@ workspace "SumatraPDF"
     mixed_dbg_rel_conf()
     warnings_as_errors()
     entrypoint "WinMainCRTStartup"
-    flags { "NoManifest" }
+    manifest ("Off")
     includedirs { "src", "mupdf/include" }
     includedirs { "ext/synctex", "ext/libdjvu", "ext/CHMLib" }
 
@@ -862,7 +859,7 @@ workspace "SumatraPDF"
     mixed_dbg_rel_conf()
     warnings_as_errors()
     entrypoint "WinMainCRTStartup"
-    flags { "NoManifest" }
+    manifest ("Off")
     includedirs { "src", "mupdf/include" }
     includedirs { "ext/synctex", "ext/libdjvu", "ext/CHMLib" }
     includedirs { "ext/darkmodelib/include" }
@@ -966,11 +963,8 @@ workspace "MakeLZSA"
   -- https://github.com/premake/premake-core/wiki/flags
 
   fatalwarnings { "All" }
-  flags {
-    "MultiProcessorCompile",
-    "Maps", -- generate map file
-    --"Unicode",
-  }
+  multiprocessorcompile ("On")
+  mapfile ("On")
 
   defines {
     "WIN32",
