@@ -136,7 +136,11 @@ void RemoveTab(WindowTab* tab) {
     }
     win->tabsCtrl->SetSelected(newIdx);
     tab = win->CurrentTab();
-    LoadModelIntoTab(tab);
+    // seen in crash report that tab was WindowTab::Type::None
+    // TODO: don't know how it could have happened
+    if (tab && tab->type != WindowTab::Type::None) {
+        LoadModelIntoTab(tab);
+    }
 #endif
 }
 
