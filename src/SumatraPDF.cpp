@@ -2732,6 +2732,11 @@ void CloseTab(WindowTab* tab, bool quitIfLast) {
         delete tab;
     }
 
+    // RemoveTab -> LoadModelIntoTab can pump messages, potentially destroying win
+    if (!IsMainWindowValid(win)) {
+        return;
+    }
+
     tabCount = win->TabCount();
     if (tabCount == 1 && win->GetTab(0)->IsAboutTab()) {
         // showing only home page tab so remove it
