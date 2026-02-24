@@ -1692,10 +1692,12 @@ static LRESULT CanvasOnMouseWheel(MainWindow* win, UINT msg, WPARAM wp, LPARAM l
             si.fMask = SIF_PAGE;
             GetScrollInfo(win->hwndCanvas, hScroll ? SB_HORZ : SB_VERT, &si);
             int scrollBy = -MulDiv(si.nPage, delta * 30, WHEEL_DELTA);
-            if (hScroll) {
-                win->AsFixed()->ScrollXBy(scrollBy);
-            } else {
-                win->AsFixed()->ScrollYBy(scrollBy, true);
+            if (scrollBy != 0) {
+                if (hScroll) {
+                    win->AsFixed()->ScrollXBy(scrollBy);
+                } else {
+                    win->AsFixed()->ScrollYBy(scrollBy, true);
+                }
             }
             return 0;
         }
@@ -1708,10 +1710,12 @@ static LRESULT CanvasOnMouseWheel(MainWindow* win, UINT msg, WPARAM wp, LPARAM l
         si.fMask = SIF_PAGE;
         GetScrollInfo(win->hwndCanvas, hScroll ? SB_HORZ : SB_VERT, &si);
         int scrollBy = -MulDiv(si.nPage, delta, WHEEL_DELTA);
-        if (hScroll) {
-            win->AsFixed()->ScrollXBy(scrollBy);
-        } else {
-            win->AsFixed()->ScrollYBy(scrollBy, true);
+        if (scrollBy != 0) {
+            if (hScroll) {
+                win->AsFixed()->ScrollXBy(scrollBy);
+            } else {
+                win->AsFixed()->ScrollYBy(scrollBy, true);
+            }
         }
         return 0;
     }
