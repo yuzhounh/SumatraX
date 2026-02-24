@@ -206,7 +206,11 @@ static void DeleteSelectedAnnotation(EditAnnotationsWindow* ew) {
         return;
     }
     Annotation* annot = ew->annotations.at(idx);
-    ReportIf(ew->tab->selectedAnnotation != annot);
+    if (ew->tab->selectedAnnotation != annot) {
+        // can get out of sync if e.g. keyboard navigation in listbox
+        // hasn't triggered ListBoxSelectionChanged yet
+        ew->tab->selectedAnnotation = annot;
+    }
     DeleteAnnotationAndUpdateUI(ew->tab, annot);
 
     // Note: auto-selecting next annotation might cause page jumping
