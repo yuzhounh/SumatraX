@@ -1952,6 +1952,10 @@ static void LoadDocumentAsyncFinish(LoadDocumentAsyncData* d) {
     const char* path = args->FilePath();
     if (!args->ctrl) {
         ShowErrorLoadingNotification(win, path, args->noSavePrefs);
+        // re-sync win->ctrl with current tab after ShowErrorLoadingNotification
+        // which can pump messages and change tab selection
+        WindowTab* currTab = win->CurrentTab();
+        win->ctrl = currTab ? currTab->ctrl : nullptr;
         return;
     }
     args->activateExisting = false;
@@ -2022,6 +2026,10 @@ void StartLoadDocument(LoadArgs* argsIn) {
             RemoveNotification(wndNotif);
             if (!args->ctrl) {
                 ShowErrorLoadingNotification(win, path, args->noSavePrefs);
+                // re-sync win->ctrl with current tab after ShowErrorLoadingNotification
+                // which can pump messages and change tab selection
+                WindowTab* currTab = win->CurrentTab();
+                win->ctrl = currTab ? currTab->ctrl : nullptr;
                 delete args;
                 return;
             }
@@ -2091,6 +2099,10 @@ MainWindow* LoadDocument(LoadArgs* args) {
 
         if (!ctrl) {
             ShowErrorLoadingNotification(win, path, args->noSavePrefs);
+            // re-sync win->ctrl with current tab after ShowErrorLoadingNotification
+            // which can pump messages and change tab selection
+            WindowTab* currTab = win->CurrentTab();
+            win->ctrl = currTab ? currTab->ctrl : nullptr;
             return win;
         }
     }
