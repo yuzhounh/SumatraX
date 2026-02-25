@@ -169,10 +169,10 @@ Rect Rect::Intersect(Rect other) const {
 
 // TODO: check that it's endpoint-exclusive https://devblogs.microsoft.com/oldnewthing/20040218-00/?p=40563
 Rect Rect::Union(Rect other) const {
-    if (this->dx <= 0 && this->dy <= 0) {
+    if (this->dx <= 0 || this->dy <= 0) {
         return other;
     }
-    if (other.dx <= 0 && other.dy <= 0) {
+    if (other.dx <= 0 || other.dy <= 0) {
         return *this;
     }
 
@@ -342,10 +342,10 @@ RectF RectF::Intersect(RectF other) const {
 
 // TODO: check that it's endpoint-exclusive https://devblogs.microsoft.com/oldnewthing/20040218-00/?p=40563
 RectF RectF::Union(RectF other) {
-    if (this->dx <= 0 && this->dy <= 0) {
+    if (this->dx <= 0 || this->dy <= 0) {
         return other;
     }
-    if (other.dx <= 0 && other.dy <= 0) {
+    if (other.dx <= 0 || other.dy <= 0) {
         return *this;
     }
 

@@ -155,7 +155,7 @@ TempStr UnknownToUtf8Temp(const char* s) {
         s += 2;
         WCHAR* ws = (WCHAR*)s;
         int n = str::Leni(ws);
-        WCHAR* tmpW = str::DupTemp(ws, n+1);
+        WCHAR* tmpW = str::DupTemp(ws, n + 1);
         char* tmp = (char*)tmpW;
         for (int i = 0; i < n; i++) {
             int idx = i * 2;
