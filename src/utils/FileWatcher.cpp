@@ -459,6 +459,10 @@ static void DeleteWatchedFile(WatchedFile* wf) {
     free(wf);
 }
 
+void FileWatcherInit(void) {
+    InitializeCriticalSection(&gFileWatcherMutex);
+}
+
 /* Subscribe for notifications about file changes. When a file changes, we'll
 call observer->OnFileChanged().
 
@@ -481,16 +485,15 @@ WatchedFile* FileWatcherSubscribe(const char* path, const Func0& onFileChangedCb
         return nullptr;
     }
 #endif
+    ScopedCritSec cs(&gFileWatcherMutex);
     if (!gThreadHandle) {
         logf("FileWatcherSubscribe: starting a thread\n");
-        InitializeCriticalSection(&gFileWatcherMutex);
         gThreadControlHandle = CreateEvent(nullptr, TRUE, FALSE, nullptr);
 
         auto fn = MkFunc0Void(FileWatcherThread);
         gThreadHandle = StartThread(fn, "FileWatcherThread");
     }
 
-    ScopedCritSec cs(&gFileWatcherMutex);
     return NewWatchedFile(path, onFileChangedCb, enableManualCheck);
 }
 
@@ -515,7 +518,7 @@ static void RemoveWatchedDirIfNotReferenced(WatchedDir* wd) {
     QueueUserAPC(StopMonitoringDirAPC, gThreadHandle, (ULONG_PTR)wd);
 }
 
-void FileWatcherWaitForShutdown() {
+void FileWatcherWaitForShutdown(void) {
     if (!gThreadHandle) {
         return;
     }

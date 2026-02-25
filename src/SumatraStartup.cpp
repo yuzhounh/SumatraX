@@ -2335,6 +2335,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR, _
     LoadSettings();
     UpdateGlobalPrefs(flags);
     SetCurrentLang(flags.lang ? flags.lang : gGlobalPrefs->uiLanguage);
+    FileWatcherInit();
 
     if (flags.testRenderPage) {
         TestRenderPage(flags);
