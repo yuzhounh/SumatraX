@@ -35,7 +35,7 @@ bool SkipUntil(const char*& s, const char* end, char c) {
     while ((s < end) && (*s != c)) {
         ++s;
     }
-    return *s == c;
+    return s < end;
 }
 
 bool SkipUntil(const char*& s, const char* end, const char* term) {
