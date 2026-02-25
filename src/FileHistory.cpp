@@ -105,7 +105,7 @@ FileState* FileHistory::FindByName(const char* filePath, size_t* idxOut) const {
         FileState* fs = states->at(i);
         if (str::EqI(fs->filePath, filePath)) {
             idxExact = i;
-        } else if (str::EndsWithI(fs->filePath, fileName)) {
+        } else if (str::EqI(path::GetBaseNameTemp(fs->filePath), fileName)) {
             idxFileNameMatch = i;
         }
     }
