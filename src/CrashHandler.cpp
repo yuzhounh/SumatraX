@@ -148,7 +148,11 @@ char* BuildCrashInfoText(const char* condStr, bool isCrash, bool captureCallstac
     }
 
     s.Append("\n-------- Log -----------------\n\n");
-    s.Append(gLogBuf->LendData());
+    if (gLogBuf) {
+        s.Append(gLogBuf->LendData());
+    } else {
+        s.Append("(no log - crashed before initializing logging)\n");
+    }
 
     if (gSettingsFile) {
         s.Append("\n\n----- Settings file ----------\n\n");

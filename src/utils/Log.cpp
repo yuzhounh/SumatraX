@@ -260,6 +260,7 @@ void StartLogToFile(const char* path, bool removeIfExists) {
 }
 
 bool WriteCurrentLogToFile(const char* path) {
+    if (!gLogBuf) return false;
     ByteSlice slice = gLogBuf->AsByteSlice();
     if (slice.empty()) {
         return false;
