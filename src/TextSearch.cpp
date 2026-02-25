@@ -136,7 +136,8 @@ void TextSearch::SetLastResult(TextSelection* sel) {
     SetText(selection);
 
     searchHitStartAt = findPage = std::min(startPage, endPage);
-    findIndex = (findPage == startPage ? startGlyph : endGlyph) + (int)str::Len(findText);
+    findPage = std::max(startPage, endPage);
+    findIndex = (findPage == endPage ? endGlyph : startGlyph);
     pageText = textCache->GetTextForPage(findPage);
     forward = true;
 }
