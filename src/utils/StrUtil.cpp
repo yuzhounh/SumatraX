@@ -2009,7 +2009,7 @@ bool IsNonCharacter(WCHAR c) {
 
 // hack: to fool CodeQL which doesn't approve of char* => WCHAR* casts
 // and doesn't allow any way to disable that warning
-WCHAR* ToWCHAR(const char* s) {
+WCHAR* CastToWCHAR(const char* s) {
     void* d = (void*)s;
     return (WCHAR*)d;
 }

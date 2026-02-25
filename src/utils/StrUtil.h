@@ -246,7 +246,7 @@ bool IsNonCharacter(WCHAR c);
 size_t TransCharsInPlace(WCHAR* str, const WCHAR* oldChars, const WCHAR* newChars);
 WCHAR* Replace(const WCHAR* s, const WCHAR* toReplace, const WCHAR* replaceWith);
 
-WCHAR* ToWCHAR(const char* s);
+WCHAR* CastToWCHAR(const char* s);
 } // namespace str
 
 namespace url {

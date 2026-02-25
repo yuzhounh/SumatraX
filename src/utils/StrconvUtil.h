@@ -12,7 +12,7 @@ WCHAR* StrCPToWStr(const char* src, uint codePage, int cbSrc = -1);
 TempWStr StrCPToWStrTemp(const char* src, uint codePage, int cbSrc = -1);
 TempStr StrToUtf8Temp(const char* src, uint codePage);
 
-char* UnknownToUtf8Temp(const char*);
+TempStr UnknownToUtf8Temp(const char*);
 
 char* WStrToAnsi(const WCHAR*);
 char* Utf8ToAnsi(const char*);

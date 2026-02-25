@@ -131,7 +131,7 @@ TempStr StrToUtf8Temp(const char* src, uint codePage) {
 // tries to convert a string in unknown encoding to utf8, as best
 // as it can
 // caller has to free() it
-char* UnknownToUtf8Temp(const char* s) {
+TempStr UnknownToUtf8Temp(const char* s) {
     size_t len = str::Len(s);
 
     if (len < 3) {
@@ -153,14 +153,15 @@ char* UnknownToUtf8Temp(const char* s) {
     if (str::StartsWith(s, UTF16BE_BOM)) {
         // convert from utf16 big endian to utf16
         s += 2;
-        WCHAR* ws = str::ToWCHAR(s);
+        WCHAR* ws = (WCHAR*)s;
         int n = str::Leni(ws);
-        char* tmp = (char*)s;
+        WCHAR* tmpW = str::DupTemp(ws, n+1);
+        char* tmp = (char*)tmpW;
         for (int i = 0; i < n; i++) {
             int idx = i * 2;
             std::swap(tmp[idx], tmp[idx + 1]);
         }
-        return ToUtf8Temp(ws);
+        return ToUtf8Temp((WCHAR*)tmp);
     }
 
     // if s is valid utf8, leave it alone

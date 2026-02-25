@@ -208,7 +208,7 @@ static SquareTreeNode* ParseSquareTreeRec(char*& data, bool isTopLevel = false) 
 }
 
 SquareTreeNode* ParseSquareTree(const char* s) {
-    char* data = strconv::UnknownToUtf8Temp(s);
+    TempStr data = strconv::UnknownToUtf8Temp(s);
     if (!data) {
         return nullptr;
     }
