@@ -135,7 +135,7 @@ static EngineBase* CreateEngineForKind(Kind kind, const char* path, PasswordUI* 
         return engine;
     }
     if (kind == kindFileHTML) {
-        engine = CreateEnginePdbFromFile(path);
+        engine = CreateEngineHtmlFromFile(path);
         return engine;
     }
     return nullptr;
