@@ -279,9 +279,48 @@ float limitValue(float val, float min, float max);
 // return true if adding n to val overflows. Only valid for n > 0
 template <typename T>
 inline bool addOverflows(T val, T n) {
-    ReportIf(!(n > 0));
+    if (n == 0 || val == 0) {
+        return true;
+    }
+    ReportIf(n < 0);
+    ReportIf(val < 0);
     T res = val + n;
     return val > res;
+}
+
+// return false if adding n to val overflows. Only valid for n > 0
+template <typename T>
+inline bool addSafe(T* valInOut, T n) {
+    if (n == 0 || *valInOut == 0) {
+        valInOut = 0;
+        return true;
+    }
+    ReportIf(n < 0);
+    ReportIf(*valInOut < 0);
+    T res = *valInOut + n;
+    if (res < *valInOut) {
+        return false;
+    }
+    *valInOut = res;
+    return true;
+}
+
+// return false if multiplying val by n overflows. Only valid for n > 0
+template <typename T>
+inline bool mulSafe(T* valInOut, T n) {
+    if (n == 0 || *valInOut == 0) {
+        *valInOut = 0;
+        return true;
+    }
+    ReportIf(n < 0);
+    ReportIf(*valInOut < 0);
+    T res = *valInOut * n;
+    if (res < *valInOut || res < n) {
+        // multiplication overflowed
+        return false;
+    }
+    *valInOut = res;
+    return true;
 }
 
 void* memdup(const void* data, size_t len, size_t extraBytes = 0);
