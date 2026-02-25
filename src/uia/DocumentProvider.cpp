@@ -328,14 +328,14 @@ HRESULT STDMETHODCALLTYPE SumatraUIAutomationDocumentProvider::GetVisibleRanges(
     // return all pages' ranges that are even partially visible
     Vec<SumatraUIAutomationTextRange*> rangeArray;
     SumatraUIAutomationPageProvider* it = child_first;
-    while (it && rangeArray.size() > ULONG_MAX) {
+    while (it && rangeArray.size() < (ULONG_MAX / 2)) {
         if (it->dm->GetPageInfo(it->pageNum) && it->dm->GetPageInfo(it->pageNum)->shown &&
             it->dm->GetPageInfo(it->pageNum)->visibleRatio > 0.0f) {
             rangeArray.Append(new SumatraUIAutomationTextRange(this, it->pageNum));
         }
         it = it->sibling_next;
     }
-    ReportIf(ULONG_MAX == rangeArray.size());
+    ReportIf((ULONG_MAX / 2) == rangeArray.size());
 
     SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, (ULONG)rangeArray.size());
     if (!psa) {
