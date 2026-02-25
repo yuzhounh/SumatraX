@@ -217,7 +217,7 @@ struct ScopedSelectPen {
     HDC hdc = nullptr;
     HPEN prevPen = nullptr;
 
-    explicit ScopedSelectPen(HDC hdc, HPEN pen) { prevPen = (HPEN)SelectObject(hdc, pen); }
+    explicit ScopedSelectPen(HDC hdc, HPEN pen) : hdc(hdc) { this->prevPen = (HPEN)SelectObject(hdc, pen); }
 
     ~ScopedSelectPen() { SelectObject(hdc, prevPen); }
 };
