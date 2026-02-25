@@ -2741,10 +2741,20 @@ void CloseTab(WindowTab* tab, bool quitIfLast) {
     } else {
         ReportIf(gPluginMode && !gWindows.Contains(win));
         RemoveTab(tab);
+        // RemoveTab -> LoadModelIntoTab can pump messages, potentially destroying win
+        // and its cbHandler. Since tab was already removed from win's tab list,
+        // ~MainWindow won't delete it, so we must delete it here.
+        // Null out cb to prevent dangling pointer access in ~DisplayModel.
+        if (!IsMainWindowValid(win)) {
+            if (tab->ctrl) {
+                tab->ctrl->cb = nullptr;
+            }
+            delete tab;
+            return;
+        }
         delete tab;
     }
 
-    // RemoveTab -> LoadModelIntoTab can pump messages, potentially destroying win
     if (!IsMainWindowValid(win)) {
         return;
     }

@@ -314,7 +314,9 @@ DisplayModel::DisplayModel(EngineBase* engine, DocControllerCallback* cb) : DocC
 DisplayModel::~DisplayModel() {
     logf("~DisplayModel: 0x%p\n", this);
     pauseRendering = true;
-    cb->CleanUp(this);
+    if (cb) {
+        cb->CleanUp(this);
+    }
 
     delete pdfSync;
     delete textSearch;
