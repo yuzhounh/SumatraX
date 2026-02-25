@@ -57,6 +57,15 @@ RenderCache::~RenderCache() {
     EnterCriticalSection(&requestAccess);
     EnterCriticalSection(&cacheAccess);
 
+    // wait for shutdown
+    AtomicBoolSet(&shouldExit, true);
+    // wake the thread in case it's waiting on startRendering event
+    SetEvent(startRendering);
+    DWORD res = WaitForSingleObject(renderThread, 5000);
+    if (res == WAIT_TIMEOUT) {
+        logf("RenderCache::WaitForShutdown: thread didn't exit in 5 seconds\n");
+    }
+
     CloseHandle(renderThread);
     CloseHandle(startRendering);
     if (curReq || 0 != requestCount || cacheCount != 0) {
@@ -69,16 +78,6 @@ RenderCache::~RenderCache() {
     DeleteCriticalSection(&cacheAccess);
     LeaveCriticalSection(&requestAccess);
     DeleteCriticalSection(&requestAccess);
-}
-
-void RenderCache::WaitForShutdown() {
-    AtomicBoolSet(&shouldExit, true);
-    // wake the thread in case it's waiting on startRendering event
-    SetEvent(startRendering);
-    DWORD res = WaitForSingleObject(renderThread, 5000);
-    if (res == WAIT_TIMEOUT) {
-        logf("RenderCache::WaitForShutdown: thread didn't exit in 5 seconds\n");
-    }
 }
 
 /* Find a bitmap for a page defined by <dm> and <pageNo> and optionally also
