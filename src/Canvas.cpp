@@ -703,11 +703,10 @@ static void OnMouseLeftButtonDown(MainWindow* win, int x, int y, WPARAM key) {
         win->mouseAction = MouseAction::None;
         return;
     }
-    ReportIf(!win->AsFixed());
 
     HwndSetFocus(win->hwndFrame);
-
     DisplayModel* dm = win->AsFixed();
+    ReportIf(!dm);
     Point pt{x, y};
 
     WindowTab* tab = win->CurrentTab();
@@ -1592,6 +1591,8 @@ static LRESULT CanvasOnMouseWheel(MainWindow* win, UINT msg, WPARAM wp, LPARAM l
         return res;
     }
 
+    DisplayModel* dm = win->AsFixed();
+
     // Note: not all mouse drivers correctly report the Ctrl key's state
     // isCtrl is also set if this is pinch gestore from touchpad (on thinkpad x1 at least).
     bool isCtrl = (LOWORD(wp) & MK_CONTROL) || IsCtrlPressed();
@@ -1624,7 +1625,6 @@ static LRESULT CanvasOnMouseWheel(MainWindow* win, UINT msg, WPARAM wp, LPARAM l
 
     // For SinglePage mode with content requiring scrolling, use continuous scrolling behavior
     if (isSinglePageMode && vScroll) {
-        DisplayModel* dm = win->AsFixed();
         if (dm && dm->NeedVScroll()) {
             // Content is larger than viewport, use continuous scrolling
             // Fall through to the default scrolling behavior below
@@ -1653,7 +1653,6 @@ static LRESULT CanvasOnMouseWheel(MainWindow* win, UINT msg, WPARAM wp, LPARAM l
         float zoomVirt = win->ctrl->GetZoomVirtual();
         // in fit content we might show vert scrollbar but we want to flip the whole page on mouse wheel
         bool flipPage = zoomVirt == kZoomFitContent;
-        DisplayModel* dm = win->AsFixed();
         if (dm && !dm->NeedVScroll()) {
             // if page/pages fully fit in window, flip the whole page
             // logf("  flipping page because !dm->NeedVScroll()\n");
@@ -1683,39 +1682,38 @@ static LRESULT CanvasOnMouseWheel(MainWindow* win, UINT msg, WPARAM wp, LPARAM l
     }
 
     // For SinglePage mode with zoomed content, use continuous scrolling with page transitions
-    if (isSinglePageMode && vScroll && win->AsFixed()) {
-        DisplayModel* dm = win->AsFixed();
-        if (dm && dm->NeedVScroll()) {
+    if (isSinglePageMode && vScroll && dm) {
+        if (dm->NeedVScroll()) {
             // Use continuous scrolling that handles page transitions at boundaries
             SCROLLINFO si{};
             si.cbSize = sizeof(si);
             si.fMask = SIF_PAGE;
             GetScrollInfo(win->hwndCanvas, hScroll ? SB_HORZ : SB_VERT, &si);
             int scrollBy = -MulDiv(si.nPage, delta * 30, WHEEL_DELTA);
-            if (scrollBy != 0) {
-                if (hScroll) {
-                    win->AsFixed()->ScrollXBy(scrollBy);
-                } else {
-                    win->AsFixed()->ScrollYBy(scrollBy, true);
-                }
+            // on sensitive touchpads delta can be very small
+            if (scrollBy == 0) return 0;
+            if (hScroll) {
+                dm->ScrollXBy(scrollBy);
+            } else {
+                dm->ScrollYBy(scrollBy, true);
             }
             return 0;
         }
     }
 
-    if (gDeltaPerLine < 0 && win->AsFixed()) {
+    if (gDeltaPerLine < 0 && dm) {
         // scroll by (fraction of a) page
         SCROLLINFO si{};
         si.cbSize = sizeof(si);
         si.fMask = SIF_PAGE;
         GetScrollInfo(win->hwndCanvas, hScroll ? SB_HORZ : SB_VERT, &si);
         int scrollBy = -MulDiv(si.nPage, delta, WHEEL_DELTA);
-        if (scrollBy != 0) {
-            if (hScroll) {
-                win->AsFixed()->ScrollXBy(scrollBy);
-            } else {
-                win->AsFixed()->ScrollYBy(scrollBy, true);
-            }
+        // on sensitive touchpads delta can be very small
+        if (scrollBy == 0) return 0;
+        if (hScroll) {
+            dm->ScrollXBy(scrollBy);
+        } else {
+            dm->ScrollYBy(scrollBy, true);
         }
         return 0;
     }
