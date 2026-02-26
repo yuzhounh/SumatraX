@@ -3146,11 +3146,25 @@ int MsgBox(HWND hwnd, const char* text, const char* caption, UINT flags) {
     return MessageBoxW(hwnd, textW, captionW, flags);
 }
 
-// https://learn.microsoft.com/en-us/cpp/intrinsics/cpuid-cpuidex?view=msvc-170
 u32 CpuID() {
 #if IS_ARM_64
-    return 0;
+    // https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocessorfeaturepresent
+    u32 res = 0;
+    if (IsProcessorFeaturePresent(PF_ARM_NEON_INSTRUCTIONS_AVAILABLE)) {
+        res |= kCpuNEON;
+    }
+    if (IsProcessorFeaturePresent(PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE)) {
+        res |= kCpuArmCrypto;
+    }
+    if (IsProcessorFeaturePresent(PF_ARM_V81_ATOMIC_INSTRUCTIONS_AVAILABLE)) {
+        res |= kCpuArmAtomics;
+    }
+    if (IsProcessorFeaturePresent(PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE)) {
+        res |= kCpuArmDotProd;
+    }
+    return res;
 #else
+    // https://learn.microsoft.com/en-us/cpp/intrinsics/cpuid-cpuidex?view=msvc-170
     std::bitset<32> f_1_ECX_;
     std::bitset<32> f_1_EDX_;
     std::bitset<32> f_7_EBX_;
@@ -3204,6 +3218,7 @@ u32 CpuID() {
 
 const char* LatestSupportedSIMD() {
     u32 id = CpuID();
+    // x86/x64
     if (id & kCpuAVX2) {
         return "avx2";
     }
@@ -3224,6 +3239,13 @@ const char* LatestSupportedSIMD() {
     }
     if (id & kCpuSSE) {
         return "sse";
+    }
+    // ARM
+    if (id & kCpuArmDotProd) {
+        return "dotprod";
+    }
+    if (id & kCpuNEON) {
+        return "neon";
     }
     return "none";
 }

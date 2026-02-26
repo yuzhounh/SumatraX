@@ -372,6 +372,11 @@ constexpr u32 kCpuSSE41 = 1 << 4;
 constexpr u32 kCpuSSE42 = 1 << 5;
 constexpr u32 kCpuAVX = 1 << 6;
 constexpr u32 kCpuAVX2 = 1 << 7;
+// ARM
+constexpr u32 kCpuNEON = 1 << 8;
+constexpr u32 kCpuArmCrypto = 1 << 9;
+constexpr u32 kCpuArmAtomics = 1 << 10;
+constexpr u32 kCpuArmDotProd = 1 << 11;
 
 u32 CpuID();
 const char* LatestSupportedSIMD();

@@ -631,10 +631,19 @@ static void GetSystemInfo(str::Str& s) {
         if (cpu & kCpuAVX2) {
             s.Append("AVX2 ");
         }
+        if (cpu & kCpuNEON) {
+            s.Append("NEON ");
+        }
+        if (cpu & kCpuArmCrypto) {
+            s.Append("Crypto ");
+        }
+        if (cpu & kCpuArmAtomics) {
+            s.Append("Atomics ");
+        }
+        if (cpu & kCpuArmDotProd) {
+            s.Append("DotProd ");
+        }
     }
-
-    // Note: maybe more information, like:
-    // * processor capabilities (mmx, sse, sse2 etc.)
 }
 
 // returns true if running on wine
