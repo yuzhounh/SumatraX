@@ -891,6 +891,23 @@ bool RemoveAll(const char* dir) {
     return res == 0;
 }
 
+// Check if the process can create files/directories in the given directory
+// by attempting to create and immediately remove a temporary file.
+bool HasWriteAccess(const char* dir) {
+    if (!dir) {
+        return false;
+    }
+    TempStr path = path::JoinTemp(dir, "__sumatra_write_test__.tmp");
+    WCHAR* pathW = ToWStrTemp(path);
+    HANDLE h = CreateFileW(pathW, GENERIC_WRITE, 0, nullptr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_DELETE_ON_CLOSE,
+                           nullptr);
+    if (h == INVALID_HANDLE_VALUE) {
+        return false;
+    }
+    CloseHandle(h);
+    return true;
+}
+
 } // namespace dir
 
 bool FileTimeEq(const FILETIME& a, const FILETIME& b) {

@@ -89,6 +89,7 @@ bool Create(const char* dir);
 bool CreateForFile(const char* path);
 bool CreateAll(const char* dir);
 bool RemoveAll(const char* dir);
+bool HasWriteAccess(const char* dir);
 
 } // namespace dir
 
