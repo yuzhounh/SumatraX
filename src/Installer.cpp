@@ -1161,6 +1161,17 @@ int RunInstaller() {
         StartLogToFile(installerLogPath, removeLog);
     }
     logf("------------- Starting SumatraPDF installation\n");
+    {
+        DWORD parentPid = 0;
+        TempStr path = GetParentProcessPath(&parentPid);
+        if (path) {
+            logf("Parent process: pid=%d, path='%s'\n", (int)parentPid, path);
+        } else if (parentPid != 0) {
+            logf("Parent process: pid=%d, path unknown\n", (int)parentPid);
+        } else {
+            logf("Parent process: unknown\n");
+        }
+    }
     if (!IsProcessAndOsArchSame()) {
         logfa("quitting because !IsProcessAndOsArchSame()\n");
         MismatchedOSDialog(nullptr);
@@ -1194,7 +1205,8 @@ int RunInstaller() {
         gCliNew.installDir = str::Dup(dir);
     }
     char* cmdLine = ToUtf8Temp(GetCommandLineW());
-    logf("Running'%s', cmdLine: '%s', installing into dir '%s'\n", GetSelfExePathTemp(), cmdLine, gCliNew.installDir);
+    logf("RunInstaller: '%s', cmdLine: '%s', installing into dir '%s'\n", GetSelfExePathTemp(), cmdLine,
+         gCliNew.installDir);
 
     int ret = 0;
 

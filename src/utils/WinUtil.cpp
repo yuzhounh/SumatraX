@@ -1093,6 +1093,47 @@ bool IsProcessRunningElevated() {
     return tobool(isAdmin);
 }
 
+// returns the exe path of the parent process, or nullptr on failure
+// if pidOut is not nullptr, it receives the parent process ID
+TempStr GetParentProcessPath(DWORD* pidOut) {
+    if (pidOut) {
+        *pidOut = 0;
+    }
+    DWORD pid = GetCurrentProcessId();
+    AutoCloseHandle snap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (INVALID_HANDLE_VALUE == snap) {
+        return nullptr;
+    }
+    PROCESSENTRY32W pe{};
+    pe.dwSize = sizeof(pe);
+    DWORD parentPid = 0;
+    if (!Process32FirstW(snap, &pe)) {
+        return nullptr;
+    }
+    do {
+        if (pe.th32ProcessID == pid) {
+            parentPid = pe.th32ParentProcessID;
+            break;
+        }
+    } while (Process32NextW(snap, &pe));
+    if (parentPid == 0) {
+        return nullptr;
+    }
+    if (pidOut) {
+        *pidOut = parentPid;
+    }
+    AutoCloseHandle hProc = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, parentPid);
+    if (!hProc.IsValid()) {
+        return nullptr;
+    }
+    WCHAR path[MAX_PATH]{};
+    DWORD pathLen = MAX_PATH;
+    if (!QueryFullProcessImageNameW(hProc, 0, path, &pathLen)) {
+        return nullptr;
+    }
+    return ToUtf8Temp(path);
+}
+
 // We assume that if OpenProcess() works, we are at the same or greater
 // elevation level
 // I tried to run IsProcessRunningElevated() on 2 processes but this didn't

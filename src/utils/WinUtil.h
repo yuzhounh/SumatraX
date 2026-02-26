@@ -94,6 +94,7 @@ void OpenPathInDefaultFileManager(const char* path);
 void RunNonElevated(const char* exePath);
 bool LaunchElevated(const char* path, const char* cmdline);
 bool IsProcessRunningElevated();
+TempStr GetParentProcessPath(DWORD* pidOut = nullptr);
 bool CanTalkToProcess(DWORD procId);
 DWORD GetAccountType();
 DWORD GetOriginalAccountType();
