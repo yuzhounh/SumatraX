@@ -1214,8 +1214,10 @@ int RunInstaller() {
     // Install button
     bool requiresSilentElevation = gCli->silent || gCli->fastInstall || gCli->runInstallNow;
     bool isElevated = IsProcessRunningElevated();
+    logf("RunInstaller: requiresSilentElevation: %d, isElevated: %d\n", (int)requiresSilentElevation, (int)isElevated);
     if (requiresSilentElevation && !isElevated) {
         bool needsElevation = gCliNew.allUsers || gPrevInstall.allUsers;
+        logf("RunInstaller: needsElevation: %d\n", (int)needsElevation);
         if (needsElevation) {
             logf(
                 "Restarting as elevated: gCli->silent: %d, gCli->fastInstall: %d, isElevated: %d, gCli->allUsers: %d, "
