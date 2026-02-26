@@ -104,7 +104,6 @@ bool IsDllBuild() {
     return resSrc != nullptr;
 }
 
-// TODO: leaks
 static char* gAppDataDir = nullptr;
 
 void DeleteAppTools() {
@@ -122,19 +121,27 @@ TempStr GetAppDataDirTemp() {
     if (gAppDataDir) {
         return gAppDataDir;
     }
-
-    TempStr dir;
-    if (IsRunningInPortableMode()) {
+    bool isPortable = IsRunningInPortableMode();
+    TempStr dir = nullptr;
+    if (isPortable) {
         dir = GetSelfExeDirTemp();
-    } else {
+        // sometimes people put executable in directory like c:\windows
+        // and we can't write to it. in that case we'll fall back to %APPDATA%
+        if (!dir::HasWriteAccess(dir)) {
+            logf("GetAppDataDirTemp: no write access to '%s'\n", dir);
+            dir = nullptr;
+        }
+    }
+    if (!dir) {
         dir = GetSpecialFolderTemp(CSIDL_LOCAL_APPDATA, true);
         if (!dir) {
+            LogLastError();
             ReportIf(true);
             dir = GetTempDirTemp(); // shouldn't happen, last chance thing
         }
         dir = path::JoinTemp(dir, kAppName);
     }
-    logf("GetAppDataDirTemp(): '%s'\n", dir);
+    logf("GetAppDataDirTemp(): '%s'%s\n", dir, isPortable ? " (portable)" : "(installed)");
     SetAppDataDir(dir);
     return gAppDataDir;
 }

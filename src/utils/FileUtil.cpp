@@ -899,8 +899,8 @@ bool HasWriteAccess(const char* dir) {
     }
     TempStr path = path::JoinTemp(dir, "__sumatra_write_test__.tmp");
     WCHAR* pathW = ToWStrTemp(path);
-    HANDLE h = CreateFileW(pathW, GENERIC_WRITE, 0, nullptr, CREATE_NEW, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_DELETE_ON_CLOSE,
-                           nullptr);
+    HANDLE h = CreateFileW(pathW, GENERIC_WRITE, 0, nullptr, CREATE_NEW,
+                           FILE_ATTRIBUTE_NORMAL | FILE_FLAG_DELETE_ON_CLOSE, nullptr);
     if (h == INVALID_HANDLE_VALUE) {
         return false;
     }

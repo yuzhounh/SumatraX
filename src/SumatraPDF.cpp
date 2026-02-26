@@ -6579,7 +6579,8 @@ void GetProgramInfo(str::Str& s) {
     if (builtOn != nullptr) {
         s.AppendFmt("BuiltOn: %s\n", builtOn);
     }
-    s.AppendFmt("Type: %s\r\n", exeType);
+    const char* instType = IsRunningInPortableMode() ? ", portable" : " : , installed";
+    s.AppendFmt("Type: %s%s\r\n", exeType, instType);
     s.AppendFmt("Ver: %s", currentVersion);
     if (gIsPreReleaseBuild) {
         s.AppendFmt(" pre-release");
