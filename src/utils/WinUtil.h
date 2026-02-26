@@ -374,6 +374,7 @@ constexpr u32 kCpuAVX = 1 << 6;
 constexpr u32 kCpuAVX2 = 1 << 7;
 
 u32 CpuID();
+const char* LatestSupportedSIMD();
 
 LARGE_INTEGER TimeNow();
 double TimeDiffSecs(const LARGE_INTEGER& start, const LARGE_INTEGER& end);

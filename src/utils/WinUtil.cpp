@@ -3202,6 +3202,32 @@ u32 CpuID() {
 #endif
 }
 
+const char* LatestSupportedSIMD() {
+    u32 id = CpuID();
+    if (id & kCpuAVX2) {
+        return "avx2";
+    }
+    if (id & kCpuAVX) {
+        return "avx";
+    }
+    if (id & kCpuSSE42) {
+        return "sse42";
+    }
+    if (id & kCpuSSE41) {
+        return "sse41";
+    }
+    if (id & kCpuSSE3) {
+        return "sse3";
+    }
+    if (id & kCpuSSE2) {
+        return "sse2";
+    }
+    if (id & kCpuSSE) {
+        return "sse";
+    }
+    return "none";
+}
+
 LARGE_INTEGER TimeNow() {
     LARGE_INTEGER now;
     QueryPerformanceCounter(&now);

@@ -532,6 +532,8 @@ static void BuildUpdateURL(str::Str& url, const char* baseURL, UpdateCheck updat
     if (gIsStoreBuild) {
         url.Append("&store");
     }
+    url.Append("&simd=");
+    url.Append(LatestSupportedSIMD());
     if (UpdateCheck::UserInitiated == updateCheckType) {
         url.Append("&force");
     }
