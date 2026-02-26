@@ -1200,7 +1200,7 @@ int RunInstaller() {
 
     // restart as admin if necessary. in non-silent mode it happens after clicking
     // Install button
-    bool requiresSilentElevation = gCli->silent || gCli->fastInstall;
+    bool requiresSilentElevation = gCli->silent || gCli->fastInstall || gCli->runInstallNow;
     bool isElevated = IsProcessRunningElevated();
     if (requiresSilentElevation && !isElevated) {
         bool needsElevation = gCliNew.allUsers || gPrevInstall.allUsers;
