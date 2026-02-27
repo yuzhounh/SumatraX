@@ -6575,12 +6575,12 @@ void GetProgramInfo(str::Str& s) {
     }
     TempStr signer = GetExecutableSignerTemp(exePath);
     s.AppendFmt("Signer: %s\r\n", signer ? signer : "(not signed)");
-    const char* exeType = IsDllBuild() ? "dll" : "static";
     if (builtOn != nullptr) {
         s.AppendFmt("BuiltOn: %s\n", builtOn);
     }
-    const char* instType = IsRunningInPortableMode() ? ", portable" : " : , installed";
-    s.AppendFmt("Type: %s%s\r\n", exeType, instType);
+    const char* exeType = IsDllBuild() ? "dll" : "static";
+    const char* instType = IsRunningInPortableMode() ? "portable" : "installed";
+    s.AppendFmt("ExeType: %s, %s\r\n", exeType, instType);
     s.AppendFmt("Ver: %s", currentVersion);
     if (gIsPreReleaseBuild) {
         s.AppendFmt(" pre-release");
