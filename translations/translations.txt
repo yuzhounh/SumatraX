@@ -1,5 +1,5 @@
 AppTranslator: SumatraPDF
-b941a86f891a3a5a5a72a34f24b970f04ac19072
+f36db6000b9516db04481f62d4fc342e131ce568
 :# File History
 br:# Histórico de Arquivos
 cn:# 文件历史记录
@@ -7,6 +7,7 @@ co:# Cronolugia di schedariu
 de:# Dateiverlauf
 nl:# Bestandsgeschiedenis
 pl:# Historia plików
+ru:# Последние файлы
 sk:# História súboru
 tw:# 檔案歷程記錄
 :%s annotation. Ctrl+click to edit.
@@ -3965,7 +3966,7 @@ am:(էջ %s)
 ar:(الصفحة %s)
 az:(səh. %s)
 bg:(страница %s)
-br:(Página %s)
+br:(página %s)
 bs:(strana %s)
 by:(старонка %s)
 ca-xv:(pàgina %s)
@@ -4050,6 +4051,7 @@ co:@ Unghjette
 de:@ Tabs
 nl:@ Tabs
 pl:@ Karty
+ru:@ Вкладки
 sk:@ Karty
 tw:@ 索引標籤
 :About SumatraPDF
@@ -6153,6 +6155,7 @@ co:Cambià di lingua…
 de:Sprache ändern…
 nl:Taal Wijzigen...
 pl:Zmień język...
+ru:Изменить Язык
 sk:Zmeniť jazyk…
 tw:變更語言…
 :Check For Updates
@@ -6163,6 +6166,7 @@ co:Cuntrollà e messe à livellu
 de:Nach Updates suchen
 nl:Controleer Op Updates
 pl:Sprawdź aktualizacje
+ru:Проверить Обновления
 sk:Skontrolovať aktualizácie
 tw:檢查是否有更新
 :Check for &Updates
@@ -6365,6 +6369,7 @@ co:Viutà a cronolugia
 de:Verlauf löschen
 nl:Geschiedenis Wissen
 pl:Wyczyść historię
+ru:Очистить Историю
 sk:Vymazať históriu
 tw:清除歷程記錄
 :Cleared history of %d files, deleted thumbnails.
@@ -6578,6 +6583,7 @@ co:Chjode u ducumentu attuale
 de:Aktuelles Dokument schließen
 nl:Sluit Huidig Document
 pl:Zamknij bieżący dokument
+ru:Закрыть текущий документ
 sk:Zatvoriť aktuálny dokument
 tw:關閉目前之文件
 :Close Document
@@ -6588,6 +6594,7 @@ co:Chjode u ducumentu
 de:Dokument schließen
 nl:Sluit Document
 pl:Zamknij dokument
+ru:Закрыть документ
 sk:Zatvoriť dokument
 tw:關閉文件
 :Close Other Tabs
@@ -7608,6 +7615,7 @@ co:Cupià u cummentu
 de:Kommentar kopieren
 nl:Kopieer Commentaar
 pl:Kopiuj komentarz
+ru:Скопировать Комментарий
 sk:Kopírovať komentár
 tw:複製留言
 :Copy File Path
@@ -7667,6 +7675,7 @@ co:Cupià a fiura
 de:Bild kopieren
 nl:Kopieer Afbeelding
 pl:Kopiuj obraz
+ru:Скопировать рисунок
 sk:Kopírovať obrázok
 tw:複製圖片
 :Copy Link Target
@@ -7687,6 +7696,7 @@ co:Cupià a selezzione
 de:Auswahl kopieren
 nl:Kopieer Selectie
 pl:Kopiuj zaznaczenie
+ru:Скопировать Выделение
 sk:Kopírovať výber
 tw:複製選取内容
 :Copy To Clipboard
@@ -8607,6 +8617,7 @@ co:Creà un accurtatoghju .lnk
 de:LNK-Verknüpfung erstellen
 nl:Maak .lnk Snelkoppeling
 pl:Utwórz skrót .lnk
+ru:Создать Ярлык .lnk
 sk:Vytvoriť odkaz .lnk
 tw:建立 .lnk 捷徑
 :Create Annotation &Under Cursor
@@ -9679,6 +9690,7 @@ co:Squassà u schedariu
 de:Datei löschen
 nl:Verwijder Bestand
 pl:Usuń plik
+ru:Удалить Файл
 sk:Odstrániť súbor
 tw:刪除檔案
 :Denied Permissions:
@@ -9826,6 +9838,7 @@ co:Ùn fà nunda
 de:Nichts tun
 nl:Doe Niets
 pl:Nic nie rób
+ru:Ничего не делать
 sk:Nič nerobiť
 tw:不執行任何動作
 :Document Properties
@@ -10641,6 +10654,7 @@ co:Esce da l’appiecazione
 de:Anwendung beenden
 nl:Applicatie Afsluiten
 pl:Wyjdź z programu
+ru:Выйти из Приложения
 sk:Ukončiť aplikáciu
 tw:結束應用程式
 :Expand All
@@ -13031,6 +13045,7 @@ co:Andà à a pagina…
 de:Zu Seite gehen…
 nl:Ga naar Pagina...
 pl:Idź do strony...
+ru:Перейти к Странице...
 sk:Prejsť na stranu…
 tw:跳至頁面…
 :Go to page
@@ -13114,6 +13129,7 @@ co:Aiutu : Apprupositu di SumatraPDF
 de:Hilfe: Über SumatraPDF
 nl:Help: Over SumatraPDF
 pl:Pomoc: o programie SumatraPDF
+ru:Справка: О SumatraPDF
 sk:Pomoc: O programe SumatraPDF
 tw:說明：關於 SumatraPDF
 :Help: Keyboard Shortcuts
@@ -13124,6 +13140,7 @@ co:Aiutu : Accurtatoghji di tastera
 de:Hilfe: Tastenkombinationen
 nl:Help: Toetsenbord Sneltoetsen
 pl:Pomoc: skróty klawiaturowe
+ru:Справка: Клавишные Сокращения (HotKeys)
 sk:Pomoc: Klávesové skratky
 tw:說明：鍵盤快速鍵
 :Help: Manual
@@ -13134,6 +13151,7 @@ co:Aiutu : Manuale
 de:Hilfe: Handbuch
 nl:Help: Handleiding
 pl:Pomoc: instrukcja obsługi
+ru:Справка: Инструкция
 sk:Pomoc: Príručka
 tw:說明：使用手冊
 :Help: Manual On Website
@@ -13144,6 +13162,7 @@ co:Aiutu : Manuale nant’à u situ web
 de:Hilfe: Handbuch auf der Website
 nl:Help: Handleiding Op Website
 pl:Pomoc: instrukcja obsługi na stronie internetowej
+ru:Справка: Инструкция На Сайте
 sk:Pomoc: Príručka na webovej stránke
 tw:說明：線上手冊
 :Help: SumatraPDF Website
@@ -13154,6 +13173,7 @@ co:Aiutu : Situ web di SumatraPDF
 de:Hilfe: SumatraPDF-Website
 nl:Help: SumatraPDF Website
 pl:Pomoc: strona internetowa programu SumatraPDF
+ru:Справка: Сайт SumatraPDF
 sk:Pomoc: Webová stránka SumatraPDF
 tw:說明：SumatraPDF 網站
 :Hide &Options
@@ -25450,6 +25470,7 @@ co:ùn impiegà micca
 de:nicht verwenden
 nl:niet gebruiken
 pl:nie używaj
+ru:не использовать
 sk:nepoužiť
 tw:不要使用
 :page %d,

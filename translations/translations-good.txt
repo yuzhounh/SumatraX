@@ -55,7 +55,7 @@ pa:# ਫਾਈਲ ਇਤਿਹਾਸ
 pl:# Historia plików
 pt:# Histórico de Arquivos
 ro:# Istoric fișiere
-ru:# История файлов
+ru:# Последние файлы
 sat:# ᱨᱮᱫ ᱱᱟᱜᱟᱢ
 si:# ගොනු ඉතිහාසය
 sk:# História súboru
@@ -4068,7 +4068,7 @@ ar:(الصفحة %s)
 az:(səh. %s)
 bg:(страница %s)
 bn:(পৃষ্ঠা %s)
-br:(Página %s)
+br:(página %s)
 bs:(strana %s)
 by:(старонка %s)
 ca:(pàgina %s)
@@ -6741,7 +6741,7 @@ pa:ਭਾਸ਼ਾ ਬਦਲੋ...
 pl:Zmień język...
 pt:Alterar Idioma...
 ro:Schimbă limba...
-ru:Изменить язык...
+ru:Изменить Язык
 sat:ᱯᱟᱹᱨᱥᱤ ᱵᱚᱫᱚᱞ...
 si:භාෂාව වෙනස් කරන්න...
 sk:Zmeniť jazyk…
@@ -6814,7 +6814,7 @@ pa:ਅੱਪਡੇਟਾਂ ਦੀ ਜਾਂਚ ਕਰੋ
 pl:Sprawdź aktualizacje
 pt:Verificar Atualizações
 ro:Verifică actualizări
-ru:Проверить обновления
+ru:Проверить Обновления
 sat:ᱦᱟᱹᱞᱤᱭᱟᱹᱠ ᱠᱚ ᱧᱮᱞ ᱢᱮ
 si:යාවත්කාලීන පරීක්ෂා කරන්න
 sk:Skontrolovať aktualizácie
@@ -7105,7 +7105,7 @@ pa:ਇਤਿਹਾਸ ਸਾਫ਼ ਕਰੋ
 pl:Wyczyść historię
 pt:Limpar Histórico
 ro:Șterge istoricul
-ru:Очистить историю
+ru:Очистить Историю
 sat:ᱱᱟᱜᱟᱢ ᱥᱟᱯᱷᱟ ᱢᱮ
 si:ඉතිහාසය මකන්න
 sk:Vymazať históriu
@@ -8771,7 +8771,7 @@ pa:ਟਿੱਪਣੀ ਕਾਪੀ ਕਰੋ
 pl:Kopiuj komentarz
 pt:Copiar comentário
 ro:Copiază comentariul
-ru:Скопировать комментарий
+ru:Скопировать Комментарий
 sat:ᱴᱤᱯᱚᱬᱤ ᱱᱚᱠᱚᱞ ᱢᱮ
 si:අදහස පිටපත් කරන්න
 sk:Kopírovať komentár
@@ -8917,7 +8917,7 @@ pa:ਤਸਵੀਰ ਕਾਪੀ ਕਰੋ
 pl:Kopiuj obraz
 pt:Copiar imagem
 ro:Copiere Imagine
-ru:Скопировать изображение
+ru:Скопировать рисунок
 sat:ᱪᱤᱛᱟᱹᱨ ᱱᱚᱠᱚᱞ ᱢᱮ
 si:රුපය ‌කොපි කරන්න
 sk:Kopírovať obrázok
@@ -9063,7 +9063,7 @@ pa:ਚੋਣ ਦੀ ਕਾਪੀ ਕਰੋ
 pl:Kopiuj zaznaczenie
 pt:Copiar Seleção
 ro:Copiază selecția
-ru:Скопировать выделенное
+ru:Скопировать Выделение
 sat:ᱵᱟᱪᱷᱟᱣ ᱱᱚᱠᱚᱞ ᱢᱮ
 si:ලකුනුකල ‌කොටස ‌කොපිකරන්න
 sk:Kopírovať výber
@@ -10158,7 +10158,7 @@ pa:.lnk ਸ਼ਾਰਟਕੱਟ ਬਣਾਓ
 pl:Utwórz skrót .lnk
 pt:Criar Atalho .lnk
 ro:Creează scurtătură .lnk
-ru:Создать ярлык .lnk
+ru:Создать Ярлык .lnk
 sat:.lnk ᱠᱷᱟᱴᱚᱢᱟᱪᱷᱟ ᱛᱮᱭᱟᱨ ᱢᱮ
 si:.lnk කෙටිමං නිර්මාණය කරන්න
 sk:Vytvoriť odkaz .lnk
@@ -13104,7 +13104,7 @@ pa:ਫਾਈਲ ਮਿਟਾਓ
 pl:Usuń plik
 pt:Excluir Arquivo
 ro:Șterge fișierul
-ru:Удалить файл
+ru:Удалить Файл
 sat:ᱨᱮᱫ ᱢᱮᱴᱟᱣ ᱢᱮ
 si:ගොනුව මකන්න
 sk:Odstrániť súbor
@@ -14456,7 +14456,7 @@ pa:ਐਪਲੀਕੇਸ਼ਨ ਬੰਦ ਕਰੋ
 pl:Wyjdź z programu
 pt:Sair da Aplicação
 ro:Ieși din aplicație
-ru:Выход из приложения
+ru:Выйти из Приложения
 sat:ᱮᱯᱞᱤᱠᱮᱥᱚᱱ ᱵᱟᱦᱨᱮ ᱚᱰᱚᱠ
 si:යෙදුමෙන් පිටවන්න
 sk:Ukončiť aplikáciu
@@ -17384,7 +17384,7 @@ pa:ਪੰਨੇ 'ਤੇ ਜਾਓ...
 pl:Idź do strony...
 pt:Ir para Página...
 ro:Mergi la pagina...
-ru:Перейти к странице...
+ru:Перейти к Странице...
 sat:ᱥᱟᱦᱴᱟ ᱛᱮ ᱪᱟᱞᱟᱜ ᱢᱮ...
 si:පිටුවට යන්න...
 sk:Prejsť na stranu…
@@ -17530,7 +17530,7 @@ pa:ਮਦਦ: SumatraPDF ਬਾਰੇ
 pl:Pomoc: o programie SumatraPDF
 pt:Ajuda: Sobre o SumatraPDF
 ro:Ajutor: Despre SumatraPDF
-ru:Справка: О программе SumatraPDF
+ru:Справка: О SumatraPDF
 sat:ᱜᱚᱲᱚ: SumatraPDF ᱵᱟᱵᱚᱛ
 si:උදව්: SumatraPDF පිළිබඳව
 sk:Pomoc: O programe SumatraPDF
@@ -17603,7 +17603,7 @@ pa:ਮਦਦ: ਕੀਬੋਰਡ ਸ਼ਾਰਟਕੱਟ
 pl:Pomoc: skróty klawiaturowe
 pt:Ajuda: Atalhos de Teclado
 ro:Ajutor: Scurtături tastatură
-ru:Справка: Сочетания клавиш
+ru:Справка: Клавишные Сокращения (HotKeys)
 sat:ᱜᱚᱲᱚ: ᱠᱤᱵᱚᱰ ᱠᱷᱟᱴᱚᱢᱟᱪᱷᱟ ᱠᱚ
 si:උදව්: යතුරුපුවරු කෙටි මාර්ග
 sk:Pomoc: Klávesové skratky
@@ -17676,7 +17676,7 @@ pa:ਮਦਦ: ਮੈਨੂਅਲ
 pl:Pomoc: instrukcja obsługi
 pt:Ajuda: Manual
 ro:Ajutor: Manual
-ru:Справка: Руководство
+ru:Справка: Инструкция
 sat:ᱜᱚᱲᱚ: ᱦᱟᱛᱛᱮ ᱵᱚᱦᱚᱜ
 si:උදව්: අත්පොත
 sk:Pomoc: Príručka
@@ -17749,7 +17749,7 @@ pa:ਮਦਦ: ਵੈੱਬਸਾਈਟ 'ਤੇ ਮੈਨੂਅਲ
 pl:Pomoc: instrukcja obsługi na stronie internetowej
 pt:Ajuda: Manual no Site
 ro:Ajutor: Manual pe site
-ru:Справка: Руководство на сайте
+ru:Справка: Инструкция На Сайте
 sat:ᱜᱚᱲᱚ: ᱣᱮᱵᱽᱥᱟᱭᱤᱴ ᱨᱮ ᱦᱟᱛᱛᱮ ᱵᱚᱦᱚᱜ
 si:උදව්: වෙබ් අඩවියේ අත්පොත
 sk:Pomoc: Príručka na webovej stránke
@@ -17822,7 +17822,7 @@ pa:ਮਦਦ: SumatraPDF ਵੈੱਬਸਾਈਟ
 pl:Pomoc: strona internetowa programu SumatraPDF
 pt:Ajuda: Site do SumatraPDF
 ro:Ajutor: Site-ul web SumatraPDF
-ru:Справка: Веб-сайт SumatraPDF
+ru:Справка: Сайт SumatraPDF
 sat:ᱜᱚᱲᱚ: SumatraPDF ᱣᱮᱵᱽᱥᱟᱭᱤᱴ
 si:උදව්: SumatraPDF වෙබ් අඩවිය
 sk:Pomoc: Webová stránka SumatraPDF
