@@ -682,7 +682,6 @@ int SyncTex::SourceToDoc(const char* srcfilename, int line, int col, int* page, 
     logfa("SyncTex::SourceToDoc: '%s', line: %d, col: %d\n", srcfilename, line, col);
     int res = RebuildIndexIfNeeded();
     if (res != PDFSYNCERR_SUCCESS) {
-        ReportIf(true);
         return res;
     }
     ReportIf(!scanner);
