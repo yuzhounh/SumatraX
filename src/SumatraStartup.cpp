@@ -397,13 +397,6 @@ static bool SetupPluginMode(Flags& i) {
     return true;
 }
 
-static void SetupCrashHandler() {
-    TempStr symDir = GetCrashInfoDirTemp();
-    TempStr crashDumpPath = path::JoinTemp(symDir, "sumatrapdfcrash.dmp");
-    TempStr crashFilePath = path::JoinTemp(symDir, "sumatrapdfcrash.txt");
-    InstallCrashHandler(crashDumpPath, crashFilePath, symDir);
-}
-
 static HWND FindPrevInstWindow(HANDLE* hMutex) {
     // create a unique identifier for this executable and appdata combination
     // (allows independent side-by-side installations)
@@ -2127,7 +2120,11 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPSTR, _
     srand((unsigned int)time(nullptr));
 
     if (!gIsAsanBuild) {
-        SetupCrashHandler();
+        // SetupCrashHandler()
+        TempStr symDir = GetCrashInfoDirTemp();
+        TempStr crashDumpPath = path::JoinTemp(symDir, "sumatrapdfcrash.dmp");
+        TempStr crashFilePath = path::JoinTemp(symDir, "sumatrapdfcrash.txt");
+        InstallCrashHandler(crashDumpPath, crashFilePath, symDir);
     }
 
     ScopedOle ole;
