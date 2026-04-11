@@ -1105,6 +1105,8 @@ struct BgColorDlgData {
     bool customColorsChanged;
     int selectedCustomIdx; // -1 = no custom button selected
     bool previewSelected;  // true if preview button is selected
+    const char* title;     // dialog title (nullptr = default)
+    bool showRadioButtons; // show "this file" / "all files" radio buttons
 };
 
 // fixed preset colors: checkered, black, white
@@ -1271,7 +1273,7 @@ static void InvalidatePreview(HWND hDlg, BgColorDlgData* data) {
 
 static void UpdateBgColorEditFromColor(HWND hDlg, BgColorDlgData* data) {
     if (data->isCheckered) {
-        HwndSetDlgItemText(hDlg, IDC_BGCOL_EDIT, "checkered");
+        HwndSetDlgItemText(hDlg, IDC_BGCOL_EDIT, data->showRadioButtons ? "checkered" : "unset");
     } else {
         TempStr s = SerializeColorTemp(data->currentColor);
         HwndSetDlgItemText(hDlg, IDC_BGCOL_EDIT, s);
@@ -1355,11 +1357,16 @@ static INT_PTR CALLBACK Dialog_ChangeBgColor_Proc(HWND hDlg, UINT msg, WPARAM wp
             if (UseDarkModeLib()) {
                 DarkMode::setDarkWndSafe(hDlg);
             }
-            HwndSetText(hDlg, _TRA("Change Background Color"));
+            HwndSetText(hDlg, data->title ? data->title : _TRA("Change Background Color"));
             HwndSetDlgItemText(hDlg, IDOK, _TRA("OK"));
             HwndSetDlgItemText(hDlg, IDCANCEL, _TRA("Cancel"));
-            CheckRadioButton(hDlg, IDC_BGCOL_THIS_FILE, IDC_BGCOL_ALL_FILES,
-                             data->applyToAll ? IDC_BGCOL_ALL_FILES : IDC_BGCOL_THIS_FILE);
+            if (data->showRadioButtons) {
+                CheckRadioButton(hDlg, IDC_BGCOL_THIS_FILE, IDC_BGCOL_ALL_FILES,
+                                 data->applyToAll ? IDC_BGCOL_ALL_FILES : IDC_BGCOL_THIS_FILE);
+            } else {
+                ShowWindow(GetDlgItem(hDlg, IDC_BGCOL_THIS_FILE), SW_HIDE);
+                ShowWindow(GetDlgItem(hDlg, IDC_BGCOL_ALL_FILES), SW_HIDE);
+            }
             ParseCustomColors(data);
             UpdateBgColorEditFromColor(hDlg, data);
             // subclass color area for mouse drag tracking
@@ -1503,6 +1510,12 @@ static INT_PTR CALLBACK Dialog_ChangeBgColor_Proc(HWND hDlg, UINT msg, WPARAM wp
                             SelectPreviewButton(hDlg, data);
                         } else {
                             SelectCustomButton(hDlg, data, idx);
+                            // load the button's color as current selection
+                            if (data->customColorSet[idx]) {
+                                data->isCheckered = false;
+                                data->currentColor = data->customColors[idx];
+                                UpdateBgColorEditFromColor(hDlg, data);
+                            }
                         }
                     }
                 } break;
@@ -1537,6 +1550,8 @@ bool Dialog_ChangeBackgroundColor(HWND hwnd, COLORREF currentColor, bool isCheck
     data.applyToAll = false;
     data.selectedCustomIdx = -1;
     data.previewSelected = true;
+    data.title = nullptr;
+    data.showRadioButtons = true;
 
     INT_PTR res = CreateDialogBox(IDD_DIALOG_CHANGE_BG_COLOR, hwnd, Dialog_ChangeBgColor_Proc, (LPARAM)&data);
     if (res != IDOK) {
@@ -1546,6 +1561,26 @@ bool Dialog_ChangeBackgroundColor(HWND hwnd, COLORREF currentColor, bool isCheck
     result.color = data.currentColor;
     result.isCheckered = data.isCheckered;
     result.applyToAllFiles = data.applyToAll;
+    return true;
+}
+
+bool Dialog_SetTabColor(HWND hwnd, COLORREF currentColor, bool isUnset, COLORREF& resultColor, bool& resultIsUnset) {
+    BgColorDlgData data;
+    data.currentColor = currentColor;
+    data.isCheckered = isUnset;
+    data.applyToAll = false;
+    data.selectedCustomIdx = -1;
+    data.previewSelected = true;
+    data.title = _TRA("Set Tab Color");
+    data.showRadioButtons = false;
+
+    INT_PTR res = CreateDialogBox(IDD_DIALOG_CHANGE_BG_COLOR, hwnd, Dialog_ChangeBgColor_Proc, (LPARAM)&data);
+    if (res != IDOK) {
+        return false;
+    }
+
+    resultColor = data.currentColor;
+    resultIsUnset = data.isCheckered;
     return true;
 }
 
