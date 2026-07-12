@@ -383,7 +383,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -412,7 +412,7 @@
       <ImportLibrary>..\out\dbg32\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/dbg32/libmupdf.dll" /PDB:"../out/dbg32/libmupdf.pdb" /IMPLIB:"../out/dbg32/obj/libmupdf.lib" /MAP:"../out/dbg32/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/dbg32/libmupdf.dll" /PDB:"../out/dbg32/libmupdf.pdb" /IMPLIB:"../out/dbg32/obj/libmupdf.lib" /MAP:"../out/dbg32/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -421,7 +421,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -450,7 +450,7 @@
       <ImportLibrary>..\out\dbg64\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/dbg64/libmupdf.dll" /PDB:"../out/dbg64/libmupdf.pdb" /IMPLIB:"../out/dbg64/obj/libmupdf.lib" /MAP:"../out/dbg64/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/dbg64/libmupdf.dll" /PDB:"../out/dbg64/libmupdf.pdb" /IMPLIB:"../out/dbg64/obj/libmupdf.lib" /MAP:"../out/dbg64/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -459,7 +459,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;ARCH_HAS_NEON=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -488,7 +488,7 @@
       <ImportLibrary>..\out\dbgarm64\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/dbgarm64/libmupdf.dll" /PDB:"../out/dbgarm64/libmupdf.pdb" /IMPLIB:"../out/dbgarm64/obj/libmupdf.lib" /MAP:"../out/dbgarm64/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/dbgarm64/libmupdf.dll" /PDB:"../out/dbgarm64/libmupdf.pdb" /IMPLIB:"../out/dbgarm64/obj/libmupdf.lib" /MAP:"../out/dbgarm64/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -497,7 +497,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>ASAN_BUILD=1;WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -526,7 +526,7 @@
       <ImportLibrary>..\out\dbg64_asan\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/dbg64_asan/libmupdf.dll" /PDB:"../out/dbg64_asan/libmupdf.pdb" /IMPLIB:"../out/dbg64_asan/obj/libmupdf.lib" /MAP:"../out/dbg64_asan/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/dbg64_asan/libmupdf.dll" /PDB:"../out/dbg64_asan/libmupdf.pdb" /IMPLIB:"../out/dbg64_asan/obj/libmupdf.lib" /MAP:"../out/dbg64_asan/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -535,7 +535,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;DEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>MinSpace</Optimization>
@@ -563,7 +563,7 @@
       <ImportLibrary>..\out\dbgfull32\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/dbgfull32/libmupdf.dll" /PDB:"../out/dbgfull32/libmupdf.pdb" /IMPLIB:"../out/dbgfull32/obj/libmupdf.lib" /MAP:"../out/dbgfull32/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/dbgfull32/libmupdf.dll" /PDB:"../out/dbgfull32/libmupdf.pdb" /IMPLIB:"../out/dbgfull32/obj/libmupdf.lib" /MAP:"../out/dbgfull32/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -572,7 +572,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;DEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>MinSpace</Optimization>
@@ -600,7 +600,7 @@
       <ImportLibrary>..\out\dbgfull64\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/dbgfull64/libmupdf.dll" /PDB:"../out/dbgfull64/libmupdf.pdb" /IMPLIB:"../out/dbgfull64/obj/libmupdf.lib" /MAP:"../out/dbgfull64/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/dbgfull64/libmupdf.dll" /PDB:"../out/dbgfull64/libmupdf.pdb" /IMPLIB:"../out/dbgfull64/obj/libmupdf.lib" /MAP:"../out/dbgfull64/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -609,7 +609,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;DEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;ARCH_HAS_NEON=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>MinSpace</Optimization>
@@ -637,7 +637,7 @@
       <ImportLibrary>..\out\dbgfullarm64\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/dbgfullarm64/libmupdf.dll" /PDB:"../out/dbgfullarm64/libmupdf.pdb" /IMPLIB:"../out/dbgfullarm64/obj/libmupdf.lib" /MAP:"../out/dbgfullarm64/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/dbgfullarm64/libmupdf.dll" /PDB:"../out/dbgfullarm64/libmupdf.pdb" /IMPLIB:"../out/dbgfullarm64/obj/libmupdf.lib" /MAP:"../out/dbgfullarm64/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -646,7 +646,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>ASAN_BUILD=1;WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;DEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>MinSpace</Optimization>
@@ -674,7 +674,7 @@
       <ImportLibrary>..\out\dbgfull64_asan\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/dbgfull64_asan/libmupdf.dll" /PDB:"../out/dbgfull64_asan/libmupdf.pdb" /IMPLIB:"../out/dbgfull64_asan/obj/libmupdf.lib" /MAP:"../out/dbgfull64_asan/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/dbgfull64_asan/libmupdf.dll" /PDB:"../out/dbgfull64_asan/libmupdf.pdb" /IMPLIB:"../out/dbgfull64_asan/obj/libmupdf.lib" /MAP:"../out/dbgfull64_asan/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -683,7 +683,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -712,7 +712,7 @@
       <ImportLibrary>..\out\rel32\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/rel32/libmupdf.dll" /PDB:"../out/rel32/libmupdf.pdb" /IMPLIB:"../out/rel32/obj/libmupdf.lib" /MAP:"../out/rel32/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/rel32/libmupdf.dll" /PDB:"../out/rel32/libmupdf.pdb" /IMPLIB:"../out/rel32/obj/libmupdf.lib" /MAP:"../out/rel32/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -721,7 +721,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -750,7 +750,7 @@
       <ImportLibrary>..\out\rel64\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/rel64/libmupdf.dll" /PDB:"../out/rel64/libmupdf.pdb" /IMPLIB:"../out/rel64/obj/libmupdf.lib" /MAP:"../out/rel64/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/rel64/libmupdf.dll" /PDB:"../out/rel64/libmupdf.pdb" /IMPLIB:"../out/rel64/obj/libmupdf.lib" /MAP:"../out/rel64/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -759,7 +759,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;ARCH_HAS_NEON=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -788,7 +788,7 @@
       <ImportLibrary>..\out\arm64\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/arm64/libmupdf.dll" /PDB:"../out/arm64/libmupdf.pdb" /IMPLIB:"../out/arm64/obj/libmupdf.lib" /MAP:"../out/arm64/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/arm64/libmupdf.dll" /PDB:"../out/arm64/libmupdf.pdb" /IMPLIB:"../out/arm64/obj/libmupdf.lib" /MAP:"../out/arm64/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -797,7 +797,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>ASAN_BUILD=1;WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -825,7 +825,7 @@
       <ImportLibrary>..\out\rel64_asan\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/rel64_asan/libmupdf.dll" /PDB:"../out/rel64_asan/libmupdf.pdb" /IMPLIB:"../out/rel64_asan/obj/libmupdf.lib" /MAP:"../out/rel64_asan/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/rel64_asan/libmupdf.dll" /PDB:"../out/rel64_asan/libmupdf.pdb" /IMPLIB:"../out/rel64_asan/obj/libmupdf.lib" /MAP:"../out/rel64_asan/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -834,7 +834,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -864,7 +864,7 @@
       <ImportLibrary>..\out\rel32_prefast\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/rel32_prefast/libmupdf.dll" /PDB:"../out/rel32_prefast/libmupdf.pdb" /IMPLIB:"../out/rel32_prefast/obj/libmupdf.lib" /MAP:"../out/rel32_prefast/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/rel32_prefast/libmupdf.dll" /PDB:"../out/rel32_prefast/libmupdf.pdb" /IMPLIB:"../out/rel32_prefast/obj/libmupdf.lib" /MAP:"../out/rel32_prefast/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -873,7 +873,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -903,7 +903,7 @@
       <ImportLibrary>..\out\rel64_prefast\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/rel64_prefast/libmupdf.dll" /PDB:"../out/rel64_prefast/libmupdf.pdb" /IMPLIB:"../out/rel64_prefast/obj/libmupdf.lib" /MAP:"../out/rel64_prefast/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/rel64_prefast/libmupdf.dll" /PDB:"../out/rel64_prefast/libmupdf.pdb" /IMPLIB:"../out/rel64_prefast/obj/libmupdf.lib" /MAP:"../out/rel64_prefast/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -912,7 +912,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;ARCH_HAS_NEON=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -942,7 +942,7 @@
       <ImportLibrary>..\out\arm64_prefast\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/arm64_prefast/libmupdf.dll" /PDB:"../out/arm64_prefast/libmupdf.pdb" /IMPLIB:"../out/arm64_prefast/obj/libmupdf.lib" /MAP:"../out/arm64_prefast/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/arm64_prefast/libmupdf.dll" /PDB:"../out/arm64_prefast/libmupdf.pdb" /IMPLIB:"../out/arm64_prefast/obj/libmupdf.lib" /MAP:"../out/arm64_prefast/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
@@ -951,7 +951,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4127;4189;4324;4458;4522;4611;4800;6319;4206;4701;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>ASAN_BUILD=1;WIN32;_WIN32;WINVER=0x0601;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;_HAS_ITERATOR_DEBUGGING=0;NDEBUG;FZ_ENABLE_PDF=1;FZ_ENABLE_SVG=1;FZ_ENABLE_BROTLI=1;FZ_ENABLE_BARCODE=0;FZ_ENABLE_JS=1;FZ_ENABLE_HYPHEN=0;FZ_ENABLE_MD=1;_HAS_EXCEPTIONS=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>DEBUG;%(UndefinePreprocessorDefinitions)</UndefinePreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -980,7 +980,7 @@
       <ImportLibrary>..\out\rel64_prefast_asan\obj\libmupdf.lib</ImportLibrary>
       <GenerateMapFile>false</GenerateMapFile>
       <ModuleDefinitionFile>../src/libmupdf.def</ModuleDefinitionFile>
-      <AdditionalOptions>/OUT:"../out/rel64_prefast_asan/libmupdf.dll" /PDB:"../out/rel64_prefast_asan/libmupdf.pdb" /IMPLIB:"../out/rel64_prefast_asan/obj/libmupdf.lib" /MAP:"../out/rel64_prefast_asan/obj/libmupdf.map" -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/OUT:"../out/rel64_prefast_asan/libmupdf.dll" /PDB:"../out/rel64_prefast_asan/libmupdf.pdb" /IMPLIB:"../out/rel64_prefast_asan/obj/libmupdf.lib" /MAP:"../out/rel64_prefast_asan/obj/libmupdf.map" -IGNORE:4701 -IGNORE:4702 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
