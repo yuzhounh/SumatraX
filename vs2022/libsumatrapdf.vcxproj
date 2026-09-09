@@ -1100,8 +1100,8 @@
     <ProjectReference Include="djvudec.vcxproj">
       <Project>{0A565B15-7635-DAB0-7F4D-6587EBAB4012}</Project>
     </ProjectReference>
-    <ProjectReference Include="libwebp.vcxproj">
-      <Project>{0A466F79-7625-EE14-7F3D-79EBEB9B5476}</Project>
+    <ProjectReference Include="a-libwebp.vcxproj">
+      <Project>{38708512-A4DA-3989-ED18-EB2E59C217DE}</Project>
     </ProjectReference>
     <ProjectReference Include="dav1d.vcxproj">
       <Project>{F5BF470F-61D4-6FC0-2A56-132096296CF1}</Project>
