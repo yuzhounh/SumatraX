@@ -288,7 +288,7 @@ static bool SetToolbarButtonHiddenByIdx(MainWindow* win, int idx, bool isHidden)
     ToolbarVirt* tb = win->toolbarVirt;
     if (w->id == PageInfoId && tb) {
         if (tb->pageLabel) {
-            tb->pageLabel->SetVisibility(want);
+            tb->pageLabel->SetVisibility(gSettings->minimalViewer ? Visibility::Collapse : want);
         }
         if (win->pageEdit) {
             win->pageEdit->SetVisibility(want);
