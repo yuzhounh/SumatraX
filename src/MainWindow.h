@@ -364,6 +364,7 @@ struct MainWindow { // NOLINT(clang-analyzer-optin.performance.Padding)
     HMENU menu = nullptr;
     // Read Aloud submenu of `menu`; per-window so WM_INITMENUPOPUP can rebuild it
     HMENU menuReadAloud = nullptr;
+    HMENU activeHamburgerMenu = nullptr;
 
     DoubleBuffer* buffer = nullptr;
 
