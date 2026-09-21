@@ -70,10 +70,22 @@ struct ToolbarButtonInfo {
 
 static ToolbarButtonInfo gToolbarButtons[] = {
     {gIconMenu, CmdToggleMenuBar, TrN("Menu")},
+    {gIconFileOpen, CmdOpenFile, TrN("Open")},
+    {gIconPrint, CmdPrint, TrN("Print")},
     {nullptr, PageInfoId, {}}, // text box for page number + show current page / no of pages
+    {gIconPagePrev, CmdGoToPrevPage, TrN("Previous Page")},
+    {gIconPageNext, CmdGoToNextPage, TrN("Next Page")},
+    {gIconNavigateBack, CmdNavigateBack, TrN("Back")},
+    {gIconNavigateForward, CmdNavigateForward, TrN("Forward")},
+    {gIconSpeak, CmdToggleReadAloud, TrN("Read Aloud")},
+    {gIconLayoutContinuous, CmdZoomFitWidthAndContinuous, TrN("Fit Width and Show Pages Continuously")},
+    {gIconLayoutSinglePage, CmdZoomFitPageAndSinglePage, TrN("Fit a Single Page")},
     {gIconRotateLeft, CmdRotateLeft, TrN("Rotate &Left")},
     {gIconRotateRight, CmdRotateRight, TrN("Rotate &Right")},
+    {gIconZoomOut, CmdZoomOut, TrN("Zoom Out")},
+    {gIconZoomIn, CmdZoomIn, TrN("Zoom In")},
     {gIconSearch, CmdFindFirst, TrN("Find")},
+    {gIconEditAnnotations, CmdToggleEditPDF, TrN("Edit PDF")},
 };
 
 constexpr int kButtonsCount = dimof(gToolbarButtons);
@@ -340,7 +352,21 @@ static void PopulateToolbarLayout() {
             gLayoutButtons[gLayoutButtonsCount++] = tbi;
         }
     };
+    static const int kDefaultMinimalCmds[] = {
+        CmdToggleMenuBar, CmdOpenFile, CmdPrint, PageInfoId, CmdRotateLeft, CmdRotateRight, CmdFindFirst,
+    };
     auto useDefaultLayout = [&addButton]() {
+        if (!gSettings || gSettings->minimalViewer) {
+            for (const ToolbarButtonInfo& tbi : gToolbarButtons) {
+                for (int id : kDefaultMinimalCmds) {
+                    if (tbi.cmdId == id) {
+                        addButton(tbi);
+                        break;
+                    }
+                }
+            }
+            return;
+        }
         for (const ToolbarButtonInfo& tbi : gToolbarButtons) {
             addButton(tbi);
         }
@@ -387,6 +413,101 @@ static void PopulateToolbarLayout() {
     if (gLayoutButtonsCount == 0) {
         logf("ToolbarCustomLayout: nothing usable in '%s', using the standard layout\n", setting);
         useDefaultLayout();
+    }
+}
+
+static bool IsToolEnabled(int cmdId) {
+    Str setting = gSettings ? gSettings->toolbarCustomLayout : Str{};
+    if (str::IsEmptyOrWhiteSpace(setting)) {
+        if (!gSettings || gSettings->minimalViewer) {
+            static const int defaultCmds[] = {
+                CmdToggleMenuBar, CmdOpenFile, CmdPrint, PageInfoId, CmdRotateLeft, CmdRotateRight, CmdFindFirst,
+            };
+            for (int id : defaultCmds) {
+                if (id == cmdId) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+    Str name = (cmdId == PageInfoId) ? StrL("PageInfo") : GetCommandName(cmdId);
+    if (len(name) == 0) {
+        return false;
+    }
+    TempStr normalized = str::ReplaceTemp(setting, StrL(","), StrL(" "));
+    normalized = str::ReplaceTemp(normalized, StrL(";"), StrL(" "));
+    StrVec names;
+    Split(&names, normalized, StrL(" "), true);
+    for (Str tok : names) {
+        str::TrimWSInPlace(tok, str::TrimOpt::Both);
+        if (str::EqI(tok, name)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static void ToggleToolEnabled(MainWindow* win, int cmdId) {
+    bool newState = !IsToolEnabled(cmdId);
+    str::Builder sb;
+    for (const ToolbarButtonInfo& tbi : gToolbarButtons) {
+        bool enabled = (tbi.cmdId == cmdId) ? newState : IsToolEnabled(tbi.cmdId);
+        if (!enabled) {
+            continue;
+        }
+        Str name = (tbi.cmdId == PageInfoId) ? StrL("PageInfo") : GetCommandName(tbi.cmdId);
+        if (len(name) > 0) {
+            if (len(sb) > 0) {
+                sb.Append(StrL(" "));
+            }
+            sb.Append(name);
+        }
+    }
+    str::ReplaceWithCopy(&gSettings->toolbarCustomLayout, ToStr(sb));
+    gLayoutParsed = false;
+    str::Free(gLayoutParsedFrom);
+    gLayoutParsedFrom = {};
+    ReCreateToolbar(win);
+    win->uiState.layout = {};
+    ScheduleUiUpdate(win);
+    ScheduleSaveSettings();
+}
+
+static void ShowToolbarContextMenu(MainWindow* win, Point ptScreen) {
+    if (!win) {
+        return;
+    }
+    HMENU menu = CreatePopupMenu();
+    if (!menu) {
+        return;
+    }
+
+    constexpr UINT_PTR kBaseCmd = 1000;
+    for (int i = 0; i < kButtonsCount; i++) {
+        const ToolbarButtonInfo& bi = gToolbarButtons[i];
+        Str title = bi.toolTip;
+        if (bi.cmdId == PageInfoId) {
+            title = TrN("Page Number");
+        }
+        TempStr translated = trans::GetTranslation(title);
+        TempStr cleanTitle = str::ReplaceTemp(translated, StrL("&"), StrL(""));
+        WCHAR* ws = CWStrTemp(cleanTitle);
+        UINT flags = MF_STRING;
+        if (IsToolEnabled(bi.cmdId)) {
+            flags |= MF_CHECKED;
+        }
+        AppendMenuW(menu, flags, kBaseCmd + i, ws);
+    }
+
+    UINT flags = TPM_RETURNCMD | TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RIGHTBUTTON;
+    int selected = (int)TrackPopupMenu(menu, flags, ptScreen.x, ptScreen.y, 0, win->hwndFrame, nullptr);
+    DestroyMenu(menu);
+
+    if (selected >= (int)kBaseCmd && selected < (int)(kBaseCmd + kButtonsCount)) {
+        int idx = selected - kBaseCmd;
+        ToggleToolEnabled(win, gToolbarButtons[idx].cmdId);
     }
 }
 
@@ -1477,6 +1598,10 @@ static void OnToolbarButtonClicked(MainWindow* win, VirtMouseEvent* ev) {
     }
     int cmdId = w->id;
     if (cmdId == PageInfoId || cmdId == 0) {
+        if (ev->button == 1) {
+            ShowToolbarContextMenu(win, GetCursorPosition());
+            ev->didHandle = true;
+        }
         return;
     }
     if (ToolbarDropdownJustClosed() &&
@@ -1489,12 +1614,15 @@ static void OnToolbarButtonClicked(MainWindow* win, VirtMouseEvent* ev) {
     if (tbv && IsPlacingAnnotation(win) && VecContains(tbv->annotationItems, w)) {
         return;
     }
-    // right-click: the drop-down, not the button's command
+    // right-click:
     if (ev->button == 1) {
         if (ShowToolbarButtonDropdown(win, cmdId)) {
             ev->didHandle = true;
             return;
         }
+        ShowToolbarContextMenu(win, GetCursorPosition());
+        ev->didHandle = true;
+        return;
     }
     if (!w->IsEnabled()) {
         return;
@@ -3712,6 +3840,12 @@ static void OnToolbarNativeMsg(MainWindow* win, VirtHostNativeMsg* ev) {
             if (win->tabsInTitlebar) {
                 ev->didHandle = OnCaptionDrag(win, ev);
             }
+            return;
+        case WM_RBUTTONUP:
+        case WM_CONTEXTMENU:
+            ShowToolbarContextMenu(win, GetCursorPosition());
+            ev->didHandle = true;
+            ev->res = 0;
             return;
     }
 }
