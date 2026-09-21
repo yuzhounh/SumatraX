@@ -174,7 +174,7 @@ SortFavoritesByName = false
 
 ; if true, show the table of contents (Bookmarks) sidebar when the document has
 ; one
-ShowToc = true
+ShowToc = false
 
 ; if true, put the bookmarks / favorites sidebar on the right of the window
 ; (left is the default; right-to-left UI languages already put it on the right)
@@ -1312,7 +1312,7 @@ FileStates [
 
     ; if true, show the table of contents (Bookmarks) sidebar when the document
     ; has one
-    ShowToc = true
+    ShowToc = false
 
     ; if true, the document is displayed right-to-left in facing and book view
     ; modes
@@ -1357,7 +1357,7 @@ SessionData [
         ScrollPos = 0 0
 
         ; if true, the table of contents was shown when the document was closed
-        ShowToc = true
+        ShowToc = false
 
         ; which table of contents items were expanded (see FileStates ->
         ; TocState)

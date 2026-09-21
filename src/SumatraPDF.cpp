@@ -1546,8 +1546,8 @@ int ScrollbarModeFromPrefs() {
     if (idx < 0) {
         idx = kScrollbarWindows;
     }
-    if (gSettings && gSettings->minimalViewer && idx == kScrollbarWindows) {
-        idx = kScrollbarSmart;
+    if (gSettings && gSettings->minimalViewer && (idx == kScrollbarWindows || idx == kScrollbarSmart)) {
+        idx = kScrollbarOverlay;
     }
     return idx;
 }
@@ -1562,6 +1562,9 @@ bool ScrollbarsUseOverlay() {
 }
 
 OverlayScrollbar::Mode ScrollbarsOverlayMode() {
+    if (gSettings && gSettings->minimalViewer) {
+        return OverlayScrollbar::Mode::Thick;
+    }
     if (ScrollbarModeFromPrefs() == kScrollbarOverlay) {
         return OverlayScrollbar::Mode::Thick;
     }
@@ -2303,6 +2306,9 @@ static void UpdateUiForCurrentTab(MainWindow* win) {
 }
 
 static bool showTocByDefault(Str path) {
+    if (gSettings && gSettings->minimalViewer) {
+        return false;
+    }
     if (!gSettings->showToc) {
         return false;
     }

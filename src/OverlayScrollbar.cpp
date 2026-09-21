@@ -46,10 +46,16 @@ static constexpr u8 kAlphaThick = 170;
 using State = OverlayScrollbar::State;
 
 static bool IsThick(OverlayScrollbar* sb) {
+    if (sb->mode == OverlayScrollbar::Mode::Thick) {
+        return true;
+    }
     return sb->state == State::SmartThick || sb->state == State::AlwaysThick;
 }
 
 static bool IsVisible(OverlayScrollbar* sb) {
+    if (sb->mode == OverlayScrollbar::Mode::Thick) {
+        return sb->state != State::Hidden;
+    }
     return sb->state == State::SmartThin || sb->state == State::SmartThick || sb->state == State::AlwaysThick;
 }
 
@@ -59,6 +65,9 @@ static bool IsActive(OverlayScrollbar* sb) {
 }
 
 static int ScaledWidth(OverlayScrollbar* sb, bool thick) {
+    if (sb->mode == OverlayScrollbar::Mode::Thick) {
+        return sb->thickWidth;
+    }
     return thick ? sb->thickWidth : sb->thinWidth;
 }
 
@@ -546,18 +555,27 @@ static void CALLBACK MouseTrackTimerProc(HWND /*hwnd*/, UINT /*msg*/, UINT_PTR /
             if (wasOver != sb->mouseOverThumb) {
                 PaintScrollbar(sb);
             }
-        } else if (overOwner && mouseMoved) {
-            // Mouse is over owner and moving, but not over the scrollbar - show thin
-            // IsThick() means transitioning from thick to thin
-            if (IsThick(sb) || sb->state != State::SmartThin) {
-                ShowScrollbarWindow(sb, false);
+        } else {
+            bool wasOver = sb->mouseOverThumb;
+            sb->mouseOverThumb = false;
+            if (wasOver) {
+                PaintScrollbar(sb);
             }
-            // Reset the auto-hide timer since mouse is moving
-            KillTimer(sb->hwnd, OverlayScrollbar::kTimerAutoHide);
-            SetTimer(sb->hwnd, OverlayScrollbar::kTimerAutoHide, sb->hideAfterMouseStopMs, nullptr);
-        } else if (IsThick(sb) && !overOwner) {
-            // Mouse left the owner area while thick - transition to hidden
-            HideScrollbarWindow(sb);
+            if (sb->mode != OverlayScrollbar::Mode::Thick) {
+                if (overOwner && mouseMoved) {
+                    // Mouse is over owner and moving, but not over the scrollbar - show thin
+                    // IsThick() means transitioning from thick to thin
+                    if (IsThick(sb) || sb->state != State::SmartThin) {
+                        ShowScrollbarWindow(sb, false);
+                    }
+                    // Reset the auto-hide timer since mouse is moving
+                    KillTimer(sb->hwnd, OverlayScrollbar::kTimerAutoHide);
+                    SetTimer(sb->hwnd, OverlayScrollbar::kTimerAutoHide, sb->hideAfterMouseStopMs, nullptr);
+                } else if (IsThick(sb) && !overOwner) {
+                    // Mouse left the owner area while thick - transition to hidden
+                    HideScrollbarWindow(sb);
+                }
+            }
         }
         // If mouse is over owner but not moving, the existing auto-hide timer handles it
     }
