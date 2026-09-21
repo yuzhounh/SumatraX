@@ -10505,6 +10505,17 @@ static void TransitionToTabs() {
     win->RedrawAllIncludingNonClient();
 }
 
+void ToggleUseTabs() {
+    bool newState = !gSettings->useTabs;
+    gSettings->useTabs = newState;
+    if (newState) {
+        uitask::Post(MkFunc0Void(TransitionToTabs));
+    } else {
+        uitask::Post(MkFunc0Void(TransitionToNoTabs));
+    }
+    ScheduleSaveSettings();
+}
+
 // set a window's menu bar visibility to match the current showMenubar pref
 // (unlike ToggleMenuBar, which flips the pref). No-op in fullscreen /
 // presentation, where the menu bar is governed by that mode.

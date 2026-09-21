@@ -319,7 +319,7 @@ void TabCtrl::Paint(VirtPaintCtx& ctx) {
             int sepDx = DpiScale(2);
             int sepDy = DpiScale(18);
             int sepY = r.y + ((r.dy - sepDy) / 2);
-            Color sepCol = IsLightColor(tabBgCol) ? MkRgb(0x8A, 0x90, 0x99) : MkRgb(0x5A, 0x5E, 0x64);
+            Color sepCol = IsLightColor(tabBgCol) ? MkRgb(0xA6, 0xAC, 0xB5) : MkRgb(0x4E, 0x52, 0x58);
             int sepX = isRtl ? (r.x - (sepDx / 2)) : (r.x + r.dx - (sepDx / 2));
             gfx->FillRect({sepX, sepY, sepDx, sepDy}, sepCol);
         }
