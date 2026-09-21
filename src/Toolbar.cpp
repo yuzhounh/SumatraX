@@ -69,30 +69,11 @@ struct ToolbarButtonInfo {
 };
 
 static ToolbarButtonInfo gToolbarButtons[] = {
-    {gIconFileOpen, CmdOpenFile, TrN("Open")},
-    {gIconPrint, CmdPrint, TrN("Print")},
-    {nullptr, 0, {}},          // separator
     {nullptr, PageInfoId, {}}, // text box for page number + show current page / no of pages
-    {gIconPagePrev, CmdGoToPrevPage, TrN("Previous Page")},
-    {gIconPageNext, CmdGoToNextPage, TrN("Next Page")},
-    {nullptr, 0, {}}, // separator
-    {gIconNavigateBack, CmdNavigateBack, TrN("Back")},
-    {gIconNavigateForward, CmdNavigateForward, TrN("Forward")},
-    {nullptr, 0, {}}, // separator
-    {gIconSpeak, CmdToggleReadAloud, TrN("Read Aloud")},
-    {nullptr, 0, {}}, // separator
-    {gIconLayoutContinuous, CmdZoomFitWidthAndContinuous, TrN("Fit Width and Show Pages Continuously")},
-    {gIconLayoutSinglePage, CmdZoomFitPageAndSinglePage, TrN("Fit a Single Page")},
     {gIconRotateLeft, CmdRotateLeft, TrN("Rotate &Left")},
     {gIconRotateRight, CmdRotateRight, TrN("Rotate &Right")},
-    {gIconZoomOut, CmdZoomOut, TrN("Zoom Out")},
-    {gIconZoomIn, CmdZoomIn, TrN("Zoom In")},
-    {nullptr, 0, {}}, // separator
     {gIconSearch, CmdFindFirst, TrN("Find")},
-    {nullptr, 0, {}}, // separator
-    {gIconEditAnnotations, CmdToggleEditPDF, TrN("Edit PDF")},
 };
-// unicode chars: https://www.compart.com/en/unicode/U+25BC
 
 constexpr int kButtonsCount = dimof(gToolbarButtons);
 
@@ -3276,6 +3257,7 @@ static void BuildToolbarLayout(MainWindow* win) {
             label->SetColor(kColText, fg);
             label->padding = {0, pageGap, 0, DpiScale(4)};
             label->id = PageInfoId;
+            label->SetVisibility(Visibility::Collapse);
             tb->pageLabel = label;
             box->AddChild(label);
 
@@ -3311,7 +3293,7 @@ static void BuildToolbarLayout(MainWindow* win) {
             auto* total = new VirtText(StrL(" "), tb->platformFont);
             total->isRtl = box->rtl;
             total->SetColor(kColText, fg);
-            total->padding = {0, DpiScale(4), 0, pageGap};
+            total->padding = {0, DpiScale(16), 0, pageGap};
             total->id = PageInfoId;
             tb->pageTotal = total;
             box->AddChild(total);
