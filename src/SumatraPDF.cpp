@@ -13735,6 +13735,13 @@ static int CaptionButtonAt(MainWindow* win, Point pt) {
     return -1;
 }
 
+static Color CaptionBackgroundColor(MainWindow* win) {
+    if (win && win->tabsInTitlebar) {
+        return IsLightColor(ThemeMainWindowBackgroundColor()) ? MkRgb(0xDD, 0xE3, 0xE9) : MkRgb(0x1F, 0x20, 0x23);
+    }
+    return ThemeControlBackgroundColor();
+}
+
 static void RepaintButton(HWND hwnd, int btnIdx, MainWindow* win) {
     if (false) {
         HwndInvalidateRect(hwnd, win->captionBtn[btnIdx].rect, false);
@@ -14134,7 +14141,7 @@ static void DrawCaptionButton(MainWindow* win, HDC hdc, ButtonInfo* bi) {
     gfx.SetSmoothingMode(Gdiplus::SmoothingModeNone);
 
     if (isSysButton) {
-        Color bgc = ThemeControlBackgroundColor();
+        Color bgc = CaptionBackgroundColor(win);
         SolidBrush bgBrNormal(GdiRgbFromColor(bgc));
         gfx.FillRectangle(&bgBrNormal, rButton.x, rButton.y, rButton.dx, rButton.dy);
 
@@ -14194,7 +14201,8 @@ static void DrawCaptionButton(MainWindow* win, HDC hdc, ButtonInfo* bi) {
         int iconPx = DpiScale(kCaptionGlyphDip);
         DrawCaptionSysButtonGlyph(hdc, kind, rc, iconCol, iconPx);
     } else if (button == CB_MENU) {
-        SolidBrush bgBrMenu(GdiRgbFromColor(ThemeControlBackgroundColor()));
+        Color bgc = CaptionBackgroundColor(win);
+        SolidBrush bgBrMenu(GdiRgbFromColor(bgc));
         gfx.FillRectangle(&bgBrMenu, rButton.x, rButton.y, rButton.dx, rButton.dy);
 
         if (win->isMenuOpen) {
@@ -14208,10 +14216,10 @@ static void DrawCaptionButton(MainWindow* win, HDC hdc, ButtonInfo* bi) {
         }
 
         if (buttonRGB != 1) {
-            if (GetLightness(ThemeWindowTextColor()) > GetLightness(ThemeControlBackgroundColor())) {
+            if (GetLightness(ThemeWindowTextColor()) > GetLightness(bgc)) {
                 buttonRGB ^= 0xff;
             }
-            u8 buttonAlpha = u8((255 - abs((int)GetLightness(ThemeControlBackgroundColor()) - buttonRGB)) / 2);
+            u8 buttonAlpha = u8((255 - abs((int)GetLightness(bgc) - buttonRGB)) / 2);
             SolidBrush br(Gdiplus::Color(buttonAlpha, buttonRGB, buttonRGB, buttonRGB));
             gfx.FillRectangle(&br, rc.x, rc.y, rc.dx, rc.dy);
         }
@@ -14225,6 +14233,10 @@ static void DrawCaptionButton(MainWindow* win, HDC hdc, ButtonInfo* bi) {
             gfx.DrawLine(&p, rc.x, rc.y + (i * rc.dy / 2), rc.x + rc.dx, rc.y + (i * rc.dy / 2));
         }
     } else if (button == CB_SYSTEM_MENU) {
+        Color bgc = CaptionBackgroundColor(win);
+        SolidBrush bgBrNormal(GdiRgbFromColor(bgc));
+        gfx.FillRectangle(&bgBrNormal, rButton.x, rButton.y, rButton.dx, rButton.dy);
+
         int xIcon = DpiGetSystemMetrics(SM_CXSMICON);
         int yIcon = DpiGetSystemMetrics(SM_CYSMICON);
         HICON hIcon = (HICON)GetClassLongPtr(win->hwndFrame, GCLP_HICONSM);
@@ -14259,7 +14271,7 @@ static LRESULT CustomCaptionFrameProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp,
                 Point clientScreen = HwndClientToScreen(hwnd, Point(0, 0));
                 int clientX = clientScreen.x - wr.x;
                 int clientY = clientScreen.y - wr.y;
-                HBRUSH br = CreateSolidBrush(ThemeControlBackgroundColor());
+                HBRUSH br = CreateSolidBrush(CaptionBackgroundColor(win));
                 if (clientY > 0) {
                     RECT rc = {0, 0, wr.dx, clientY};
                     HdcFillRect(hdc, ToRect(rc), br);
@@ -14305,7 +14317,7 @@ static LRESULT CustomCaptionFrameProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp,
                 SetLayout(memDC, 0);
             }
             {
-                HBRUSH brCap = CreateSolidBrush(ThemeControlBackgroundColor());
+                HBRUSH brCap = CreateSolidBrush(CaptionBackgroundColor(win));
                 RECT rcFill = ToRECT(captionArea);
                 HdcFillRect(memDC, ToRect(rcFill), brCap);
                 DeleteObject(brCap);

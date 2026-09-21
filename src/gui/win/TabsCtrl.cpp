@@ -219,20 +219,10 @@ void TabCtrl::SetBounds(Rect r) {
     int dx = r.dx;
     int dy = r.dy;
 
-    // Close glyph grows with tab height (taller UI fonts / tab bar) so it
-    // stays usable on touch; floor 16 DIP, cap 28 DIP (issue #5220).
-    int closeMin = DpiScale(16);
-    int closeMax = DpiScale(28);
-    int closeDy = dy - DpiScale(6);
-    closeDy = limitValue(closeDy, closeMin, closeMax);
-    if (closeDy > dy) {
-        closeDy = dy;
-    }
+    // Close glyph in Chrome is a 18x18 circle/glyph with a 32 DIP hit area
+    int closeDy = DpiScale(18);
     int closeDx = closeDy;
-
-    // Padding between circle and tab edge; grow with the button.
-    int closePad = std::max(DpiScale(6), closeDx / 2);
-    // Keep the glyph inside the tab when tabs are very narrow.
+    int closePad = DpiScale(8);
     if (closeDx + closePad > dx && dx > 0) {
         closeDx = std::min(closeDx, std::max(DpiScale(12), dx - 2));
         closeDy = closeDx;
@@ -240,9 +230,7 @@ void TabCtrl::SetBounds(Rect r) {
     }
     int closeY = (dy - closeDy) / 2;
 
-    // Hit target: at least ~40 DIP wide (touch-friendly), full tab height.
-    // Cap at half the tab so title still has a drag/select zone.
-    int minHitDx = DpiScale(40);
+    int minHitDx = DpiScale(32);
     int hitDx = std::max(closeDx + (2 * closePad), minHitDx);
     hitDx = std::min(hitDx, std::max(closeDx + closePad, dx / 2));
     hitDx = std::min(hitDx, dx);
@@ -282,7 +270,7 @@ void TabCtrl::Paint(VirtPaintCtx& ctx) {
     bool isRtl = IsTabsRtl(hwnd);
     PlatformFont* font = tabsCtrl->GetFont();
 
-    int cardMarginY = DpiScale(3);
+    int cardMarginY = DpiScale(4);
     int cardMarginX = DpiScale(2);
     Rect cardRect = {r.x + cardMarginX, r.y + cardMarginY, r.dx - (cardMarginX * 2), r.dy - (cardMarginY * 2)};
     int radius = DpiScale(8);
@@ -293,15 +281,29 @@ void TabCtrl::Paint(VirtPaintCtx& ctx) {
         gfx->FillRoundedRect(cardRect, radius, cardBg);
         textColor = IsLightColor(cardBg) ? MkRgb(0x1F, 0x1F, 0x1F) : MkRgb(0xF1, 0xF3, 0xF4);
         closeBtn->SetColor(kColCloseCircle, cardBg);
+        closeBtn->SetColor(kColCloseCircleHover,
+                           IsLightColor(tabBgCol) ? MkRgb(0xDA, 0xDC, 0xE0) : MkRgb(0x4A, 0x4D, 0x51));
+        closeBtn->SetColor(kColCloseX, IsLightColor(tabBgCol) ? MkRgb(0x5F, 0x63, 0x68) : MkRgb(0x9A, 0xA0, 0xA6));
+        closeBtn->SetColor(kColCloseXHover, IsLightColor(tabBgCol) ? MkRgb(0x20, 0x21, 0x24) : MkRgb(0xFF, 0xFF, 0xFF));
     } else {
         if (isUnderMouse) {
             Color hoverBg = IsLightColor(tabBgCol) ? MkRgb(0xD8, 0xDD, 0xE4) : MkRgb(0x3A, 0x3E, 0x42);
             gfx->FillRoundedRect(cardRect, radius, hoverBg);
             textColor = IsLightColor(tabBgCol) ? MkRgb(0x3C, 0x40, 0x43) : MkRgb(0xE8, 0xEA, 0xED);
             closeBtn->SetColor(kColCloseCircle, hoverBg);
+            closeBtn->SetColor(kColCloseCircleHover,
+                               IsLightColor(tabBgCol) ? MkRgb(0xCC, 0xD1, 0xD9) : MkRgb(0x4A, 0x4D, 0x51));
+            closeBtn->SetColor(kColCloseX, IsLightColor(tabBgCol) ? MkRgb(0x5F, 0x63, 0x68) : MkRgb(0x9A, 0xA0, 0xA6));
+            closeBtn->SetColor(kColCloseXHover,
+                               IsLightColor(tabBgCol) ? MkRgb(0x20, 0x21, 0x24) : MkRgb(0xFF, 0xFF, 0xFF));
         } else {
             textColor = IsLightColor(tabBgCol) ? MkRgb(0x5F, 0x63, 0x68) : MkRgb(0x9A, 0xA0, 0xA6);
             closeBtn->SetColor(kColCloseCircle, tabBgCol);
+            closeBtn->SetColor(kColCloseCircleHover,
+                               IsLightColor(tabBgCol) ? MkRgb(0xDA, 0xDC, 0xE0) : MkRgb(0x4A, 0x4D, 0x51));
+            closeBtn->SetColor(kColCloseX, IsLightColor(tabBgCol) ? MkRgb(0x5F, 0x63, 0x68) : MkRgb(0x9A, 0xA0, 0xA6));
+            closeBtn->SetColor(kColCloseXHover,
+                               IsLightColor(tabBgCol) ? MkRgb(0x20, 0x21, 0x24) : MkRgb(0xFF, 0xFF, 0xFF));
         }
 
         // Draw vertical separator between inactive tabs (like Chrome)
@@ -1117,7 +1119,7 @@ LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
                 return 0;
             }
             HDC hdc = GetDC(hwnd);
-            Color bgCol = IsLightColor(GetColor(kColTabBg)) ? MkRgb(0xDF, 0xE3, 0xE8) : MkRgb(0x1F, 0x20, 0x23);
+            Color bgCol = IsLightColor(GetColor(kColTabBg)) ? MkRgb(0xDD, 0xE3, 0xE9) : MkRgb(0x1F, 0x20, 0x23);
             if (vroot) {
                 PaintVirtTree(vroot, hdc, clientRc, bgCol);
             } else {
