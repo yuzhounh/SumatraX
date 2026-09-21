@@ -115,7 +115,7 @@ ReuseInstance = true
 
 ; if true, show the menu bar (F9 toggles it; the choice is remembered across
 ; sessions) (introduced in version 2.5)
-ShowMenubar = true
+ShowMenubar = false
 
 ; if true, show the menu bar when using tabs (useTabs = true) (introduced in
 ; version 3.7)
@@ -415,7 +415,7 @@ UseSysColors = false
 
 ; if true, documents are opened in tabs instead of new windows (introduced in
 ; version 3.0)
-UseTabs = true
+UseTabs = false
 
 ; if true, a small floating toolbar with selection actions (copy, read aloud,
 ; highlight etc.) pops up after selecting text. Set to false to disable it
