@@ -69,10 +69,8 @@ struct ToolbarButtonInfo {
 };
 
 static ToolbarButtonInfo gToolbarButtons[] = {
-    {gIconMenu, CmdToggleMenuBar, TrN("Menu")},
     {gIconFileOpen, CmdOpenFile, TrN("Open")},
     {gIconPrint, CmdPrint, TrN("Print")},
-    {nullptr, PageInfoId, {}}, // text box for page number + show current page / no of pages
     {gIconPagePrev, CmdGoToPrevPage, TrN("Previous Page")},
     {gIconPageNext, CmdGoToNextPage, TrN("Next Page")},
     {gIconNavigateBack, CmdNavigateBack, TrN("Back")},
@@ -86,6 +84,7 @@ static ToolbarButtonInfo gToolbarButtons[] = {
     {gIconZoomIn, CmdZoomIn, TrN("Zoom In")},
     {gIconSearch, CmdFindFirst, TrN("Find")},
     {gIconEditAnnotations, CmdToggleEditPDF, TrN("Edit PDF")},
+    {gIconMenu, CmdToggleMenuBar, TrN("Menu")},
 };
 
 constexpr int kButtonsCount = dimof(gToolbarButtons);
@@ -3377,6 +3376,10 @@ static void BuildToolbarLayout(MainWindow* win) {
     box->alignCross = CrossAxisAlign::CrossCenter;
     box->rtl = IsUIRtl();
 
+    auto* rightBox = new HBox();
+    rightBox->alignCross = CrossAxisAlign::CrossCenter;
+    rightBox->rtl = box->rtl;
+
     int n = TotalButtonsCount();
     for (int i = 0; i < n; i++) {
         const ToolbarButtonInfo& bi = GetToolbarButtonInfoByIdx(i);
@@ -3460,7 +3463,11 @@ static void BuildToolbarLayout(MainWindow* win) {
             w->onClick = MkFunc1(OnToolbarButtonClicked, win);
         }
         VecAppend(tb->items, w);
-        box->AddChild(w);
+        if (bi.cmdId == CmdToggleMenuBar) {
+            rightBox->AddChild(w);
+        } else {
+            box->AddChild(w);
+        }
     }
 
     auto* annotationBox = new HBox();
@@ -3494,6 +3501,7 @@ static void BuildToolbarLayout(MainWindow* win) {
     mainRow->alignCross = CrossAxisAlign::CrossCenter;
     mainRow->gap = DpiScale(kButtonSpacingX);
     mainRow->AddChild(box, 1);
+    mainRow->AddChild(rightBox, 0);
 
     SetToolbarHoverDropdown(win, CmdSaveAnnotations, MkFunc1(BuildSaveHoverMenu, win));
     // one strip for the two of them, so it doesn't jump when the mouse crosses

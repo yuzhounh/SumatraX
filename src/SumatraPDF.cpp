@@ -14225,8 +14225,6 @@ static void DrawCaptionButton(MainWindow* win, HDC hdc, ButtonInfo* bi) {
             gfx.DrawLine(&p, rc.x, rc.y + (i * rc.dy / 2), rc.x + rc.dx, rc.y + (i * rc.dy / 2));
         }
     } else if (button == CB_SYSTEM_MENU) {
-        SolidBrush bgBrSys(GdiRgbFromColor(ThemeControlBackgroundColor()));
-        gfx.FillRectangle(&bgBrSys, rButton.x, rButton.y, rButton.dx, rButton.dy);
         int xIcon = DpiGetSystemMetrics(SM_CXSMICON);
         int yIcon = DpiGetSystemMetrics(SM_CYSMICON);
         HICON hIcon = (HICON)GetClassLongPtr(win->hwndFrame, GCLP_HICONSM);

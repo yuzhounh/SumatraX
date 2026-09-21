@@ -1765,6 +1765,16 @@ static void OnMouseMove(MainWindow* win, int x, int y, WPARAM key) {
     // ReportIf(!dm); // can happen if reload fails, we delete DisplayModel
     if (!dm) return;
 
+    bool overBadge = win->pageBadgeRc.Contains(x, y);
+    if (overBadge != win->isPageBadgeHover) {
+        win->isPageBadgeHover = overBadge;
+        HwndInvalidate(win->hwndCanvas);
+    }
+    if (overBadge) {
+        SetCursorCached(IDC_HAND);
+        return;
+    }
+
     if (AnnotationPlacementOnMouseMove(win, Point{x, y}, key)) {
         return;
     }
@@ -2282,6 +2292,11 @@ static void OnMouseLeftButtonDown(MainWindow* win, int x, int y, WPARAM key) {
     }
 
     HideToolbarHoverDropdown(win);
+
+    if (win->pageBadgeRc.Contains(x, y)) {
+        PostMessageW(win->hwndFrame, WM_COMMAND, CmdGoToPage, 0);
+        return;
+    }
 
     if (ReadingBarOnLeftDown(win, x, y)) {
         return;
@@ -3735,6 +3750,74 @@ NO_INLINE static void PaintCurrentEditAnnotationMark(WindowTab* tab, HDC hdc, Di
     drawHandle(left, midY);
 }
 
+static void PaintFloatingPageBadge(MainWindow* win, HDC hdc, DisplayModel* dm) {
+    if (!win || !dm || dm->PageCount() <= 0 || win->InPresentation()) {
+        win->pageBadgeRc = {};
+        return;
+    }
+    int curr = dm->CurrentPageNo();
+    int count = dm->PageCount();
+    if (curr < 1 || count < 1) {
+        win->pageBadgeRc = {};
+        return;
+    }
+
+    Rect clientRc = HwndClientRect(win->hwndCanvas);
+    if (clientRc.IsEmpty()) {
+        win->pageBadgeRc = {};
+        return;
+    }
+
+    TempStr text = fmt("%d / %d", curr, count);
+    PlatformFont* font = GetAppFontForDpi(win->frameDpi > 0 ? win->frameDpi : 96);
+    if (!font) {
+        return;
+    }
+
+    Gdiplus::Graphics gs(hdc);
+    gs.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+    gs.SetTextRenderingHint(Gdiplus::TextRenderingHintClearTypeGridFit);
+
+    Gdiplus::Font gdipFont(hdc, font->GetHFont());
+    Gdiplus::RectF boundsF;
+    TempWStr wstr = ToWStrTemp(text);
+    gs.MeasureString(wstr.s, -1, &gdipFont, Gdiplus::PointF(0, 0), &boundsF);
+
+    int padX = DpiScale(12);
+    int padY = DpiScale(5);
+    int badgeW = (int)ceilf(boundsF.Width) + (padX * 2);
+    int badgeH = (int)ceilf(boundsF.Height) + (padY * 2);
+
+    int scrollW = DpiScale(18);
+    int marginX = scrollW + DpiScale(12);
+    int marginY = DpiScale(14);
+
+    Rect badgeRc = {clientRc.dx - badgeW - marginX, clientRc.dy - badgeH - marginY, badgeW, badgeH};
+    win->pageBadgeRc = badgeRc;
+
+    // Draw capsule pill
+    Gdiplus::GraphicsPath path;
+    int d = badgeH;
+    path.AddArc((float)badgeRc.x, (float)badgeRc.y, (float)d, (float)d, 90, 180);
+    path.AddArc((float)(badgeRc.Right() - d), (float)badgeRc.y, (float)d, (float)d, 270, 180);
+    path.CloseFigure();
+
+    BYTE bgAlpha = win->isPageBadgeHover ? 175 : 115;
+    Gdiplus::SolidBrush bgBrush(Gdiplus::Color(bgAlpha, 25, 25, 25));
+    gs.FillPath(&bgBrush, &path);
+
+    BYTE borderAlpha = win->isPageBadgeHover ? 110 : 50;
+    Gdiplus::Pen pen(Gdiplus::Color(borderAlpha, 255, 255, 255), 1.0f);
+    gs.DrawPath(&pen, &path);
+
+    Gdiplus::StringFormat sf;
+    sf.SetAlignment(Gdiplus::StringAlignmentCenter);
+    sf.SetLineAlignment(Gdiplus::StringAlignmentCenter);
+    Gdiplus::SolidBrush textBrush(Gdiplus::Color(245, 255, 255, 255));
+    Gdiplus::RectF rf((float)badgeRc.x, (float)badgeRc.y, (float)badgeRc.dx, (float)badgeRc.dy);
+    gs.DrawString(wstr.s, -1, &gdipFont, rf, &sf, &textBrush);
+}
+
 static bool DrawDocument(MainWindow* win, HDC hdc, Rect rcArea) {
     ReportIf(!win->AsFixed());
     if (!win->AsFixed()) {
@@ -4028,6 +4111,7 @@ static bool DrawDocument(MainWindow* win, HDC hdc, Rect rcArea) {
             PaintPdfPageBoxes(dm, hdc);
         }
     }
+    PaintFloatingPageBadge(win, hdc, dm);
     // Empty viewport (narrow page on a canvas sized by a wider one): the last
     // frame is stale after a reload or jump. Flush the background. Issue #6136.
     if (!anyPageVisible) {
@@ -4122,6 +4206,11 @@ static LRESULT OnSetCursorMouseNone(MainWindow* win, HWND hwnd) {
     if (!dm || !GetCursor() || pt.IsEmpty()) {
         win->DeleteToolTip();
         return FALSE;
+    }
+    if (win->pageBadgeRc.Contains(pt)) {
+        win->DeleteToolTip();
+        SetCursorCached(IDC_HAND);
+        return TRUE;
     }
     if (GetNotificationForGroup(win->hwndCanvas, kNotifCursorPos)) {
         SetCursorCached(IDC_CROSS);
