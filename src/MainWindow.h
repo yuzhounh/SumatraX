@@ -520,6 +520,8 @@ struct MainWindow { // NOLINT(clang-analyzer-optin.performance.Padding)
     bool toolbarOverlayShown = false;
     // a hide of the overlay toolbar is scheduled (after kDelayToolbarHide)
     bool toolbarOverlayHidePending = false;
+    Rect pageBadgeRc{};
+    bool isPageBadgeHover = false;
     bool isFullScreen = false;
     // chrome-less always-on-top preview from Explorer Space (issue #2568)
     bool isQuickLook = false;
