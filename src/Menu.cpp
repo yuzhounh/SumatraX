@@ -2261,10 +2261,12 @@ static TempStr CleanupURLForClipbardCopyTemp(Str s) {
 }
 
 void OnWindowContextMenu(MainWindow* win, int x, int y) {
-    (void)win;
-    (void)x;
-    (void)y;
-    return;
+    if (gSettings->minimalViewer || !gSettings->contextMenu) {
+        (void)win;
+        (void)x;
+        (void)y;
+        return;
+    }
 
     DisplayModel* dm = win->AsFixed();
     ReportIf(!dm);

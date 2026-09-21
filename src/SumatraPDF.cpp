@@ -3290,7 +3290,8 @@ static MainWindow* CreateMainWindow() {
     if (fixedPos) {
         windowPos = gCli->windowPos;
     } else {
-        MainWindow* recentWin = FindMostRecentMainWindow();
+        bool samePos = gSettings->minimalViewer || gSettings->newWindowSamePosition;
+        MainWindow* recentWin = samePos ? FindMostRecentMainWindow() : nullptr;
         if (recentWin) {
             windowPos = GetWindowRectForNewWindow(recentWin);
         }
@@ -3314,6 +3315,10 @@ static MainWindow* CreateMainWindow() {
         posDpi = 96;
     }
     DpiSet(posDpi, posDpi);
+    if (!fixedPos && !(gSettings->minimalViewer || gSettings->newWindowSamePosition)) {
+        int nShift = len(gWindows);
+        windowPos.x += nShift * DpiScale(15);
+    }
 
     WStr clsName = WStr(kFrameClassName);
     WStr title = WStr(kSumatraWindowTitleW);
