@@ -31,17 +31,17 @@ static Color ThemeTrackColor() {
 
 static Color ThemeThumbColor() {
     Color bg = ThemeControlBackgroundColor();
-    return AccentColor(bg, 100);
+    return AccentColor(bg, 40);
 }
 
 static Color ThemeThumbHoverColor() {
     Color bg = ThemeControlBackgroundColor();
-    return AccentColor(bg, 140);
+    return AccentColor(bg, 75);
 }
 
 static constexpr int kMinThumbSize = 20;
-static constexpr u8 kAlphaThin = 180;
-static constexpr u8 kAlphaThick = 220;
+static constexpr u8 kAlphaThin = 120;
+static constexpr u8 kAlphaThick = 170;
 
 using State = OverlayScrollbar::State;
 
@@ -811,11 +811,11 @@ OverlayScrollbar* OverlayScrollbarCreate(HWND hwndOwner, OverlayScrollbar::Type 
     sb->hwndOwner = hwndOwner;
     sb->type = type;
     sb->mode = mode;
-    sb->thinWidth = DpiScale(4);
-    sb->thickWidth = DpiScale(16);
+    sb->thinWidth = DpiScale(8);
+    sb->thickWidth = DpiScale(18);
     int sysWidth = DpiGetSystemMetrics(IsVert(sb) ? SM_CXVSCROLL : SM_CYHSCROLL);
     if (sysWidth > 0) {
-        sb->thickWidth = sysWidth;
+        sb->thickWidth = std::max(sysWidth, DpiScale(18));
     }
     DWORD exStyle = WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE;
     DWORD style = WS_POPUP;

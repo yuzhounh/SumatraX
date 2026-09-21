@@ -1546,6 +1546,9 @@ int ScrollbarModeFromPrefs() {
     if (idx < 0) {
         idx = kScrollbarWindows;
     }
+    if (gSettings && gSettings->minimalViewer && idx == kScrollbarWindows) {
+        idx = kScrollbarSmart;
+    }
     return idx;
 }
 
@@ -7610,7 +7613,8 @@ static void SyncCaptionLayout(MainWindow* win) {
         win->captionBtn[id].visible = vis;
     };
     setBtn(CB_SYSTEM_MENU, true, tabBtn);
-    setBtn(CB_MENU, !twoRow, tabBtn);
+    bool showCapMenu = !twoRow && (!gSettings || (!gSettings->minimalViewer && !gSettings->showToolbar));
+    setBtn(CB_MENU, showCapMenu, tabBtn);
     setBtn(CB_MINIMIZE, true, winBtn);
     setBtn(CB_MAXIMIZE, !maximized, winBtn);
     setBtn(CB_RESTORE, maximized, winBtn);
