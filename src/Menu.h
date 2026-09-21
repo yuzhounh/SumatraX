@@ -29,6 +29,7 @@ bool CommandUsesContextMenuPoint(int cmdId);
 void ForgetFileFromFrequentlyRead(MainWindow* win, Str filePath);
 int CmdIdFromVirtualZoom(float virtualZoom);
 void UpdateAppMenu(MainWindow* win, HMENU m);
+void ShowHamburgerMenu(MainWindow* win, Rect buttonScreen);
 void ToggleMenuBar(MainWindow* win, bool showTemporarily);
 float ZoomMenuItemToZoom(int menuItemId);
 

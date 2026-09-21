@@ -1936,7 +1936,13 @@ static void ZoomMenuItemCheck(HMENU m, int cmdId, bool canZoom) {
     }
 }
 
-static void MenuUpdateZoom(MainWindow* win) {
+static void MenuUpdateZoom(MainWindow* win, HMENU menu = nullptr) {
+    if (!menu) {
+        menu = win->menu;
+    }
+    if (!menu) {
+        return;
+    }
     float zoomVirtual = gSettings->defaultZoomFloat;
     if (win->IsDocLoaded()) {
         zoomVirtual = win->ctrl->GetZoomVirtual();
@@ -1951,7 +1957,7 @@ static void MenuUpdateZoom(MainWindow* win) {
     if (menuId == 0) {
         menuId = CmdIdFromVirtualZoom(zoomVirtual);
     }
-    ZoomMenuItemCheck(win->menu, menuId, win->IsDocLoaded());
+    ZoomMenuItemCheck(menu, menuId, win->IsDocLoaded());
 }
 
 static void MenuUpdatePrintItem(MainWindow* win, HMENU menu, bool disableOnly = false) {
@@ -2012,7 +2018,13 @@ static void SetMenuStateForSelection(WindowTab* tab, HMENU menu) {
     }
 }
 
-static void MenuUpdateDisplayMode(MainWindow* win) {
+static void MenuUpdateDisplayMode(MainWindow* win, HMENU menu = nullptr) {
+    if (!menu) {
+        menu = win->menu;
+    }
+    if (!menu) {
+        return;
+    }
     bool enabled = win->IsDocLoaded();
     DisplayMode displayMode = gSettings->defaultDisplayModeEnum;
     if (enabled) {
@@ -2020,7 +2032,7 @@ static void MenuUpdateDisplayMode(MainWindow* win) {
     }
 
     for (int id = CmdViewLayoutFirst; id <= CmdViewLayoutLast; id++) {
-        MenuSetEnabled(win->menu, id, enabled);
+        MenuSetEnabled(menu, id, enabled);
     }
 
     int id = 0;
@@ -2034,57 +2046,63 @@ static void MenuUpdateDisplayMode(MainWindow* win) {
         ReportIf(win->ctrl || DisplayMode::Automatic != displayMode);
     }
 
-    CheckMenuRadioItem(win->menu, CmdViewLayoutFirst, CmdViewLayoutLast, id, MF_BYCOMMAND);
-    MenuSetChecked(win->menu, CmdToggleContinuousView, IsContinuous(displayMode));
-    MenuSetChecked(win->menu, CmdToggleAutomaticallyScroll, ReadingAutoScrollIsOn(win));
-    MenuSetChecked(win->menu, CmdToggleReadingBar, ReadingBarIsOn(win));
-    MenuSetChecked(win->menu, CmdToggleReadingBarInvert, gSettings && gSettings->readingBar.invert);
+    CheckMenuRadioItem(menu, CmdViewLayoutFirst, CmdViewLayoutLast, id, MF_BYCOMMAND);
+    MenuSetChecked(menu, CmdToggleContinuousView, IsContinuous(displayMode));
+    MenuSetChecked(menu, CmdToggleAutomaticallyScroll, ReadingAutoScrollIsOn(win));
+    MenuSetChecked(menu, CmdToggleReadingBar, ReadingBarIsOn(win));
+    MenuSetChecked(menu, CmdToggleReadingBarInvert, gSettings && gSettings->readingBar.invert);
 
     DisplayModel* dm = win->AsFixed();
     if (dm && win->CurrentTab()) {
         bool mangaMode = dm->GetDisplayR2L();
-        MenuSetChecked(win->menu, CmdToggleMangaMode, mangaMode);
-        MenuSetEnabled(win->menu, CmdToggleMangaMode, true);
-        MenuSetChecked(win->menu, CmdToggleUniformPageWidth, dm->GetUniformPageWidth());
-        MenuSetEnabled(win->menu, CmdToggleUniformPageWidth, true);
-        MenuSetChecked(win->menu, CmdToggleTrimEmptyMargins, dm->GetTrimEmptyMargins());
-        MenuSetEnabled(win->menu, CmdToggleTrimEmptyMargins, true);
+        MenuSetChecked(menu, CmdToggleMangaMode, mangaMode);
+        MenuSetEnabled(menu, CmdToggleMangaMode, true);
+        MenuSetChecked(menu, CmdToggleUniformPageWidth, dm->GetUniformPageWidth());
+        MenuSetEnabled(menu, CmdToggleUniformPageWidth, true);
+        MenuSetChecked(menu, CmdToggleTrimEmptyMargins, dm->GetTrimEmptyMargins());
+        MenuSetEnabled(menu, CmdToggleTrimEmptyMargins, true);
     }
 }
 
-static void MenuUpdateStateForWindow(MainWindow* win) {
+static void MenuUpdateStateForWindow(MainWindow* win, HMENU menu = nullptr) {
+    if (!menu) {
+        menu = win->menu;
+    }
+    if (!menu) {
+        return;
+    }
     WindowTab* tab = win->CurrentTab();
 
     bool hasDocument = tab && tab->IsDocLoaded();
-    MenuSetEnabledForDocumentCommands(win->menu, hasDocument);
+    MenuSetEnabledForDocumentCommands(menu, hasDocument);
 
-    SetMenuStateForSelection(tab, win->menu);
-    MenuSetEnabled(win->menu, CmdClose, IsFileCloseMenuEnabled());
+    SetMenuStateForSelection(tab, menu);
+    MenuSetEnabled(menu, CmdClose, IsFileCloseMenuEnabled());
 
-    MenuUpdatePrintItem(win, win->menu);
+    MenuUpdatePrintItem(win, menu);
 
     bool enabled = win->IsDocLoaded() && tab && tab->ctrl->HasToc();
-    MenuSetEnabled(win->menu, CmdToggleBookmarks, enabled);
+    MenuSetEnabled(menu, CmdToggleBookmarks, enabled);
 
     bool documentSpecific = win->IsDocLoaded();
     bool checked = documentSpecific ? win->uiState.tocVisible : gSettings->showToc;
-    MenuSetChecked(win->menu, CmdToggleBookmarks, checked);
+    MenuSetChecked(menu, CmdToggleBookmarks, checked);
 
-    MenuSetChecked(win->menu, CmdFavoriteToggle, gSettings->showFavorites);
-    MenuSetChecked(win->menu, CmdFavoriteShowInTab, FindFavoritesTab(win) != nullptr);
+    MenuSetChecked(menu, CmdFavoriteToggle, gSettings->showFavorites);
+    MenuSetChecked(menu, CmdFavoriteShowInTab, FindFavoritesTab(win) != nullptr);
     {
         // checked when mode is not "hide" (show or overlay)
         bool toolbarOn = win->isFullScreen ? FullscreenToolbarModeFromPrefs() != kToolbarHide : !ToolbarModeIsHidden();
-        MenuSetChecked(win->menu, CmdToggleToolbar, toolbarOn);
+        MenuSetChecked(menu, CmdToggleToolbar, toolbarOn);
     }
-    MenuSetChecked(win->menu, CmdToggleMenuBar, gSettings->showMenubar);
+    MenuSetChecked(menu, CmdToggleMenuBar, gSettings->showMenubar);
     // CmdChangeScrollbar doesn't need a check mark - it opens a dialog
-    MenuUpdateDisplayMode(win);
-    MenuUpdateZoom(win);
+    MenuUpdateDisplayMode(win, menu);
+    MenuUpdateZoom(win, menu);
 
     if (win->IsDocLoaded() && tab) {
-        MenuSetEnabled(win->menu, CmdNavigateBack, tab->ctrl->CanNavigate(-1));
-        MenuSetEnabled(win->menu, CmdNavigateForward, tab->ctrl->CanNavigate(1));
+        MenuSetEnabled(menu, CmdNavigateBack, tab->ctrl->CanNavigate(-1));
+        MenuSetEnabled(menu, CmdNavigateForward, tab->ctrl->CanNavigate(1));
     }
 
     // TODO: is this check too expensive?
@@ -2092,37 +2110,37 @@ static void MenuUpdateStateForWindow(MainWindow* win) {
 
     if (tab && tab->ctrl && !fileExists && dir::Exists(tab->filePath)) {
         for (int id : disableIfDirectoryOrBrokenPDF) {
-            MenuSetEnabled(win->menu, id, false);
+            MenuSetEnabled(menu, id, false);
         }
     } else if (fileExists && CouldBePDFDoc(tab)) {
         for (int id : disableIfDirectoryOrBrokenPDF) {
-            MenuSetEnabled(win->menu, id, true);
+            MenuSetEnabled(menu, id, true);
         }
     }
 
     DisplayModel* dm = tab ? tab->AsFixed() : nullptr;
     EngineBase* engine = dm ? dm->GetEngine() : nullptr;
     if (engine) {
-        MenuSetEnabled(win->menu, CmdFindFirst, !engine->IsImageCollection());
+        MenuSetEnabled(menu, CmdFindFirst, !engine->IsImageCollection());
     }
 
     if (win->IsDocLoaded() && !fileExists) {
-        MenuSetEnabled(win->menu, CmdRenameFile, false);
-        MenuSetEnabled(win->menu, CmdDeleteFile, false);
-        MenuSetEnabled(win->menu, CmdDeleteFileAndOpenNext, false);
+        MenuSetEnabled(menu, CmdRenameFile, false);
+        MenuSetEnabled(menu, CmdDeleteFile, false);
+        MenuSetEnabled(menu, CmdDeleteFileAndOpenNext, false);
     }
 
-    CheckMenuRadioItem(win->menu, gFirstSetThemeCmdId, gLastSetThemeCmdId, gCurrSetThemeCmdId, MF_BYCOMMAND);
+    CheckMenuRadioItem(menu, gFirstSetThemeCmdId, gLastSetThemeCmdId, gCurrSetThemeCmdId, MF_BYCOMMAND);
 
-    MenuSetChecked(win->menu, CmdToggleLinks, gSettings->showLinks);
-    MenuSetChecked(win->menu, CmdTogglePageBoxes, win->showPageBoxes);
-    MenuSetChecked(win->menu, CmdToggleHighlightFormFields, gSettings->highlightFormFields);
-    MenuSetChecked(win->menu, CmdToggleTransparencyGrid, ShowTransparencyGrid());
-    MenuSetChecked(win->menu, CmdTogglePageGrid, ShowPageGrid());
-    MenuSetChecked(win->menu, CmdToggleImages, ShowImageOutlines());
-    MenuSetChecked(win->menu, CmdDebugShowFitContentArea, ShowFitContentArea());
-    MenuSetEnabled(win->menu, CmdTabGroupSave, HasOpenedDocuments(win));
-    MenuSetChecked(win->menu, CmdToggleFilePicker, gSettings && str::EqI(gSettings->filePicker, StrL("sumatrapdf")));
+    MenuSetChecked(menu, CmdToggleLinks, gSettings->showLinks);
+    MenuSetChecked(menu, CmdTogglePageBoxes, win->showPageBoxes);
+    MenuSetChecked(menu, CmdToggleHighlightFormFields, gSettings->highlightFormFields);
+    MenuSetChecked(menu, CmdToggleTransparencyGrid, ShowTransparencyGrid());
+    MenuSetChecked(menu, CmdTogglePageGrid, ShowPageGrid());
+    MenuSetChecked(menu, CmdToggleImages, ShowImageOutlines());
+    MenuSetChecked(menu, CmdDebugShowFitContentArea, ShowFitContentArea());
+    MenuSetEnabled(menu, CmdTabGroupSave, HasOpenedDocuments(win));
+    MenuSetChecked(menu, CmdToggleFilePicker, gSettings && str::EqI(gSettings->filePicker, StrL("sumatrapdf")));
 }
 
 void OnAboutContextMenu(MainWindow* win, int x, int y) {
@@ -3032,6 +3050,58 @@ void UpdateAppMenu(MainWindow* win, HMENU m) {
     }
     MenuUpdateStateForWindow(win);
     MarkMenuOwnerDraw(win->menu, true);
+    if (win->activeHamburgerMenu) {
+        MenuUpdateStateForWindow(win, win->activeHamburgerMenu);
+        MarkMenuOwnerDraw(win->activeHamburgerMenu, false);
+    }
+}
+
+// Show the application menu as a vertical popup menu below the hamburger toolbar button.
+void ShowHamburgerMenu(MainWindow* win, Rect buttonScreen) {
+    if (!win) {
+        return;
+    }
+    WindowTab* tab = win->CurrentTab();
+    auto* ctx = NewBuildMenuCtx(tab, Point{0, 0});
+    AutoDelete delCtx(ctx);
+
+    HMENU popup = BuildMenuFromDef(menuDefMenubar, CreatePopupMenu(), ctx);
+    if (!popup) {
+        return;
+    }
+
+    win->activeHamburgerMenu = popup;
+    MenuUpdateStateForWindow(win, popup);
+    MarkMenuOwnerDraw(popup, false);
+    RemoveBadMenuSeparators(popup);
+
+    RECT rc = ToRECT(buttonScreen);
+    int x = IsUIRtl() ? rc.right : rc.left;
+    int y = rc.bottom;
+    if (buttonScreen.IsEmpty()) {
+        Point pt = GetCursorPosition();
+        x = pt.x;
+        y = pt.y;
+    }
+
+    UINT flags = TPM_RETURNCMD | TPM_TOPALIGN | TPM_RIGHTBUTTON | TPM_LEFTBUTTON;
+    flags |= IsUIRtl() ? TPM_RIGHTALIGN : TPM_LEFTALIGN;
+    int cmdId = (int)TrackPopupMenu(popup, flags, x, y, 0, win->hwndFrame, nullptr);
+    ToolbarNoteDropdownClosed();
+
+    if (IsMainWindowValidAndNotClosing(win)) {
+        win->activeHamburgerMenu = nullptr;
+    }
+    FreeMenuOwnerDrawInfoData(popup);
+    DestroyMenu(popup);
+
+    if (!IsMainWindowValidAndNotClosing(win)) {
+        return;
+    }
+
+    if (cmdId > 0) {
+        ToolbarPostCommand(win, cmdId);
+    }
 }
 
 // show/hide top-level menu bar. This doesn't persist across launches

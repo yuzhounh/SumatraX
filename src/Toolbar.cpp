@@ -69,6 +69,7 @@ struct ToolbarButtonInfo {
 };
 
 static ToolbarButtonInfo gToolbarButtons[] = {
+    {gIconMenu, CmdToggleMenuBar, TrN("Menu")},
     {nullptr, PageInfoId, {}}, // text box for page number + show current page / no of pages
     {gIconRotateLeft, CmdRotateLeft, TrN("Rotate &Left")},
     {gIconRotateRight, CmdRotateRight, TrN("Rotate &Right")},
@@ -1478,7 +1479,8 @@ static void OnToolbarButtonClicked(MainWindow* win, VirtMouseEvent* ev) {
     if (cmdId == PageInfoId || cmdId == 0) {
         return;
     }
-    if (ToolbarDropdownJustClosed() && (cmdId == CmdToggleReadAloud || cmdId == CmdPauseReadAloud)) {
+    if (ToolbarDropdownJustClosed() &&
+        (cmdId == CmdToggleReadAloud || cmdId == CmdPauseReadAloud || cmdId == CmdToggleMenuBar)) {
         ev->didHandle = true;
         return;
     }
@@ -1495,6 +1497,12 @@ static void OnToolbarButtonClicked(MainWindow* win, VirtMouseEvent* ev) {
         }
     }
     if (!w->IsEnabled()) {
+        return;
+    }
+    if (cmdId == CmdToggleMenuBar) {
+        Rect rc = GetToolbarButtonScreenRect(win, cmdId);
+        ShowHamburgerMenu(win, rc);
+        ev->didHandle = true;
         return;
     }
     if (auto* ib = AsVirtIconButton(w)) {
