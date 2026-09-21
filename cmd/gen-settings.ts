@@ -1662,7 +1662,7 @@ const globalPrefs: Field[] = [
   field(
     "ToolbarSize",
     Int,
-    18,
+    22,
     "size of the toolbar icons in pixels at 100% display scaling (8-64); the toolbar itself " +
       "is a few pixels taller",
   ).ver("3.4"),

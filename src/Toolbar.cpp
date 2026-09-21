@@ -168,10 +168,8 @@ static Color TbEdgeColor() {
     return ThemeEdgeColor();
 }
 
-// Old Win32 toolbar: TBMETRICS.cyPad defaults to 6, then we added DpiScale(2).
-// TB_SETBUTTONSIZE cannot go below image + 2*cyPad, so that was the bar height.
 static int ToolbarCyPad() {
-    return 6 + DpiScale(2);
+    return DpiScale(8);
 }
 
 static int ToolbarRowDy(int iconSize) {
@@ -3234,7 +3232,7 @@ static void BuildToolbarLayout(MainWindow* win) {
     win->chapterEdit = nullptr;
 
     int cyPad = ToolbarCyPad();
-    int iconPad = DpiScale(6);
+    int iconPad = DpiScale(8);
     tb->rowDy = ToolbarRowDy(tb->iconSize);
     Color fg = TbTextColor();
     Color dis = TbDisabledColor();
