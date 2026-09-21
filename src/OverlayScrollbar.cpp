@@ -46,6 +46,9 @@ static constexpr u8 kAlphaThick = 170;
 using State = OverlayScrollbar::State;
 
 static bool IsThick(OverlayScrollbar* sb) {
+    if (sb->state == State::Hidden) {
+        return false;
+    }
     if (sb->mode == OverlayScrollbar::Mode::Thick) {
         return true;
     }
@@ -53,8 +56,11 @@ static bool IsThick(OverlayScrollbar* sb) {
 }
 
 static bool IsVisible(OverlayScrollbar* sb) {
+    if (sb->state == State::Hidden) {
+        return false;
+    }
     if (sb->mode == OverlayScrollbar::Mode::Thick) {
-        return sb->state != State::Hidden;
+        return true;
     }
     return sb->state == State::SmartThin || sb->state == State::SmartThick || sb->state == State::AlwaysThick;
 }
@@ -961,10 +967,10 @@ void OverlayScrollbarUpdatePos(OverlayScrollbar* sb) {
     int scrollW = ScaledWidth(sb, IsThick(sb));
     int x, y, w, h;
 
-    // Check if the sibling scrollbar (other orientation, same owner) is thick
+    // Check if the sibling scrollbar (other orientation, same owner) is thick and visible
     bool siblingThick = false;
     for (auto* other : gAllScrollbars) {
-        if (other != sb && other->hwndOwner == sb->hwndOwner && IsThick(other)) {
+        if (other != sb && other->hwndOwner == sb->hwndOwner && IsVisible(other) && IsThick(other)) {
             siblingThick = true;
             break;
         }
