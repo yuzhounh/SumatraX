@@ -316,11 +316,12 @@ void TabCtrl::Paint(VirtPaintCtx& ctx) {
             }
         }
         if (!isUnderMouse && !nextIsActiveOrHover && myIdx + 1 < tabsCtrl->TabCount()) {
-            int sepDy = DpiScale(16);
+            int sepDx = DpiScale(2);
+            int sepDy = DpiScale(18);
             int sepY = r.y + ((r.dy - sepDy) / 2);
-            Color sepCol = IsLightColor(tabBgCol) ? MkRgb(0xBD, 0xC1, 0xC6) : MkRgb(0x4A, 0x4D, 0x51);
-            int sepX = isRtl ? r.x : (r.x + r.dx - 1);
-            gfx->FillRect({sepX, sepY, 1, sepDy}, sepCol);
+            Color sepCol = IsLightColor(tabBgCol) ? MkRgb(0x8A, 0x90, 0x99) : MkRgb(0x5A, 0x5E, 0x64);
+            int sepX = isRtl ? (r.x - (sepDx / 2)) : (r.x + r.dx - (sepDx / 2));
+            gfx->FillRect({sepX, sepY, sepDx, sepDy}, sepCol);
         }
     }
 
