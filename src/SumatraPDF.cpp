@@ -3248,11 +3248,59 @@ static void UpdateWindowFrameBorderColor(MainWindow* win) {
 
 static void OnDpiChanged(MainWindow* win, RECT* suggested, int explicitDpi = 0, bool force = false);
 
+static MainWindow* FindMostRecentMainWindow() {
+    MainWindow* win = FindMainWindowByHwnd(GetForegroundWindow());
+    if (win && IsWindow(win->hwndFrame)) {
+        return win;
+    }
+    if (gLastActiveFrameHwnd) {
+        win = FindMainWindowByHwnd(gLastActiveFrameHwnd);
+        if (win && IsWindow(win->hwndFrame)) {
+            return win;
+        }
+    }
+    for (int i = len(gWindows) - 1; i >= 0; i--) {
+        win = gWindows[i];
+        if (win && IsWindow(win->hwndFrame)) {
+            return win;
+        }
+    }
+    return nullptr;
+}
+
+static Rect GetWindowRectForNewWindow(MainWindow* source) {
+    if (!source || !IsWindow(source->hwndFrame)) {
+        return {};
+    }
+    if (IsZoomed(source->hwndFrame)) {
+        WINDOWPLACEMENT wp{};
+        wp.length = sizeof(wp);
+        if (GetWindowPlacement(source->hwndFrame, &wp)) {
+            return ToRect(wp.rcNormalPosition);
+        }
+    }
+    return HwndWindowRect(source->hwndFrame);
+}
+
 static MainWindow* CreateMainWindow() {
     // -window-pos wins over both the remembered position and the default, and
     // skips the per-window shift below: a test asked for an exact rectangle
     bool fixedPos = gCli && !gCli->windowPos.IsEmpty();
-    Rect windowPos = fixedPos ? gCli->windowPos : gSettings->windowPos;
+    Rect windowPos;
+    if (fixedPos) {
+        windowPos = gCli->windowPos;
+    } else {
+        MainWindow* recentWin = FindMostRecentMainWindow();
+        if (recentWin) {
+            windowPos = GetWindowRectForNewWindow(recentWin);
+        }
+        if (windowPos.IsEmpty()) {
+            windowPos = gSettings->windowPos;
+        }
+        if (windowPos.IsEmpty()) {
+            windowPos = GetDefaultWindowPos();
+        }
+    }
     if (!windowPos.IsEmpty()) {
         EnsureAreaVisibility(windowPos);
     } else {
@@ -3266,11 +3314,6 @@ static MainWindow* CreateMainWindow() {
         posDpi = 96;
     }
     DpiSet(posDpi, posDpi);
-    // we don't want the windows to overlap so shift each window by a bit
-    if (!fixedPos) {
-        int nShift = len(gWindows);
-        windowPos.x += nShift * DpiScale(15);
-    }
 
     WStr clsName = WStr(kFrameClassName);
     WStr title = WStr(kSumatraWindowTitleW);
@@ -3416,6 +3459,7 @@ void ShowMainWindow(MainWindow* win, int windowState) {
     } else {
         ShowWindow(win->hwndFrame, SW_SHOW);
     }
+    SetForegroundWindow(win->hwndFrame);
 
     // a hidden frame's GetDpiForWindow() can still be the primary-monitor
     // DPI; after ShowWindow the monitor of the window rect is reliable
