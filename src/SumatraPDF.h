@@ -152,6 +152,7 @@ WindowTab* FindTabByController(DocController*);
 bool CanCloseWindow(MainWindow* win);
 void CloseWindow(MainWindow* win, bool quitIfLast, bool forceClose);
 void PostAppExit();
+void ToggleUseTabs();
 enum class SidebarResizeFrame {
     Keep,
     Adjust

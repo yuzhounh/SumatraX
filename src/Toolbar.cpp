@@ -500,11 +500,25 @@ static void ShowToolbarContextMenu(MainWindow* win, Point ptScreen) {
         AppendMenuW(menu, flags, kBaseCmd + i, ws);
     }
 
+    constexpr UINT_PTR kCmdUseTabs = 2000;
+    AppendMenuW(menu, MF_SEPARATOR, 0, nullptr);
+    TempStr useTabsStr = trans::GetTranslation(TrN("Use &tabs"));
+    TempStr cleanTabsTitle = str::ReplaceTemp(useTabsStr, StrL("&"), StrL(""));
+    UINT tabFlags = MF_STRING;
+    if (gSettings && gSettings->useTabs) {
+        tabFlags |= MF_CHECKED;
+    }
+    AppendMenuW(menu, tabFlags, kCmdUseTabs, CWStrTemp(cleanTabsTitle));
+
+    MarkMenuOwnerDraw(menu);
     UINT flags = TPM_RETURNCMD | TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RIGHTBUTTON;
     int selected = (int)TrackPopupMenu(menu, flags, ptScreen.x, ptScreen.y, 0, win->hwndFrame, nullptr);
+    FreeMenuOwnerDrawInfoData(menu);
     DestroyMenu(menu);
 
-    if (selected >= (int)kBaseCmd && selected < (int)(kBaseCmd + kButtonsCount)) {
+    if (selected == (int)kCmdUseTabs) {
+        ToggleUseTabs();
+    } else if (selected >= (int)kBaseCmd && selected < (int)(kBaseCmd + kButtonsCount)) {
         int idx = selected - kBaseCmd;
         ToggleToolEnabled(win, gToolbarButtons[idx].cmdId);
     }
