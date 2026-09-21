@@ -24,6 +24,7 @@ void FileHistoryPurge(bool alwaysUseDefaultState = false);
 int RecentlyCloseDocumentsCount();
 void RememberRecentlyClosedDocument(Str path);
 Str PopRecentlyClosedDocument();
+void FileHistoryGetRecentlyClosed(StrVec& out, int maxCount = 10);
 void RemoveNonExistentFilesAsync();
 bool DocumentPathExists(Str path);
 void CleanUpThumbnailCache();

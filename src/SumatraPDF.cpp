@@ -13806,6 +13806,130 @@ static void MenuBarAsPopupMenu(MainWindow* win, Rect btnRect) {
     DestroyMenu(popup);
 }
 
+static void ShowTabSearchMenu(MainWindow* win) {
+    HMENU popup = CreatePopupMenu();
+
+    // Section 1: Open Tabs
+    AppendMenuW(popup, MF_STRING | MF_DISABLED | MF_GRAYED, 0, CWStrTemp(ToWStrTemp(Tr("Open Tabs"))));
+
+    auto tabs = win->Tabs();
+    int nTabs = len(tabs);
+    constexpr UINT_PTR kOpenTabBase = 1000;
+    constexpr UINT_PTR kRecentBase = 2000;
+
+    for (int i = 0; i < nTabs; i++) {
+        WindowTab* tab = tabs[i];
+        Str title = tab->GetTabTitle();
+        if (len(title) == 0) {
+            title = path::GetBaseNameTemp(tab->filePath);
+        }
+        if (len(title) == 0) {
+            title = StrL("Untitled");
+        }
+        const int kMaxRunes = 70;
+        TempStr shortTitle = ShortenStringUtf8InTheMiddleTemp(title, kMaxRunes);
+        TempStr safeTitle = MenuToSafeStringTemp(shortTitle);
+        UINT flags = MF_STRING;
+        if (tab == win->CurrentTab()) {
+            flags |= MF_CHECKED;
+        }
+        AppendMenuW(popup, flags, kOpenTabBase + (UINT_PTR)i, CWStrTemp(ToWStrTemp(safeTitle)));
+    }
+
+    AppendMenuW(popup, MF_SEPARATOR, 0, nullptr);
+
+    // Section 2: Recently Closed
+    AppendMenuW(popup, MF_STRING | MF_DISABLED | MF_GRAYED, 0, CWStrTemp(ToWStrTemp(Tr("Recently Closed"))));
+
+    StrVec recentCandidates;
+    FileHistoryGetRecentlyClosed(recentCandidates, 15);
+
+    Vec<FileState*> historyStates;
+    FileHistoryGetRecentlyOpenedOrder(historyStates);
+    for (FileState* fs : historyStates) {
+        if (len(recentCandidates) >= 20) {
+            break;
+        }
+        if (!fs || len(fs->filePath) == 0 || fs->isMissing) {
+            continue;
+        }
+        if (recentCandidates.Contains(fs->filePath)) {
+            continue;
+        }
+        recentCandidates.Append(fs->filePath);
+    }
+
+    StrVec filteredRecent;
+    for (int i = 0; i < len(recentCandidates); i++) {
+        Str p = recentCandidates[i];
+        if (!file::Exists(p)) {
+            continue;
+        }
+        bool isOpen = false;
+        for (int t = 0; t < nTabs; t++) {
+            if (str::EqI(tabs[t]->filePath, p)) {
+                isOpen = true;
+                break;
+            }
+        }
+        if (isOpen) {
+            continue;
+        }
+        filteredRecent.Append(p);
+        if (len(filteredRecent) >= 12) {
+            break;
+        }
+    }
+
+    if (len(filteredRecent) == 0) {
+        AppendMenuW(popup, MF_STRING | MF_DISABLED | MF_GRAYED, 0, CWStrTemp(ToWStrTemp(Tr("(None)"))));
+    } else {
+        for (int i = 0; i < len(filteredRecent); i++) {
+            Str p = filteredRecent[i];
+            Str baseName = path::GetBaseNameTemp(p);
+            if (len(baseName) == 0) {
+                baseName = p;
+            }
+            const int kMaxRunes = 70;
+            TempStr shortName = ShortenStringUtf8InTheMiddleTemp(baseName, kMaxRunes);
+            TempStr safeName = MenuToSafeStringTemp(shortName);
+            AppendMenuW(popup, MF_STRING, kRecentBase + (UINT_PTR)i, CWStrTemp(ToWStrTemp(safeName)));
+        }
+    }
+
+    Rect btnRect = win->captionBtn[CB_SYSTEM_MENU].rect;
+    Rect rs = HwndMapLtrClientRectToScreen(win->hwndFrame, btnRect);
+    TPMPARAMS tpm{};
+    tpm.cbSize = sizeof(TPMPARAMS);
+    tpm.rcExclude = ToRECT(rs);
+
+    uint flags = TPM_LEFTALIGN | TPM_TOPALIGN | TPM_VERTICAL | TPM_RETURNCMD;
+    int x = rs.x;
+    int y = rs.y + rs.dy;
+    if (IsUIRtl()) {
+        x = rs.x + rs.dx;
+        flags = TPM_RIGHTALIGN | TPM_TOPALIGN | TPM_VERTICAL | TPM_LAYOUTRTL | TPM_RETURNCMD;
+    }
+
+    MarkMenuOwnerDraw(popup);
+    int chosen = (int)TrackPopupMenuEx(popup, flags, x, y, win->hwndFrame, &tpm);
+    FreeMenuOwnerDrawInfoData(popup);
+    DestroyMenu(popup);
+
+    if (chosen >= (int)kOpenTabBase && chosen < (int)kRecentBase) {
+        int tabIdx = chosen - (int)kOpenTabBase;
+        TabsSelect(win, tabIdx);
+    } else if (chosen >= (int)kRecentBase) {
+        int recentIdx = chosen - (int)kRecentBase;
+        if (recentIdx >= 0 && recentIdx < len(filteredRecent)) {
+            Str p = filteredRecent[recentIdx];
+            LoadArgs args(p, win);
+            args.showWin = true;
+            LoadDocument(&args);
+        }
+    }
+}
+
 static void HandleCaptionClick(MainWindow* win, int btnIdx) {
     switch (btnIdx) {
         case CB_MINIMIZE:
@@ -13833,7 +13957,22 @@ static void HandleCaptionClick(MainWindow* win, int btnIdx) {
             HwndSetFocus(win->hwndFrame);
             break;
         case CB_SYSTEM_MENU:
-            OpenSystemMenu(win);
+            if (win->tabsInTitlebar) {
+                if (!KillTimer(win->hwndFrame, kDoNotReopenMenuTimerID) && !win->isMenuOpen) {
+                    win->isMenuOpen = true;
+                    win->captionBtn[CB_SYSTEM_MENU].pressed = true;
+                    RepaintButton(win->hwndFrame, CB_SYSTEM_MENU, win);
+                    ShowTabSearchMenu(win);
+                    win->isMenuOpen = false;
+                    win->captionBtn[CB_SYSTEM_MENU].pressed = false;
+                    win->captionBtn[CB_SYSTEM_MENU].highlighted = false;
+                    RepaintButton(win->hwndFrame, CB_SYSTEM_MENU, win);
+                    SetTimer(win->hwndFrame, kDoNotReopenMenuTimerID, kDoNotReopenMenuDelayInMs, nullptr);
+                }
+                HwndSetFocus(win->hwndFrame);
+            } else {
+                OpenSystemMenu(win);
+            }
             break;
     }
 }
@@ -14248,12 +14387,62 @@ static void DrawCaptionButton(MainWindow* win, HDC hdc, ButtonInfo* bi) {
         SolidBrush bgBrNormal(GdiRgbFromColor(bgc));
         gfx.FillRectangle(&bgBrNormal, rButton.x, rButton.y, rButton.dx, rButton.dy);
 
-        int xIcon = DpiGetSystemMetrics(SM_CXSMICON);
-        int yIcon = DpiGetSystemMetrics(SM_CYSMICON);
-        HICON hIcon = (HICON)GetClassLongPtr(win->hwndFrame, GCLP_HICONSM);
-        int x = rButton.x + ((rButton.dx - xIcon) / 2);
-        int y = rButton.y + ((rButton.dy - yIcon) / 2);
-        DrawIconEx(hdc, x, y, hIcon, xIcon, yIcon, 0, nullptr, DI_NORMAL);
+        if (win->tabsInTitlebar) {
+            int state = stateId;
+            if (win->captionBtn[CB_SYSTEM_MENU].pressed) {
+                state = CBS_PUSHED;
+            }
+            if (state == CBS_HOT || state == CBS_PUSHED) {
+                Color pillCol;
+                if (IsLightColor(bgc)) {
+                    pillCol = (state == CBS_PUSHED) ? MkRgb(0xBD, 0xC5, 0xCE) : MkRgb(0xD0, 0xD6, 0xDD);
+                } else {
+                    pillCol = (state == CBS_PUSHED) ? MkRgb(0x42, 0x47, 0x4C) : MkRgb(0x35, 0x39, 0x3D);
+                }
+                int pillSize = DpiScale(28);
+                if (pillSize > rButton.dy - DpiScale(4)) {
+                    pillSize = rButton.dy - DpiScale(4);
+                }
+                int pillX = rButton.x + (rButton.dx - pillSize) / 2;
+                int pillY = rButton.y + (rButton.dy - pillSize) / 2;
+                gfx.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+                SolidBrush pillBr(GdiRgbFromColor(pillCol));
+                gfx.FillEllipse(&pillBr, pillX, pillY, pillSize, pillSize);
+            }
+
+            Color glyphCol;
+            if (stateId == kCbsInactive) {
+                glyphCol = MkRgb(153, 153, 153);
+            } else {
+                glyphCol = IsLightColor(bgc) ? MkRgb(0x44, 0x47, 0x46) : MkRgb(0xC4, 0xC7, 0xC5);
+            }
+            float cx = (float)rButton.x + (float)rButton.dx / 2.0f;
+            float cy = (float)rButton.y + (float)rButton.dy / 2.0f;
+            float halfW = (float)DpiScale(9) / 2.0f;
+            float halfH = (float)DpiScale(5) / 2.0f;
+            float strokeW = (float)DpiScale(18) / 10.0f;
+
+            gfx.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+            u8 r, g, b;
+            UnpackColor(glyphCol, r, g, b);
+            Pen pen(Gdiplus::Color(255, r, g, b), strokeW);
+            pen.SetStartCap(Gdiplus::LineCapRound);
+            pen.SetEndCap(Gdiplus::LineCapRound);
+            pen.SetLineJoin(Gdiplus::LineJoinRound);
+            Gdiplus::PointF pts[3] = {
+                {cx - halfW, cy - halfH},
+                {cx, cy + halfH},
+                {cx + halfW, cy - halfH},
+            };
+            gfx.DrawLines(&pen, pts, 3);
+        } else {
+            int xIcon = DpiGetSystemMetrics(SM_CXSMICON);
+            int yIcon = DpiGetSystemMetrics(SM_CYSMICON);
+            HICON hIcon = (HICON)GetClassLongPtr(win->hwndFrame, GCLP_HICONSM);
+            int x = rButton.x + ((rButton.dx - xIcon) / 2);
+            int y = rButton.y + ((rButton.dy - yIcon) / 2);
+            DrawIconEx(hdc, x, y, hIcon, xIcon, yIcon, 0, nullptr, DI_NORMAL);
+        }
     }
 }
 
@@ -14604,7 +14793,9 @@ static LRESULT CustomCaptionFrameProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp,
             Point ptdc{GET_X_LPARAM(lp), GET_Y_LPARAM(lp)};
             int btnIdx = CaptionButtonAt(win, ptdc);
             if (btnIdx == CB_SYSTEM_MENU) {
-                PostMessageW(hwnd, WM_SYSCOMMAND, SC_CLOSE, 0);
+                if (!win->tabsInTitlebar) {
+                    PostMessageW(hwnd, WM_SYSCOMMAND, SC_CLOSE, 0);
+                }
                 *callDef = false;
                 return 0;
             }

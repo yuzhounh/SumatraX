@@ -276,6 +276,16 @@ Str PopRecentlyClosedDocument() {
     return {};
 }
 
+void FileHistoryGetRecentlyClosed(StrVec& out, int maxCount) {
+    int n = len(gClosedDocuments);
+    for (int i = n - 1; i >= 0 && len(out) < maxCount; i--) {
+        Str p = gClosedDocuments[i];
+        if (len(p) > 0 && !out.Contains(p)) {
+            out.Append(p);
+        }
+    }
+}
+
 // --- thumbnail cache delete
 
 // Delete cached thumbnails for file-history entries marked missing (issue #4286).
