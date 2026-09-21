@@ -1330,7 +1330,7 @@ const globalPrefs: Field[] = [
   field(
     "ShowMenubar",
     Bool,
-    true,
+    false,
     "if true, show the menu bar (F9 toggles it; the choice is remembered across sessions)",
   ).ver("2.5"),
   field("ShowMenubarWithTabs", Bool, false, "if true, show the menu bar when using tabs (useTabs = true)").ver("3.7"),
@@ -1713,7 +1713,7 @@ const globalPrefs: Field[] = [
     false,
     "if true, use the Windows system colors for the document background and text. Overrides other color settings",
   ),
-  field("UseTabs", Bool, true, "if true, documents are opened in tabs instead of new windows").ver("3.0"),
+  field("UseTabs", Bool, false, "if true, documents are opened in tabs instead of new windows").ver("3.0"),
   field(
     "SelectionToolbar",
     Bool,
