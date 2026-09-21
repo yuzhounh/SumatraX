@@ -382,7 +382,7 @@ ToolbarShowReadAloud = false
 
 ; size of the toolbar icons in pixels at 100% display scaling (8-64); the
 ; toolbar itself is a few pixels taller (introduced in version 3.4)
-ToolbarSize = 18
+ToolbarSize = 22
 
 ; font name for bookmarks and favorites tree views. automatic means Windows
 ; default

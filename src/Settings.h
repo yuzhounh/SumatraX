@@ -2143,7 +2143,7 @@ static const FieldInfo gSettingsFields[] = {
     {offsetof(Settings, tocDy), SettingType::Int, 0, true},
     {offsetof(Settings, toolbarCustomLayout), SettingType::String, (intptr_t)""},
     {offsetof(Settings, toolbarShowReadAloud), SettingType::Bool, false},
-    {offsetof(Settings, toolbarSize), SettingType::Int, 18},
+    {offsetof(Settings, toolbarSize), SettingType::Int, 22},
     {offsetof(Settings, treeFontName), SettingType::String, (intptr_t)"automatic"},
     {offsetof(Settings, treeFontSize), SettingType::Int, 0},
     {offsetof(Settings, uIFontSize), SettingType::Int, 0},
