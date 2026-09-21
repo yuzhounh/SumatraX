@@ -113,6 +113,17 @@ RestoreSession = true
 ; a new one
 ReuseInstance = true
 
+; if true, enables minimal viewer mode (no context menu, same window position,
+; simplified toolbar)
+MinimalViewer = true
+
+; if true, show context menu on right click in the document canvas
+ContextMenu = false
+
+; if true, newly opened windows inherit the position and size of the last active
+; window
+NewWindowSamePosition = true
+
 ; if true, show the menu bar (F9 toggles it; the choice is remembered across
 ; sessions) (introduced in version 2.5)
 ShowMenubar = false

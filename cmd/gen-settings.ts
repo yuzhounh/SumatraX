@@ -1328,6 +1328,19 @@ const globalPrefs: Field[] = [
     "if true, open documents in the already running SumatraPDF instead of starting a new one",
   ),
   field(
+    "MinimalViewer",
+    Bool,
+    true,
+    "if true, enables minimal viewer mode (no context menu, same window position, simplified toolbar)",
+  ),
+  field("ContextMenu", Bool, false, "if true, show context menu on right click in the document canvas"),
+  field(
+    "NewWindowSamePosition",
+    Bool,
+    true,
+    "if true, newly opened windows inherit the position and size of the last active window",
+  ),
+  field(
     "ShowMenubar",
     Bool,
     false,
@@ -2064,6 +2077,9 @@ const globalPrefsLayout = [
   "MarkdownUI",
   "HtmlUI",
   "CheckForUpdates",
+  "MinimalViewer",
+  "ContextMenu",
+  "NewWindowSamePosition",
 ];
 
 const globalPrefsStruct = struct("Settings", globalPrefs, "Preferences are persisted in SumatraPDF-settings.txt");
