@@ -452,6 +452,14 @@ static void SetState(OverlayScrollbar* sb, State newState) {
         MakeLayeredWindowTransparent(sb->hwnd);
     }
 
+    if (wasVisible != nowVisible) {
+        for (auto* other : gAllScrollbars) {
+            if (other != sb && other->hwndOwner == sb->hwndOwner) {
+                OverlayScrollbarUpdatePos(other);
+            }
+        }
+    }
+
     KillTimer(sb->hwnd, OverlayScrollbar::kTimerAutoHide);
     if (newState == State::SmartThin) {
         SetTimer(sb->hwnd, OverlayScrollbar::kTimerAutoHide, sb->showAfterScrollMs, nullptr);
@@ -967,28 +975,25 @@ void OverlayScrollbarUpdatePos(OverlayScrollbar* sb) {
     int scrollW = ScaledWidth(sb, IsThick(sb));
     int x, y, w, h;
 
-    // Check if the sibling scrollbar (other orientation, same owner) is thick and visible
-    bool siblingThick = false;
-    for (auto* other : gAllScrollbars) {
-        if (other != sb && other->hwndOwner == sb->hwndOwner && IsVisible(other) && IsThick(other)) {
-            siblingThick = true;
-            break;
-        }
-    }
-    int siblingInset = 0;
-    if (IsThick(sb) && siblingThick) {
-        siblingInset = scrollW;
-    }
-
     if (IsVert(sb)) {
         x = ownerRc.x + ownerRc.dx - scrollW;
         y = ownerRc.y;
         w = scrollW;
-        h = ownerRc.dy - siblingInset;
+        h = ownerRc.dy;
     } else {
+        bool vertVisible = false;
+        int vertW = scrollW;
+        for (auto* other : gAllScrollbars) {
+            if (other != sb && other->hwndOwner == sb->hwndOwner && IsVert(other) && IsVisible(other)) {
+                vertVisible = true;
+                vertW = ScaledWidth(other, IsThick(other));
+                break;
+            }
+        }
+        int horzInset = vertVisible ? vertW : 0;
         x = ownerRc.x;
         y = ownerRc.y + ownerRc.dy - scrollW;
-        w = ownerRc.dx - siblingInset;
+        w = ownerRc.dx - horzInset;
         h = scrollW;
     }
 
