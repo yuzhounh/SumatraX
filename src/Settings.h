@@ -1955,7 +1955,7 @@ static const FieldInfo gFileStateFields[] = {
     {offsetof(FileState, isPinned), SettingType::Bool, false},
     {offsetof(FileState, isMissing), SettingType::Bool, false},
     {offsetof(FileState, useDefaultState), SettingType::Bool, false},
-    {offsetof(FileState, showToc), SettingType::Bool, true},
+    {offsetof(FileState, showToc), SettingType::Bool, false},
     {offsetof(FileState, displayR2L), SettingType::Bool, false},
     {offsetof(FileState, uniformPageWidth), SettingType::Bool, false},
     {offsetof(FileState, trimEmptyMargins), SettingType::Bool, false},
@@ -2007,7 +2007,7 @@ static const FieldInfo gTabStateFields[] = {
     {offsetof(TabState, zoom), SettingType::String, (intptr_t)"fit page"},
     {offsetof(TabState, rotation), SettingType::Int, 0},
     {offsetof(TabState, scrollPos), SettingType::Compact, (intptr_t)&gPointF_2_Info},
-    {offsetof(TabState, showToc), SettingType::Bool, true},
+    {offsetof(TabState, showToc), SettingType::Bool, false},
     {offsetof(TabState, tocState), SettingType::IntArray, 0},
 };
 static const StructInfo gTabStateInfo = {
@@ -2112,7 +2112,7 @@ static const FieldInfo gSettingsFields[] = {
     {offsetof(Settings, searchUIFloating), SettingType::Bool, false},
     {offsetof(Settings, showFavorites), SettingType::Bool, false},
     {offsetof(Settings, sortFavoritesByName), SettingType::Bool, false},
-    {offsetof(Settings, showToc), SettingType::Bool, true},
+    {offsetof(Settings, showToc), SettingType::Bool, false},
     {offsetof(Settings, sidebarOnRight), SettingType::Bool, false},
     {offsetof(Settings, sidebarWindowSize), SettingType::String, (intptr_t)""},
     {offsetof(Settings, showLinks), SettingType::Bool, false},

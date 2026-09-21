@@ -1101,7 +1101,7 @@ const fileState: Field[] = [
     "state of the window. 1 is normal, 2 is maximized, " + "3 is fullscreen, 4 is minimized",
   ),
   compactStruct("WindowPos", windowPos, "default position (can be on any monitor)").structName("Rect"),
-  field("ShowToc", Bool, true, "if true, show the table of contents (Bookmarks) sidebar when the document has one"),
+  field("ShowToc", Bool, false, "if true, show the table of contents (Bookmarks) sidebar when the document has one"),
   field("SidebarDx", Int, 0, "width of the bookmarks / favorites sidebar in screen pixels, as last resized"),
   field("DisplayR2L", Bool, false, "if true, the document is displayed right-to-left in facing and book view modes"),
   field(
@@ -1190,7 +1190,7 @@ const tabState: Field[] = [
   compactStruct("ScrollPos", scrollPos, "how far this document has been scrolled (in x and y direction)").structName(
     "PointF",
   ),
-  field("ShowToc", Bool, true, "if true, the table of contents was shown when the document was closed"),
+  field("ShowToc", Bool, false, "if true, the table of contents was shown when the document was closed"),
   compactArray("TocState", Int, null, "which table of contents items were expanded (see FileStates -> TocState)"),
 ];
 
@@ -1400,7 +1400,7 @@ const globalPrefs: Field[] = [
     "if true, favorites within each file are sorted alphabetically by name " +
       "(or page label); if false (the default), they are sorted by page number",
   ).ver("3.7"),
-  field("ShowToc", Bool, true, "if true, show the table of contents (Bookmarks) sidebar when the document has one"),
+  field("ShowToc", Bool, false, "if true, show the table of contents (Bookmarks) sidebar when the document has one"),
   field(
     "SidebarOnRight",
     Bool,

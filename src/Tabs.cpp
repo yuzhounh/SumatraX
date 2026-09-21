@@ -779,7 +779,7 @@ WindowTab* AddTabToWindow(MainWindow* win, WindowTab* tab, bool deferUpdate) {
     auto* tabs = win->tabsCtrl;
     int idx = win->TabCount();
     bool useTabs = SettingsUseTabs();
-    bool noHomeTab = gSettings->noHomeTab;
+    bool noHomeTab = gSettings->noHomeTab || (gSettings && gSettings->minimalViewer);
     bool createHomeTab = useTabs && !noHomeTab && (idx == 0);
     if (createHomeTab) {
         WindowTab* homeTab = new WindowTab(win);

@@ -1510,6 +1510,9 @@ bool SetSettingsValueFromStr(Str path, Str value) {
 FileState* NewFileState(Str filePath) {
     FileState* fs = (FileState*)DeserializeStruct(&gFileStateInfo, {});
     SetFileStatePath(fs, filePath);
+    if (gSettings && gSettings->minimalViewer) {
+        fs->showToc = false;
+    }
     return fs;
 }
 
