@@ -336,9 +336,9 @@ static void RelayoutFacingWithSpreads(DocumentLayout& layout, bool isFitContent)
     int canvasDx = params.windowMargin.left + pagesDx + params.windowMargin.right;
 
     int offX = 0;
-    if (canvasDx < layout.viewPort.dx) {
+    if (canvasDx <= layout.viewPort.dx + 4) {
         layout.viewPort.x = 0;
-        offX = (layout.viewPort.dx - canvasDx) / 2;
+        offX = std::max(0, (layout.viewPort.dx - canvasDx) / 2);
         canvasDx = layout.viewPort.dx;
     }
 
@@ -501,9 +501,9 @@ void DocumentLayout::Relayout(const DocumentLayoutParams& newParams) {
                    (columns == 2 ? params.pageSpacing.dx + columnMaxWidth[1] : 0) + params.windowMargin.right;
 
     int offX = 0;
-    if (canvasDx < viewPort.dx) {
+    if (canvasDx <= viewPort.dx + 4) {
         viewPort.x = 0;
-        offX = (viewPort.dx - canvasDx) / 2;
+        offX = std::max(0, (viewPort.dx - canvasDx) / 2);
         canvasDx = viewPort.dx;
     }
 

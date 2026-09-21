@@ -1675,8 +1675,19 @@ void ControllerCallbackHandler::UpdateScrollbars(DisplayModel* dm, Size canvas) 
 
     Size viewPort = dm->GetViewPort().Size();
 
+    // Ignore tiny differences (rounding/margin slack <= 4px) or fit-to-width/fit-to-page modes
+    bool isFitZoom = (dm->GetZoomVirtual() == kZoomFitWidth || dm->GetZoomVirtual() == kZoomFitPage);
+    if (isFitZoom || canvas.dx <= viewPort.dx + 4) {
+        if (canvas.dx > viewPort.dx) {
+            canvas.dx = viewPort.dx;
+        }
+    }
+
     if (viewPort.dx >= canvas.dx) {
         makeFullScrollbar(si);
+        if (dm->GetViewPort().x != 0) {
+            dm->ScrollXTo(0);
+        }
     } else {
         si.nPos = dm->GetViewPort().x;
         si.nMin = 0;
