@@ -878,6 +878,13 @@ Str MarkdownModel::GetDataForUrl(Str url) {
             data = str::Dup(poolAlloc, Str((const char*)js, n));
         }
         free(js);
+    } else if (str::EndsWithI(plainUrl, StrL("/tex-svg.js")) || str::EqI(plainUrl, StrL("tex-svg.js"))) {
+        int n = 0;
+        u8* js = GetEmbeddedFileData(StrL("tex-svg.js"), &n);
+        if (js && n > 0) {
+            data = str::Dup(poolAlloc, Str((const char*)js, n));
+        }
+        free(js);
     } else {
         TempStr filePath = VirtualUrlToFileTemp(plainUrl);
         // in html mode every resource (the page, images, linked pages) is served raw;

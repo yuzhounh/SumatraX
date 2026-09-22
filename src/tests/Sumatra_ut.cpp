@@ -71,6 +71,7 @@ bool MarkdownModel_UnitTestBrowserNavigationUrl();
 bool MarkdownToc_UnitTestHtmlLinks();
 bool MarkdownToc_UnitTestHtmlHeadings();
 bool MarkdownToc_UnitTestMermaid();
+bool MarkdownToc_UnitTestMath();
 bool EbookDoc_UnitTestNormalizeURL();
 bool ExternalViewers_UnitTestPDFXChangePaths();
 bool Canvas_UnitTestScrollLineAmount();
@@ -604,6 +605,7 @@ int RunAppUnitTests(bool forAi) {
     utassert(MarkdownToc_UnitTestHtmlLinks());
     utassert(MarkdownToc_UnitTestHtmlHeadings());
     utassert(MarkdownToc_UnitTestMermaid());
+    utassert(MarkdownToc_UnitTestMath());
     utassert(EbookDoc_UnitTestNormalizeURL());
     utassert(ExternalViewers_UnitTestPDFXChangePaths());
     utassert(Canvas_UnitTestScrollLineAmount());
