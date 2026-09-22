@@ -13877,13 +13877,13 @@ static bool TabSearchMenuDrawItem(HWND hwnd, DRAWITEMSTRUCT* dis) {
         delete gfx;
     };
 
-    Color bgCol = ThemeWindowBackgroundColor();
+    Color bgCol = DarkModeIsActive() ? ThemeControlBackgroundColor() : MkRgb(0xFF, 0xFF, 0xFF);
     gfx->FillRect(rc, bgCol);
 
     if (item->isSeparator) {
         int y = rc.y + rc.dy / 2;
-        int padX = DpiScale(8);
-        Color lineCol = AccentColor(bgCol, 20);
+        int padX = DpiScale(12);
+        Color lineCol = AccentColor(bgCol, 12);
         gfx->DrawLine({rc.x + padX, y, rc.dx - padX * 2, 0}, lineCol);
         return true;
     }
@@ -13899,24 +13899,24 @@ static bool TabSearchMenuDrawItem(HWND hwnd, DRAWITEMSTRUCT* dis) {
         }
     } else if (!item->isHeader && !item->isDisabled) {
         if (isSelected && item->isActiveTab) {
-            itemBg = AccentColor(bgCol, 46);
+            itemBg = AccentColor(bgCol, 26);
         } else if (isSelected) {
-            itemBg = AccentColor(bgCol, 22);
+            itemBg = AccentColor(bgCol, 12);
         } else if (item->isActiveTab) {
-            // slightly darker than mouse hover
-            itemBg = AccentColor(bgCol, 36);
+            // slightly darker than mouse hover, light and soft
+            itemBg = AccentColor(bgCol, 20);
         }
     }
 
     if (itemBg != kColorTransparent) {
         Rect bgRect = rc;
-        int marginX = DpiScale(4);
+        int marginX = DpiScale(5);
         int marginY = DpiScale(2);
         bgRect.x += marginX;
         bgRect.dx -= marginX * 2;
         bgRect.y += marginY;
         bgRect.dy -= marginY * 2;
-        gfx->FillRoundedRect(bgRect, DpiScale(4), itemBg);
+        gfx->FillRoundedRect(bgRect, DpiScale(5), itemBg);
     }
 
     PlatformFont* font = GetAppMenuFont();
@@ -14071,12 +14071,6 @@ static void ShowTabSearchMenu(MainWindow* win) {
     }
 
     HMENU popup = CreatePopupMenu();
-    HBRUSH hbrBack = CreateSolidBrush(ThemeWindowBackgroundColor());
-    MENUINFO mi{};
-    mi.cbSize = sizeof(MENUINFO);
-    mi.fMask = MIM_BACKGROUND;
-    mi.hbrBack = hbrBack;
-    SetMenuInfo(popup, &mi);
 
     int nItems = len(menuItems);
     for (int i = 0; i < nItems; i++) {
@@ -14116,7 +14110,6 @@ static void ShowTabSearchMenu(MainWindow* win) {
     g_inTabSearchMenu = false;
 
     DestroyMenu(popup);
-    DeleteObject(hbrBack);
 
     if (chosen >= (int)kOpenTabBase && chosen < (int)kRecentBase) {
         int tabIdx = chosen - (int)kOpenTabBase;
