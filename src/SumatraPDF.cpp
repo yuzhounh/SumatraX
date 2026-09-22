@@ -13840,11 +13840,27 @@ static bool IsMenuWindowClass(HWND hwnd, LPARAM lp) {
     return false;
 }
 
+static bool IsSysShadowClass(HWND hwnd, LPARAM lp) {
+    WCHAR cls[32]{};
+    if (GetClassNameW(hwnd, cls, dimof(cls)) && wstr::Eq(WStr(cls), WStrL(L"SysShadow"))) {
+        return true;
+    }
+    auto* cbt = (CBT_CREATEWNDW*)lp;
+    if (cbt && cbt->lpcs && cbt->lpcs->lpszClass) {
+        if ((((ULONG_PTR)cbt->lpcs->lpszClass) >> 16) != 0) {
+            if (wstr::Eq(WStr(cbt->lpcs->lpszClass), WStrL(L"SysShadow"))) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 static void ApplyMenuRoundedCorners(HWND hwnd) {
     SetWindowRgn(hwnd, nullptr, FALSE);
     DWM_WINDOW_CORNER_PREFERENCE cornerPref = DWMWCP_ROUND;
     DwmSetWindowAttribute(hwnd, DWMWA_WINDOW_CORNER_PREFERENCE, &cornerPref, sizeof(cornerPref));
-    Color borderColor = DarkModeIsActive() ? MkRgb(0x40, 0x40, 0x40) : MkRgb(0xDA, 0xDC, 0xE0);
+    Color borderColor = DarkModeIsActive() ? MkRgb(0x40, 0x40, 0x40) : MkRgb(0xEA, 0xEC, 0xEF);
     DwmSetWindowAttribute(hwnd, DWMWA_BORDER_COLOR, &borderColor, sizeof(borderColor));
 }
 
@@ -13866,11 +13882,18 @@ static LRESULT CALLBACK TabSearchMenuWndProc(HWND hwnd, UINT msg, WPARAM wp, LPA
 static LRESULT CALLBACK TabSearchCbtHook(int nCode, WPARAM wp, LPARAM lp) {
     if (nCode == HCBT_CREATEWND) {
         HWND hwnd = (HWND)wp;
+        if (IsSysShadowClass(hwnd, lp)) {
+            return 1;
+        }
         if (IsMenuWindowClass(hwnd, lp)) {
             auto* cbt = (CBT_CREATEWNDW*)lp;
             if (cbt && cbt->lpcs) {
                 cbt->lpcs->style &= ~WS_BORDER;
                 cbt->lpcs->dwExStyle &= ~WS_EX_DLGMODALFRAME;
+            }
+            ULONG_PTR clsStyle = GetClassLongPtrW(hwnd, GCL_STYLE);
+            if (clsStyle & CS_DROPSHADOW) {
+                SetClassLongPtrW(hwnd, GCL_STYLE, clsStyle & ~CS_DROPSHADOW);
             }
             LONG_PTR style = GetWindowLongPtrW(hwnd, GWL_STYLE);
             LONG_PTR newStyle = style & ~WS_BORDER;
@@ -13944,7 +13967,7 @@ static bool TabSearchMenuDrawItem(HWND hwnd, DRAWITEMSTRUCT* dis) {
         delete gfx;
     };
 
-    Color bgCol = DarkModeIsActive() ? ThemeControlBackgroundColor() : MkRgb(0xFF, 0xFF, 0xFF);
+    Color bgCol = DarkModeIsActive() ? ThemeControlBackgroundColor() : MkRgb(0xF9, 0xF9, 0xF9);
     gfx->FillRect(rc, bgCol);
 
     if (item->isSeparator) {
