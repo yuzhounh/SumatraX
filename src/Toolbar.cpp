@@ -352,7 +352,7 @@ static void PopulateToolbarLayout() {
         }
     };
     static const int kDefaultMinimalCmds[] = {
-        CmdToggleMenuBar, CmdOpenFile, CmdPrint, PageInfoId, CmdRotateRight, CmdFindFirst,
+        CmdToggleMenuBar, CmdOpenFile, CmdPrint, PageInfoId, CmdRotateRight, CmdFindFirst, CmdToggleEditPDF,
     };
     auto useDefaultLayout = [&addButton]() {
         if (!gSettings || gSettings->minimalViewer) {
@@ -420,7 +420,7 @@ static bool IsToolEnabled(int cmdId) {
     if (str::IsEmptyOrWhiteSpace(setting)) {
         if (!gSettings || gSettings->minimalViewer) {
             static const int defaultCmds[] = {
-                CmdToggleMenuBar, CmdOpenFile, CmdPrint, PageInfoId, CmdRotateRight, CmdFindFirst,
+                CmdToggleMenuBar, CmdOpenFile, CmdPrint, PageInfoId, CmdRotateRight, CmdFindFirst, CmdToggleEditPDF,
             };
             for (int id : defaultCmds) {
                 if (id == cmdId) {
