@@ -13912,15 +13912,24 @@ static void ShowTabSearchMenu(MainWindow* win) {
         if (!file::Exists(p)) {
             continue;
         }
+        Str pBase = path::GetBaseNameTemp(p);
         bool isOpen = false;
         for (int t = 0; t < nTabs; t++) {
             Str tabPath = tabs[t]->filePath;
             if (len(tabPath) == 0 && tabs[t]->ctrl) {
                 tabPath = tabs[t]->ctrl->GetFilePath();
             }
-            if (len(tabPath) > 0 && (path::IsSame(tabPath, p) || str::EqI(tabPath, p))) {
+            Str tabTitle = tabs[t]->GetTabTitle();
+            if (str::EqI(tabTitle, pBase)) {
                 isOpen = true;
                 break;
+            }
+            if (len(tabPath) > 0) {
+                if (path::IsSame(tabPath, p) || str::EqI(tabPath, p) ||
+                    str::EqI(path::GetBaseNameTemp(tabPath), pBase)) {
+                    isOpen = true;
+                    break;
+                }
             }
         }
         if (isOpen) {
@@ -13948,7 +13957,7 @@ static void ShowTabSearchMenu(MainWindow* win) {
         }
     }
 
-    // Set custom checkmark spacer bitmaps to give comfortable, touch-friendly item height
+    // Set custom checkmark spacer bitmaps to give comfortable, touch-friendly item height on clickable items
     int dxSpacer = DpiScale(20);
     int dySpacer = DpiScale(26);
     HBITMAP hbmpChecked = CreateMenuSpacerBitmap(dxSpacer, dySpacer, true, ThemeWindowTextColor());
@@ -13957,13 +13966,20 @@ static void ShowTabSearchMenu(MainWindow* win) {
     for (int i = 0; i < itemCount; i++) {
         MENUITEMINFOW mii{};
         mii.cbSize = sizeof(mii);
-        mii.fMask = MIIM_FTYPE;
-        if (GetMenuItemInfoW(popup, (uint)i, TRUE, &mii) && !(mii.fType & MFT_SEPARATOR)) {
-            mii.fMask = MIIM_CHECKMARKS;
-            mii.hbmpChecked = hbmpChecked;
-            mii.hbmpUnchecked = hbmpUnchecked;
-            SetMenuItemInfoW(popup, (uint)i, TRUE, &mii);
+        mii.fMask = MIIM_FTYPE | MIIM_STATE | MIIM_ID;
+        if (!GetMenuItemInfoW(popup, (uint)i, TRUE, &mii)) {
+            continue;
         }
+        if (mii.fType & MFT_SEPARATOR) {
+            continue;
+        }
+        if ((mii.fState & (MFS_DISABLED | MFS_GRAYED)) || mii.wID < kOpenTabBase) {
+            continue;
+        }
+        mii.fMask = MIIM_CHECKMARKS;
+        mii.hbmpChecked = hbmpChecked;
+        mii.hbmpUnchecked = hbmpUnchecked;
+        SetMenuItemInfoW(popup, (uint)i, TRUE, &mii);
     }
 
     Rect btnRect = win->captionBtn[CB_SYSTEM_MENU].rect;
