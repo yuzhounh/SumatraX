@@ -13806,6 +13806,53 @@ static void MenuBarAsPopupMenu(MainWindow* win, Rect btnRect) {
     DestroyMenu(popup);
 }
 
+static HBITMAP CreateMenuSpacerBitmap(int dx, int dy, bool withCheckmark, Color checkColor) {
+    BITMAPINFO bi{};
+    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bi.bmiHeader.biWidth = dx;
+    bi.bmiHeader.biHeight = dy;
+    bi.bmiHeader.biPlanes = 1;
+    bi.bmiHeader.biBitCount = 32;
+    bi.bmiHeader.biCompression = BI_RGB;
+    void* bits = nullptr;
+    HBITMAP hbmp = CreateDIBSection(nullptr, &bi, DIB_RGB_COLORS, &bits, nullptr, 0);
+    if (!hbmp || !bits) {
+        return hbmp;
+    }
+    memset(bits, 0, (size_t)dx * dy * 4);
+
+    if (withCheckmark) {
+        HDC hdcMem = CreateCompatibleDC(nullptr);
+        HGDIOBJ hOld = SelectObject(hdcMem, hbmp);
+        {
+            Graphics gfx(hdcMem);
+            gfx.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+
+            u8 r, g, b;
+            UnpackColor(checkColor, r, g, b);
+            float strokeW = (float)DpiScale(18) / 10.0f;
+            Pen pen(Gdiplus::Color(255, r, g, b), strokeW);
+            pen.SetStartCap(Gdiplus::LineCapRound);
+            pen.SetEndCap(Gdiplus::LineCapRound);
+            pen.SetLineJoin(Gdiplus::LineJoinRound);
+
+            float cx = (float)dx / 2.0f;
+            float cy = (float)dy / 2.0f;
+            float w = (float)DpiScale(10) / 2.0f;
+            float h = (float)DpiScale(8) / 2.0f;
+            Gdiplus::PointF pts[3] = {
+                {cx - w, cy},
+                {cx - w * 0.3f, cy + h},
+                {cx + w, cy - h},
+            };
+            gfx.DrawLines(&pen, pts, 3);
+        }
+        SelectObject(hdcMem, hOld);
+        DeleteDC(hdcMem);
+    }
+    return hbmp;
+}
+
 static void ShowTabSearchMenu(MainWindow* win) {
     HMENU popup = CreatePopupMenu();
 
@@ -13867,7 +13914,11 @@ static void ShowTabSearchMenu(MainWindow* win) {
         }
         bool isOpen = false;
         for (int t = 0; t < nTabs; t++) {
-            if (str::EqI(tabs[t]->filePath, p)) {
+            Str tabPath = tabs[t]->filePath;
+            if (len(tabPath) == 0 && tabs[t]->ctrl) {
+                tabPath = tabs[t]->ctrl->GetFilePath();
+            }
+            if (len(tabPath) > 0 && (path::IsSame(tabPath, p) || str::EqI(tabPath, p))) {
                 isOpen = true;
                 break;
             }
@@ -13897,6 +13948,24 @@ static void ShowTabSearchMenu(MainWindow* win) {
         }
     }
 
+    // Set custom checkmark spacer bitmaps to give comfortable, touch-friendly item height
+    int dxSpacer = DpiScale(20);
+    int dySpacer = DpiScale(26);
+    HBITMAP hbmpChecked = CreateMenuSpacerBitmap(dxSpacer, dySpacer, true, ThemeWindowTextColor());
+    HBITMAP hbmpUnchecked = CreateMenuSpacerBitmap(dxSpacer, dySpacer, false, ThemeWindowTextColor());
+    int itemCount = GetMenuItemCount(popup);
+    for (int i = 0; i < itemCount; i++) {
+        MENUITEMINFOW mii{};
+        mii.cbSize = sizeof(mii);
+        mii.fMask = MIIM_FTYPE;
+        if (GetMenuItemInfoW(popup, (uint)i, TRUE, &mii) && !(mii.fType & MFT_SEPARATOR)) {
+            mii.fMask = MIIM_CHECKMARKS;
+            mii.hbmpChecked = hbmpChecked;
+            mii.hbmpUnchecked = hbmpUnchecked;
+            SetMenuItemInfoW(popup, (uint)i, TRUE, &mii);
+        }
+    }
+
     Rect btnRect = win->captionBtn[CB_SYSTEM_MENU].rect;
     Rect rs = HwndMapLtrClientRectToScreen(win->hwndFrame, btnRect);
     TPMPARAMS tpm{};
@@ -13915,6 +13984,13 @@ static void ShowTabSearchMenu(MainWindow* win) {
     int chosen = (int)TrackPopupMenuEx(popup, flags, x, y, win->hwndFrame, &tpm);
     FreeMenuOwnerDrawInfoData(popup);
     DestroyMenu(popup);
+
+    if (hbmpChecked) {
+        DeleteObject(hbmpChecked);
+    }
+    if (hbmpUnchecked) {
+        DeleteObject(hbmpUnchecked);
+    }
 
     if (chosen >= (int)kOpenTabBase && chosen < (int)kRecentBase) {
         int tabIdx = chosen - (int)kOpenTabBase;
