@@ -13821,6 +13821,73 @@ struct TabSearchMenuItemData {
 };
 
 static bool g_inTabSearchMenu = false;
+static HHOOK g_tabSearchCbtHook = nullptr;
+
+static bool IsMenuWindowClass(HWND hwnd, LPARAM lp) {
+    WCHAR cls[32]{};
+    if (GetClassNameW(hwnd, cls, dimof(cls)) && wstr::Eq(WStr(cls), WStrL(L"#32768"))) {
+        return true;
+    }
+    auto* cbt = (CBT_CREATEWNDW*)lp;
+    if (cbt && cbt->lpcs && cbt->lpcs->lpszClass) {
+        if ((((ULONG_PTR)cbt->lpcs->lpszClass) >> 16) == 0) {
+            return (UINT_PTR)cbt->lpcs->lpszClass == 0x8000;
+        }
+        if (wstr::Eq(WStr(cbt->lpcs->lpszClass), WStrL(L"#32768"))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static void ApplyMenuRoundedCorners(HWND hwnd) {
+    SetWindowRgn(hwnd, nullptr, FALSE);
+    DWM_WINDOW_CORNER_PREFERENCE cornerPref = DWMWCP_ROUND;
+    DwmSetWindowAttribute(hwnd, DWMWA_WINDOW_CORNER_PREFERENCE, &cornerPref, sizeof(cornerPref));
+    Color borderColor = DarkModeIsActive() ? MkRgb(0x40, 0x40, 0x40) : MkRgb(0xDA, 0xDC, 0xE0);
+    DwmSetWindowAttribute(hwnd, DWMWA_BORDER_COLOR, &borderColor, sizeof(borderColor));
+}
+
+static LRESULT CALLBACK TabSearchMenuWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp, UINT_PTR uIdSubclass,
+                                             DWORD_PTR dwRefData) {
+    if (msg == WM_NCPAINT) {
+        ApplyMenuRoundedCorners(hwnd);
+        return 0;
+    }
+    if (msg == WM_CREATE || msg == WM_WINDOWPOSCHANGING || msg == WM_SHOWWINDOW) {
+        ApplyMenuRoundedCorners(hwnd);
+    }
+    if (msg == WM_NCDESTROY) {
+        RemoveWindowSubclass(hwnd, TabSearchMenuWndProc, uIdSubclass);
+    }
+    return DefSubclassProc(hwnd, msg, wp, lp);
+}
+
+static LRESULT CALLBACK TabSearchCbtHook(int nCode, WPARAM wp, LPARAM lp) {
+    if (nCode == HCBT_CREATEWND) {
+        HWND hwnd = (HWND)wp;
+        if (IsMenuWindowClass(hwnd, lp)) {
+            auto* cbt = (CBT_CREATEWNDW*)lp;
+            if (cbt && cbt->lpcs) {
+                cbt->lpcs->style &= ~WS_BORDER;
+                cbt->lpcs->dwExStyle &= ~WS_EX_DLGMODALFRAME;
+            }
+            LONG_PTR style = GetWindowLongPtrW(hwnd, GWL_STYLE);
+            LONG_PTR newStyle = style & ~WS_BORDER;
+            if (newStyle != style) {
+                SetWindowLongPtrW(hwnd, GWL_STYLE, newStyle);
+            }
+            LONG_PTR exStyle = GetWindowLongPtrW(hwnd, GWL_EXSTYLE);
+            LONG_PTR newExStyle = exStyle & ~WS_EX_DLGMODALFRAME;
+            if (newExStyle != exStyle) {
+                SetWindowLongPtrW(hwnd, GWL_EXSTYLE, newExStyle);
+            }
+            ApplyMenuRoundedCorners(hwnd);
+            SetWindowSubclass(hwnd, TabSearchMenuWndProc, 1, 0);
+        }
+    }
+    return CallNextHookEx(g_tabSearchCbtHook, nCode, wp, lp);
+}
 
 static bool TabSearchMenuMeasureItem(HWND hwnd, MEASUREITEMSTRUCT* mis) {
     if (!g_inTabSearchMenu || mis->CtlType != ODT_MENU || mis->itemData == 0) {
@@ -14106,7 +14173,12 @@ static void ShowTabSearchMenu(MainWindow* win) {
     }
 
     g_inTabSearchMenu = true;
+    g_tabSearchCbtHook = SetWindowsHookExW(WH_CBT, TabSearchCbtHook, nullptr, GetCurrentThreadId());
     int chosen = (int)TrackPopupMenuEx(popup, flags, x, y, win->hwndFrame, &tpm);
+    if (g_tabSearchCbtHook) {
+        UnhookWindowsHookEx(g_tabSearchCbtHook);
+        g_tabSearchCbtHook = nullptr;
+    }
     g_inTabSearchMenu = false;
 
     DestroyMenu(popup);
