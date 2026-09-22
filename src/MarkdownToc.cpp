@@ -399,8 +399,17 @@ void ParseMarkdownTocsParallel(StrVec& files, bool htmlMode, Vec<MarkdownFileToc
 
 static const char* kMarkdownPageCssFmt = R"(
 :root { %s }
+html { background: var(--canvas-bg); min-height: 100%%; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 16px;
-  line-height: 1.5; color: var(--fg); background: var(--bg); margin: 0; padding: 2rem 3rem; max-width: 980px; }
+  line-height: 1.5; color: var(--fg); background: var(--bg); margin: 1.5rem auto; padding: 2.5rem 3.5rem; max-width: 980px;
+  border: 1px solid var(--border); box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 4px; box-sizing: border-box; min-height: calc(100vh - 3rem); }
+@media (max-width: 1040px) {
+  html { background: var(--bg); }
+  body { margin: 0; border: none; box-shadow: none; border-radius: 0; padding: 1.5rem; min-height: 100vh; }
+}
+@media print {
+  html, body { background: #fff !important; margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; max-width: 100%% !important; }
+}
 a { color: var(--link); text-decoration: none; }
 a:hover { text-decoration: underline; }
 h1,h2,h3,h4,h5,h6 { margin-top: 1.5rem; margin-bottom: 1rem; font-weight: 600; line-height: 1.25; }
@@ -412,6 +421,8 @@ code { background: var(--code-bg); padding: .2em .4em; border-radius: 6px; }
 pre code { background: transparent; padding: 0; }
 pre.mermaid { background: transparent; text-align: center; overflow: visible; }
 pre.mermaid svg { max-width: 100%%; height: auto; }
+.math-display { overflow-x: auto; overflow-y: hidden; text-align: center; margin: 1em 0; }
+.math-inline { }
 blockquote { margin: 0; padding: 0 1em; color: var(--muted); border-left: .25em solid var(--border); }
 table { border-collapse: collapse; }
 table th, table td { border: 1px solid var(--border); padding: 6px 13px; }
@@ -506,6 +517,316 @@ static const char kMermaidBootstrap[] = R"HTML(
 </script>
 )HTML";
 
+enum class MathKind {
+    Display,
+    Inline,
+};
+
+struct MathItem {
+    MathKind kind = MathKind::Inline;
+    Str formula = {};
+};
+
+// tex-svg.js lives in IDR_EMBEDDED_PAK and is served from the markdown
+// virtual host (GetDataForUrl). Must match kMdVirtualHost in MarkdownModel.cpp.
+static const char kMathJaxBootstrap[] = R"HTML(
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+<script src="https://sumatrapdf.markdown/tex-svg.js"></script>
+)HTML";
+
+static void ProtectMathExpressions(str::Builder& out, Str md, Vec<MathItem>& items) {
+    int n = len(md);
+    int i = 0;
+    while (i < n) {
+        // Escaped characters: \$
+        if (md.s[i] == '\\' && i + 1 < n) {
+            if (md.s[i + 1] == '$') {
+                out.Append(StrL("\\$"));
+                i += 2;
+                continue;
+            }
+            out.AppendChar('\\');
+            out.AppendChar(md.s[i + 1]);
+            i += 2;
+            continue;
+        }
+
+        // Code fences: ``` or ~~~
+        bool isLineStart = (i == 0 || md.s[i - 1] == '\n');
+        if (isLineStart) {
+            int sp = 0;
+            while (i + sp < n && md.s[i + sp] == ' ' && sp < 4) {
+                sp++;
+            }
+            if (i + sp + 2 < n && (str::StartsWith(Str(md.s + i + sp, n - (i + sp)), StrL("```")) ||
+                                   str::StartsWith(Str(md.s + i + sp, n - (i + sp)), StrL("~~~")))) {
+                char fenceChar = md.s[i + sp];
+                int fenceLen = 0;
+                while (i + sp + fenceLen < n && md.s[i + sp + fenceLen] == fenceChar) {
+                    fenceLen++;
+                }
+                // Check if fence is ```math
+                int infoStart = i + sp + fenceLen;
+                while (infoStart < n && md.s[infoStart] == ' ') {
+                    infoStart++;
+                }
+                int infoEnd = infoStart;
+                while (infoEnd < n && md.s[infoEnd] != '\n' && md.s[infoEnd] != ' ' && md.s[infoEnd] != '\r') {
+                    infoEnd++;
+                }
+                Str info(md.s + infoStart, infoEnd - infoStart);
+                bool isMathFence = str::EqI(info, StrL("math"));
+
+                // Advance to end of opening fence line
+                int bodyStart = infoEnd;
+                while (bodyStart < n && md.s[bodyStart] != '\n') {
+                    bodyStart++;
+                }
+                if (bodyStart < n && md.s[bodyStart] == '\n') {
+                    bodyStart++;
+                }
+
+                // Find closing fence
+                int closeFence = bodyStart;
+                while (closeFence < n) {
+                    bool atLineStart = (closeFence == 0 || md.s[closeFence - 1] == '\n');
+                    if (atLineStart) {
+                        int csp = 0;
+                        while (closeFence + csp < n && md.s[closeFence + csp] == ' ' && csp < 4) {
+                            csp++;
+                        }
+                        int cfLen = 0;
+                        while (closeFence + csp + cfLen < n && md.s[closeFence + csp + cfLen] == fenceChar) {
+                            cfLen++;
+                        }
+                        if (cfLen >= fenceLen) {
+                            // Found closing fence
+                            int afterClose = closeFence + csp + cfLen;
+                            while (afterClose < n && md.s[afterClose] != '\n') {
+                                afterClose++;
+                            }
+                            if (afterClose < n && md.s[afterClose] == '\n') {
+                                afterClose++;
+                            }
+                            if (isMathFence) {
+                                Str formula(md.s + bodyStart, closeFence - bodyStart);
+                                MathItem item{MathKind::Display, formula};
+                                VecAppend(items, item);
+                                out.Append(fmt("\n\nSUMATRA_MATH_DISPLAY_%d_END\n\n", len(items) - 1));
+                            } else {
+                                out.Append(Str(md.s + i, afterClose - i));
+                            }
+                            i = afterClose;
+                            goto next_token;
+                        }
+                    }
+                    closeFence++;
+                }
+                // If closing fence not found, append remainder
+                out.Append(Str(md.s + i, n - i));
+                break;
+            }
+        }
+
+        // Inline code: `...`
+        if (md.s[i] == '`') {
+            int tickCount = 0;
+            while (i + tickCount < n && md.s[i + tickCount] == '`') {
+                tickCount++;
+            }
+            int closeTick = i + tickCount;
+            while (closeTick < n) {
+                if (md.s[closeTick] == '`') {
+                    int ctc = 0;
+                    while (closeTick + ctc < n && md.s[closeTick + ctc] == '`') {
+                        ctc++;
+                    }
+                    if (ctc == tickCount) {
+                        int spanEnd = closeTick + ctc;
+                        out.Append(Str(md.s + i, spanEnd - i));
+                        i = spanEnd;
+                        goto next_token;
+                    }
+                    closeTick += ctc;
+                    continue;
+                }
+                closeTick++;
+            }
+            out.Append(Str(md.s + i, tickCount));
+            i += tickCount;
+            continue;
+        }
+
+        // Display math: $$ ... $$
+        if (md.s[i] == '$' && i + 1 < n && md.s[i + 1] == '$') {
+            int closeAt = -1;
+            int j = i + 2;
+            while (j + 1 < n) {
+                if (md.s[j] == '\\') {
+                    j += 2;
+                    continue;
+                }
+                if (md.s[j] == '$' && md.s[j + 1] == '$') {
+                    closeAt = j;
+                    break;
+                }
+                j++;
+            }
+            if (closeAt >= 0) {
+                Str formula(md.s + i + 2, closeAt - (i + 2));
+                MathItem item{MathKind::Display, formula};
+                VecAppend(items, item);
+                out.Append(fmt("\n\nSUMATRA_MATH_DISPLAY_%d_END\n\n", len(items) - 1));
+                i = closeAt + 2;
+                continue;
+            }
+        }
+
+        // Inline math: $ ... $
+        if (md.s[i] == '$' && i + 1 < n) {
+            char nextChar = md.s[i + 1];
+            bool canOpen = (nextChar != ' ' && nextChar != '\t' && nextChar != '\r' && nextChar != '\n' &&
+                            nextChar != '$' && (nextChar < '0' || nextChar > '9'));
+            if (canOpen) {
+                int closeAt = -1;
+                int j = i + 1;
+                while (j < n) {
+                    if (md.s[j] == '\\') {
+                        j += 2;
+                        continue;
+                    }
+                    if (md.s[j] == '\n' && j + 1 < n && md.s[j + 1] == '\n') {
+                        // Inline math cannot cross paragraph breaks
+                        break;
+                    }
+                    if (md.s[j] == '$') {
+                        char prevChar = md.s[j - 1];
+                        if (prevChar != ' ' && prevChar != '\t' && prevChar != '\r' && prevChar != '\n') {
+                            char afterClose = (j + 1 < n) ? md.s[j + 1] : 0;
+                            // Closing $ should not be followed by alphanumeric character
+                            if (!((afterClose >= 'a' && afterClose <= 'z') ||
+                                  (afterClose >= 'A' && afterClose <= 'Z') ||
+                                  (afterClose >= '0' && afterClose <= '9'))) {
+                                closeAt = j;
+                                break;
+                            }
+                        }
+                    }
+                    j++;
+                }
+                if (closeAt >= 0) {
+                    Str formula(md.s + i + 1, closeAt - (i + 1));
+                    MathItem item{MathKind::Inline, formula};
+                    VecAppend(items, item);
+                    out.Append(fmt("SUMATRA_MATH_INLINE_%d_END", len(items) - 1));
+                    i = closeAt + 1;
+                    continue;
+                }
+            }
+        }
+
+        out.AppendChar(md.s[i]);
+        i++;
+    next_token:;
+    }
+}
+
+static void AppendHtmlEscaped(str::Builder& out, Str s) {
+    for (int i = 0; i < len(s); i++) {
+        char c = s.s[i];
+        if (c == '&') {
+            out.Append(StrL("&amp;"));
+        } else if (c == '<') {
+            out.Append(StrL("&lt;"));
+        } else if (c == '>') {
+            out.Append(StrL("&gt;"));
+        } else {
+            out.AppendChar(c);
+        }
+    }
+}
+
+static void RestoreMathExpressions(str::Builder& out, Str html, const Vec<MathItem>& items) {
+    if (len(items) == 0) {
+        out.Append(html);
+        return;
+    }
+
+    Str rest = html;
+    Str kDispPrefix = StrL("SUMATRA_MATH_DISPLAY_");
+    Str kInlinePrefix = StrL("SUMATRA_MATH_INLINE_");
+    Str kEnd = StrL("_END");
+
+    while (rest) {
+        int dispAt = str::IndexOf(rest, kDispPrefix);
+        int inlineAt = str::IndexOf(rest, kInlinePrefix);
+        if (dispAt < 0 && inlineAt < 0) {
+            out.Append(rest);
+            break;
+        }
+
+        bool isDisp = (dispAt >= 0 && (inlineAt < 0 || dispAt < inlineAt));
+        int at = isDisp ? dispAt : inlineAt;
+        Str prefix = isDisp ? kDispPrefix : kInlinePrefix;
+
+        int chunkStart = at;
+        bool hasPBefore = false;
+        if (isDisp && chunkStart >= 3 && str::Eq(Str(rest.s + chunkStart - 3, 3), StrL("<p>"))) {
+            chunkStart -= 3;
+            hasPBefore = true;
+        }
+
+        if (chunkStart > 0) {
+            out.Append(Str(rest.s, chunkStart));
+        }
+
+        Str fromTag = Str(rest.s + at + len(prefix), rest.len - at - len(prefix));
+        int endAt = str::IndexOf(fromTag, kEnd);
+        if (endAt < 0) {
+            out.Append(prefix);
+            rest = fromTag;
+            continue;
+        }
+
+        Str idStr(fromTag.s, endAt);
+        int id = -1;
+        str::Parse(idStr, "%d", &id);
+        if (id < 0 || id >= len(items)) {
+            out.Append(prefix);
+            rest = fromTag;
+            continue;
+        }
+
+        const MathItem& item = items[id];
+        if (item.kind == MathKind::Display) {
+            out.Append(StrL("<div class=\"math-display\">$$"));
+            AppendHtmlEscaped(out, item.formula);
+            out.Append(StrL("$$</div>"));
+        } else {
+            out.Append(StrL("<span class=\"math-inline\">$"));
+            AppendHtmlEscaped(out, item.formula);
+            out.Append(StrL("$</span>"));
+        }
+
+        int advance = at + len(prefix) + endAt + len(kEnd);
+        if (isDisp && hasPBefore && advance + 4 <= rest.len && str::Eq(Str(rest.s + advance, 4), StrL("</p>"))) {
+            advance += 4;
+        }
+        rest = Str(rest.s + advance, rest.len - advance);
+    }
+}
+
 static TempStr ColorToCssTemp(Color c) {
     return fmt("#%02x%02x%02x", (int)GetRValue(c), (int)GetGValue(c), (int)GetBValue(c));
 }
@@ -519,6 +840,9 @@ static TempStr MarkdownPageCssTemp() {
     bool dark = !IsLightColor(bgCol);
     bool isDefault = (bgCol == kColWhite) && (txtCol == kColBlack);
 
+    Color canvasCol = ThemeMainWindowBackgroundColor();
+    TempStr canvasBg = ColorToCssTemp(canvasCol);
+
     TempStr bg = ColorToCssTemp(bgCol);
     // the default black-on-white gets the classic GitHub palette
     TempStr fg = isDefault ? str::DupTemp(StrL("#24292f")) : ColorToCssTemp(txtCol);
@@ -527,8 +851,8 @@ static TempStr MarkdownPageCssTemp() {
     TempStr border = isDefault ? str::DupTemp(StrL("#d0d7de")) : ColorToCssTemp(AccentColor(bgCol, 25));
     TempStr codeBg = isDefault ? str::DupTemp(StrL("#f6f8fa")) : ColorToCssTemp(AccentColor(bgCol, 8));
 
-    TempStr cssVars =
-        fmt("--bg:%s; --fg:%s; --link:%s; --muted:%s; --border:%s; --code-bg:%s;", bg, fg, link, muted, border, codeBg);
+    TempStr cssVars = fmt("--canvas-bg:%s; --bg:%s; --fg:%s; --link:%s; --muted:%s; --border:%s; --code-bg:%s;",
+                          canvasBg, bg, fg, link, muted, border, codeBg);
     return fmt(kMarkdownPageCssFmt, cssVars);
 }
 
@@ -757,15 +1081,22 @@ static char* MarkdownToHtmlBody(Str markdown) {
 
 // Convert markdown source to a full HTML page (body only is rendered with cmark-gfm).
 Str MarkdownToHtmlPage(Str markdown) {
-    char* body = MarkdownToHtmlBody(markdown);
+    Vec<MathItem> mathItems;
+    str::Builder protectedMd;
+    ProtectMathExpressions(protectedMd, markdown, mathItems);
+
+    char* body = MarkdownToHtmlBody(ToStr(protectedMd));
     if (!body) {
         return {};
     }
 
-    str::Builder rewritten;
-    int nMermaid = RewriteMermaidCodeBlocks(rewritten, Str(body));
+    str::Builder restored;
+    RestoreMathExpressions(restored, Str(body), mathItems);
     cmark_mem* mem = cmark_get_default_mem_allocator();
     mem->free(body);
+
+    str::Builder rewritten;
+    int nMermaid = RewriteMermaidCodeBlocks(rewritten, ToStr(restored));
 
     str::Builder html;
     html.Append(
@@ -778,6 +1109,10 @@ Str MarkdownToHtmlPage(Str markdown) {
     // Mermaid diagrams need JS (WebView2). Fixed-page MuPDF path has no scripts.
     if (nMermaid > 0) {
         html.Append(Str(kMermaidBootstrap, (int)(sizeof(kMermaidBootstrap) - 1)));
+    }
+    // MathJax for LaTeX math formulas (WebView2).
+    if (len(mathItems) > 0) {
+        html.Append(Str(kMathJaxBootstrap, (int)(sizeof(kMathJaxBootstrap) - 1)));
     }
     html.Append(StrL("</body></html>"));
 
@@ -918,5 +1253,42 @@ bool MarkdownToc_UnitTestMermaid() {
     Str plain = ToStr(plainB);
     ok = ok && (nPlain == 0) && str::Contains(plain, StrL("language-js")) &&
          !str::Contains(plain, StrL("pre class=\"mermaid\""));
+    return ok;
+}
+
+bool MarkdownToc_UnitTestMath() {
+    Str md = StrL(
+        "# Math Test\n\n"
+        "$$\\mathbf{X}_i\\in\\mathbb{R}^{V\\times T},\\quad "
+        "x_i=\\operatorname{vec}(\\mathbf{X}_i)\\in\\mathbb{R}^d$$\n\n"
+        "Inline: $X=[x_1^T\\dots x_n^T]\\in\\mathbb{R}^{n\\times d}$ and $Y\\in[0,1]^{n\\times K}$.\n\n"
+        "Matrix:\n\n"
+        "$$\\Theta=\\begin{bmatrix}B\\\\x^T\\end{bmatrix}\\tag{5}$$\n\n"
+        "Code: `$not_math$`\n\n```math\n\\frac{1}{2}\n```\n");
+
+    Vec<MathItem> items;
+    str::Builder protectedMd;
+    ProtectMathExpressions(protectedMd, md, items);
+
+    if (len(items) != 5) {
+        return false;
+    }
+
+    char* body = MarkdownToHtmlBody(ToStr(protectedMd));
+    if (!body) {
+        return false;
+    }
+
+    str::Builder restored;
+    RestoreMathExpressions(restored, Str(body), items);
+    cmark_get_default_mem_allocator()->free(body);
+
+    Str html = ToStr(restored);
+    // Double backslash should be preserved in matrix
+    bool ok = str::Contains(html, StrL("<div class=\"math-display\">$$\\mathbf{X}_i")) &&
+              str::Contains(html, StrL("<span class=\"math-inline\">$X=[x_1^T")) &&
+              str::Contains(html, StrL("<span class=\"math-inline\">$Y\\in[0,1]")) &&
+              str::Contains(html, StrL("\\begin{bmatrix}B\\\\x^T\\end{bmatrix}\\tag{5}")) &&
+              str::Contains(html, StrL("\\frac{1}{2}")) && str::Contains(html, StrL("<code>$not_math$</code>"));
     return ok;
 }

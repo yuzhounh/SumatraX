@@ -135,7 +135,10 @@ export function detectVisualStudio2022(): VisualStudioInfo {
 export function detectVisualStudio2026(): VisualStudioInfo {
   let res = detectVisualStudioVer("18");
   if (!res) {
-    throw new Error(`couldn't find vs 2026 msbuild.exe `);
+    res = detectVisualStudioVer("2022");
+  }
+  if (!res) {
+    throw new Error(`couldn't find vs 2026 or 2022 msbuild.exe `);
   }
   return res;
 }
