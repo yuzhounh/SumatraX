@@ -13806,265 +13806,58 @@ static void MenuBarAsPopupMenu(MainWindow* win, Rect btnRect) {
     DestroyMenu(popup);
 }
 
-constexpr u32 kTabSearchMagic = 0x54414253; // 'TABS'
-
-struct TabSearchMenuItemData {
-    u32 magic = kTabSearchMagic;
-    Str text;
-    bool isHeader = false;
-    bool isSeparator = false;
-    bool isActiveTab = false;
-    bool isDisabled = false;
-    int id = 0;
-
-    ~TabSearchMenuItemData() { str::FreePtr(&text); }
-};
-
-static bool g_inTabSearchMenu = false;
-static HHOOK g_tabSearchCbtHook = nullptr;
-
-static bool IsMenuWindowClass(HWND hwnd, LPARAM lp) {
-    WCHAR cls[32]{};
-    if (GetClassNameW(hwnd, cls, dimof(cls)) && wstr::Eq(WStr(cls), WStrL(L"#32768"))) {
-        return true;
+static HBITMAP CreateMenuSpacerBitmap(int dx, int dy, bool withCheckmark, Color checkColor) {
+    BITMAPINFO bi{};
+    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bi.bmiHeader.biWidth = dx;
+    bi.bmiHeader.biHeight = dy;
+    bi.bmiHeader.biPlanes = 1;
+    bi.bmiHeader.biBitCount = 32;
+    bi.bmiHeader.biCompression = BI_RGB;
+    void* bits = nullptr;
+    HBITMAP hbmp = CreateDIBSection(nullptr, &bi, DIB_RGB_COLORS, &bits, nullptr, 0);
+    if (!hbmp || !bits) {
+        return hbmp;
     }
-    auto* cbt = (CBT_CREATEWNDW*)lp;
-    if (cbt && cbt->lpcs && cbt->lpcs->lpszClass) {
-        if ((((ULONG_PTR)cbt->lpcs->lpszClass) >> 16) == 0) {
-            return (UINT_PTR)cbt->lpcs->lpszClass == 0x8000;
+    memset(bits, 0, (size_t)dx * dy * 4);
+
+    if (withCheckmark) {
+        HDC hdcMem = CreateCompatibleDC(nullptr);
+        HGDIOBJ hOld = SelectObject(hdcMem, hbmp);
+        {
+            Graphics gfx(hdcMem);
+            gfx.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+
+            u8 r, g, b;
+            UnpackColor(checkColor, r, g, b);
+            float strokeW = (float)DpiScale(18) / 10.0f;
+            Pen pen(Gdiplus::Color(255, r, g, b), strokeW);
+            pen.SetStartCap(Gdiplus::LineCapRound);
+            pen.SetEndCap(Gdiplus::LineCapRound);
+            pen.SetLineJoin(Gdiplus::LineJoinRound);
+
+            float cx = (float)dx / 2.0f;
+            float cy = (float)dy / 2.0f;
+            float w = (float)DpiScale(10) / 2.0f;
+            float h = (float)DpiScale(8) / 2.0f;
+            Gdiplus::PointF pts[3] = {
+                {cx - w, cy},
+                {cx - w * 0.3f, cy + h},
+                {cx + w, cy - h},
+            };
+            gfx.DrawLines(&pen, pts, 3);
         }
-        if (wstr::Eq(WStr(cbt->lpcs->lpszClass), WStrL(L"#32768"))) {
-            return true;
-        }
+        SelectObject(hdcMem, hOld);
+        DeleteDC(hdcMem);
     }
-    return false;
-}
-
-static bool IsSysShadowClass(HWND hwnd, LPARAM lp) {
-    WCHAR cls[32]{};
-    if (GetClassNameW(hwnd, cls, dimof(cls)) && wstr::Eq(WStr(cls), WStrL(L"SysShadow"))) {
-        return true;
-    }
-    auto* cbt = (CBT_CREATEWNDW*)lp;
-    if (cbt && cbt->lpcs && cbt->lpcs->lpszClass) {
-        if ((((ULONG_PTR)cbt->lpcs->lpszClass) >> 16) != 0) {
-            if (wstr::Eq(WStr(cbt->lpcs->lpszClass), WStrL(L"SysShadow"))) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-static void ApplyMenuRoundedCorners(HWND hwnd) {
-    SetWindowRgn(hwnd, nullptr, FALSE);
-    DWM_WINDOW_CORNER_PREFERENCE cornerPref = DWMWCP_ROUND;
-    DwmSetWindowAttribute(hwnd, DWMWA_WINDOW_CORNER_PREFERENCE, &cornerPref, sizeof(cornerPref));
-    Color borderColor = DarkModeIsActive() ? MkRgb(0x40, 0x40, 0x40) : MkRgb(0xEA, 0xEC, 0xEF);
-    DwmSetWindowAttribute(hwnd, DWMWA_BORDER_COLOR, &borderColor, sizeof(borderColor));
-}
-
-static LRESULT CALLBACK TabSearchMenuWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp, UINT_PTR uIdSubclass,
-                                             DWORD_PTR dwRefData) {
-    if (msg == WM_NCPAINT) {
-        ApplyMenuRoundedCorners(hwnd);
-        return 0;
-    }
-    if (msg == WM_CREATE || msg == WM_WINDOWPOSCHANGING || msg == WM_SHOWWINDOW) {
-        ApplyMenuRoundedCorners(hwnd);
-    }
-    if (msg == WM_NCDESTROY) {
-        RemoveWindowSubclass(hwnd, TabSearchMenuWndProc, uIdSubclass);
-    }
-    return DefSubclassProc(hwnd, msg, wp, lp);
-}
-
-static LRESULT CALLBACK TabSearchCbtHook(int nCode, WPARAM wp, LPARAM lp) {
-    if (nCode == HCBT_CREATEWND) {
-        HWND hwnd = (HWND)wp;
-        if (IsSysShadowClass(hwnd, lp)) {
-            return 1;
-        }
-        if (IsMenuWindowClass(hwnd, lp)) {
-            auto* cbt = (CBT_CREATEWNDW*)lp;
-            if (cbt && cbt->lpcs) {
-                cbt->lpcs->style &= ~WS_BORDER;
-                cbt->lpcs->dwExStyle &= ~WS_EX_DLGMODALFRAME;
-            }
-            ULONG_PTR clsStyle = GetClassLongPtrW(hwnd, GCL_STYLE);
-            if (clsStyle & CS_DROPSHADOW) {
-                SetClassLongPtrW(hwnd, GCL_STYLE, clsStyle & ~CS_DROPSHADOW);
-            }
-            LONG_PTR style = GetWindowLongPtrW(hwnd, GWL_STYLE);
-            LONG_PTR newStyle = style & ~WS_BORDER;
-            if (newStyle != style) {
-                SetWindowLongPtrW(hwnd, GWL_STYLE, newStyle);
-            }
-            LONG_PTR exStyle = GetWindowLongPtrW(hwnd, GWL_EXSTYLE);
-            LONG_PTR newExStyle = exStyle & ~WS_EX_DLGMODALFRAME;
-            if (newExStyle != exStyle) {
-                SetWindowLongPtrW(hwnd, GWL_EXSTYLE, newExStyle);
-            }
-            ApplyMenuRoundedCorners(hwnd);
-            SetWindowSubclass(hwnd, TabSearchMenuWndProc, 1, 0);
-        }
-    }
-    return CallNextHookEx(g_tabSearchCbtHook, nCode, wp, lp);
-}
-
-static bool TabSearchMenuMeasureItem(HWND hwnd, MEASUREITEMSTRUCT* mis) {
-    if (!g_inTabSearchMenu || mis->CtlType != ODT_MENU || mis->itemData == 0) {
-        return false;
-    }
-    auto* item = (TabSearchMenuItemData*)mis->itemData;
-    if (item->magic != kTabSearchMagic) {
-        return false;
-    }
-
-    DpiSetFromHwnd(hwnd);
-    if (item->isSeparator) {
-        mis->itemHeight = DpiScale(7);
-        mis->itemWidth = DpiScale(100);
-        return true;
-    }
-
-    // Open tabs, recently closed headers and all items keep consistent height
-    mis->itemHeight = DpiScale(32);
-
-    PlatformFont* font = GetAppMenuFont();
-    Size size = PlatformFontMeasureText(font, item->text);
-    Size sz1 = PlatformFontMeasureText(font, StrL("A  A"));
-    Size sz2 = PlatformFontMeasureText(font, StrL("AA"));
-    int space2Dx = std::max(sz1.dx - sz2.dx, DpiScale(8));
-
-    int basePadX = DpiScale(14);
-    int padRight = DpiScale(16);
-    int totalWidth = basePadX + size.dx + padRight;
-    if (!item->isHeader) {
-        totalWidth += space2Dx;
-    }
-    int minWidth = DpiScale(220);
-    mis->itemWidth = std::max(totalWidth, minWidth);
-    return true;
-}
-
-static bool TabSearchMenuDrawItem(HWND hwnd, DRAWITEMSTRUCT* dis) {
-    if (!g_inTabSearchMenu || dis->CtlType != ODT_MENU || dis->itemData == 0) {
-        return false;
-    }
-    auto* item = (TabSearchMenuItemData*)dis->itemData;
-    if (item->magic != kTabSearchMagic) {
-        return false;
-    }
-
-    DpiSetFromHwnd(hwnd);
-    Rect rc = ToRect(dis->rcItem);
-    Gfx* gfx = GfxCreate(dis->hDC);
-    if (!gfx) {
-        return true;
-    }
-    defer {
-        delete gfx;
-    };
-
-    Color bgCol = DarkModeIsActive() ? ThemeControlBackgroundColor() : MkRgb(0xF9, 0xF9, 0xF9);
-    gfx->FillRect(rc, bgCol);
-
-    if (item->isSeparator) {
-        int y = rc.y + rc.dy / 2;
-        int padX = DpiScale(12);
-        Color lineCol = AccentColor(bgCol, 12);
-        gfx->DrawLine({rc.x + padX, y, rc.dx - padX * 2, 0}, lineCol);
-        return true;
-    }
-
-    bool isSelected = (dis->itemState & ODS_SELECTED) != 0;
-    Color itemBg = kColorTransparent;
-
-    if (ThemeUsesHighContrastColors()) {
-        if (isSelected) {
-            itemBg = (Color)GetSysColor(COLOR_HIGHLIGHT);
-        } else if (item->isActiveTab) {
-            itemBg = (Color)GetSysColor(COLOR_BTNFACE);
-        }
-    } else if (!item->isHeader && !item->isDisabled) {
-        if (isSelected && item->isActiveTab) {
-            itemBg = AccentColor(bgCol, 26);
-        } else if (isSelected) {
-            itemBg = AccentColor(bgCol, 12);
-        } else if (item->isActiveTab) {
-            // slightly darker than mouse hover, light and soft
-            itemBg = AccentColor(bgCol, 20);
-        }
-    }
-
-    if (itemBg != kColorTransparent) {
-        Rect bgRect = rc;
-        int marginX = DpiScale(5);
-        int marginY = DpiScale(2);
-        bgRect.x += marginX;
-        bgRect.dx -= marginX * 2;
-        bgRect.y += marginY;
-        bgRect.dy -= marginY * 2;
-        gfx->FillRoundedRect(bgRect, DpiScale(5), itemBg);
-    }
-
-    PlatformFont* font = GetAppMenuFont();
-    Color txtCol = ThemeWindowTextColor();
-    if (ThemeUsesHighContrastColors() && isSelected) {
-        txtCol = SysHighlightTextColor();
-    } else if (item->isHeader || item->isDisabled) {
-        txtCol = ThemeWindowTextDisabledColor();
-    }
-
-    Size sz1 = PlatformFontMeasureText(font, StrL("A  A"));
-    Size sz2 = PlatformFontMeasureText(font, StrL("AA"));
-    int space2Dx = std::max(sz1.dx - sz2.dx, DpiScale(8));
-
-    int basePadX = DpiScale(14);
-    int padRight = DpiScale(14);
-    int textX = rc.x + basePadX;
-    if (!item->isHeader) {
-        textX += space2Dx;
-    }
-
-    Rect textRc = {textX, rc.y, std::max(rc.x + rc.dx - textX - padRight, 1), rc.dy};
-    u32 textFlags = gfxTextLeft | gfxTextVCenter | gfxTextEllipsis;
-    if (IsUIRtl()) {
-        int rtlTextX = rc.x + rc.dx - basePadX;
-        if (!item->isHeader) {
-            rtlTextX -= space2Dx;
-        }
-        textRc = {rc.x + padRight, rc.y, std::max(rtlTextX - (rc.x + padRight), 1), rc.dy};
-        textFlags = gfxTextRight | gfxTextVCenter | gfxTextEllipsis | gfxTextRtl;
-    }
-    if (len(item->text) > 0) {
-        gfx->DrawText(item->text, textRc, textFlags, font, txtCol);
-    }
-
-    return true;
+    return hbmp;
 }
 
 static void ShowTabSearchMenu(MainWindow* win) {
-    Vec<TabSearchMenuItemData*> menuItems;
-    defer {
-        DeleteVecMembers(menuItems);
-    };
-
-    auto addItem = [&](Str text, bool isHeader, bool isSeparator, bool isActiveTab, bool isDisabled, int id) {
-        auto* it = new TabSearchMenuItemData();
-        it->text = str::Dup(text);
-        it->isHeader = isHeader;
-        it->isSeparator = isSeparator;
-        it->isActiveTab = isActiveTab;
-        it->isDisabled = isDisabled;
-        it->id = id;
-        VecAppend(menuItems, it);
-        return it;
-    };
+    HMENU popup = CreatePopupMenu();
 
     // Section 1: Open Tabs
-    addItem(Tr("Open Tabs"), true, false, false, false, 0);
+    AppendMenuW(popup, MF_STRING | MF_DISABLED | MF_GRAYED, 0, CWStrTemp(ToWStrTemp(Tr("Open Tabs"))));
 
     auto tabs = win->Tabs();
     int nTabs = len(tabs);
@@ -14082,15 +13875,18 @@ static void ShowTabSearchMenu(MainWindow* win) {
         }
         const int kMaxRunes = 70;
         TempStr shortTitle = ShortenStringUtf8InTheMiddleTemp(title, kMaxRunes);
-        bool isActive = (tab == win->CurrentTab());
-        addItem(shortTitle, false, false, isActive, false, (int)(kOpenTabBase + (UINT_PTR)i));
+        TempStr safeTitle = MenuToSafeStringTemp(shortTitle);
+        UINT flags = MF_STRING;
+        if (tab == win->CurrentTab()) {
+            flags |= MF_CHECKED;
+        }
+        AppendMenuW(popup, flags, kOpenTabBase + (UINT_PTR)i, CWStrTemp(ToWStrTemp(safeTitle)));
     }
 
-    // Separator
-    addItem({}, false, true, false, false, 0);
+    AppendMenuW(popup, MF_SEPARATOR, 0, nullptr);
 
     // Section 2: Recently Closed
-    addItem(Tr("Recently Closed"), true, false, false, false, 0);
+    AppendMenuW(popup, MF_STRING | MF_DISABLED | MF_GRAYED, 0, CWStrTemp(ToWStrTemp(Tr("Recently Closed"))));
 
     StrVec recentCandidates;
     FileHistoryGetRecentlyClosed(recentCandidates, 15);
@@ -14146,7 +13942,7 @@ static void ShowTabSearchMenu(MainWindow* win) {
     }
 
     if (len(filteredRecent) == 0) {
-        addItem(Tr("(None)"), false, false, false, true, 0);
+        AppendMenuW(popup, MF_STRING | MF_DISABLED | MF_GRAYED, 0, CWStrTemp(ToWStrTemp(Tr("(None)"))));
     } else {
         for (int i = 0; i < len(filteredRecent); i++) {
             Str p = filteredRecent[i];
@@ -14156,29 +13952,34 @@ static void ShowTabSearchMenu(MainWindow* win) {
             }
             const int kMaxRunes = 70;
             TempStr shortName = ShortenStringUtf8InTheMiddleTemp(baseName, kMaxRunes);
-            addItem(shortName, false, false, false, false, (int)(kRecentBase + (UINT_PTR)i));
+            TempStr safeName = MenuToSafeStringTemp(shortName);
+            AppendMenuW(popup, MF_STRING, kRecentBase + (UINT_PTR)i, CWStrTemp(ToWStrTemp(safeName)));
         }
     }
 
-    HMENU popup = CreatePopupMenu();
-
-    int nItems = len(menuItems);
-    for (int i = 0; i < nItems; i++) {
-        auto* it = menuItems[i];
+    // Set custom checkmark spacer bitmaps to give comfortable, touch-friendly item height on clickable items
+    int dxSpacer = DpiScale(20);
+    int dySpacer = DpiScale(26);
+    HBITMAP hbmpChecked = CreateMenuSpacerBitmap(dxSpacer, dySpacer, true, ThemeWindowTextColor());
+    HBITMAP hbmpUnchecked = CreateMenuSpacerBitmap(dxSpacer, dySpacer, false, ThemeWindowTextColor());
+    int itemCount = GetMenuItemCount(popup);
+    for (int i = 0; i < itemCount; i++) {
         MENUITEMINFOW mii{};
-        mii.cbSize = sizeof(MENUITEMINFOW);
-        mii.fMask = MIIM_FTYPE | MIIM_ID | MIIM_DATA;
-        mii.fType = MFT_OWNERDRAW;
-        if (it->isSeparator) {
-            mii.fType |= MFT_SEPARATOR;
+        mii.cbSize = sizeof(mii);
+        mii.fMask = MIIM_FTYPE | MIIM_STATE | MIIM_ID;
+        if (!GetMenuItemInfoW(popup, (uint)i, TRUE, &mii)) {
+            continue;
         }
-        if (it->isHeader || it->isDisabled) {
-            mii.fMask |= MIIM_STATE;
-            mii.fState = MFS_DISABLED;
+        if (mii.fType & MFT_SEPARATOR) {
+            continue;
         }
-        mii.wID = (UINT)it->id;
-        mii.dwItemData = (ULONG_PTR)it;
-        InsertMenuItemW(popup, (UINT)i, TRUE, &mii);
+        if ((mii.fState & (MFS_DISABLED | MFS_GRAYED)) || mii.wID < kOpenTabBase) {
+            continue;
+        }
+        mii.fMask = MIIM_CHECKMARKS;
+        mii.hbmpChecked = hbmpChecked;
+        mii.hbmpUnchecked = hbmpUnchecked;
+        SetMenuItemInfoW(popup, (uint)i, TRUE, &mii);
     }
 
     Rect btnRect = win->captionBtn[CB_SYSTEM_MENU].rect;
@@ -14195,16 +13996,17 @@ static void ShowTabSearchMenu(MainWindow* win) {
         flags = TPM_RIGHTALIGN | TPM_TOPALIGN | TPM_VERTICAL | TPM_LAYOUTRTL | TPM_RETURNCMD;
     }
 
-    g_inTabSearchMenu = true;
-    g_tabSearchCbtHook = SetWindowsHookExW(WH_CBT, TabSearchCbtHook, nullptr, GetCurrentThreadId());
+    MarkMenuOwnerDraw(popup);
     int chosen = (int)TrackPopupMenuEx(popup, flags, x, y, win->hwndFrame, &tpm);
-    if (g_tabSearchCbtHook) {
-        UnhookWindowsHookEx(g_tabSearchCbtHook);
-        g_tabSearchCbtHook = nullptr;
-    }
-    g_inTabSearchMenu = false;
-
+    FreeMenuOwnerDrawInfoData(popup);
     DestroyMenu(popup);
+
+    if (hbmpChecked) {
+        DeleteObject(hbmpChecked);
+    }
+    if (hbmpUnchecked) {
+        DeleteObject(hbmpUnchecked);
+    }
 
     if (chosen >= (int)kOpenTabBase && chosen < (int)kRecentBase) {
         int tabIdx = chosen - (int)kOpenTabBase;
@@ -15325,9 +15127,6 @@ static LRESULT CALLBACK WndProcSumatraFrame(HWND hwnd, UINT msg, WPARAM wp, LPAR
             return FrameOnCommand(win, hwnd, msg, wp, lp);
 
         case WM_MEASUREITEM:
-            if (TabSearchMenuMeasureItem(hwnd, (MEASUREITEMSTRUCT*)lp)) {
-                return TRUE;
-            }
             if (ThemeColorizeControls()) {
                 MenuCustomDrawMesureItem(hwnd, (MEASUREITEMSTRUCT*)lp);
                 return TRUE;
@@ -15335,9 +15134,6 @@ static LRESULT CALLBACK WndProcSumatraFrame(HWND hwnd, UINT msg, WPARAM wp, LPAR
             break;
 
         case WM_DRAWITEM:
-            if (TabSearchMenuDrawItem(hwnd, (DRAWITEMSTRUCT*)lp)) {
-                return TRUE;
-            }
             if (ThemeColorizeControls()) {
                 MenuCustomDrawItem(hwnd, (DRAWITEMSTRUCT*)lp);
                 return TRUE;
