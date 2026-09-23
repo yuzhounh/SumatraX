@@ -83,7 +83,7 @@ static TempStr MarkdownBrowserNavigationUrl(Str url) {
 // link to another page (VirtualUrlToFileTemp() resolves the name to a .md file).
 static bool IsBrowserViewableExt(Str urlOrPath) {
     static SeqStrings exts =
-        ".md\0.markdown\0.html\0.htm\0.xhtml\0.txt\0.css\0.js\0.json\0"
+        ".md\0.markdown\0.html\0.htm\0.xhtml\0.txt\0.log\0.css\0.js\0.json\0"
         ".svg\0.png\0.apng\0.jpg\0.jpeg\0.gif\0.bmp\0.webp\0.avif\0.ico\0";
     TempStr ext = path::GetExtTemp(urlOrPath);
     return len(ext) == 0 || SeqStrIndexIS(exts, ext) >= 0;
@@ -244,7 +244,13 @@ Str MarkdownModel::GetFilePath() const {
 }
 
 Str MarkdownModel::GetDefaultFileExt() const {
-    return isHtml ? StrL(".html") : StrL(".md");
+    if (isHtml) {
+        return StrL(".html");
+    }
+    if (isTxt) {
+        return StrL(".txt");
+    }
+    return StrL(".md");
 }
 
 int MarkdownModel::PageCount() const {
@@ -264,7 +270,7 @@ int MarkdownModel::CurrentPageNo() const {
 
 // the TOC is also built on a background thread, which has no model to ask, so
 // this takes the two fields it needs instead of being a method
-static TempStr FileToVirtualUrlTemp(Str filePath, Str baseDir, bool isHtml) {
+static TempStr FileToVirtualUrlTemp(Str filePath, Str baseDir, bool isHtml, bool isTxt = false) {
     if (len(filePath) == 0) {
         return {};
     }
@@ -277,8 +283,8 @@ static TempStr FileToVirtualUrlTemp(Str filePath, Str baseDir, bool isHtml) {
     // read back as url syntax (issue #6140). '.' stays literal, so the extension
     // below is still trimmed by length.
     rel = url::EncodePathTemp(rel);
-    if (isHtml) {
-        // .html files are served raw, so keep their real name/extension
+    if (isHtml || isTxt) {
+        // .html and plain text files are served raw / under their own extension
         return fmt("%s%s", Str(kMdVirtualHost, kMdVirtualHostLen), rel);
     }
     Str relStr = rel;
@@ -291,7 +297,7 @@ static TempStr FileToVirtualUrlTemp(Str filePath, Str baseDir, bool isHtml) {
 }
 
 TempStr MarkdownModel::FileToVirtualUrlTemp(Str filePath) const {
-    return ::FileToVirtualUrlTemp(filePath, baseDir, isHtml);
+    return ::FileToVirtualUrlTemp(filePath, baseDir, isHtml, isTxt);
 }
 
 TempStr MarkdownModel::VirtualUrlToFileTemp(Str url) const {
@@ -305,21 +311,21 @@ TempStr MarkdownModel::VirtualUrlToFileTemp(Str url) const {
     }
     // url path -> file path: decode first, a '/' or '\' can't be in a file name
     TempStr rel = str::ReplaceTemp(url::DecodeTemp(pathPart), StrL("/"), StrL("\\"));
-    if (isHtml) {
+    if (isHtml || isTxt) {
         // page urls keep their real name; images/links resolve against baseDir too
         return path::JoinTemp(baseDir, rel);
+    }
+    TempStr direct = path::JoinTemp(baseDir, rel);
+    if (pages.Find(direct) >= 0 || file::Exists(direct)) {
+        return direct;
     }
     if (str::EndsWithI(rel, StrL(".html"))) {
         // a page url made by FileToVirtualUrlTemp(): <name>.html for <name>.md
         rel.len -= 5;
-    } else {
-        // a file referenced by its real name: an image, a raw link to
-        // another .md file etc.
-        TempStr direct = path::JoinTemp(baseDir, rel);
-        if (pages.Find(direct) >= 0 || file::Exists(direct)) {
-            return direct;
-        }
-        // fall through: possibly an extension-less link to a page
+    }
+    direct = path::JoinTemp(baseDir, rel);
+    if (pages.Find(direct) >= 0 || file::Exists(direct)) {
+        return direct;
     }
     TempStr mdPath = path::JoinTemp(baseDir, Str(str::JoinTemp(rel, StrL(".md"))));
     if (pages.Find(mdPath) >= 0) {
@@ -887,16 +893,24 @@ Str MarkdownModel::GetDataForUrl(Str url) {
         free(js);
     } else {
         TempStr filePath = VirtualUrlToFileTemp(plainUrl);
+        FileType fileKind = filePath ? GuessFileType(filePath, true) : FileType::Unknown;
         // in html mode every resource (the page, images, linked pages) is served raw;
-        // in markdown mode .md/.markdown/.html are rendered to a styled page and other
-        // resources (images) are served raw
-        bool renderMd = !isHtml && filePath &&
-                        (str::EndsWithI(filePath, StrL(".md")) || str::EndsWithI(filePath, StrL(".markdown")) ||
-                         str::EndsWithI(filePath, StrL(".html")));
+        // in markdown mode .md/.markdown/.html are rendered to a styled page;
+        // plain text (.txt, .log) is wrapped in a styled card;
+        // and other resources (images) are served raw
+        bool renderMd = !isHtml && !isTxt && filePath &&
+                        (fileKind == FileType::Markdown || str::EndsWithI(filePath, StrL(".md")) ||
+                         str::EndsWithI(filePath, StrL(".markdown")) || str::EndsWithI(filePath, StrL(".html")));
+        bool renderTxt = (isTxt || fileKind == FileType::Txt) && filePath;
         if (renderMd) {
             Str md = file::ReadFile(filePath);
             if (md) {
                 data = MarkdownToHtmlPage(md);
+            }
+        } else if (renderTxt) {
+            Str txt = file::ReadFile(filePath);
+            if (txt) {
+                data = PlainTextToHtmlPage(txt);
             }
         } else if (filePath) {
             data = file::ReadFile(filePath);
@@ -974,7 +988,7 @@ void MarkdownModel::GetDisplayState(FileState* fs) {
 void MarkdownModel::CreateThumbnail(Size /*size*/, const OnBitmapRendered* /*saveThumbnail*/) {}
 
 bool MarkdownModel::IsSupportedFileType(FileType kind) {
-    return kind == FileType::Markdown || kind == FileType::HTML;
+    return kind == FileType::Markdown || kind == FileType::HTML || kind == FileType::Txt;
 }
 
 bool MarkdownModel::IsHtmlFileType(FileType kind) {
@@ -1048,11 +1062,11 @@ static void AppendFileTocTraceItem(Vec<MarkdownTocTraceItem>& tocTrace, Str file
 // .html file to find its headings takes minutes in a directory with thousands
 // of them (#5918), so the document opens with this and BuildFullToc() replaces
 // it when it's ready.
-static TocTree* BuildFilesOnlyToc(Arena* arena, StrVec& pages, Str baseDir, bool isHtml) {
+static TocTree* BuildFilesOnlyToc(Arena* arena, StrVec& pages, Str baseDir, bool isHtml, bool isTxt = false) {
     Vec<MarkdownTocTraceItem> tocTrace;
     for (int i = 0; i < len(pages); i++) {
         Str filePath = pages[i];
-        AppendFileTocTraceItem(tocTrace, filePath, FileToVirtualUrlTemp(filePath, baseDir, isHtml), i + 1);
+        AppendFileTocTraceItem(tocTrace, filePath, FileToVirtualUrlTemp(filePath, baseDir, isHtml, isTxt), i + 1);
     }
     TocTree* res = BuildTocTreeFromTrace(arena, tocTrace);
     FreeTocTrace(tocTrace);
@@ -1153,7 +1167,22 @@ bool MarkdownModel::Load(Str fileName) {
     }
     str::ReplaceWithCopy(&this->fileName, fileName);
     str::ReplaceWithCopy(&baseDir, path::GetDirTemp(fileName));
-    isHtml = IsHtmlFileType(GuessFileType(fileName, true));
+    FileType kind = GuessFileType(fileName, true);
+    isTxt = (kind == FileType::Txt);
+    isHtml = IsHtmlFileType(kind);
+
+    if (isTxt) {
+        pages.Reset();
+        pages.Append(fileName);
+        Arena* tocArena = ArenaNew();
+        tocTree = BuildFilesOnlyToc(tocArena, pages, baseDir, isHtml, isTxt);
+        if (!tocTree) {
+            ArenaDelete(tocArena);
+        }
+        currentPageNo = 1;
+        currentPageUrl = {};
+        return true;
+    }
 
     StrVec mdFiles;
     CollectMarkdownFiles(baseDir, fileName, isHtml, mdFiles);
@@ -1164,7 +1193,7 @@ bool MarkdownModel::Load(Str fileName) {
     pages = mdFiles;
     // show the files right away, then fill in the headings in the background
     Arena* tocArena = ArenaNew();
-    tocTree = BuildFilesOnlyToc(tocArena, pages, baseDir, isHtml);
+    tocTree = BuildFilesOnlyToc(tocArena, pages, baseDir, isHtml, isTxt);
     if (!tocTree) {
         ArenaDelete(tocArena);
     }

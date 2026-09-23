@@ -89,6 +89,10 @@ void CollectVirtCtrls(ILayout* root, Vec<VirtCtrl*>& out) {
         VecAppend(out, w);
         return;
     }
+    // a collapsed container (e.g. a hidden toolbar row) keeps stale child bounds: don't paint / hit-test them
+    if (IsCollapsed(root)) {
+        return;
+    }
     int n = root->LayoutChildCount();
     for (int i = 0; i < n; i++) {
         CollectVirtCtrls(root->LayoutChildAt(i), out);

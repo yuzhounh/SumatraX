@@ -844,10 +844,10 @@ OverlayScrollbar* OverlayScrollbarCreate(HWND hwndOwner, OverlayScrollbar::Type 
     sb->type = type;
     sb->mode = mode;
     sb->thinWidth = DpiScale(8);
-    sb->thickWidth = DpiScale(18);
+    sb->thickWidth = DpiScale(16);
     int sysWidth = DpiGetSystemMetrics(IsVert(sb) ? SM_CXVSCROLL : SM_CYHSCROLL);
     if (sysWidth > 0) {
-        sb->thickWidth = std::max(sysWidth, DpiScale(18));
+        sb->thickWidth = std::max(sysWidth, DpiScale(16));
     }
     DWORD exStyle = WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT | WS_EX_NOACTIVATE;
     DWORD style = WS_POPUP;

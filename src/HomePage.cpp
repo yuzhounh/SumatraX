@@ -3241,10 +3241,11 @@ void HomePageRelayout(MainWindow* win) {
         SaveHomeLayoutCache(l, filterText, win->homePageScrollY);
     }
     HomePageSyncChrome(l);
-    PlaceHomeSearchEdit(win, l.rcSearchBorder);
+    // show before placing: layout skips a collapsed edit, leaving it at (0,0)
     if (win->homeSearch) {
         win->homeSearch->SetIsVisible(true);
     }
+    PlaceHomeSearchEdit(win, l.rcSearchBorder);
     UpdateHomeSearchCueBanner(win);
     UpdateHomeOverlayScrollbar(win);
 }

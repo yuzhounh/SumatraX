@@ -143,7 +143,7 @@ static int gCustomButtonsCount = 0;
 
 // Light theme ControlBackgroundColor is white, which is what the old themed
 // rebar/toolbar painted. Other themes use their control background.
-static Color TbBgColor() {
+Color TbBgColor() {
     return ThemeControlBackgroundColor();
 }
 
@@ -154,7 +154,7 @@ Color TbTextColor() {
     return ThemeWindowTextColor();
 }
 
-static Color TbDisabledColor() {
+Color TbDisabledColor() {
     if (IsCurrentThemeDefault() && !ThemeColorizeControls()) {
         return SysDisabledTextColor();
     }
@@ -228,8 +228,18 @@ VirtCtrl* ToolbarItemFromPoint(MainWindow* win, Point pt) {
             return w;
         }
     }
+    bool annotationsVisible = tb->annotationRow && !IsCollapsed(tb->annotationRow);
     for (VirtCtrl* w : tb->annotationItems) {
-        if (!w || w->GetVisibility() != Visibility::Visible) {
+        if (!annotationsVisible || !w || w->GetVisibility() != Visibility::Visible) {
+            continue;
+        }
+        if (w->BoundsInWindow().Contains(pt)) {
+            return w;
+        }
+    }
+    bool findVisible = tb->findRow && !IsCollapsed(tb->findRow);
+    for (VirtCtrl* w : tb->findItems) {
+        if (!findVisible || !w || w->GetVisibility() != Visibility::Visible) {
             continue;
         }
         if (w->BoundsInWindow().Contains(pt)) {
@@ -738,6 +748,39 @@ static void SetToolbarButtonToolTipByIdx(MainWindow* win, int idx, int cmdId, St
     w->SetTooltip(ToolbarTipTemp(cmdId, s, false));
 }
 
+int ToolbarVisibleRowCount(MainWindow* win) {
+    ToolbarVirt* tb = win ? win->toolbarVirt : nullptr;
+    if (!tb) {
+        return 1;
+    }
+    int count = 1;
+    if (tb->annotationRow && tb->annotationRow->GetVisibility() == Visibility::Visible) {
+        count++;
+    }
+    if (tb->findRow && tb->findRow->GetVisibility() == Visibility::Visible) {
+        count++;
+    }
+    return count;
+}
+
+void SetFindRowVisible(MainWindow* win, bool visible) {
+    ToolbarVirt* tb = win ? win->toolbarVirt : nullptr;
+    if (!tb || !tb->findRow) {
+        return;
+    }
+    Visibility want = visible ? Visibility::Visible : Visibility::Collapse;
+    if (tb->findRow->GetVisibility() == want) {
+        return;
+    }
+    tb->findRow->SetVisibility(want);
+    FindBarSetEditVisible(win, visible);
+    SetToolbarButtonCheckedState(win, CmdFindFirst, visible);
+    ToolbarSetHeight(win, tb->rowDy * ToolbarVisibleRowCount(win));
+    tb->host->Relayout();
+    tb->host->Invalidate(true);
+    ScheduleUiUpdate(win, kUiForceRelayout | kUiToolbarDirty);
+}
+
 static void SetPdfAnnotationsToolbarVisible(MainWindow* win, bool visible) {
     ToolbarVirt* tb = win ? win->toolbarVirt : nullptr;
     if (!tb || !tb->annotationRow) {
@@ -749,7 +792,7 @@ static void SetPdfAnnotationsToolbarVisible(MainWindow* win, bool visible) {
     }
     tb->annotationRow->SetVisibility(want);
     SetToolbarButtonCheckedState(win, CmdToggleEditPDF, visible);
-    ToolbarSetHeight(win, tb->rowDy * (visible ? 2 : 1));
+    ToolbarSetHeight(win, tb->rowDy * ToolbarVisibleRowCount(win));
     tb->host->Relayout();
     tb->host->Invalidate(true);
     if (visible) {
@@ -1374,7 +1417,7 @@ int ToolbarIconSize() {
     return RoundUp(DpiScale(gSettings->toolbarSize), 4);
 }
 
-static void ApplyToolbarItemColors(VirtCtrl* w) {
+void ApplyToolbarItemColors(VirtCtrl* w) {
     Color hover = TbHoverColor();
     Color sel = TbSelectedColor();
     if (auto* ib = AsVirtIconButton(w)) {
@@ -3372,7 +3415,9 @@ static void BuildToolbarLayout(MainWindow* win) {
     ToolbarVirt* tb = win->toolbarVirt;
     VecReset(tb->items);
     VecReset(tb->annotationItems);
+    VecReset(tb->findItems);
     tb->annotationRow = nullptr;
+    tb->findRow = nullptr;
     tb->pageLabel = nullptr;
     tb->pageLabel2 = nullptr;
     tb->pageTotal = nullptr;
@@ -3533,6 +3578,10 @@ static void BuildToolbarLayout(MainWindow* win) {
     tb->annotationRow = new Padding(annotationBox, Insets{0, DpiScale(4), 0, DpiScale(4)});
     tb->annotationRow->SetVisibility(Visibility::Collapse);
     root->AddChild(tb->annotationRow);
+    tb->findRow = BuildFindToolbarRow(win);
+    if (tb->findRow) {
+        root->AddChild(tb->findRow);
+    }
     tb->host->SetLayout(root);
 }
 
