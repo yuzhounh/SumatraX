@@ -78,6 +78,7 @@ struct MarkdownModel : DocController {
     // true when displaying .html/.htm files: they are served to the browser raw
     // instead of being rendered from markdown, and the sibling TOC scans .html
     bool isHtml = false;
+    bool isTxt = false;
     StrVec pages;
     int currentPageNo = 1;
     Str currentPageUrl;

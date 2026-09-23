@@ -2075,6 +2075,9 @@ static bool ShouldUseBrowserView(FileType kind) {
     if (MarkdownModel::IsHtmlFileType(kind)) {
         return !gSettings->htmlUI.useFixedPageUI;
     }
+    if (kind == FileType::Txt) {
+        return true;
+    }
     if (MarkdownModel::IsSupportedFileType(kind)) {
         return !gSettings->markdownUI.useFixedPageUI;
     }
@@ -7151,6 +7154,10 @@ static void FinishNextPrevDirScan(NextPrevDirScanResult* r) {
         if (IsAtDocumentBottom(w)) {
             MaybeShowNextFileScrollHint(w);
         }
+        DisplayModel* dm = w->AsFixed();
+        if (dm && dm->GetEngine() && dm->GetEngine()->kind == kindEngineImage) {
+            ScheduleRepaint(w, 0);
+        }
     }
 }
 
@@ -7528,6 +7535,132 @@ static void DeleteCurrentFileAndOpenNext(MainWindow* win) {
     OpenNextPrevFileInFolder(win, true, path);
 }
 
+bool IsSupportedImageFileType(FileType kind) {
+    return IsEngineImageSupportedFileType(kind) || kind == FileType::Svg;
+}
+
+bool IsCurrentTabImage(MainWindow* win) {
+    WindowTab* tab = win ? win->CurrentTab() : nullptr;
+    if (!tab || len(tab->filePath) == 0) {
+        return false;
+    }
+    FileType kind = GuessFileTypeFromName(tab->filePath, true);
+    return IsSupportedImageFileType(kind);
+}
+
+static Str gFolderImagesDir;
+static StrVec gFolderImagesCache;
+
+bool GetFolderImageInfo(Str filePath, int& currOut, int& totalOut) {
+    currOut = 0;
+    totalOut = 0;
+    if (len(filePath) == 0 || !CanAccessDisk() || gPluginMode) {
+        return false;
+    }
+    FileType fileKind = GuessFileTypeFromName(filePath, true);
+    if (!IsSupportedImageFileType(fileKind)) {
+        return false;
+    }
+    TempStr dir = path::GetDirTemp(filePath);
+    bool needRefresh = !path::IsSame(dir, gFolderImagesDir);
+    if (!needRefresh) {
+        int idx = -1;
+        for (int i = 0; i < len(gFolderImagesCache); i++) {
+            if (path::IsSame(gFolderImagesCache.At(i), filePath)) {
+                idx = i;
+                break;
+            }
+        }
+        if (idx < 0) {
+            needRefresh = true;
+        }
+    }
+    if (needRefresh) {
+        str::ReplaceWithCopy(&gFolderImagesDir, dir);
+        gFolderImagesCache.Reset();
+        DirIter di{dir};
+        for (DirIterEntry* de : di) {
+            FileType kind = GuessFileTypeFromName(de->filePath, true);
+            if (IsSupportedImageFileType(kind)) {
+                gFolderImagesCache.Append(de->filePath);
+            }
+        }
+        SortNatural(&gFolderImagesCache);
+    }
+    int total = len(gFolderImagesCache);
+    int idx = -1;
+    for (int i = 0; i < total; i++) {
+        if (path::IsSame(gFolderImagesCache.At(i), filePath)) {
+            idx = i;
+            break;
+        }
+    }
+    if (idx < 0) {
+        gFolderImagesCache.Append(filePath);
+        SortNatural(&gFolderImagesCache);
+        total = len(gFolderImagesCache);
+        for (int i = 0; i < total; i++) {
+            if (path::IsSame(gFolderImagesCache.At(i), filePath)) {
+                idx = i;
+                break;
+            }
+        }
+    }
+    if (total <= 0 || idx < 0) {
+        return false;
+    }
+    currOut = idx + 1;
+    totalOut = total;
+    return true;
+}
+
+void OpenNextPrevImageInFolder(MainWindow* win, bool forward) {
+    ReportIf(win->IsCurrentTabAbout());
+    if (win->IsCurrentTabAbout() || !CanAccessDisk() || gPluginMode) {
+        return;
+    }
+    WindowTab* tab = win->CurrentTab();
+    if (!tab || len(tab->filePath) == 0) {
+        return;
+    }
+    Str path = tab->filePath;
+    int curr = 0, total = 0;
+    if (!GetFolderImageInfo(path, curr, total) || total < 2) {
+        ShowNoFileToOpenNotif(win, forward);
+        return;
+    }
+    int curIdx = curr - 1;
+    int nextIdx = curIdx + (forward ? 1 : -1);
+    if (nextIdx < 0 || nextIdx >= total) {
+        ShowNoFileToOpenNotif(win, forward);
+        return;
+    }
+    Str chosen = gFolderImagesCache.At(nextIdx);
+    if (!file::Exists(chosen)) {
+        ShowNoFileToOpenNotif(win, forward);
+        return;
+    }
+
+    if (!MaybeSaveAnnotations(tab)) {
+        return;
+    }
+    if (!IsMainWindowValidAndNotClosing(win)) {
+        return;
+    }
+    tab->askedToSaveAnnotations = false;
+    UpdateTabFileDisplayStateForTab(tab);
+
+    auto* d = new NextPrevFileInFolderData;
+    d->win = win;
+    d->forward = forward;
+    d->path = str::Dup(chosen);
+    d->pathToDelete = {};
+    LoadArgs args(chosen, win);
+    args.forceReuse = true;
+    args.onFinished = MkFunc1<NextPrevFileInFolderData, bool>(OnNextPrevFileInFolderLoaded, d);
+    StartLoadDocument(&args);
+}
+
 constexpr int kSidebarMinDx = 150;
 constexpr int kTocMinDy = 100;
 
@@ -7624,7 +7757,8 @@ static void SyncCaptionLayout(MainWindow* win) {
     int tabBtn = twoRow ? menuBarDy : tabHeight;
 
     auto setBtn = [&](int id, bool vis, int sz) {
-        win->capBtn[id]->idealSize = {sz, sz};
+        // full caption height so every glyph centers on the same line as min/max/close
+        win->capBtn[id]->idealSize = {sz, winBtn};
         SetVis(win->capBtn[id], vis);
         win->captionBtn[id].id = id;
         win->captionBtn[id].visible = vis;
@@ -7647,6 +7781,10 @@ static void SyncCaptionLayout(MainWindow* win) {
     SetVis(win->capRow2Trail, twoRow && hasFileTabs);
 
     win->capGap->dx = kTabsButtonGapX;
+    // tabs sit below the top pad: lift their content to the caption's center line
+    if (win->tabsCtrl) {
+        win->tabsCtrl->contentDy = twoRow ? 0 : -(pad / 2);
+    }
     win->capTabsRow1->dy = tabHeight + 2;
     win->capTabsRow2->dy = tabHeight;
 
@@ -9405,6 +9543,18 @@ static bool FrameOnKeydown(MainWindow* win, WPARAM key, LPARAM lp) {
                 OpenNextPrevFileInFolder(win, true);
             }
             return true;
+        }
+    }
+
+    if (!IsCtrlPressed() && !IsShiftPressed() && !IsAltPressed()) {
+        if (key == VK_LEFT || key == VK_RIGHT) {
+            if (IsCurrentTabImage(win)) {
+                DisplayModel* dm = win->AsFixed();
+                if (!dm || !dm->NeedHScroll()) {
+                    OpenNextPrevImageInFolder(win, key == VK_RIGHT);
+                    return true;
+                }
+            }
         }
     }
 
@@ -12648,7 +12798,10 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             if (!win->IsDocLoaded()) {
                 return 0;
             }
-            if (dm && dm->NeedHScroll()) {
+            bool isImage = IsCurrentTabImage(win);
+            if (isImage && (!dm || !dm->NeedHScroll())) {
+                OpenNextPrevImageInFolder(win, false);
+            } else if (dm && dm->NeedHScroll()) {
                 SendMessageW(win->hwndCanvas, WM_HSCROLL, SB_LINELEFT, 0);
             } else if (dm) {
                 // manga (R2L): Left advances (issue #3964)
@@ -12672,7 +12825,10 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
             if (!win->IsDocLoaded()) {
                 return 0;
             }
-            if (dm && dm->NeedHScroll()) {
+            bool isImage = IsCurrentTabImage(win);
+            if (isImage && (!dm || !dm->NeedHScroll())) {
+                OpenNextPrevImageInFolder(win, true);
+            } else if (dm && dm->NeedHScroll()) {
                 SendMessageW(win->hwndCanvas, WM_HSCROLL, SB_LINERIGHT, 0);
             } else if (dm) {
                 // manga (R2L): Right goes back (issue #3964)
@@ -12750,6 +12906,8 @@ static LRESULT FrameOnCommand(MainWindow* win, HWND hwnd, UINT msg, WPARAM wp, L
         case CmdFindFirst:
             if (win->IsCurrentTabAbout()) {
                 HomePageFocusSearch(win);
+            } else if (IsFindBarVisible(win) && win->findEdit && win->findEdit->IsFocused()) {
+                HideFindBar(win);
             } else {
                 FindFirst(win);
             }
@@ -14504,15 +14662,15 @@ static void DrawCaptionButton(MainWindow* win, HDC hdc, ButtonInfo* bi) {
 
             Color glyphCol;
             if (stateId == kCbsInactive) {
-                glyphCol = MkRgb(153, 153, 153);
+                glyphCol = IsLightColor(bgc) ? MkRgb(0x5F, 0x63, 0x68) : MkRgb(0x9A, 0xA0, 0xA6);
             } else {
-                glyphCol = IsLightColor(bgc) ? MkRgb(0x44, 0x47, 0x46) : MkRgb(0xC4, 0xC7, 0xC5);
+                glyphCol = IsLightColor(bgc) ? MkRgb(0x1F, 0x1F, 0x1F) : MkRgb(0xF1, 0xF3, 0xF4);
             }
             float cx = (float)rButton.x + (float)rButton.dx / 2.0f;
             float cy = (float)rButton.y + (float)rButton.dy / 2.0f;
-            float halfW = (float)DpiScale(9) / 2.0f;
-            float halfH = (float)DpiScale(5) / 2.0f;
-            float strokeW = (float)DpiScale(18) / 10.0f;
+            float halfW = (float)DpiScale(kCaptionGlyphDip) / 2.0f;
+            float halfH = halfW / 2.0f;
+            float strokeW = (float)DpiScale(14) / 10.0f;
 
             gfx.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
             u8 r, g, b;

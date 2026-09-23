@@ -347,3 +347,8 @@ void ShowFileInFolder(MainWindow* win, Str path);
 void SmartZoom(MainWindow* win, float factor, Point* pt, bool smartZoom);
 TempStr GetSumatraDataDirTemp();
 TempStr GetSumatraBuildSpecificDirTemp();
+
+bool IsSupportedImageFileType(FileType kind);
+bool IsCurrentTabImage(MainWindow* win);
+bool GetFolderImageInfo(Str filePath, int& currOut, int& totalOut);
+void OpenNextPrevImageInFolder(MainWindow* win, bool forward);

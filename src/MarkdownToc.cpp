@@ -8,6 +8,7 @@
 
 #include "base/HtmlTags.h"
 
+#include "gui/Dpi.h"
 #include "Theme.h"
 #include "GumboHtmlParser.h"
 
@@ -16,6 +17,8 @@ extern "C" {
 #include "cmark-gfm-core-extensions.h"
 #include "node.h"
 }
+
+#include "Translations.h"
 #include "MarkdownToc.h"
 
 static bool IsMarkdownExt(Str path) {
@@ -399,10 +402,10 @@ void ParseMarkdownTocsParallel(StrVec& files, bool htmlMode, Vec<MarkdownFileToc
 
 static const char* kMarkdownPageCssFmt = R"(
 :root { %s }
-html { background: var(--canvas-bg); min-height: 100%%; }
+html { overflow-y: scroll; background: var(--canvas-bg); min-height: 100%%; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 16px;
-  line-height: 1.5; color: var(--fg); background: var(--bg); margin: 1.5rem auto; padding: 2.5rem 3.5rem; max-width: 980px;
-  border: 1px solid var(--border); box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 4px; box-sizing: border-box; min-height: calc(100vh - 3rem); }
+  line-height: 1.5; color: var(--fg); background: var(--bg); margin: 0 auto 1.5rem auto; padding: 2.5rem 3.5rem; max-width: 980px;
+  border: 1px solid var(--border); box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 4px; box-sizing: border-box; min-height: calc(100vh - 1.5rem); }
 @media (max-width: 1040px) {
   html { background: var(--bg); }
   body { margin: 0; border: none; box-shadow: none; border-radius: 0; padding: 1.5rem; min-height: 100vh; }
@@ -427,6 +430,22 @@ blockquote { margin: 0; padding: 0 1em; color: var(--muted); border-left: .25em 
 table { border-collapse: collapse; }
 table th, table td { border: 1px solid var(--border); padding: 6px 13px; }
 img { max-width: 100%%; }
+::-webkit-scrollbar { width: var(--sb-width); height: var(--sb-width); }
+::-webkit-scrollbar-track { background: var(--sb-track); }
+::-webkit-scrollbar-thumb { background: var(--sb-thumb); }
+::-webkit-scrollbar-thumb:hover { background: var(--sb-thumb-hover); }
+::-webkit-scrollbar-button { display: none; width: var(--sb-width); height: var(--sb-width); background-color: var(--sb-track); background-repeat: no-repeat; background-position: center; background-size: contain; }
+::-webkit-scrollbar-button:single-button:vertical:decrement { display: block; background-image: url("%s"); }
+::-webkit-scrollbar-button:single-button:vertical:increment { display: block; background-image: url("%s"); }
+::-webkit-scrollbar-button:single-button:horizontal:decrement { display: block; background-image: url("%s"); }
+::-webkit-scrollbar-button:single-button:horizontal:increment { display: block; background-image: url("%s"); }
+::-webkit-scrollbar-button:vertical:start:increment,
+::-webkit-scrollbar-button:vertical:end:decrement,
+::-webkit-scrollbar-button:horizontal:start:increment,
+::-webkit-scrollbar-button:horizontal:end:decrement { display: none; }
+::-webkit-scrollbar-button:hover { background-color: var(--sb-thumb); }
+::-webkit-scrollbar-corner { background: var(--sb-track); }
+pre.plain-text { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; overflow-x: auto; background: transparent; padding: 0; margin: 0; border-radius: 0; }
 )";
 
 // cmark emits <pre><code class="language-mermaid">…</code></pre> for ```mermaid
@@ -695,9 +714,12 @@ static void ProtectMathExpressions(str::Builder& out, Str md, Vec<MathItem>& ite
 
         // Inline math: $ ... $
         if (md.s[i] == '$' && i + 1 < n) {
+            char openPrev = (i > 0) ? md.s[i - 1] : 0;
+            bool prevAlpha = (openPrev >= 'a' && openPrev <= 'z') || (openPrev >= 'A' && openPrev <= 'Z') ||
+                             (openPrev >= '0' && openPrev <= '9');
             char nextChar = md.s[i + 1];
-            bool canOpen = (nextChar != ' ' && nextChar != '\t' && nextChar != '\r' && nextChar != '\n' &&
-                            nextChar != '$' && (nextChar < '0' || nextChar > '9'));
+            bool canOpen = !prevAlpha && (nextChar != ' ' && nextChar != '\t' && nextChar != '\r' && nextChar != '\n' &&
+                                          nextChar != '$');
             if (canOpen) {
                 int closeAt = -1;
                 int j = i + 1;
@@ -851,9 +873,49 @@ static TempStr MarkdownPageCssTemp() {
     TempStr border = isDefault ? str::DupTemp(StrL("#d0d7de")) : ColorToCssTemp(AccentColor(bgCol, 25));
     TempStr codeBg = isDefault ? str::DupTemp(StrL("#f6f8fa")) : ColorToCssTemp(AccentColor(bgCol, 8));
 
-    TempStr cssVars = fmt("--canvas-bg:%s; --bg:%s; --fg:%s; --link:%s; --muted:%s; --border:%s; --code-bg:%s;",
-                          canvasBg, bg, fg, link, muted, border, codeBg);
-    return fmt(kMarkdownPageCssFmt, cssVars);
+    Color controlBg = ThemeControlBackgroundColor();
+    TempStr sbTrack = ColorToCssTemp(controlBg);
+    TempStr sbThumb = ColorToCssTemp(AccentColor(controlBg, 40));
+    TempStr sbThumbHover = ColorToCssTemp(AccentColor(controlBg, 75));
+
+    Color arrowCol = AccentColor(controlBg, 75);
+    TempStr arrowFill =
+        fmt("%%23%02x%02x%02x", (int)GetRValue(arrowCol), (int)GetGValue(arrowCol), (int)GetBValue(arrowCol));
+
+    TempStr upArrowUrl =
+        fmt("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 "
+            "8'><polygon points='4,2.1 1.3,5.9 6.7,5.9' fill='%s'/></svg>",
+            arrowFill);
+    TempStr downArrowUrl =
+        fmt("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 "
+            "8'><polygon points='1.3,2.1 6.7,2.1 4,5.9' fill='%s'/></svg>",
+            arrowFill);
+    TempStr leftArrowUrl =
+        fmt("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 "
+            "8'><polygon points='5.9,1.3 5.9,6.7 2.1,4' fill='%s'/></svg>",
+            arrowFill);
+    TempStr rightArrowUrl =
+        fmt("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 "
+            "8'><polygon points='2.1,1.3 2.1,6.7 5.9,4' fill='%s'/></svg>",
+            arrowFill);
+
+    int curDpi = DpiGet();
+    if (curDpi <= 0) {
+        curDpi = 96;
+    }
+    int thickWidth = DpiScale(16);
+    int sysWidth = DpiGetSystemMetrics(SM_CXVSCROLL);
+    if (sysWidth > 0) {
+        thickWidth = std::max(sysWidth, DpiScale(16));
+    }
+    int sbWidthCss = MulDiv(thickWidth, 96, curDpi);
+    sbWidthCss = std::max(sbWidthCss, 16);
+
+    TempStr cssVars =
+        fmt("--canvas-bg:%s; --bg:%s; --fg:%s; --link:%s; --muted:%s; --border:%s; --code-bg:%s; --sb-track:%s; "
+            "--sb-thumb:%s; --sb-thumb-hover:%s; --sb-width:%dpx;",
+            canvasBg, bg, fg, link, muted, border, codeBg, sbTrack, sbThumb, sbThumbHover, sbWidthCss);
+    return fmt(kMarkdownPageCssFmt, cssVars, upArrowUrl, downArrowUrl, leftArrowUrl, rightArrowUrl);
 }
 
 // Markdown pages are exposed to WebView2 as generated .html resources. Keep
@@ -1119,6 +1181,39 @@ Str MarkdownToHtmlPage(Str markdown) {
     return html.TakeStr();
 }
 
+Str PlainTextToHtmlPage(Str text) {
+    str::Builder html;
+    html.Append(
+        StrL("<!DOCTYPE html><html><head><meta charset=\"utf-8\">"
+             "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+             "<style>"));
+    html.Append(Str(MarkdownPageCssTemp()));
+    html.Append(StrL("</style></head><body><pre class=\"plain-text\">"));
+
+    constexpr int kMaxDirectRenderBytes = 5 * 1024 * 1024;
+    constexpr int kTruncateBytes = 2 * 1024 * 1024;
+    bool isTruncated = false;
+    Str toRender = text;
+    if (len(text) > kMaxDirectRenderBytes) {
+        toRender = Str(text.s, kTruncateBytes);
+        isTruncated = true;
+    }
+
+    AppendHtmlEscaped(html, toRender);
+    html.Append(StrL("</pre>"));
+
+    if (isTruncated) {
+        html.Append(
+            fmt("<p style=\"color:var(--muted);font-size:13px;margin-top:1.5rem;text-align:center;\">"
+                "%s (%.1f MB / %.1f MB)</p>",
+                Tr("File is large; displaying first part only"), (double)kTruncateBytes / (1024.0 * 1024.0),
+                (double)len(text) / (1024.0 * 1024.0)));
+    }
+
+    html.Append(StrL("</body></html>"));
+    return html.TakeStr();
+}
+
 bool MarkdownToc_UnitTestHtmlLinks() {
     // GitHub's slug rules: '_' survives, punctuation is dropped, each space
     // becomes its own '-'. Generated register docs link to "#intr_state" and
@@ -1264,13 +1359,17 @@ bool MarkdownToc_UnitTestMath() {
         "Inline: $X=[x_1^T\\dots x_n^T]\\in\\mathbb{R}^{n\\times d}$ and $Y\\in[0,1]^{n\\times K}$.\n\n"
         "Matrix:\n\n"
         "$$\\Theta=\\begin{bmatrix}B\\\\x^T\\end{bmatrix}\\tag{5}$$\n\n"
-        "Code: `$not_math$`\n\n```math\n\\frac{1}{2}\n```\n");
+        "Code: `$not_math$`\n\n```math\n\\frac{1}{2}\n```\n\n"
+        "Digit prefix: $0<p<1, h_{p,\\epsilon}(r)$ and $1\\le\\nu_a\\le2$。中文$t^{p_a}$\n\n"
+        "Currency: costs $10 and $20, or $10-$20.\n");
 
     Vec<MathItem> items;
     str::Builder protectedMd;
     ProtectMathExpressions(protectedMd, md, items);
 
-    if (len(items) != 5) {
+    // 5 original items + 3 new inline formulas ($0<p<1...$, $1\le\nu_a\le2$, $t^{p_a}$) = 8 items
+    // Currency $10 and $20, $10-$20 must not be matched.
+    if (len(items) != 8) {
         return false;
     }
 
@@ -1289,6 +1388,10 @@ bool MarkdownToc_UnitTestMath() {
               str::Contains(html, StrL("<span class=\"math-inline\">$X=[x_1^T")) &&
               str::Contains(html, StrL("<span class=\"math-inline\">$Y\\in[0,1]")) &&
               str::Contains(html, StrL("\\begin{bmatrix}B\\\\x^T\\end{bmatrix}\\tag{5}")) &&
-              str::Contains(html, StrL("\\frac{1}{2}")) && str::Contains(html, StrL("<code>$not_math$</code>"));
+              str::Contains(html, StrL("\\frac{1}{2}")) && str::Contains(html, StrL("<code>$not_math$</code>")) &&
+              str::Contains(html, StrL("<span class=\"math-inline\">$0&lt;p&lt;1, h_{p,\\epsilon}(r)$</span>")) &&
+              str::Contains(html, StrL("<span class=\"math-inline\">$1\\le\\nu_a\\le2$</span>")) &&
+              str::Contains(html, StrL("<span class=\"math-inline\">$t^{p_a}$</span>")) &&
+              str::Contains(html, StrL("$10 and $20")) && str::Contains(html, StrL("$10-$20"));
     return ok;
 }

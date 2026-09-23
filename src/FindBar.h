@@ -4,7 +4,9 @@
 struct MainWindow;
 struct FindBarWnd;
 struct PlatformFont;
+struct ILayout;
 
+ILayout* BuildFindToolbarRow(MainWindow* win);
 FindBarWnd* CreateFindBar(MainWindow* win);
 void DeleteFindBar(MainWindow* win);
 void RecreateFindBar(MainWindow* win);
@@ -16,6 +18,7 @@ void HideFindBar(MainWindow* win);
 bool IsFindBarVisible(MainWindow* win);
 bool IsFindUIVisible(MainWindow* win);
 void FindBarReposition(MainWindow* win);
+void FindBarSetEditVisible(MainWindow* win, bool visible);
 void FindBarSetStatus(MainWindow* win, Str s, int totalHits = -1);
 int FindStatusDx(PlatformFont* font, int totalHits, bool capped);
 void StartPickedFindTerm(MainWindow* win, Str term);

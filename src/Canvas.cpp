@@ -2294,7 +2294,12 @@ static void OnMouseLeftButtonDown(MainWindow* win, int x, int y, WPARAM key) {
     HideToolbarHoverDropdown(win);
 
     if (win->pageBadgeRc.Contains(x, y)) {
-        PostMessageW(win->hwndFrame, WM_COMMAND, CmdGoToPage, 0);
+        DisplayModel* dmBadge = win->AsFixed();
+        if (dmBadge && dmBadge->GetEngine() && dmBadge->GetEngine()->kind == kindEngineImage) {
+            PostMessageW(win->hwndFrame, WM_COMMAND, CmdNavigateFilesInFolder, 0);
+        } else {
+            PostMessageW(win->hwndFrame, WM_COMMAND, CmdGoToPage, 0);
+        }
         return;
     }
 
@@ -3757,6 +3762,16 @@ static void PaintFloatingPageBadge(MainWindow* win, HDC hdc, DisplayModel* dm) {
     }
     int curr = dm->CurrentPageNo();
     int count = dm->PageCount();
+    if (IsCurrentTabImage(win)) {
+        WindowTab* tab = win->CurrentTab();
+        if (tab && len(tab->filePath) > 0) {
+            int imgCurr = 0, imgTotal = 0;
+            if (GetFolderImageInfo(tab->filePath, imgCurr, imgTotal) && imgTotal > 0) {
+                curr = imgCurr;
+                count = imgTotal;
+            }
+        }
+    }
     if (curr < 1 || count < 1) {
         win->pageBadgeRc = {};
         return;

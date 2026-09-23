@@ -20,4 +20,6 @@ void ParseMarkdownTocsParallel(StrVec& files, bool htmlMode, Vec<MarkdownFileToc
 
 Str MarkdownToHtmlPage(Str markdown);
 
+Str PlainTextToHtmlPage(Str text);
+
 Str MarkdownHeadingSlug(Arena* a, Str title);

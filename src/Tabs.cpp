@@ -670,6 +670,32 @@ static void MainWindowTabMigration(MainWindow* win, TabsCtrl::MigrationEvent* ev
     MaybeMigrateTab(tab, releaseWnd, ev->releasePoint);
 }
 
+// "+" in the tab bar: select the Home tab, appending one if there is none
+static void OpenHomeTab(MainWindow* win) {
+    if (!IsMainWindowValidAndNotClosing(win) || !win->tabsCtrl) {
+        return;
+    }
+    int nTabs = win->TabCount();
+    for (int i = 0; i < nTabs; i++) {
+        if (win->GetTab(i)->IsAboutTab()) {
+            TabsSelect(win, i);
+            return;
+        }
+    }
+
+    WindowTab* homeTab = new WindowTab(win);
+    homeTab->type = WindowTab::Type::About;
+    homeTab->canvasRc = win->canvasRc;
+    TabInfo* ti = new TabInfo();
+    ti->text = str::Dup(StrL("Home"));
+    ti->userData = (UINT_PTR)homeTab;
+    // InsertTab selects it without the selection callbacks: save / load by hand
+    SaveCurrentWindowTab(win);
+    win->tabsCtrl->InsertTab(nTabs, ti);
+    UpdateTabWidth(win);
+    LoadModelIntoTab(homeTab);
+}
+
 void CreateTabbar(MainWindow* win) {
     if (win->frameDpi > 0) {
         DpiSet(win->frameDpi, win->frameDpi);
@@ -688,6 +714,7 @@ void CreateTabbar(MainWindow* win) {
     tabsCtrl->onSelectionChanged = MkFunc1(MainWindowTabSelectionChanged, win);
     tabsCtrl->onContextMenu = MkFunc1(TabsContextMenu, tabsCtrl);
     tabsCtrl->onTabMigration = MkFunc1(MainWindowTabMigration, win);
+    tabsCtrl->onNewTab = MkFunc0(OpenHomeTab, win);
     tabsCtrl->Create(args);
     win->tabsCtrl = tabsCtrl;
     win->tabSelectionHistory = new Vec<WindowTab*>();

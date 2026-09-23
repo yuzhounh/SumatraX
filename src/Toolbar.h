@@ -46,6 +46,8 @@ void ToolbarNoteDropdownClosed();
 void TogglePdfAnnotationsToolbar(MainWindow*);
 void EnablePdfAnnotationsToolbar(MainWindow*);
 int ToolbarIconSize();
+void SetFindRowVisible(MainWindow*, bool visible);
+int ToolbarVisibleRowCount(MainWindow*);
 
 TempStr ToolbarButtonsResultTemp(int* exitCodeOut);
 
@@ -143,7 +145,9 @@ struct ToolbarVirt {
     VirtHost* host = nullptr;
     Vec<VirtCtrl*> items; // not owned; the layout owns them
     Vec<VirtCtrl*> annotationItems;
+    Vec<VirtCtrl*> findItems;
     ILayout* annotationRow = nullptr;
+    ILayout* findRow = nullptr;
     VirtText* pageLabel = nullptr;
     VirtText* pageLabel2 = nullptr; // "Page:" before pageEdit, only for HasChapters() docs
     VirtText* pageTotal = nullptr;
@@ -165,7 +169,10 @@ struct ToolbarVirt {
     Str hoverSavedTip;
 };
 
+Color TbBgColor();
 Color TbTextColor();
+Color TbDisabledColor();
+void ApplyToolbarItemColors(VirtCtrl*);
 VirtCtrl* ToolbarItemFromPoint(MainWindow*, Point);
 
 Edit* ToolbarCreatePageEdit(MainWindow*, PlatformFont*, int iconDy);

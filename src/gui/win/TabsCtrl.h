@@ -11,6 +11,7 @@ constexpr int kTabMinDx = 100;
 struct TabsCtrl;
 struct TabInfo;
 struct TabCtrl;
+struct NewTabBtn;
 struct VirtRoot;
 struct VirtCloseButton;
 struct VirtMouseEvent;
@@ -96,6 +97,8 @@ struct TabsCtrl : VirtCtrl {
     int ctrlID = 0;
     bool withToolTips = false;
     bool inTitleBar = false;
+    // vertical shift of tab content (icon, text, ✕) when inTitleBar, to center it on the caption buttons
+    int contentDy = 0;
     bool draggingTab = false;
     // dx of tab if there's more space available
     int tabDefaultDx = 300;
@@ -105,6 +108,8 @@ struct TabsCtrl : VirtCtrl {
     VirtRoot* vroot = nullptr;
     // in tab order (children are reversed when the UI is RTL)
     Vec<TabCtrl*> tabCtrls;
+    // "+" after the last tab (Chrome-like); only created when onNewTab is set
+    NewTabBtn* newTabBtn = nullptr;
     int selectedIdx = -1;
 
     // tracking state of which tab is highlighted etc.
@@ -127,6 +132,7 @@ struct TabsCtrl : VirtCtrl {
     SelectionChangedHandler onSelectionChanged;
     MigrationHandler onTabMigration;
     DraggedHandler onTabDragged;
+    Func0 onNewTab;
 
     // colors: kColTab* (the unselected and hovered shades are derived from
     // kColTabBg; a tab with a TabInfo::tabColor of its own overrides it)
@@ -158,6 +164,8 @@ struct TabsCtrl : VirtCtrl {
     void SetTabDirty(int idx, bool isDirty);
 
     int TabCount();
+    int NewTabBtnDx();
+    int ContentDy() const;
 
     UINT_PTR RemoveTab(int idx);
 
