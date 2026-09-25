@@ -2,23 +2,24 @@
   <img src="src/gfx/appx/SumatraPDF_StoreLogo_150x150.png" width="104" alt="SumatraPDF brand icon" />
 </p>
 
-<h1 align="center">SumatraPDF Reader</h1>
+<h1 align="center">SumatraX</h1>
 
-<p align="center"><strong>Fast, lightweight, and customizable multi-format document reader.</strong></p>
+<p align="center"><strong>Fast, lightweight, and focused multi-format document reader.</strong></p>
 
-SumatraPDF 是一个面向 Windows 的多格式（PDF、EPUB、MOBI、CBZ、CBR、FB2、CHM、XPS、DjVu）极速阅读器，具备极低的系统资源占用、极简的界面设计与增强的 Markdown 与 LaTeX 排版渲染支持。
+SumatraX 是基于 SumatraPDF 深度定制的专注、极简型多格式文档阅读器。在保持极速启动与超低资源占用的同时，强化了窗口布局记忆、极简界面交互以及增强的 Markdown 与 LaTeX 数学公式渲染体验。
 
 <p align="center">
-  <img src="screenshots/ss_1.png" width="800" alt="SumatraPDF main window" />
+  <img src="screenshots/ss_1.png" width="800" alt="SumatraX main window" />
 </p>
 
 ## 核心特性
 
-- **多格式支持**：PDF、EPUB、MOBI、CBZ、CBR、FB2、CHM、XPS、DjVu 全能阅读
-- **极速启动与低内存占用**：原生 C++ 构建，启动秒开，内存消耗极小
-- **增强 Markdown 渲染**：居中排版优化，原生支持 LaTeX 行内与块级数学公式
-- **标签页设计与现代化界面**：柔和边框阴影，圆角菜单设计与舒适的深/浅色模式
-- **快捷键盘交互**：快速查找、目录跳转与平滑缩放体验
+- **固定与记忆窗口位置**：精准记忆上次关闭时的窗口尺寸与屏幕位置，新窗口原位保持打开，杜绝多窗口错位层叠困扰
+- **极简专注界面（Minimal Viewer）**：精简重组工具栏控件，右上角汉堡菜单，隐去冗余视觉干扰
+- **现代化标签页设计**：支持原生 `+` 新建标签按钮、Chrome 风格标签快速搜索下拉列表与柔和圆角视觉
+- **多格式支持**：PDF、EPUB、MOBI、CBZ、CBR、FB2、CHM、XPS、DjVu 全能解析
+- **增强 Markdown 渲染**：居中排版优化，原生支持 LaTeX 行内与块级数学公式排版
+- **单文件独立便携**：完全独立命名与隔离配置（`SumatraX-settings.txt`），可与官方 SumatraPDF 并行使用互不干扰
 
 ## 更多信息
 
