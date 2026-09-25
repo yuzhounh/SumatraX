@@ -30,9 +30,9 @@
 #include "ExplorerQuickLook.h"
 #include "SumatraLog.h"
 
-constexpr const WCHAR* kQuickLookAgentClass = L"SUMATRA_PDF_QUICKLOOK_AGENT";
-constexpr const WCHAR* kQuickLookAgentMutexName = L"SumatraPDF-QuickLookAgent";
-#define kQuickLookRunValue StrL("SumatraPDF-QuickLook")
+constexpr const WCHAR* kQuickLookAgentClass = L"SUMATRA_X_QUICKLOOK_AGENT";
+constexpr const WCHAR* kQuickLookAgentMutexName = L"SumatraX-QuickLookAgent";
+#define kQuickLookRunValue StrL("SumatraX-QuickLook")
 #define kQuickLookRunKey StrL("Software\\Microsoft\\Windows\\CurrentVersion\\Run")
 constexpr UINT kMsgQuickLookSpace = WM_APP + 40;
 

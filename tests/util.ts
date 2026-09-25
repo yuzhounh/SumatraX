@@ -49,8 +49,8 @@ function exeFromArgv(argv: string[]): string {
   const ps = `(Get-Item -LiteralPath '${full}').VersionInfo.ProductName`;
   const p = Bun.spawnSync(["powershell", "-NoProfile", "-Command", ps]);
   const product = p.stdout.toString().trim();
-  if (!/sumatrapdf/i.test(product)) {
-    bail(`not a SumatraPDF executable (ProductName is '${product}'): ${full}`);
+  if (!/sumatra/i.test(product)) {
+    bail(`not a Sumatra executable (ProductName is '${product}'): ${full}`);
   }
   return full;
 }
@@ -60,7 +60,10 @@ function exeFromArgv(argv: string[]): string {
 // debug ASan build (out/dbg64_asan/SumatraPDF-static.exe), which is the same app
 // plus ASan. Both are read at import time, before any test runs.
 export const EXE_FROM_ARGV = exeFromArgv(process.argv);
-const SOURCE_EXE = EXE_FROM_ARGV || process.env.SUMATRA_TEST_EXE || join(ROOT, "out", "dbg64", "SumatraPDF.exe");
+const defaultDbgExe = existsSync(join(ROOT, "out", "dbg64", "SumatraX.exe"))
+  ? join(ROOT, "out", "dbg64", "SumatraX.exe")
+  : join(ROOT, "out", "dbg64", "SumatraPDF.exe");
+const SOURCE_EXE = EXE_FROM_ARGV || process.env.SUMATRA_TEST_EXE || defaultDbgExe;
 
 // Keep the executable and its portable settings file in a fresh directory for
 // every test run. This prevents a manual run, or an earlier test that saves

@@ -2232,7 +2232,7 @@ static const FieldInfo gSettingsFields[] = {
     {offsetof(Settings, timeOfLastUpdateCheck), SettingType::Compact, (intptr_t)&gFILETIMEInfo, true},
     {offsetof(Settings, openCountWeek), SettingType::Int, 0, true},
     {offsetof(Settings, propWinPos), SettingType::Compact, (intptr_t)&gPointInfo, true},
-    {offsetof(Settings, checkForUpdates), SettingType::Bool, true, true},
+    {offsetof(Settings, checkForUpdates), SettingType::Bool, false, true},
     {(size_t)-1, SettingType::Comment, 0, true},
     {(size_t)-1, SettingType::Comment, (intptr_t)"Settings below are not recognized by the current version", true},
 };

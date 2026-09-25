@@ -208,7 +208,7 @@ TempStr GetPdfPreviewLogDirTemp() {
     if (len(local) == 0) {
         return {};
     }
-    TempStr dir = path::JoinTemp(local, StrL("SumatraPDF-data"));
+    TempStr dir = path::JoinTemp(local, StrL("SumatraX-data"));
     return path::JoinTemp(dir, Str(id));
 }
 

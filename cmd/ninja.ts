@@ -11,8 +11,8 @@ const generatedFile = join(ninjaDir, ".generated");
 // must re-generate them from scratch (the fixups are not idempotent).
 const premakeFiles = ["premake5.lua", "premake5.files.lua", "cmd/ninja.ts"];
 const resources = [
-  ["SumatraPDF", "SumatraPDF.exe", "../../src/SumatraPDF.rc"],
-  ["SumatraPDF-static", "SumatraPDF-static.exe", "../../src/SumatraPDF.rc"],
+  ["SumatraPDF", "SumatraX.exe", "../../src/SumatraPDF.rc"],
+  ["SumatraPDF-static", "SumatraX-static.exe", "../../src/SumatraPDF.rc"],
   ["libsumatrapdf", "libsumatrapdf.dll", "../../src/libsumatrapdf.rc"],
   ["PdfFilter", "PdfFilter.dll", "../../src/ifilter/PdfFilter.rc"],
   ["PdfPreview", "PdfPreview.dll", "../../src/previewer/PdfPreview.rc"],

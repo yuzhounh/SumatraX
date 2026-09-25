@@ -31,7 +31,7 @@ constexpr int kGlobalHotkeyBaseId = 0x6000;
 static bool IsOtherSumatraProcessRunning() {
     DWORD myPid = GetCurrentProcessId();
     HWND hwnd = nullptr;
-    while ((hwnd = FindWindowEx(HWND_DESKTOP, hwnd, L"SUMATRA_PDF_FRAME", nullptr)) != nullptr) {
+    while ((hwnd = FindWindowEx(HWND_DESKTOP, hwnd, kFrameClassName, nullptr)) != nullptr) {
         DWORD pid = 0;
         GetWindowThreadProcessId(hwnd, &pid);
         if (pid != myPid) {
