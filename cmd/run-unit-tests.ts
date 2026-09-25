@@ -76,7 +76,7 @@ function configFor(kind: BuildKind): UnitTestConfig {
     return {
       platform: "Win32",
       target: "SumatraPDF",
-      exeName: "SumatraPDF.exe",
+      exeName: "SumatraX.exe",
       outDir: join("out", "dbg32"),
       logName: "unit-tests-dbg32.txt",
     };
@@ -85,7 +85,7 @@ function configFor(kind: BuildKind): UnitTestConfig {
     return {
       platform: "x64_asan",
       target: "SumatraPDF-static",
-      exeName: "SumatraPDF-static.exe",
+      exeName: "SumatraX-static.exe",
       outDir: join("out", "dbg64_asan"),
       logName: "unit-tests-asan.txt",
     };
@@ -93,7 +93,7 @@ function configFor(kind: BuildKind): UnitTestConfig {
   return {
     platform: "x64",
     target: "SumatraPDF",
-    exeName: "SumatraPDF.exe",
+    exeName: "SumatraX.exe",
     outDir: join("out", "dbg64"),
     logName: "unit-tests-dbg.txt",
   };

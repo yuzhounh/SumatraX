@@ -128,7 +128,7 @@ export async function killAndWait(proc: Bun.Subprocess): Promise<void> {
   await killAndWaitProcess(proc);
 }
 
-export const FRAME_CLASS = "SUMATRA_PDF_FRAME";
+export const FRAME_CLASS = "SUMATRA_X_FRAME";
 export const CANVAS_CLASS = "SUMATRA_PDF_CANVAS";
 
 // -window-pos for the right half of the screen (see testWindowPos)

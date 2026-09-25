@@ -1258,6 +1258,7 @@ workspace "SumatraPDF"
 
   -- a single static executable
   project "SumatraPDF-static"
+    targetname "SumatraX-static"
     static_app_objdir()
     static_linker_intermediates()
     kind "WindowedApp"
@@ -1362,6 +1363,7 @@ workspace "SumatraPDF"
 
   -- a dll version where most functionality is in libsumatrapdf.dll
   project "SumatraPDF"
+    targetname "SumatraX"
     dll_app_objdir()
     dll_linker_intermediates()
     kind "WindowedApp"

@@ -1395,7 +1395,7 @@ OpenCountWeek = 0
 PropWinPos = 0 0
 
 ; if true, check once a day whether an update is available
-CheckForUpdates = true
+CheckForUpdates = false
 ```
 
 ## Syntax for color values

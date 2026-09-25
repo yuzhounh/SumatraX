@@ -75,7 +75,7 @@ async function build(opts: RunOptions): Promise<void> {
 function runWindows(opts: RunOptions): void {
   const dir = opts.config === "release" ? "rel64" : "dbg64";
   const outDir = opts.asan ? `${dir}_asan` : dir;
-  const exe = join("out", outDir, opts.asan ? "SumatraPDF-static.exe" : "SumatraPDF.exe");
+  const exe = join("out", outDir, opts.asan ? "SumatraX-static.exe" : "SumatraX.exe");
   const proc = spawn(exe, ["-for-testing"], { cwd: ".", detached: true, stdio: "ignore" });
   proc.unref();
 }

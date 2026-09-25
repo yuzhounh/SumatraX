@@ -56,6 +56,7 @@ const char* gInstalledFiles[] = {
     "UnRar64.dll",
     // other files we might generate
     "sumatrapdfprefs.dat",
+    "SumatraX-settings.txt",
     "SumatraPDF-settings.txt",
 };
 // clang-format on
@@ -156,6 +157,8 @@ static void UninstallerThread() {
 
     RemoveInstallDirFromPath(gCli->allUsers, gCli->installDir);
     RemoveInstalledFiles();
+    LoggedDeleteRegValue(HKEY_CURRENT_USER, StrL("Software\\Microsoft\\Windows\\CurrentVersion\\Run"),
+                         StrL("SumatraX-QuickLook"));
     LoggedDeleteRegValue(HKEY_CURRENT_USER, StrL("Software\\Microsoft\\Windows\\CurrentVersion\\Run"),
                          StrL("SumatraPDF-QuickLook"));
 
