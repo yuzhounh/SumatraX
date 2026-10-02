@@ -3043,79 +3043,54 @@ static void OnMouseRightButtonDblClick(MainWindow* win, int x, int y, WPARAM key
     }
 }
 
-static void HdcFillRectAlpha(HDC hdc, const Rect& rc, BYTE alpha) {
-    if (rc.IsEmpty() || alpha == 0) {
-        return;
-    }
-    static HDC sMemDC = nullptr;
-    static HBITMAP sBmp = nullptr;
-    if (!sMemDC) {
-        sMemDC = CreateCompatibleDC(nullptr);
-        BITMAPINFO bmi{};
-        bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-        bmi.bmiHeader.biWidth = 1;
-        bmi.bmiHeader.biHeight = 1;
-        bmi.bmiHeader.biPlanes = 1;
-        bmi.bmiHeader.biBitCount = 32;
-        bmi.bmiHeader.biCompression = BI_RGB;
-        void* bits = nullptr;
-        sBmp = CreateDIBSection(sMemDC, &bmi, DIB_RGB_COLORS, &bits, nullptr, 0);
-        if (bits) {
-            *(u32*)bits = 0;
-        }
-        SelectObject(sMemDC, sBmp);
-    }
-    BLENDFUNCTION bf{};
-    bf.BlendOp = AC_SRC_OVER;
-    bf.BlendFlags = 0;
-    bf.SourceConstantAlpha = alpha;
-    bf.AlphaFormat = 0;
-    AlphaBlend(hdc, rc.x, rc.y, rc.dx, rc.dy, sMemDC, 0, 0, 1, 1, bf);
-}
+#ifdef DRAW_PAGE_SHADOWS
+constexpr int kBorderSize = 1;
+constexpr int kShadowOffset = 4;
+constexpr COLORREF kColPageShadow = RGB(0x40, 0x40, 0x40);
+constexpr COLORREF kColPageFrame = RGB(0x88, 0x88, 0x88);
+static void PaintPageFrameAndShadow(HDC hdc, Rect& bounds, Rect& pageRect, bool presentation, Color /*bgCol*/) {
+    // Frame info
+    Rect frame = bounds;
+    frame.Inflate(kBorderSize, kBorderSize);
 
-static void PaintPageFrameAndShadow(HDC hdc, Rect& bounds, Rect& pageRect, bool presentation, Color colPlaceholder,
-                                    Color colDocBg) {
-    if (presentation) {
-        AutoDeletePen pen(CreatePen(PS_NULL, 0, 0));
-        AutoDeleteBrush brush(CreateSolidBrush(colPlaceholder));
-        AutoRestorePen restorePen(hdc, pen);
-        AutoRestoreGdiObject restoreBrush(hdc, brush);
-        Rectangle(hdc, bounds.x, bounds.y, bounds.x + bounds.dx + 1, bounds.y + bounds.dy + 1);
-        return;
+    // Shadow info
+    Rect shadow = frame;
+    shadow.Offset(kShadowOffset, kShadowOffset);
+    if (frame.x < 0) {
+        // the left of the page isn't visible, so start the shadow at the left
+        int diff = std::min(-pageRect.x, kShadowOffset);
+        shadow.x -= diff;
+        shadow.dx += diff;
+    }
+    if (frame.y < 0) {
+        // the top of the page isn't visible, so start the shadow at the top
+        int diff = std::min(-pageRect.y, kShadowOffset);
+        shadow.y -= diff;
+        shadow.dy += diff;
     }
 
-    Rect frame = pageRect;
-    frame.Inflate(1, 1);
-
-    // Draw soft ambient shadow around all four sides
-    Rect ambient = frame;
-    ambient.Inflate(1, 1);
-    HdcFillRectAlpha(hdc, ambient, 15);
-
-    // Draw multi-layer soft drop shadow toward bottom-right
-    int shadowSize = DpiScale(4);
-    if (shadowSize < 2) {
-        shadowSize = 2;
-    }
-    if (shadowSize > 8) {
-        shadowSize = 8;
-    }
-    for (int i = shadowSize; i >= 1; i--) {
-        Rect s = frame;
-        s.Offset(i, i);
-        BYTE alpha = (BYTE)(8 + ((shadowSize - i) * 22) / shadowSize);
-        HdcFillRectAlpha(hdc, s, alpha);
+    // Draw shadow
+    if (!presentation) {
+        AutoDeleteBrush brush = CreateSolidBrush(kColPageShadow);
+        HdcFillRect(hdc, shadow, brush);
     }
 
-    // Draw page frame border and placeholder fill
-    Color bg = colDocBg == kColorUnset ? ThemeMainWindowBackgroundColor() : colDocBg;
-    Color borderCol = IsLightColor(bg) ? MkRgb(175, 175, 175) : MkRgb(70, 70, 70);
-    AutoDeletePen pen(CreatePen(PS_SOLID, 1, borderCol));
-    AutoDeleteBrush brush(CreateSolidBrush(colPlaceholder));
-    AutoRestorePen restorePen(hdc, pen);
-    AutoRestoreGdiObject restoreBrush(hdc, brush);
+    // Draw frame
+    AutoDeleteGdiObj<HPEN> pe(CreatePen(PS_SOLID, 1, presentation ? TRANSPARENT : kColPageFrame));
+    AutoDeleteBrush brush = CreateSolidBrush(gCurrentTheme->window.backgroundColor);
+    SelectObject(hdc, pe);
+    SelectObject(hdc, brush);
     Rectangle(hdc, frame.x, frame.y, frame.x + frame.dx, frame.y + frame.dy);
 }
+#else
+static void PaintPageFrameAndShadow(HDC hdc, Rect& bounds, Rect& /*pageRect*/, bool /*presentation*/, Color bgCol) {
+    AutoDeletePen pen(CreatePen(PS_NULL, 0, 0));
+    AutoDeleteBrush brush(CreateSolidBrush(bgCol));
+    AutoRestorePen restorePen(hdc, pen);
+    AutoRestoreGdiObject restoreBrush(hdc, brush);
+    Rectangle(hdc, bounds.x, bounds.y, bounds.x + bounds.dx + 1, bounds.y + bounds.dy + 1);
+}
+#endif
 
 // CmdToggleImages. Like showLinks this is a debug aid (both live in the debug
 // menu, so both are debug / pre-release only), and like it the outlines are
@@ -4022,7 +3997,7 @@ static bool DrawDocument(MainWindow* win, HDC hdc, Rect rcArea) {
             } else {
                 Rect r = pi->pageOnScreen;
                 auto presMode = win->presentation;
-                PaintPageFrameAndShadow(hdc, bounds, r, presMode, colPlaceholder, colDocBg);
+                PaintPageFrameAndShadow(hdc, bounds, r, presMode, colPlaceholder);
             }
         }
 
