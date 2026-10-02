@@ -36,7 +36,7 @@ SumatraX 是基于 SumatraPDF 深度定制的专注、极简型多格式文档�
 
 在 [发布页](https://github.com/yuzhounh/SumatraX/releases/latest) 下载 Windows x64 安装版（`.exe`）或便携版（`.zip`）。便携版解压后即可运行；两种版本都可与官方 SumatraPDF 并行使用。
 
-打开 PDF、EPUB、MOBI 或 Markdown 文件即可阅读；Markdown 数学公式的显示方式见下方功能说明。
+打开 PDF、EPUB、MOBI 或 Markdown 文件即可阅读。
 
 ## 更多信息
 
