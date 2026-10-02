@@ -2,7 +2,7 @@
    License: GPLv3 */
 
 // define the following if you want shadows drawn around the pages
-#define DRAW_PAGE_SHADOWS
+// #define DRAW_PAGE_SHADOWS
 
 constexpr int kInvalidPageNo = -1;
 
