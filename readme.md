@@ -20,7 +20,7 @@
 SumatraX 是基于 SumatraPDF 深度定制的专注、极简型多格式文档阅读器。在保持极速启动与超低资源占用的同时，强化了窗口布局记忆、极简界面交互以及增强的 Markdown 与 LaTeX 数学公式渲染体验。
 
 <p align="center">
-  <img src="screenshots/ss_1.png" width="800" alt="SumatraX main window" />
+  <img src="docs/screenshot.png" width="800" alt="SumatraX main window" />
 </p>
 
 ## 功能特点
