@@ -43,14 +43,16 @@ bool TtsOnEngineCrash(void* faultAddr);
 bool TtsTakeEngineCrash();
 bool TtsEngineCrashed();
 bool TtsTestEngineCrash();
+void TtsTestPumpOnNextSpeak();
 
 // --- highlight of the words being spoken ---
 
 constexpr int kReadAloudHighlightTimerID = 8;
 constexpr int kReadAloudHighlightDelayInMs = 80;
 
+// pageLoc, not a flat pageNo: flat numbers shift when chapters re-lay out
 struct ReadAloudByteLoc {
-    int pageNo = -1;
+    Location pageLoc;
     int x = 0;
     int y = 0;
     int dx = 0;

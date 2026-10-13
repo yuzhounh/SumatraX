@@ -299,6 +299,16 @@ void SetRect(Annotation* annot, RectF r) {
                 if (nStrokes > 0) {
                     pdf_set_annot_ink_list(ctx, a, nStrokes, strokeCounts.els, pts.els);
                 }
+            } else if (r.dx == annot->bounds.dx && r.dy == annot->bounds.dy) {
+                // a move: shift /Rect itself. The bounds can be bigger than
+                // /Rect (a border), so setting them as /Rect grew the
+                // annotation on every move
+                fz_rect rect = pdf_annot_rect(ctx, a);
+                rect.x0 += dx;
+                rect.x1 += dx;
+                rect.y0 += dy;
+                rect.y1 += dy;
+                pdf_set_annot_rect(ctx, a, rect);
             } else {
                 pdf_set_annot_rect(ctx, a, ToFzRect(r));
             }
@@ -447,9 +457,7 @@ void SetQuadPointsAsRect(Annotation* annot, const Vec<RectF>& rects) {
         if (!quads) {
             return;
         }
-        defer {
-            free(quads);
-        };
+        AutoFree<fz_quad> freeQuads(quads);
         for (int i = 0; i < n; i++) {
             RectF rect = rects[i];
             fz_rect r = ToFzRect(rect);
@@ -584,7 +592,19 @@ bool ToggleFormButton(Annotation* annot) {
                 bool isOn = curAS && !pdf_name_eq(ctx, curAS, PDF_NAME(Off));
                 bool noToggleOff = (flags & PDF_BTN_FIELD_IS_NO_TOGGLE_TO_OFF) != 0;
                 Str onName = Str(pdf_to_name(ctx, pdf_button_field_on_state(ctx, kid)));
-                pdf_set_field_value(ctx, e->pdfdoc, grp, CStrTemp((isOn && !noToggleOff) ? StrL("Off") : onName), 0);
+                char* val = CStrTemp((isOn && !noToggleOff) ? StrL("Off") : onName);
+                // unlike pdf_toggle_widget, pdf_set_field_value doesn't open a
+                // journal operation itself, and the journalled doc throws on
+                // a write outside one
+                pdf_begin_operation(ctx, e->pdfdoc, "Toggle radio button");
+                fz_try(ctx) {
+                    pdf_set_field_value(ctx, e->pdfdoc, grp, val, 0);
+                    pdf_end_operation(ctx, e->pdfdoc);
+                }
+                fz_catch(ctx) {
+                    pdf_abandon_operation(ctx, e->pdfdoc);
+                    fz_rethrow(ctx);
+                }
                 pdf_update_annot(ctx, a);
                 UpdateFormFieldPage(ctx, a); // refresh all radio-group siblings
                 changed = true;
@@ -1919,11 +1939,7 @@ static float PointSegmentDistSq(PointF p, PointF a, PointF b) {
     float t = 0.f;
     if (lengthSq > 0.f) {
         t = (((p.x - a.x) * dx) + ((p.y - a.y) * dy)) / lengthSq;
-        if (t < 0.f) {
-            t = 0.f;
-        } else if (t > 1.f) {
-            t = 1.f;
-        }
+        t = clampf(t, 0.f, 1.f);
     }
     float px = a.x + (t * dx);
     float py = a.y + (t * dy);

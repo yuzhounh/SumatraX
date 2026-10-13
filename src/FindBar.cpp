@@ -131,6 +131,14 @@ struct FindBarWnd {
     bool statusCapped = false;
     VirtIconButton* btns[4]{};
     bool suppressTextChanged = false;
+    Str savedText;
+    int savedSelStart = 0;
+    int savedSelEnd = 0;
+    bool savedVisible = false;
+    bool savedFocus = false;
+    bool hasSavedState = false;
+
+    ~FindBarWnd() { str::Free(savedText); }
 
     bool UpdateStatusWidth(int totalHits, bool capped);
 };
@@ -410,6 +418,43 @@ void RecreateFindBar(MainWindow*) {
     // Toolbar recreation handles this automatically
 }
 
+void FindBarSaveState(MainWindow* win) {
+    FindBarWnd* bar = win->findBar;
+    if (!bar || !bar->edit) {
+        return;
+    }
+    str::Free(bar->savedText);
+    bar->savedText = str::Dup(bar->edit->GetTextTemp());
+    CbEditGetSelection(bar->edit, bar->savedSelStart, bar->savedSelEnd);
+    bar->savedVisible = IsFindBarVisible(win);
+    bar->savedFocus = GetFocus() == CbEditHwnd(bar->edit->hwnd);
+    bar->hasSavedState = true;
+    if (win->findEdit == bar->edit) {
+        win->findEdit = nullptr;
+    }
+    bar->edit = nullptr;
+    bar->status = nullptr;
+    bar->statusBox = nullptr;
+}
+
+void FindBarRestoreState(MainWindow* win) {
+    FindBarWnd* bar = win->findBar;
+    if (!bar || !bar->edit || !bar->hasSavedState) {
+        return;
+    }
+    // Keep the hidden term available to F3 after theme or DPI changes.
+    bar->suppressTextChanged = true;
+    bar->edit->SetText(bar->savedText);
+    bar->suppressTextChanged = false;
+    CbEditSelectText(bar->edit, bar->savedSelStart, bar->savedSelEnd);
+    SetFindRowVisible(win, bar->savedVisible);
+    if (bar->savedFocus) {
+        bar->edit->SetFocus();
+    }
+    str::FreePtr(&bar->savedText);
+    bar->hasSavedState = false;
+}
+
 static void ShowCompactBar(MainWindow* win) {
     TempStr term = CurrentFindTermTemp(win);
     ToolbarVirt* tb = win ? win->toolbarVirt : nullptr;
@@ -442,6 +487,10 @@ void ShowFindBar(MainWindow* win) {
 }
 
 void HideFindBar(MainWindow* win) {
+    win->searchStartMarked = false;
+    // drop the cached results: they belong to this search/document and must not
+    // be shown or navigated into after the find UI is reopened (e.g. on another
+    // tab, which would carry the previous document's page/glyph coordinates)
     ClearFindMatches(win);
     if (win->ctrl) {
         win->ctrl->FindClear();
@@ -462,9 +511,6 @@ void HideFindBar(MainWindow* win) {
 }
 
 bool IsFindBarVisible(MainWindow* win) {
-    if (gSettings->searchUIFloating) {
-        return IsFindWindowVisible(win);
-    }
     ToolbarVirt* tb = win ? win->toolbarVirt : nullptr;
     return tb && tb->findRow && tb->findRow->GetVisibility() == Visibility::Visible;
 }
@@ -578,7 +624,7 @@ TempStr FindUiStateResultTemp(Str action, int* exitCodeOut) {
     } else if (str::Eq(action, StrL("hide-first"))) {
         HideFindBar(gWindows[0]);
     } else if (str::Eq(action, StrL("theme-recreate-first"))) {
-        RecreateFindBar(gWindows[0]);
+        ReCreateToolbar(gWindows[0]);
     } else if (!str::Eq(action, StrL("state"))) {
         out.Append(StrL("ERROR invalid action\n"));
         return finish(1);

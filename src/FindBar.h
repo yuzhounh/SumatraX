@@ -10,6 +10,8 @@ ILayout* BuildFindToolbarRow(MainWindow* win);
 FindBarWnd* CreateFindBar(MainWindow* win);
 void DeleteFindBar(MainWindow* win);
 void RecreateFindBar(MainWindow* win);
+void FindBarSaveState(MainWindow* win);
+void FindBarRestoreState(MainWindow* win);
 void FindBarUpdateDpi(MainWindow* win);
 int FindBarFontHeight(MainWindow* win);
 int FindBarWindowHeight(MainWindow* win);

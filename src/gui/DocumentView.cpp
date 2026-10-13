@@ -192,7 +192,8 @@ static void ScrollToDestination(DocumentView* view, int pageNo, RectF rect, floa
     }
 
     bool isVirtualZoom = zoom == kZoomFitPage || zoom == kZoomFitWidth || zoom == kZoomFitHeight ||
-                         zoom == kZoomFitContent || zoom == kZoomShrinkToFit || zoom == kZoomFitByOrientation;
+                         zoom == kZoomFitContent || zoom == kZoomFitVisible || zoom == kZoomShrinkToFit ||
+                         zoom == kZoomFitByOrientation;
     if (isVirtualZoom) {
         view->SetZoom(zoom);
     } else if (zoom > 0) {
@@ -579,10 +580,12 @@ static void OnCanvasKey(DocumentView* view, PlatformCanvasKeyEvent* ev) {
     if (c >= 'A' && c <= 'Z') {
         c += 'a' - 'A';
     }
+    // ctrl/alt don't run the letter shortcuts; ctrl+c still copies
+    if ((ev->isCtrl || ev->isAlt) && !(ev->isCtrl && c == 'c')) {
+        return;
+    }
     if (ev->isCtrl && c == 'c') {
         view->CopySelection();
-    } else if (ev->isCtrl || ev->isAlt) {
-        return;
     } else if (c == ' ') {
         ScrollByPage(view, ev->isShift ? -1 : 1);
     } else if (c == 'h') {

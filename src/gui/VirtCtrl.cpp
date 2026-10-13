@@ -599,9 +599,7 @@ VirtRoot::VirtRoot(HWND hwnd) {
 VirtRoot::~VirtRoot() {
     // `tops` belong to the layout tree and can outlive us; make sure they don't
     // report their destruction to a root that is gone
-    for (VirtCtrl* w : tops) {
-        w->SetRoot(nullptr);
-    }
+    ForgetTops();
     delete owned;
     delete tooltip;
     GfxDestroyDoubleBuffer(gfxBuf);
@@ -633,8 +631,19 @@ void VirtRoot::SetChild(VirtCtrl* c) {
     needsLayout = true;
 }
 
+// the tops let go of this root, unless another root took them since
+void VirtRoot::ForgetTops() {
+    for (VirtCtrl* w : tops) {
+        if (w->root == this) {
+            w->SetRoot(nullptr);
+        }
+    }
+}
+
 void VirtRoot::SetTops(const Vec<VirtCtrl*>& newTops) {
     ReportIf(owned);
+    // a dropped top can outlive this root (e.g. a view that moved elsewhere)
+    ForgetTops();
     VecReset(tops);
     hovered = nullptr;
     captured = nullptr;
@@ -1258,7 +1267,7 @@ int VirtScroll::MaxScrollY() const {
 
 bool VirtScroll::ScrollTo(int y) {
     int maxY = MaxScrollY();
-    y = Clamp(y, 0, maxY);
+    y = clampi(y, 0, maxY);
     if (y == scrollY) {
         return false;
     }
@@ -1455,7 +1464,7 @@ int ScrollBox::MaxScrollY() const {
 
 bool ScrollBox::ScrollTo(int y) {
     int maxY = MaxScrollY();
-    y = Clamp(y, 0, maxY);
+    y = clampi(y, 0, maxY);
     if (y == scrollY) {
         UpdateScrollbar();
         return false;
@@ -1639,7 +1648,7 @@ Rect VirtListBox::ThumbRectLocal() {
     int visibleDy = UsableDy();
     int minDy = DpiScaleByDpi(GetDpi(), 20);
     int thumbDy = Scale(sb.dy, visibleDy, contentDy);
-    thumbDy = Clamp(thumbDy, std::min(minDy, sb.dy), sb.dy);
+    thumbDy = clampi(thumbDy, std::min(minDy, sb.dy), sb.dy);
     int maxY = MaxScrollY();
     int y = (maxY > 0) ? Scale(sb.dy - thumbDy, scrollY, maxY) : 0;
     return {sb.x, sb.y + y, sb.dx, thumbDy};
@@ -1659,7 +1668,7 @@ Size VirtListBox::GetIdealSize() {
 void VirtListBox::SetBounds(Rect r) {
     VirtCtrl::SetBounds(r);
     // a taller viewport can make the current scroll position invalid
-    scrollY = Clamp(scrollY, 0, MaxScrollY());
+    scrollY = clampi(scrollY, 0, MaxScrollY());
     if (pendingVisibleIdx >= 0) {
         int idx = pendingVisibleIdx;
         pendingVisibleIdx = -1;
@@ -1668,7 +1677,7 @@ void VirtListBox::SetBounds(Rect r) {
 }
 
 bool VirtListBox::ScrollTo(int y) {
-    y = Clamp(y, 0, MaxScrollY());
+    y = clampi(y, 0, MaxScrollY());
     if (y == scrollY) {
         return false;
     }
@@ -1782,8 +1791,8 @@ void VirtListBox::SelectRange(int from, int to) {
     if (n == 0) {
         return;
     }
-    from = Clamp(from, 0, n - 1);
-    to = Clamp(to, 0, n - 1);
+    from = clampi(from, 0, n - 1);
+    to = clampi(to, 0, n - 1);
     if (!multiSelect) {
         SetCurrentSelection(to);
         return;
@@ -2142,7 +2151,7 @@ void VirtListBox::OnKeyDown(VirtKeyEvent* ev) {
         default:
             return;
     }
-    idx = Clamp(idx, 0, n - 1);
+    idx = clampi(idx, 0, n - 1);
     ApplyNav(idx, ev->isCtrl, ev->isShift);
     ev->didHandle = true;
     return;
@@ -2931,19 +2940,28 @@ constexpr int kLabelPad = 2;
 constexpr int kCloseBtnDx = 16;
 constexpr int kCloseBtnGapDx = 8;
 
+// Scale a panel header's ✕ for this window's DPI.
+void ApplyCloseButtonDpi(VirtCloseButton* closeBtn, int dpi) {
+    if (!closeBtn || dpi <= 0) {
+        return;
+    }
+    int pad = DpiScaleByDpi(dpi, kLabelPad);
+    int btnDx = DpiScaleByDpi(dpi, kCloseBtnDx);
+    int gap = DpiScaleByDpi(dpi, kCloseBtnGapDx);
+    // the padding is part of the ideal size, so it enlarges the hit area
+    // without shrinking the ✕ itself
+    closeBtn->padding = Insets{0, pad, 0, gap};
+    closeBtn->idealSize = {btnDx + pad + gap, btnDx};
+}
+
 // Scale the header ✕ and label padding for this window's DPI.
 void ApplyLabelWithCloseDpi(VirtText* label, VirtCloseButton* closeBtn, int dpi) {
     if (!label || !closeBtn || dpi <= 0) {
         return;
     }
     int pad = DpiScaleByDpi(dpi, kLabelPad);
-    int btnDx = DpiScaleByDpi(dpi, kCloseBtnDx);
-    int gap = DpiScaleByDpi(dpi, kCloseBtnGapDx);
     label->padding = Insets{pad, pad, pad, pad};
-    // the padding is part of the ideal size, so it enlarges the hit area
-    // without shrinking the ✕ itself
-    closeBtn->padding = Insets{0, pad, 0, gap};
-    closeBtn->idealSize = {btnDx + pad + gap, btnDx};
+    ApplyCloseButtonDpi(closeBtn, dpi);
 }
 
 LabelWithClose NewLabelWithClose(HWND hwnd, PlatformFont* font, const VirtMouseHandler& onClose) {
@@ -3132,12 +3150,7 @@ int VirtSlider::ValueFromLocalX(int xLocal) {
     if (track.dx > 0) {
         t = (float)(x - track.x) / (float)track.dx;
     }
-    if (t < 0) {
-        t = 0;
-    }
-    if (t > 1) {
-        t = 1;
-    }
+    t = clampf(t, 0, 1);
     int n = maxVal - minVal;
     return minVal + (int)lroundf(t * (float)n);
 }
@@ -3150,12 +3163,7 @@ void VirtSlider::SetValue(int v, bool notify) {
     if (maxVal < minVal) {
         maxVal = minVal;
     }
-    if (v < minVal) {
-        v = minVal;
-    }
-    if (v > maxVal) {
-        v = maxVal;
-    }
+    v = clampi(v, minVal, maxVal);
     if (v == value) {
         if (!adjusting) {
             committed = v;
@@ -4138,6 +4146,56 @@ TipLink* VirtRichText::LinkAt(Point ptLocal) {
 }
 
 // a click on a link runs it; anything else bubbles up to whoever hosts us
+int VirtFixedLinesText::FixedDy() {
+    int lineDy = PlatformFontMeasureText(font, StrL("Ag")).dy;
+    return (lineDy * nLines) + padding.top + padding.bottom;
+}
+
+// the height is ours in all three, or the box would follow the text: it is
+// laid out (and sized) while empty, and every text is a different length
+Size VirtFixedLinesText::GetIdealSize() {
+    Size sz = VirtRichText::GetIdealSize();
+    sz.dy = FixedDy();
+    return sz;
+}
+
+int VirtFixedLinesText::MinIntrinsicHeight(int width) {
+    VirtRichText::MinIntrinsicHeight(width); // wraps to `width`
+    return FixedDy();
+}
+
+Size VirtFixedLinesText::Layout(Constraints bc) {
+    Size sz = VirtRichText::Layout(bc);
+    sz.dy = FixedDy();
+    return bc.Constrain(sz);
+}
+
+// a longer text is cut off rather than spilling over what sits below
+void VirtFixedLinesText::Paint(VirtPaintCtx& ctx) {
+    Rect clip = ctx.bounds.Intersect(ctx.clip);
+    if (clip.IsEmpty()) {
+        return;
+    }
+    ctx.gfx->PushClip(clip);
+    Color bg = GetColor(kColRichBg);
+    if (!ColorSkipsPaint(bg)) {
+        ctx.gfx->FillRect(ctx.bounds, bg);
+    }
+    VirtRichText::Paint(ctx);
+    if (!ColorSkipsPaint(borderCol)) {
+        ctx.gfx->DrawRect(ctx.bounds, borderCol);
+    }
+    ctx.gfx->PopClip();
+}
+
+// Reset() drops the word layout, so re-wrap to the width we already have
+void VirtFixedLinesText::SetText(Str s) {
+    Reset();
+    AddPlainText(s);
+    LayoutText(ContentRectInWindow().dx);
+    Invalidate();
+}
+
 void VirtRichText::OnMouseDown(VirtMouseEvent* ev) {
     if (LinkAt(ev->pt)) {
         ev->didHandle = true;

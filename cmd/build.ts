@@ -4,7 +4,8 @@ import { join, relative } from "node:path";
 import { $ } from "bun";
 import { clearDirPreserveSettings } from "./clean";
 import { ensureNinja, ninjaDir, ninjaToRoot } from "./ninja";
-import { detectVisualStudio2026, runLogged } from "./util";
+import { detectVisualStudio2026, extractSumatraBuildVersion, runLogged } from "./util";
+import { syncReleasePackage } from "./helper/release-package";
 
 type BuildMode = "windows" | "all" | "smoke" | "ci" | "daily" | "codeql" | "mingw" | "wine" | "build-no";
 type Config = "debug" | "release" | "profile";
@@ -25,7 +26,8 @@ interface BuildOptions {
 const usage = `Usage: bun cmd/build.ts <mode> [options]
 
 Windows builds:
-  -dbg | -rel             Build SumatraPDF.exe for x64
+  -dbg                    Build SumatraX.exe for x64
+  -rel                    Build both x64 release variants and sync release packages
   -profile                Build a function-timing profile variant (out/prf64)
   -rel -32                Build the 32-bit release
   -asan [-dbg|-rel]       Build SumatraPDF-static.exe with MSVC ASan
@@ -215,6 +217,10 @@ function windowsOutDir(config: Config, win32: boolean): string {
 }
 
 async function buildWindows(config: Config, win32: boolean, clean: boolean, ninja: boolean): Promise<void> {
+  if (config === "release" && !win32) {
+    await buildAll(clean, ninja);
+    return;
+  }
   const configName = windowsConfigName(config);
   const platform = win32 ? "Win32" : "x64";
   const outDir = join("out", windowsOutDir(config, win32));
@@ -330,19 +336,13 @@ async function buildAll(clean: boolean, ninja: boolean): Promise<void> {
     ]);
   }
   printBinaries(outDir, new Set(["SumatraX.exe", "SumatraX-static.exe"]));
+  const version = extractSumatraBuildVersion();
+  await syncReleasePackage(outDir, join("out", `release-${version}`), version);
 }
 
 async function buildSmoke(ninja: boolean): Promise<void> {
-  const outDir = join("out", "rel64");
   console.log("smoke build");
-  clearDirPreserveSettings(outDir);
-  if (ninja) {
-    await buildNinja([join(ninjaToRoot, outDir, "SumatraX.exe")]);
-  } else {
-    const { msbuildPath } = detectVisualStudio2026();
-    await buildApp(msbuildPath, "Release", "x64", "SumatraPDF:Rebuild");
-  }
-  printBinaries(outDir, new Set(["SumatraX.exe"]));
+  await buildAll(true, ninja);
   // unit tests are compiled into the debug SumatraPDF only
   await runLogged("bun", [join("cmd", "run-unit-tests.ts"), "-dbg"]);
 }
@@ -388,6 +388,11 @@ async function runWslLauncher(args: string[]): Promise<void> {
 
 async function runBuild(opts: BuildOptions): Promise<void> {
   const mode = opts.mode!;
+  if (["windows", "all", "smoke"].includes(mode)) {
+    // the exe embeds the manual from .work/docs (ci / daily do this themselves)
+    const { genDocsForBuild } = await import("./gen-docs");
+    await genDocsForBuild();
+  }
   if (mode === "windows") {
     const config = opts.config ?? "debug";
     if (opts.asan) await buildWindowsAsan(config, opts.clean, opts.ninja);

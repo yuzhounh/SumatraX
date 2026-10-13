@@ -5,14 +5,21 @@
 #include "base/File.h"
 #include "base/Pixmap.h"
 #include "base/ByteReaderWriter.h"
+#include "base/Win.h"
 
 extern "C" {
 #include <mupdf/fitz.h>
+#include <mupdf/pdf.h>
 }
 
 #include "Settings.h"
 #include "AppSettings.h"
 #include "gui/UIModels.h"
+#include "gui/Layout.h"
+#include "gui/PlatformFont.h"
+#include "gui/Gfx.h"
+#include "gui/GuiColors.h"
+#include "gui/VirtCtrl.h"
 #include "DocController.h"
 #include "EngineBase.h"
 #include "base/GuessFileType.h"
@@ -28,18 +35,23 @@ extern "C" {
 #include "TextSelection.h"
 #include "TextSearch.h"
 #include "MainWindow.h"
+#include "SumatraPDF.h"
 #include "WindowTab.h"
+#include "PagePosition.h"
 #include "Selection.h"
 #include "SearchAndDDE.h"
 #include "ReadAloud.h"
 #include "Translations.h"
 #include "MarkdownModel.h"
+#include "PageThumbnails.h"
 #include "TableOfContents.h"
+#include "SidebarPanel.h"
 #include "gui/win/BrowserDocView.h"
 
 #include <chm.h>
 #include "EbookBase.h"
 #include "ChmFile.h"
+#include "RefHover.h"
 #include "SumatraTest.h"
 
 // internal LZX test hook, defined in chm.c but not exposed in chm.h
@@ -1648,6 +1660,10 @@ TempStr CadEnhanceColorsResultTemp(Str path, int pageNo, int zoomPercent, int* e
         }
     }
     out.Append(fmt("size=%dx%d\n", rgb->width, rgb->height));
+    // mupdf warnings during the render, e.g. "dropping unclosed device"
+    if (engine->HasErrors()) {
+        out.Append(fmt("errors=%s\n", engine->GetErrorsTextTemp()));
+    }
     // every gray with a meaningful area, so the test can see what survived
     for (int i = 0; i < 256; i++) {
         if (counts[i] >= 64) {
@@ -1668,6 +1684,11 @@ TempStr CadEnhanceColorsResultTemp(Str path, int pageNo, int zoomPercent, int* e
 // Render an image page and report dest size plus the RGB of the left and right
 // edge pixels. clipKind=1 uses the slightly-off page rect that Copy Selection
 // produces after CvtFromScreen (issue #3434).
+// clipKind values of ImageRenderEdgesResultTemp
+constexpr int kClipSelection = 1;
+constexpr int kClipRightHalfTile = 2;
+constexpr int kClipFullPageTile = 3;
+
 TempStr ImageRenderEdgesResultTemp(Str path, int zoomPercent, int clipKind, int* exitCodeOut) {
     str::Builder out;
     auto fail = [&out, exitCodeOut](Str msg) {
@@ -1686,10 +1707,26 @@ TempStr ImageRenderEdgesResultTemp(Str path, int zoomPercent, int clipKind, int*
     float zoom = (float)zoomPercent / 100.f;
     RectF clip;
     RectF* pageRect = nullptr;
-    if (clipKind != 0) {
+    if (clipKind == kClipSelection) {
         // same half-pixel pull-back CvtFromScreen applies to a pixel-aligned
         // selection of the whole image
         clip = RectF(-0.499f, -0.499f, box.dx, box.dy);
+        pageRect = &clip;
+    }
+    if (clipKind == kClipRightHalfTile) {
+        // full render first so mupdf caches the whole decoded image, then a
+        // tile of the right half (#6229)
+        RenderPageArgs full(1, zoom, 0, nullptr, RenderTarget::Export);
+        FreePixmap(engine->RenderPage(full));
+        clip = RectF(box.dx / 2, 0, box.dx / 2, box.dy);
+        pageRect = &clip;
+    }
+    Rect tile;
+    if (clipKind == kClipFullPageTile) {
+        // the page -> pixels -> page round trip RenderCache's GetTileRectUser
+        // makes for a single-tile page (#6245)
+        tile = engine->Transform(box, 1, zoom, 0).Round();
+        clip = engine->Transform(ToRectF(tile), 1, zoom, 0, true);
         pageRect = &clip;
     }
     RenderPageArgs args(1, zoom, 0, pageRect, RenderTarget::Export);
@@ -1727,7 +1764,11 @@ TempStr ImageRenderEdgesResultTemp(Str path, int zoomPercent, int clipKind, int*
     int lr, lg, lb, rr, rg, rb;
     pixel(0, bmp->height / 2, &lr, &lg, &lb);
     pixel(bmp->width - 1, bmp->height / 2, &rr, &rg, &rb);
-    out.Append(fmt("size=%dx%d left=%d,%d,%d right=%d,%d,%d\n", bmp->width, bmp->height, lr, lg, lb, rr, rg, rb));
+    out.Append(fmt("size=%dx%d left=%d,%d,%d right=%d,%d,%d", bmp->width, bmp->height, lr, lg, lb, rr, rg, rb));
+    if (clipKind == kClipFullPageTile) {
+        out.Append(fmt(" tile=%dx%d", tile.dx, tile.dy));
+    }
+    out.Append(StrL("\n"));
 
     FreePixmap(bmp);
     SafeEngineRelease(&engine);
@@ -2420,7 +2461,7 @@ TempStr ImageOrientationResultTemp(Str pdfPath, int pageNo, Str bmpPath, int* ex
     if (!bmp) {
         return fail(StrL("ERROR no-image"));
     }
-    Pixmap* px = PixmapFromRenderedBitmap(bmp); // takes ownership of bmp
+    Pixmap* px = PixmapToBgra(PixmapFromRenderedBitmap(bmp)); // takes ownership of bmp
     if (!px || !px->data) {
         FreePixmap(px);
         return fail(StrL("ERROR no-pixmap"));
@@ -2462,9 +2503,17 @@ TempStr ChapterInfoResultTemp(int* exitCodeOut) {
     DocController* ctrl = win->ctrl;
     Location cur = ctrl->CurrentLocation();
     bool hasChapters = ctrl->HasChapters();
-    out.Append(fmt("OK chapter=%d page=%d chapterCount=%d chapterPageCount=%d pageCount=%d hasChapters=%d\n",
-                   cur.chapter, cur.page, ctrl->ChapterCount(), ctrl->ChapterPageCount(cur.chapter), ctrl->PageCount(),
-                   hasChapters ? 1 : 0));
+    int laidOut = 0;
+    DisplayModel* dm = ctrl->AsFixed();
+    if (dm && dm->GetEngine()) {
+        laidOut = dm->GetEngine()->ChaptersLaidOut();
+    }
+    bool chapterUi = ShowChapterUi(ctrl);
+    out.Append(
+        fmt("OK chapter=%d page=%d chapterCount=%d chapterPageCount=%d pageCount=%d hasChapters=%d "
+            "laidOut=%d chapterUi=%d\n",
+            cur.chapter, cur.page, ctrl->ChapterCount(), ctrl->ChapterPageCount(cur.chapter), ctrl->PageCount(),
+            hasChapters ? 1 : 0, laidOut, chapterUi ? 1 : 0));
     if (exitCodeOut) {
         *exitCodeOut = 0;
     }
@@ -2550,6 +2599,121 @@ TempStr HiddenTabGoToPageResultTemp(int* exitCodeOut) {
 // nothing. Only a quad selection reaches DisplayModel::CvtToScreen unguarded,
 // which is where crash 2026-09-12-09-59-1328 reported.
 // Used by tests/epub-relayout-stale-page.ts.
+void DiscardUnsavedChangesInAllTabs() {
+    for (MainWindow* win : gWindows) {
+        for (WindowTab* tab : win->Tabs()) {
+            ResolveUnsavedChanges(tab, UnsavedChangesAction::Discard);
+        }
+    }
+}
+
+// action: "discard" | "save" (every tab) | "save-as" <path> (current tab).
+TempStr ResolveUnsavedChangesResultTemp(Str action, Str path, int* exitCodeOut) {
+    str::Builder out;
+    auto fail = [&](Str msg, int code = 1) -> TempStr {
+        out.Append(msg);
+        out.AppendChar('\n');
+        if (exitCodeOut) {
+            *exitCodeOut = code;
+        }
+        return ToStrTemp(out);
+    };
+
+    if (len(gWindows) == 0) {
+        return fail(StrL("NOTREADY no-window"), 2);
+    }
+    if (str::Eq(action, StrL("save-as"))) {
+        WindowTab* tab = gWindows[0]->CurrentTab();
+        if (len(path) == 0 || !tab) {
+            return fail(StrL("ERROR save-as needs a path and a document"));
+        }
+        if (!ResolveUnsavedChanges(tab, UnsavedChangesAction::SaveNew, path)) {
+            return fail(fmt("ERROR save-as '%s' failed", path));
+        }
+        if (exitCodeOut) {
+            *exitCodeOut = 0;
+        }
+        out.Append(StrL("OK tabs=1\n"));
+        return ToStrTemp(out);
+    }
+
+    UnsavedChangesAction act;
+    if (str::Eq(action, StrL("discard"))) {
+        act = UnsavedChangesAction::Discard;
+    } else if (str::Eq(action, StrL("save"))) {
+        act = UnsavedChangesAction::SaveExisting;
+    } else {
+        return fail(fmt("ERROR unknown action '%s'", action));
+    }
+    int nTabs = 0;
+    for (MainWindow* win : gWindows) {
+        for (WindowTab* tab : win->Tabs()) {
+            if (!ResolveUnsavedChanges(tab, act)) {
+                return fail(fmt("ERROR save of '%s' failed", tab->filePath));
+            }
+            nTabs++;
+        }
+    }
+    if (exitCodeOut) {
+        *exitCodeOut = 0;
+    }
+    out.Append(fmt("OK tabs=%d\n", nTabs));
+    return ToStrTemp(out);
+}
+
+// Toggle the idx-th (0-based) checkbox / radio widget on pageNo, as a click
+// on it would. Reports the field value before and after.
+TempStr ToggleFormButtonResultTemp(int pageNo, int idx, int* exitCodeOut) {
+    str::Builder out;
+    auto fail = [&](Str msg, int code = 1) -> TempStr {
+        out.Append(msg);
+        out.AppendChar('\n');
+        if (exitCodeOut) {
+            *exitCodeOut = code;
+        }
+        return ToStrTemp(out);
+    };
+
+    if (len(gWindows) == 0) {
+        return fail(StrL("NOTREADY no-window"), 2);
+    }
+    MainWindow* win = gWindows[0];
+    DisplayModel* dm = win ? win->AsFixed() : nullptr;
+    if (!dm) {
+        return fail(StrL("NOTREADY no-doc"), 2);
+    }
+    if (!dm->ValidPageNo(pageNo)) {
+        return fail(fmt("ERROR invalid-page pageNo=%d pageCount=%d", pageNo, dm->PageCount()));
+    }
+
+    Vec<Annotation*> widgets;
+    EngineMupdfGetPageWidgets(dm->GetEngine(), pageNo, widgets);
+    Annotation* button = nullptr;
+    int nButtons = 0;
+    for (Annotation* w : widgets) {
+        int wt = GetWidgetType(w);
+        if (wt != PDF_WIDGET_TYPE_CHECKBOX && wt != PDF_WIDGET_TYPE_RADIOBUTTON) {
+            continue;
+        }
+        if (nButtons == idx) {
+            button = w;
+        }
+        nButtons++;
+    }
+    if (!button) {
+        return fail(fmt("ERROR no-button idx=%d buttons=%d", idx, nButtons));
+    }
+
+    TempStr before = str::DupTemp(GetWidgetValue(button));
+    bool toggled = ToggleFormButton(button);
+    TempStr after = str::DupTemp(GetWidgetValue(button));
+    if (exitCodeOut) {
+        *exitCodeOut = 0;
+    }
+    out.Append(fmt("OK toggled=%d before='%s' after='%s' buttons=%d\n", (int)toggled, before, after, nButtons));
+    return ToStrTemp(out);
+}
+
 TempStr SeedTextSelectionResultTemp(int pageNo, int* exitCodeOut) {
     str::Builder out;
     auto fail = [&](Str msg, int code = 1) -> TempStr {
@@ -2607,4 +2771,211 @@ TempStr SeedTextSelectionResultTemp(int pageNo, int* exitCodeOut) {
         *exitCodeOut = 0;
     }
     return ToStrTemp(out);
+}
+
+// Renders a blank strip of pages 1 and 2 as one selection image and counts
+// its white pixels. Used by tests/render-selections-8bpp.ts.
+TempStr RenderSelectionsResultTemp(int* exitCodeOut) {
+    str::Builder out;
+    auto fail = [&](Str msg, int code = 1) -> TempStr {
+        out.Append(msg);
+        out.AppendChar('\n');
+        if (exitCodeOut) {
+            *exitCodeOut = code;
+        }
+        return ToStrTemp(out);
+    };
+
+    if (len(gWindows) == 0) {
+        return fail(StrL("NOTREADY no-window"), 2);
+    }
+    MainWindow* win = gWindows[0];
+    DisplayModel* dm = win ? win->AsFixed() : nullptr;
+    if (!dm || dm->PageCount() < 2) {
+        return fail(StrL("NOTREADY need-two-pages"), 2);
+    }
+
+    Vec<SelectionOnPage> sels;
+    RectF r(72, 300, 200, 40);
+    VecAppend(sels, SelectionOnPage(1, &r, nullptr));
+    VecAppend(sels, SelectionOnPage(2, &r, nullptr));
+    RenderedBitmap* rb = RenderSelectionsAsRenderedBitmap(dm, sels);
+    Pixmap* px = PixmapFromRenderedBitmap(rb);
+    if (!px || !px->data) {
+        FreePixmap(px);
+        return fail(StrL("ERROR no-bitmap"));
+    }
+    int white = 0;
+    int total = px->width * px->height;
+    if (px->format == PixmapFormat::BGRA8) {
+        for (int y = 0; y < px->height; y++) {
+            const u32* row = (const u32*)(px->data + ((size_t)y * px->stride));
+            for (int x = 0; x < px->width; x++) {
+                if ((row[x] & 0xffffff) == 0xffffff) {
+                    white++;
+                }
+            }
+        }
+    }
+    TempStr res = fmt("OK w=%d h=%d format=%d white=%d total=%d", px->width, px->height, (int)px->format, white, total);
+    FreePixmap(px);
+    if (exitCodeOut) {
+        *exitCodeOut = 0;
+    }
+    return res;
+}
+
+// Citation hover popup state. action "show" first opens the popup for the link
+// at canvas point (x, y), as hovering does: a test's cursor can't hold a hover.
+// Used by tests/issue-6252.ts.
+TempStr RefHoverResultTemp(Str action, int x, int y, int* exitCodeOut) {
+    if (exitCodeOut) {
+        *exitCodeOut = 0;
+    }
+    MainWindow* win = len(gWindows) > 0 ? gWindows[0] : nullptr;
+    DisplayModel* dm = win ? win->AsFixed() : nullptr;
+    if (str::Eq(action, StrL("show")) && dm) {
+        if (!win->refHover) {
+            win->refHover = RefHoverCreate(win->hwndCanvas);
+        }
+        win->refHover->ctrl = win->ctrl;
+        win->refHover->linkHandler = win->linkHandler;
+        IPageElement* el = dm->GetElementAtPos({x, y}, nullptr);
+        if (!RefHoverScheduleLink(win->refHover, win->hwndCanvas, dm, x, y, el, 0)) {
+            if (exitCodeOut) {
+                *exitCodeOut = 1;
+            }
+            return fmt("ERROR no-link x=%d y=%d", x, y);
+        }
+    }
+    RefHoverState* s = win ? win->refHover : nullptr;
+    if (!s || !s->hwndPopup || !HwndIsVisible(s->hwndPopup)) {
+        return fmt("OK visible=0");
+    }
+    auto& d = s->displayed;
+    return fmt("OK visible=1 hwnd=%d page=%d y=%d zoom=%d", (int)(INT_PTR)s->hwndPopup, d.destPage, (int)d.region.y,
+               (int)(d.userZoom * 100));
+}
+
+// The current tab's pages: each page's width, which a test gives a unique value
+// per page, and where the bookmarks point. Used by tests/issue-6070.ts.
+TempStr PageInfoResultTemp(int* exitCodeOut) {
+    auto finish = [exitCodeOut](int code, TempStr s) -> TempStr {
+        if (exitCodeOut) {
+            *exitCodeOut = code;
+        }
+        return s;
+    };
+    MainWindow* win = len(gWindows) > 0 ? gWindows[0] : nullptr;
+    WindowTab* tab = win ? win->CurrentTab() : nullptr;
+    DisplayModel* dm = tab ? tab->AsFixed() : nullptr;
+    if (!dm) {
+        return finish(2, str::DupTemp(StrL("NOTREADY no-document")));
+    }
+    str::Builder out;
+    EngineBase* engine = dm->GetEngine();
+    out.Append(fmt("pages=%d widths=", engine->PageCount()));
+    for (int i = 1; i <= engine->PageCount(); i++) {
+        out.Append(fmt(i == 1 ? "%d" : ",%d", (int)lroundf(engine->PageMediabox(i).dx)));
+    }
+    out.Append(StrL(" toc="));
+    TocTree* toc = engine->GetToc();
+    for (TocItem* it = toc && toc->root ? toc->root->child : nullptr; it; it = it->next) {
+        out.Append(fmt("%s:%d;", it->title, it->pageNo));
+    }
+    return finish(0, fmt("OK %s", ToStrTemp(out)));
+}
+
+// The sidebar's panels (HWND, visible, view, the view icons' enabled / selected
+// state and client rects) and its Thumbnails view: whether it shows, the current
+// page and, for clicking, each visible thumbnail in
+// its panel's client coords. Used by tests/sidebar-thumbnails.ts.
+TempStr SidebarThumbnailsResultTemp(int* exitCodeOut) {
+    MainWindow* win = len(gWindows) > 0 ? gWindows[0] : nullptr;
+    PageThumbnailsCtrl* thumbs = win ? win->pageThumbs : nullptr;
+    if (!thumbs) {
+        if (exitCodeOut) {
+            *exitCodeOut = 2;
+        }
+        return str::DupTemp(StrL("NOTREADY no-window"));
+    }
+    SidebarPanel* shows = SidebarPanelShowing(win, SidebarView::Thumbnails);
+    HWND hwnd = shows ? shows->hwnd : win->sidebarTop->hwnd;
+    str::Builder sb;
+    sb.Append(fmt("hwnd=%d thumbnails=%d count=%d current=%d rendered=%d", (int)(intptr_t)hwnd,
+                  (int)thumbs->IsVisible(), thumbs->pageCount, thumbs->selectedPage, thumbs->RenderedCount()));
+    // the focus ring is drawn while the thumbnails have the (virtual) focus
+    sb.Append(fmt(" ring=%d", (int)thumbs->HasFlag(vwfFocused)));
+    // e.g. top=1234,1,thumbnails,110,010:2,2,22,22;26,2,22,22;50,2,22,22
+    // (enabled icons, selected icon, icon rects in order B, T, F)
+    SidebarPanel* panels[] = {win->sidebarTop, win->sidebarBottom};
+    bool visible[] = {win->uiState.sidebarTopVisible, win->uiState.sidebarBottomVisible};
+    Str names[] = {StrL("top"), StrL("bottom")};
+    for (int i = 0; i < 2; i++) {
+        SidebarPanel* p = panels[i];
+        sb.Append(fmt(" %s=%d,%d,%s,", names[i], (int)(intptr_t)p->hwnd, (int)visible[i], SidebarViewToStr(p->view)));
+        for (VirtIconButton* b : p->viewBtns) {
+            sb.Append(fmt("%d", (int)b->IsEnabled()));
+        }
+        sb.Append(StrL(","));
+        for (VirtIconButton* b : p->viewBtns) {
+            sb.Append(fmt("%d", (int)b->isSelected));
+        }
+        sb.Append(StrL(":"));
+        for (int j = 0; j < kSidebarViewCount; j++) {
+            Rect r = p->viewBtns[j]->BoundsInWindow();
+            sb.Append(fmt(j == 0 ? "%d,%d,%d,%d" : ";%d,%d,%d,%d", r.x, r.y, r.dx, r.dy));
+        }
+    }
+    sb.Append(StrL(" rects="));
+    for (int pageNo = 1; pageNo <= thumbs->pageCount; pageNo++) {
+        Rect r = thumbs->PageRect(pageNo);
+        sb.Append(fmt("%d:%d,%d,%d,%d;", pageNo, r.x, r.y, r.dx, r.dy));
+    }
+    if (exitCodeOut) {
+        *exitCodeOut = 0;
+    }
+    return ToStrTemp(sb);
+}
+
+// The first window's frame: whether it's maximized and the non-client strips
+// its WM_NCPAINT fills (window coords). Used by tests/issue-6259.ts.
+TempStr FrameNcStripsResultTemp(int* exitCodeOut) {
+    MainWindow* win = len(gWindows) > 0 ? gWindows[0] : nullptr;
+    if (!win) {
+        if (exitCodeOut) {
+            *exitCodeOut = 2;
+        }
+        return str::DupTemp(StrL("NOTREADY no-window"));
+    }
+    Vec<Rect> strips;
+    GetFrameNcStrips(win, strips);
+    str::Builder sb;
+    sb.Append(fmt("zoomed=%d strips=%d", (int)IsZoomed(win->hwndFrame), len(strips)));
+    for (Rect& r : strips) {
+        sb.Append(fmt(" %d,%d,%d,%d", r.x, r.y, r.dx, r.dy));
+    }
+    if (exitCodeOut) {
+        *exitCodeOut = 0;
+    }
+    return ToStrTemp(sb);
+}
+
+// Sends the frame a mouse wheel while the window is marked as being closed, as
+// when a wheel arrives during CloseWindow(). Used by tests/wheel-while-closing.ts.
+TempStr WheelWhileClosingResultTemp(int* exitCodeOut) {
+    MainWindow* win = len(gWindows) > 0 ? gWindows[0] : nullptr;
+    if (!win || !win->IsDocLoaded()) {
+        if (exitCodeOut) {
+            *exitCodeOut = 2;
+        }
+        return str::DupTemp(StrL("NOTREADY no-document"));
+    }
+    win->isBeingClosed = true;
+    SendMessageW(win->hwndFrame, WM_MOUSEWHEEL, MAKEWPARAM(0, -WHEEL_DELTA), 0);
+    win->isBeingClosed = false;
+    if (exitCodeOut) {
+        *exitCodeOut = 0;
+    }
+    return str::DupTemp(StrL("OK"));
 }

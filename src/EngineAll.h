@@ -8,10 +8,12 @@ struct PasswordUI;
 struct FileArgs;
 struct AnnotCreateArgs;
 struct PropValue;
+struct djvu_text_zone;
 
 bool IsEngineDjVuSupportedFileType(FileType kind);
 EngineBase* CreateEngineDjvuDecFromFile(Str path);
 EngineBase* CreateEngineDjvuDecFromData(Str data);
+PageText DjvuZonesToPageText(djvu_text_zone* root, float dpiF);
 extern bool gMemoryMapLargeFiles;
 
 EngineBase* CreateEngineEpubFromFile(Str fileName);
@@ -73,7 +75,7 @@ TempStr EbookGeneratedCssTemp(Str fontName, const Vec<float>* margin, float line
 constexpr int kImageSizeFromDataPartialSize = 64 * 1024;
 
 bool IsEngineImageSupportedFileType(FileType);
-EngineBase* CreateEngineImageFromFile(Str fileName);
+EngineBase* CreateEngineImageFromFile(Str path);
 EngineBase* CreateEngineImageFromData(Str data);
 
 bool IsEngineImageDirSupportedFile(Str fileName, bool sniff = false);
@@ -83,6 +85,7 @@ bool IsEngineCbxSupportedFileType(FileType kind);
 EngineBase* CreateEngineCbxFromFile(Str path, PasswordUI* pwdUI = nullptr, FileType hintType = FileType::Unknown,
                                     Str realPath = {});
 EngineBase* CreateEngineCbxFromData(Str data);
+bool EngineCbxHasComicInfoToc(EngineBase*);
 
 bool IsEngineImages(EngineBase*);
 void EngineImagesGetImageProperties(EngineBase*, int pageNo, Vec<PropValue>& propsOut);
@@ -96,6 +99,7 @@ Str EngineImagesGetImageData(EngineBase*, int pageNo);
 using ShowErrorCb = Func1<Str>;
 
 bool IsEngineMupdfSupportedFileType(FileType);
+int EngineMupdfCount();
 EngineBase* CreateEngineMupdfFromFile(Str path, FileType kind, int displayDPI, PasswordUI* pwdUI = nullptr);
 EngineBase* CreateEngineMupdfFromData(Str data, Str nameHint, PasswordUI* pwdUI);
 Str LoadEmbeddedPDFFile(Str path);
@@ -118,6 +122,17 @@ bool EngineMupdfCanRedo(EngineBase*);
 bool EngineMupdfUndo(EngineBase*, Vec<Annotation*>& removedOut);
 bool EngineMupdfRedo(EngineBase*, Vec<Annotation*>& removedOut);
 void EngineMupdfRefreshModifiedState(EngineBase*);
+// a PDF EngineMupdfMergePdfs() reads pages from
+struct PdfMergeSource {
+    Str path;
+    Str password;
+};
+// page pageNo (1-based) of source src
+struct PdfMergePage {
+    int src = 0;
+    int pageNo = 0;
+};
+bool EngineMupdfMergePdfs(const Vec<PdfMergeSource>& srcs, const Vec<PdfMergePage>& pages, Str destPath);
 
 bool EngineMupdfSupportsAnnotations(EngineBase*);
 bool EngineMupdfIsPdf(EngineBase* engine);
@@ -172,6 +187,7 @@ PdfSigCert* EngineMupdfGetSignatureCerts(EngineBase*);
 void FreePdfSigCerts(PdfSigCert*);
 Annotation* EngineMupdfGetAnnotationAtPos(EngineBase*, int pageNo, PointF pos, float padding, Annotation*);
 Annotation* EngineMupdfGetWidgetAtPos(EngineBase*, int pageNo, PointF pos);
+void EngineMupdfGetPageWidgets(EngineBase*, int pageNo, Vec<Annotation*>& out);
 Annotation* EngineMupdfGetAdjacentWidget(EngineBase*, Annotation* cur, bool forward);
 void EngineMupdfGetFormFieldHighlightRects(EngineBase*, int pageNo, Annotation* skip, Vec<RectF>& out);
 void EngineMupdfSetDisableJavaScript(bool disable);
@@ -195,6 +211,12 @@ TempStr EngineMupdfGetPdfOutline(Str path);
 bool IsEnginePsAvailable();
 bool IsEnginePsSupportedFileType(FileType);
 EngineBase* CreateEnginePsFromFile(Str fileName);
+TempStr GetGhostscriptPathTemp();
+
+bool IsEngineDviAvailable();
+bool IsEngineDviSupportedFileType(FileType);
+EngineBase* CreateEngineDviFromFile(Str fileName);
+void DeleteStaleDviCache();
 
 bool IsSupportedFileType(FileType kind, bool enableEngineEbooks);
 

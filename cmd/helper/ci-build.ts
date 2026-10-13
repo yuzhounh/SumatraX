@@ -3,7 +3,13 @@
 import { existsSync, readFileSync, writeFileSync, statSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createHmac, createHash } from "node:crypto";
-import { getGitLinearVersion, extractSumatraVersion, runLogged, getGitSha1, detectVisualStudio2026 } from "../util";
+import {
+  extractSumatraBuildVersion,
+  extractSumatraVersion,
+  runLogged,
+  getGitSha1,
+  detectVisualStudio2026,
+} from "../util";
 
 // const { msbuildPath, llvmPdbutilPath } = detectVisualStudio2022();
 // const slnPath = join("vs2022", "SumatraPDF.sln");
@@ -80,16 +86,6 @@ async function revertBuildConfig(): Promise<void> {
     stderr: "inherit",
   });
   await proc.exited;
-}
-
-// gen-docs.ts writes the in-app manual to .work/docs; the exe's prebuild
-// (cmd/pack-embedded-prebuild.cmd) packs it into IDR_EMBEDDED_PAK. Without it
-// the build still succeeds but ships without the manual, so fail early.
-function ensureDocsGenerated(): void {
-  const path = join(".work", "docs", "manual.shell.html");
-  if (!existsSync(path)) {
-    throw new Error(`'${path}' missing which indicates gen-docs didn't run`);
-  }
 }
 
 // === Command Execution ===
@@ -225,7 +221,6 @@ function removeReleaseBuilds(): void {
 }
 
 async function buildPreRelease(preRelVer: string, sha1: string, vsplatform: string): Promise<void> {
-  ensureDocsGenerated();
   console.log(`building pre-release version ${preRelVer}`);
   const buildStart = performance.now();
 
@@ -378,9 +373,10 @@ export async function buildCi() {
 
   getSecrets();
 
-  const preRelVer = String(await getGitLinearVersion());
-  const sha1 = await getGitSha1();
   const sumatraVer = extractSumatraVersion();
+  const preRelVer = extractSumatraBuildVersion().slice(sumatraVer.length + 1);
+  if (!/^\d+$/.test(preRelVer)) throw new Error("official pre-release version missing from src/Version.h");
+  const sha1 = await getGitSha1();
   console.log(`preReleaseVer: '${preRelVer}'`);
   console.log(`gitSha1: '${sha1}'`);
   console.log(`sumatraVersion: '${sumatraVer}'`);

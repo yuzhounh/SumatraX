@@ -19,7 +19,6 @@
 #include "gui/GuiColors.h"
 #include "gui/VirtCtrl.h"
 
-#define INCLUDE_SETTINGSSTRUCTS_METADATA
 #include "Settings.h"
 #include "AppSettings.h"
 #include "DisplayMode.h"
@@ -34,10 +33,12 @@
 #include "SumatraPDF.h"
 #include "Canvas.h"
 #include "TableOfContents.h"
+#include "SidebarPanel.h"
 #include "Favorites.h"
 #include "FileHistory.h"
 #include "Menu.h"
 #include "Translations.h"
+#include "PagePosition.h"
 #include "Installer.h"
 #include "RegistryPreview.h"
 #include "RegistrySearchFilter.h"
@@ -51,6 +52,7 @@
 #include "AnnotSearch.h"
 #include "AnnotEditToolbar.h"
 #include "AnnotPlacement.h"
+#include "PageThumbnails.h"
 #include "CommandPalette.h"
 
 struct MainWindow;
@@ -58,7 +60,6 @@ struct WindowTab;
 struct TocItem;
 struct FileState;
 struct Favorite;
-struct ThumbnailPaletteCtrl;
 struct Annotation;
 
 enum class ThumbnailMode {
@@ -86,12 +87,21 @@ struct ItemDataCP {
     // setting's dotted path; in the value-picking stage it is a candidate value
     // and settingPath names the setting it belongs to.
     SettingType settingType = SettingType::Comment; // Comment: not a setting row
-    u8* settingPtr = nullptr;
-    intptr_t settingDefault = 0; // FieldInfo::value, decoded per type
+    int settingOffset = 0;                          // into gSettings, see SettingFieldPtr()
+    intptr_t settingDefault = 0;                    // FieldInfo::value, decoded per type
     Str settingPath;
+    Str settingComment; // its doc comment, from the settings metadata
 };
 
 using StrVecCP = StrVecWithData<ItemDataCP>;
+
+static bool IsSettingRow(const ItemDataCP* d) {
+    return d->settingType != SettingType::Comment;
+}
+
+static const u8* SettingRowPtr(const ItemDataCP* d) {
+    return SettingFieldPtr(d->settingOffset);
+}
 
 struct ListBoxModelCP : ListBoxModel {
     StrVecCP strings;
@@ -116,10 +126,13 @@ struct CommandPaletteWnd : WindowBase {
     StrVecCP annotations;
     StrVecCP settings;
     VirtListBox* listBox = nullptr;
-    ThumbnailPaletteCtrl* thumbnailCtrl = nullptr;
+    PageThumbnailsCtrl* thumbnailCtrl = nullptr;
     HBox* switchRow = nullptr;
     HBox* helpRow = nullptr;
     int helpKind = -1;
+    // the selected setting's doc comment, shown under the list in "= settings"
+    ILayout* settingHelpBox = nullptr;
+    VirtFixedLinesText* settingHelp = nullptr;
 
     StrVec filterWords;
     Vec<u8> highlighted;
@@ -149,6 +162,8 @@ struct CommandPaletteWnd : WindowBase {
     bool Create(MainWindow* win, Str prefix, int smartTabAdvance);
     void QueryChanged();
     void UpdateHelpRow();
+    void UpdateSettingHelp();
+    void UpdateColors();
 
     void ExecuteCurrentSelection();
     bool AdvanceSelection(int dir);
@@ -163,9 +178,12 @@ struct CommandPaletteWnd : WindowBase {
     void SwitchToFavorites();
     void SwitchToSettings();
     void BeginEditSettingValue(Str path);
-    void ReturnToSettings();
+    void ReturnToSettings(Str selPath);
     bool IsEditingSettingValue();
+    TempStr EditedSettingPathTemp();
+    ItemDataCP* FindSetting(Str path, Str& foundPath);
     void FillSettingValueRows(Str path, Str value, StrVecCP& out);
+    void SelectSetting(Str path);
     void SetThumbnailMode(ThumbnailMode mode);
     void OnSelectionChange();
     void OnListDoubleClick();
@@ -259,579 +277,9 @@ static LPARAM gCursorPosLParam = 0;
 static FileState* gFavFsToGoToOnClose = nullptr;
 static Favorite* gFavToGoToOnClose = nullptr;
 
-constexpr int kPaletteThumbnailDx = 120;
-constexpr int kPaletteThumbnailDy = 170;
-constexpr int kPaletteThumbnailGap = 16;
-constexpr int kPaletteThumbnailPadding = 16;
-constexpr int kPaletteThumbnailMaxCols = 6;
-constexpr int kPaletteThumbnailRenderScreens = 1;
-constexpr int kPaletteThumbnailKeepScreens = 2;
-
-static Pixmap* const kThumbnailRenderFailed = (Pixmap*)(intptr_t)-1;
-
-struct ThumbnailPaletteCtrl;
-
-struct ThumbnailPaletteCache {
-    Vec<Pixmap*> thumbnails;
-    ThumbnailPaletteCtrl* ctrl = nullptr;
-    EngineBase* renderEngine = nullptr;
-    AtomicInt cancelRendering = 0;
-    int rotation = 0;
-    int thumbDx = 0;
-    int thumbDy = 0;
-    bool workerRunning = false;
-    bool deleteWhenWorkerFinishes = false;
-};
-
-struct ThumbnailRowsModel : ListBoxModel {
-    int rows = 0;
-
-    int ItemsCount() override { return rows; }
-    Str Item(int) override { return {}; }
-};
-
-struct ThumbnailRenderTask {
-    ThumbnailPaletteCache* cache = nullptr;
-    int pageNo = 0;
-    Location loc;
-    Pixmap* bitmap = nullptr;
-};
-
-struct ThumbnailRenderWorker {
-    ThumbnailPaletteCache* cache = nullptr;
-    EngineBase* sourceEngine = nullptr;
-    Vec<int> pages;
-    Vec<Location> locs;
-    int rotation = 0;
-    int thumbDx = 0;
-    int thumbDy = 0;
-};
-
-struct ThumbnailPaletteCtrl : VirtListBox {
-    MainWindow* win = nullptr;
-    WindowTab* tab = nullptr;
-    ThumbnailRowsModel* rowsModel = nullptr;
-    ThumbnailPaletteCache* cache = nullptr;
-    int pageCount = 0;
-    int selectedPage = 1;
-    int cols = 1;
-    int thumbDx = 0;
-    int thumbDy = 0;
-    int gap = 0;
-    int rowGap = 0;
-    bool active = false;
-
-    ThumbnailPaletteCtrl(MainWindow*, PlatformFont*, int dpi);
-    ~ThumbnailPaletteCtrl() override;
-
-    void SetBounds(Rect) override;
-    void DrawRow(DrawItemEvent*);
-    void OnThumbMouseDown(VirtMouseEvent*);
-    void OnThumbMouseMove(VirtMouseEvent*);
-    void OnThumbMouseUp(VirtMouseEvent*);
-    void OnThumbMouseWheel(VirtMouseEvent*);
-    void OnThumbDoubleClick(VirtMouseEvent*);
-    void Activate();
-    void Deactivate();
-    void HandleKey(int vkey);
-    void StartRendering();
-    int RenderedCount() const;
-
-  private:
-    int PageAtPoint(Point);
-    void SelectPage(int);
-    void OpenSelectedPage();
-};
-
-static void FreeThumbnail(Pixmap* thumbnail) {
-    if (thumbnail != kThumbnailRenderFailed) {
-        FreePixmap(thumbnail);
-    }
-}
-
-static Pixmap* ThumbnailToDraw(ThumbnailPaletteCache* cache, int idx) {
-    Pixmap* thumbnail = cache->thumbnails[idx];
-    return thumbnail == kThumbnailRenderFailed ? nullptr : thumbnail;
-}
-
-static void FreeThumbnailRenderEngine(ThumbnailPaletteCache* cache) {
-    ReportIf(cache->workerRunning);
-    if (cache->renderEngine) {
-        cache->renderEngine->Release();
-        cache->renderEngine = nullptr;
-    }
-}
-
-static void DeleteThumbnailCache(ThumbnailPaletteCache* cache) {
-    for (Pixmap* thumbnail : cache->thumbnails) {
-        FreeThumbnail(thumbnail);
-    }
-    VecReset(cache->thumbnails);
-    FreeThumbnailRenderEngine(cache);
-    delete cache;
-}
-
-static Pixmap* RenderPageThumbnail(EngineBase* engine, int pageNo, Location loc, int rotation, int thumbDx,
-                                   int thumbDy) {
-    // reflow docs share one mediabox; don't use a flat pageNo that a clone's
-    // chapter layout may have already shifted
-    int boxPage = loc.IsValid() && engine->isReflowable ? 1 : pageNo;
-    RectF pageRect = engine->PageMediabox(boxPage);
-    if (pageRect.IsEmpty()) {
-        return nullptr;
-    }
-
-    pageRect = engine->Transform(pageRect, boxPage, 1.0f, rotation);
-    if (pageRect.dx <= 0 || pageRect.dy <= 0) {
-        return nullptr;
-    }
-    float zoom = (float)thumbDx / pageRect.dx;
-    pageRect.dy = std::min(pageRect.dy, (float)thumbDy / zoom);
-    pageRect = engine->Transform(pageRect, boxPage, 1.0f, rotation, true);
-    RenderPageArgs args(pageNo, zoom, rotation, &pageRect, RenderTarget::View);
-    args.loc = loc;
-    return engine->RenderPage(args);
-}
-
-static void FinishThumbnailRender(ThumbnailRenderTask* task) {
-    ThumbnailPaletteCache* cache = task->cache;
-    int idx = task->pageNo - 1;
-    bool isValid = !cache->deleteWhenWorkerFinishes && idx >= 0 && idx < len(cache->thumbnails);
-    if (isValid) {
-        if (task->bitmap) {
-            FreeThumbnail(cache->thumbnails[idx]);
-            cache->thumbnails[idx] = task->bitmap;
-            task->bitmap = nullptr;
-            if (cache->ctrl && cache->ctrl->active) {
-                cache->ctrl->Invalidate();
-            }
-        } else if (!cache->thumbnails[idx]) {
-            cache->thumbnails[idx] = kThumbnailRenderFailed;
-        }
-    }
-    FreePixmap(task->bitmap);
-    delete task;
-}
-
-static void FinishThumbnailWorker(ThumbnailPaletteCache* cache) {
-    cache->workerRunning = false;
-    if (cache->deleteWhenWorkerFinishes) {
-        DeleteThumbnailCache(cache);
-        return;
-    }
-    if (!cache->ctrl || !cache->ctrl->active) {
-        FreeThumbnailRenderEngine(cache);
-        return;
-    }
-    cache->ctrl->StartRendering();
-}
-
-static void RenderAndPostThumbnail(ThumbnailRenderWorker* worker, EngineBase* engine, int pageNo, Location loc) {
-    auto* task = new ThumbnailRenderTask;
-    task->cache = worker->cache;
-    task->pageNo = pageNo;
-    task->loc = loc;
-    task->bitmap = RenderPageThumbnail(engine, pageNo, loc, worker->rotation, worker->thumbDx, worker->thumbDy);
-    uitask::Post(MkFunc0<ThumbnailRenderTask>(FinishThumbnailRender, task));
-}
-
-static void RenderThumbnailsInBackground(ThumbnailRenderWorker* worker) {
-    ThumbnailPaletteCache* cache = worker->cache;
-    if (worker->sourceEngine) {
-        cache->renderEngine = worker->sourceEngine->Clone();
-        worker->sourceEngine->Release();
-        worker->sourceEngine = nullptr;
-    }
-    EngineBase* engine = cache->renderEngine;
-    if (engine) {
-        int n = len(worker->pages);
-        for (int i = 0; i < n; i++) {
-            if (AtomicIntGet(&cache->cancelRendering) != 0) {
-                break;
-            }
-            Location loc = i < len(worker->locs) ? worker->locs[i] : kInvalidLocation;
-            RenderAndPostThumbnail(worker, engine, worker->pages[i], loc);
-        }
-    }
-    uitask::Post(MkFunc0<ThumbnailPaletteCache>(FinishThumbnailWorker, cache));
-    delete worker;
-}
-
-ThumbnailPaletteCtrl::ThumbnailPaletteCtrl(MainWindow* win, PlatformFont* font, int dpi) {
-    this->win = win;
-    this->tab = win->CurrentTab();
-    this->font = font;
-    this->dpi = dpi;
-    SetFlag(vwfFocusable, false);
-    SetColor(kColListText, ThemeWindowTextColor());
-    SetColor(kColListBg, ThemeWindowControlBackgroundColor());
-
-    thumbDx = DpiScaleByDpi(dpi, kPaletteThumbnailDx);
-    thumbDy = DpiScaleByDpi(dpi, kPaletteThumbnailDy);
-    gap = DpiScaleByDpi(dpi, kPaletteThumbnailGap);
-    rowGap = gap;
-    itemDy = thumbDy + gap;
-    padding = DpiScaledInsets(kPaletteThumbnailPadding, kPaletteThumbnailPadding);
-
-    DisplayModel* dm = tab ? tab->AsFixed() : nullptr;
-    pageCount = dm ? dm->PageCount() : 0;
-    selectedPage = dm ? Clamp(dm->CurrentPageNo(), 1, std::max(pageCount, 1)) : 1;
-
-    rowsModel = new ThumbnailRowsModel();
-    rowsModel->rows = pageCount;
-    SetModel(rowsModel);
-
-    cache = new ThumbnailPaletteCache();
-    cache->ctrl = this;
-    cache->rotation = dm ? dm->GetRotation() : 0;
-    cache->thumbDx = thumbDx;
-    cache->thumbDy = thumbDy;
-    VecAppendBlanks(cache->thumbnails, pageCount);
-
-    onDrawItem = MkMethod1<ThumbnailPaletteCtrl, DrawItemEvent*, &ThumbnailPaletteCtrl::DrawRow>(this);
-    VirtCtrl::onMouseDown =
-        MkMethod1<ThumbnailPaletteCtrl, VirtMouseEvent*, &ThumbnailPaletteCtrl::OnThumbMouseDown>(this);
-    VirtCtrl::onMouseMove =
-        MkMethod1<ThumbnailPaletteCtrl, VirtMouseEvent*, &ThumbnailPaletteCtrl::OnThumbMouseMove>(this);
-    VirtCtrl::onMouseUp = MkMethod1<ThumbnailPaletteCtrl, VirtMouseEvent*, &ThumbnailPaletteCtrl::OnThumbMouseUp>(this);
-    VirtCtrl::onMouseWheel =
-        MkMethod1<ThumbnailPaletteCtrl, VirtMouseEvent*, &ThumbnailPaletteCtrl::OnThumbMouseWheel>(this);
-    VirtCtrl::onDoubleClick =
-        MkMethod1<ThumbnailPaletteCtrl, VirtMouseEvent*, &ThumbnailPaletteCtrl::OnThumbDoubleClick>(this);
-}
-
-ThumbnailPaletteCtrl::~ThumbnailPaletteCtrl() {
-    cache->ctrl = nullptr;
-    AtomicIntSet(&cache->cancelRendering, 1);
-    if (cache->workerRunning) {
-        cache->deleteWhenWorkerFinishes = true;
-    } else {
-        DeleteThumbnailCache(cache);
-    }
-    cache = nullptr;
-}
-
-void ThumbnailPaletteCtrl::SetBounds(Rect r) {
-    int reservedScrollbarDx = DpiScaleByDpi(dpi, 10);
-    int availableDx = r.dx - padding.left - padding.right - reservedScrollbarDx;
-    int newCols = (availableDx + gap) / (thumbDx + gap);
-    newCols = Clamp(newCols, 1, kPaletteThumbnailMaxCols);
-    if (newCols != cols) {
-        cols = newCols;
-        rowsModel->rows = (pageCount + cols - 1) / cols;
-        SetModel(rowsModel);
-    }
-
-    int visibleRows = std::max(1, (r.dy - gap) / (thumbDy + gap));
-    visibleRows = std::min(visibleRows, rowsModel->rows);
-    if (visibleRows > 0) {
-        int freeDy = r.dy - (visibleRows * thumbDy);
-        rowGap = std::max(gap, freeDy / (visibleRows + 1));
-    }
-    itemDy = thumbDy + rowGap;
-    padding.top = rowGap;
-    padding.bottom = 0;
-
-    VirtListBox::SetBounds(r);
-    EnsureVisible((selectedPage - 1) / cols);
-    if (active) {
-        StartRendering();
-    }
-}
-
-void ThumbnailPaletteCtrl::DrawRow(DrawItemEvent* ev) {
-    int gridDx = (cols * thumbDx) + ((cols - 1) * gap);
-    int left = ev->itemRect.x + std::max(0, (ev->itemRect.dx - gridDx) / 2);
-    int firstPage = (ev->itemIndex * cols) + 1;
-    int lastPage = std::min(pageCount, firstPage + cols - 1);
-    DisplayModel* dm = tab ? tab->AsFixed() : nullptr;
-    EngineBase* engine = dm ? dm->GetEngine() : nullptr;
-    bool chapters = engine && engine->HasChapters();
-    for (int pageNo = firstPage; pageNo <= lastPage; pageNo++) {
-        int col = pageNo - firstPage;
-        int x = left + (col * (thumbDx + gap));
-        Rect pageRect{x, ev->itemRect.y, thumbDx, thumbDy};
-        ev->gfx->FillRect(pageRect, kColWhite);
-
-        Pixmap* thumbnail = ThumbnailToDraw(cache, pageNo - 1);
-        if (thumbnail) {
-            int drawDx = std::min(thumbnail->width, thumbDx);
-            int drawDy = std::min(thumbnail->height, thumbDy);
-            Rect target{x + ((thumbDx - drawDx) / 2), pageRect.y + ((thumbDy - drawDy) / 2), drawDx, drawDy};
-            ev->gfx->DrawPixmap(thumbnail, target);
-        }
-
-        if (pageNo == selectedPage) {
-            ev->gfx->DrawRect(pageRect, MkRgb(0, 120, 215), 3);
-        }
-
-        TempStr label = fmt("%d", pageNo);
-        if (chapters) {
-            Location loc = engine->LocationFromPageNo(pageNo);
-            if (loc.IsValid()) {
-                label = fmt("%d / %d", loc.chapter, loc.page);
-            }
-        }
-        Size ts = ev->gfx->MeasureText(label, font);
-        int padX = DpiScaleByDpi(dpi, 6);
-        int padY = DpiScaleByDpi(dpi, 2);
-        int inset = DpiScaleByDpi(dpi, 4);
-        int boxDx = std::min(ts.dx + (padX * 2), pageRect.dx - (inset * 2));
-        int boxDy = ts.dy + (padY * 2);
-        int boxX = pageRect.x + ((pageRect.dx - boxDx) / 2);
-        int boxY = pageRect.y + pageRect.dy - boxDy - inset;
-        if (boxY < pageRect.y + inset) {
-            boxY = pageRect.y + inset;
-        }
-        Rect box{boxX, boxY, boxDx, boxDy};
-        // a pill: half the height rounds the short sides into semicircles
-        ev->gfx->FillRoundedRect(box, boxDy / 2, ThemeWindowBackgroundColor());
-        ev->gfx->DrawText(label, box, gfxTextCenter | gfxTextVCenter, font, ThemeWindowTextColor());
-    }
-}
-
-int ThumbnailPaletteCtrl::PageAtPoint(Point pt) {
-    int row = ItemFromPoint(pt);
-    if (row < 0) {
-        return -1;
-    }
-    Rect rowRect = ItemRect(row);
-    if (rowRect.IsEmpty()) {
-        return -1;
-    }
-    Point origin = OriginInWindow();
-    rowRect.Offset(-origin.x, -origin.y);
-    int gridDx = (cols * thumbDx) + ((cols - 1) * gap);
-    int left = rowRect.x + std::max(0, (rowRect.dx - gridDx) / 2);
-    if (pt.x < left || pt.y < rowRect.y || pt.y >= rowRect.y + thumbDy) {
-        return -1;
-    }
-    int col = (pt.x - left) / (thumbDx + gap);
-    if (col < 0 || col >= cols) {
-        return -1;
-    }
-    int cellX = left + (col * (thumbDx + gap));
-    if (pt.x >= cellX + thumbDx) {
-        return -1;
-    }
-    int pageNo = (row * cols) + col + 1;
-    return pageNo <= pageCount ? pageNo : -1;
-}
-
-void ThumbnailPaletteCtrl::SelectPage(int pageNo) {
-    if (pageCount <= 0) {
-        return;
-    }
-    pageNo = Clamp(pageNo, 1, pageCount);
-    if (pageNo == selectedPage) {
-        return;
-    }
-    selectedPage = pageNo;
-    EnsureVisible((selectedPage - 1) / cols);
-    Invalidate();
-    StartRendering();
-}
-
-void ThumbnailPaletteCtrl::OpenSelectedPage() {
-    if (!win || !tab || win->CurrentTab() != tab) {
-        return;
-    }
-    DisplayModel* dm = tab->AsFixed();
-    if (!dm) {
-        return;
-    }
-    dm->GoToPage(selectedPage, 0, true);
+// the palette's thumbnails went to a page: the palette's job is done
+static void ClosePaletteAfterThumbnail() {
     ScheduleDeleteAndExecCommand();
-}
-
-void ThumbnailPaletteCtrl::OnThumbMouseDown(VirtMouseEvent* ev) {
-    int pageNo = PageAtPoint(ev->pt);
-    if (pageNo > 0) {
-        SelectPage(pageNo);
-        ev->didHandle = true;
-        return;
-    }
-    int oldScrollY = scrollY;
-    VirtListBox::OnMouseDown(ev);
-    if (scrollY != oldScrollY) {
-        StartRendering();
-    }
-}
-
-void ThumbnailPaletteCtrl::OnThumbMouseMove(VirtMouseEvent* ev) {
-    int oldScrollY = scrollY;
-    VirtListBox::OnMouseMove(ev);
-    if (scrollY != oldScrollY) {
-        StartRendering();
-    }
-    if (ev->didHandle) {
-        return;
-    }
-    int pageNo = PageAtPoint(ev->pt);
-    if (pageNo > 0) {
-        SelectPage(pageNo);
-        ev->didHandle = true;
-    }
-}
-
-void ThumbnailPaletteCtrl::OnThumbMouseUp(VirtMouseEvent* ev) {
-    VirtListBox::OnMouseUp(ev);
-}
-
-void ThumbnailPaletteCtrl::OnThumbMouseWheel(VirtMouseEvent* ev) {
-    int oldScrollY = scrollY;
-    VirtListBox::OnMouseWheel(ev);
-    if (scrollY != oldScrollY) {
-        StartRendering();
-    }
-}
-
-void ThumbnailPaletteCtrl::OnThumbDoubleClick(VirtMouseEvent* ev) {
-    int pageNo = PageAtPoint(ev->pt);
-    if (pageNo <= 0) {
-        return;
-    }
-    SelectPage(pageNo);
-    OpenSelectedPage();
-    ev->didHandle = true;
-}
-
-void ThumbnailPaletteCtrl::HandleKey(int vkey) {
-    if (pageCount <= 0) {
-        return;
-    }
-    int pageNo = selectedPage;
-    int pageStep = std::max(1, UsableDy() / itemDy) * cols;
-    switch (vkey) {
-        case VK_RETURN:
-            OpenSelectedPage();
-            return;
-        case VK_LEFT:
-            pageNo--;
-            break;
-        case VK_RIGHT:
-            pageNo++;
-            break;
-        case VK_UP:
-            pageNo -= cols;
-            break;
-        case VK_DOWN:
-            pageNo += cols;
-            break;
-        case VK_PRIOR:
-            pageNo -= pageStep;
-            break;
-        case VK_NEXT:
-            pageNo += pageStep;
-            break;
-        case VK_HOME:
-            pageNo = 1;
-            break;
-        case VK_END:
-            pageNo = pageCount;
-            break;
-        default:
-            return;
-    }
-    SelectPage(Clamp(pageNo, 1, pageCount));
-}
-
-void ThumbnailPaletteCtrl::Activate() {
-    if (active) {
-        return;
-    }
-    active = true;
-    AtomicIntSet(&cache->cancelRendering, 0);
-    EnsureVisible((selectedPage - 1) / cols);
-    StartRendering();
-    Invalidate();
-}
-
-void ThumbnailPaletteCtrl::Deactivate() {
-    if (!active) {
-        return;
-    }
-    active = false;
-    AtomicIntSet(&cache->cancelRendering, 1);
-    if (!cache->workerRunning) {
-        FreeThumbnailRenderEngine(cache);
-    }
-}
-
-int ThumbnailPaletteCtrl::RenderedCount() const {
-    int n = 0;
-    for (Pixmap* thumbnail : cache->thumbnails) {
-        if (thumbnail && thumbnail != kThumbnailRenderFailed) {
-            n++;
-        }
-    }
-    return n;
-}
-
-void ThumbnailPaletteCtrl::StartRendering() {
-    if (!active || cache->workerRunning || pageCount <= 0) {
-        return;
-    }
-    DisplayModel* dm = tab ? tab->AsFixed() : nullptr;
-    if (!dm || win->CurrentTab() != tab || dm->PageCount() != pageCount || dm->GetRotation() != cache->rotation) {
-        return;
-    }
-    EngineBase* engine = dm->GetEngine();
-    if (!engine) {
-        return;
-    }
-
-    int visibleRows = std::max(1, UsableDy() / itemDy);
-    int firstVisible = ((scrollY / itemDy) * cols) + 1;
-    int perScreen = std::max(1, visibleRows * cols);
-    int lastVisible = std::min(pageCount, firstVisible + perScreen - 1);
-    int firstPage = std::max(1, firstVisible - (kPaletteThumbnailRenderScreens * perScreen));
-    int lastPage = std::min(pageCount, lastVisible + (kPaletteThumbnailRenderScreens * perScreen));
-
-    int keepFirst = std::max(1, firstPage - (kPaletteThumbnailKeepScreens * perScreen));
-    int keepLast = std::min(pageCount, lastPage + (kPaletteThumbnailKeepScreens * perScreen));
-    for (int idx = 0; idx < len(cache->thumbnails); idx++) {
-        int pageNo = idx + 1;
-        if (cache->thumbnails[idx] && (pageNo < keepFirst || pageNo > keepLast)) {
-            FreeThumbnail(cache->thumbnails[idx]);
-            cache->thumbnails[idx] = nullptr;
-        }
-    }
-
-    auto* worker = new ThumbnailRenderWorker;
-    auto queuePage = [&](int pageNo) {
-        if (cache->thumbnails[pageNo - 1]) {
-            return;
-        }
-        VecAppend(worker->pages, pageNo);
-        VecAppend(worker->locs, engine->LocationFromPageNo(pageNo));
-    };
-    for (int pageNo = firstVisible; pageNo <= lastVisible; pageNo++) {
-        queuePage(pageNo);
-    }
-    for (int pageNo = firstPage; pageNo < firstVisible; pageNo++) {
-        queuePage(pageNo);
-    }
-    for (int pageNo = lastVisible + 1; pageNo <= lastPage; pageNo++) {
-        queuePage(pageNo);
-    }
-    if (len(worker->pages) == 0) {
-        delete worker;
-        return;
-    }
-
-    worker->cache = cache;
-    worker->rotation = cache->rotation;
-    worker->thumbDx = cache->thumbDx;
-    worker->thumbDy = cache->thumbDy;
-    if (!cache->renderEngine) {
-        worker->sourceEngine = engine;
-        engine->AddRef();
-    }
-    AtomicIntSet(&cache->cancelRendering, 0);
-    cache->workerRunning = true;
-    RunAsync(MkFunc0<ThumbnailRenderWorker>(RenderThumbnailsInBackground, worker),
-             StrL("CommandPaletteThumbnailRender"));
 }
 
 void CommandPaletteWnd::SetThumbnailMode(ThumbnailMode mode) {
@@ -931,9 +379,10 @@ static void ApplyRemoveItem(RemoveItemOp* op) {
     FileState* favFs = op->favFs;
     Str filePath = op->filePath;
     int currSel = op->currSel;
+
+    AutoDelete opDel(op);
     defer {
         str::Free(filePath);
-        delete op;
     };
 
     if (gCommandPaletteWnd != wnd) {
@@ -1029,7 +478,7 @@ void CommandPaletteWnd::BeginEditSettingValue(Str path) {
     if (!GetSettingsEnumValues(path)) {
         for (int i = 0; i < len(settings); i++) {
             if (str::Eq(settings[i], path)) {
-                value = FormatSettingValueTemp(settings.AtData(i)->settingType, settings.AtData(i)->settingPtr);
+                value = FormatSettingValueTemp(settings.AtData(i)->settingType, SettingRowPtr(settings.AtData(i)));
                 break;
             }
         }
@@ -1038,11 +487,35 @@ void CommandPaletteWnd::BeginEditSettingValue(Str path) {
                         fmt("%s%s %s %s", Str(kPalettePrefixBoolSettings), path, Str(kPaletteSettingValueSep), value));
 }
 
-// Back to the setting-picking stage. Applying a value reloads gSettings, so
-// every row pointing into it (settings, file history, favorites) is rebuilt.
-void CommandPaletteWnd::ReturnToSettings() {
+// Back to the setting-picking stage with selPath selected. Applying a value
+// reloads gSettings, so the rows built from it (settings, file history,
+// favorites) is rebuilt; selPath usually points into those rows, hence the copy.
+void CommandPaletteWnd::ReturnToSettings(Str selPath) {
+    TempStr path = str::DupTemp(selPath);
     CollectStrings(win);
     SwitchToSettings();
+    SelectSetting(path);
+}
+
+// the full path of the setting named in the "=<path> = <value>" query
+TempStr CommandPaletteWnd::EditedSettingPathTemp() {
+    Str filter = CommandPaletteSkipWS(Str(editQuery->GetTextTemp()));
+    str::TrimPrefix(filter, Str(kPalettePrefixBoolSettings));
+    Str path, value, foundPath;
+    if (!SplitSettingValueQuery(filter, path, value) || !FindSetting(path, foundPath)) {
+        return {};
+    }
+    return str::DupTemp(foundPath);
+}
+
+void CommandPaletteWnd::SelectSetting(Str path) {
+    auto* m = (ListBoxModelCP*)listBox->model;
+    for (int i = 0; i < m->ItemsCount(); i++) {
+        if (str::Eq(m->strings[i], path)) {
+            CommandPaletteSetCurrentSelection(this, i);
+            return;
+        }
+    }
 }
 
 // true in the "=<path> = <value>" stage
@@ -1099,6 +572,7 @@ void CommandPaletteWnd::OnCommand(WindowBase::CommandEvent* ev) {
 }
 
 void CommandPaletteWnd::OnSelectionChange() {
+    UpdateSettingHelp();
     int idx = listBox->GetCurrentSelection();
     if (!smartTabMode) {
         return;
@@ -1178,7 +652,7 @@ bool CommandPaletteWnd::RemoveSelectedItem() {
 void CommandPaletteWnd::OnKeyDown(KeyEvent* ev) {
     if (ev->vkey == VK_ESCAPE) {
         if (IsEditingSettingValue()) {
-            ReturnToSettings();
+            ReturnToSettings(EditedSettingPathTemp());
             ev->didHandle = true;
             return;
         }
@@ -1335,17 +809,17 @@ void CommandPaletteWnd::ExecuteCurrentSelection() {
         return;
     }
 
-    if (data->settingPtr) {
+    if (IsSettingRow(data)) {
         Str itemText = m->strings[idx];
         if (len(data->settingPath) > 0) {
             // a value picked for a setting: the row text is the value
             SetSettingsValueFromStr(data->settingPath, itemText);
-            ReturnToSettings();
+            ReturnToSettings(data->settingPath);
             return;
         }
         if (data->settingType == SettingType::Bool) {
-            ToggleSettingsBool((bool*)data->settingPtr);
-            ReturnToSettings();
+            ToggleSettingsBool((bool*)SettingRowPtr(data));
+            ReturnToSettings(itemText);
             return;
         }
         // anything else needs a value: stay open and ask for one
@@ -1562,6 +1036,7 @@ enum {
     kHelpFavorites,
     kHelpAnnotations,
     kHelpSettings,
+    kHelpSettingValue,
     kHelpToc,
     kHelpEverything,
     kHelpThumbnails,
@@ -1589,8 +1064,9 @@ static int PaletteHelpKind(Str filter, bool smartTab) {
     if (str::StartsWith(filter, Str(kPalettePrefixAnnotations))) {
         return kHelpAnnotations;
     }
-    if (str::StartsWith(filter, Str(kPalettePrefixBoolSettings))) {
-        return kHelpSettings;
+    if (str::TrimPrefix(filter, Str(kPalettePrefixBoolSettings))) {
+        Str path, value;
+        return SplitSettingValueQuery(filter, path, value) ? kHelpSettingValue : kHelpSettings;
     }
     if (str::StartsWith(filter, Str(kPalettePrefixThumbnails))) {
         return kHelpThumbnails;
@@ -1642,6 +1118,8 @@ void CommandPaletteWnd::UpdateHelpRow() {
             strings[nHelp++] = Tr("Esc close");
             break;
         case kHelpAnnotations:
+        case kHelpThumbnails:
+        case kHelpToc:
             strings[nHelp++] = Tr("Enter go to");
             strings[nHelp++] = Tr("Esc close");
             break;
@@ -1649,13 +1127,9 @@ void CommandPaletteWnd::UpdateHelpRow() {
             strings[nHelp++] = Tr("Enter change");
             strings[nHelp++] = Tr("Esc close");
             break;
-        case kHelpThumbnails:
-            strings[nHelp++] = Tr("Enter go to");
-            strings[nHelp++] = Tr("Esc close");
-            break;
-        case kHelpToc:
-            strings[nHelp++] = Tr("Enter go to");
-            strings[nHelp++] = Tr("Esc close");
+        case kHelpSettingValue:
+            strings[nHelp++] = Tr("Enter apply");
+            strings[nHelp++] = Tr("Esc go back");
             break;
         case kHelpEverything:
             strings[nHelp++] = Tr("Enter select");
@@ -1672,9 +1146,55 @@ void CommandPaletteWnd::UpdateHelpRow() {
     for (int i = 0; i < nHelp; i++) {
         helpRow->AddChild(NewHelpText(st, WithKbdMarkupTemp(strings[i])));
     }
+    if (settingHelpBox) {
+        bool show = kind == kHelpSettings || kind == kHelpSettingValue;
+        settingHelpBox->SetVisibility(show ? Visibility::Visible : Visibility::Collapse);
+        // a collapsed box is not laid out, but its virtual child still paints
+        settingHelp->SetIsVisible(show);
+    }
     if (layout) {
         DoLayout();
     }
+    UpdateSettingHelp();
+}
+
+// the doc comment of the selected setting, like the advanced settings dialog
+void CommandPaletteWnd::UpdateSettingHelp() {
+    if (!settingHelpBox || IsCollapsed(settingHelpBox)) {
+        return;
+    }
+    Str comment;
+    int idx = listBox->GetCurrentSelection();
+    auto* m = (ListBoxModelCP*)listBox->model;
+    if (idx >= 0 && idx < m->ItemsCount()) {
+        comment = m->Data(idx)->settingComment;
+    }
+    settingHelp->SetText(comment);
+}
+
+// the theme changed while the palette is open: the colors were set at creation
+void CommandPaletteWnd::UpdateColors() {
+    auto colBg = ThemeWindowControlBackgroundColor();
+    auto colTxt = ThemeWindowTextColor();
+    // recolors the window and its native children (the query edit)
+    UpdateTheme();
+
+    listBox->SetColor(kColListText, colTxt);
+    listBox->SetColor(kColListBg, colBg);
+    if (thumbnailCtrl) {
+        thumbnailCtrl->SetColor(kColListText, colTxt);
+        thumbnailCtrl->SetColor(kColListBg, colBg);
+    }
+    settingHelp->SetColor(kColRichText, colTxt);
+    settingHelp->SetColor(kColRichLink, colTxt);
+    settingHelp->SetColor(kColRichBg, colBg);
+    settingHelp->borderCol = ThemeEdgeColor();
+
+    // the help rows bake the colors into their items, so rebuild them
+    FillSwitchRow();
+    helpKind = kHelpNone;
+    UpdateHelpRow();
+    RedrawWindow(hwnd, nullptr, nullptr, RDW_ERASE | RDW_INVALIDATE | RDW_ALLCHILDREN);
 }
 
 bool CommandPaletteWnd::Create(MainWindow* win, Str prefix, int smartTabAdvance) {
@@ -1756,11 +1276,27 @@ bool CommandPaletteWnd::Create(MainWindow* win, Str prefix, int smartTabAdvance)
         overlay->AddChild(c);
 
         if (win->AsFixed()) {
-            thumbnailCtrl = new ThumbnailPaletteCtrl(win, font, GetDpi());
+            thumbnailCtrl = new PageThumbnailsCtrl(win, font, GetDpi(), ThumbnailsHost::Palette);
+            thumbnailCtrl->onPageOpened = MkFunc0Void(ClosePaletteAfterThumbnail);
             thumbnailCtrl->SetIsVisible(false);
             overlay->AddChild(thumbnailCtrl);
         }
         vbox->AddChild(overlay, 1);
+    }
+
+    {
+        auto* c = new VirtFixedLinesText();
+        c->font = font;
+        c->SetColor(kColRichText, colTxt);
+        c->SetColor(kColRichLink, colTxt);
+        c->SetColor(kColRichBg, colBg);
+        c->borderCol = ThemeEdgeColor();
+        c->padding = DpiScaledInsets(4);
+        settingHelp = c;
+        auto* box = new Padding(c, DpiScaledInsets(4, 0));
+        box->SetVisibility(Visibility::Collapse);
+        settingHelpBox = box;
+        vbox->AddChild(box);
     }
 
     {
@@ -1846,6 +1382,14 @@ void RunCommandPalette(MainWindow* win, Str prefix, int smartTabAdvance) {
     gHwndToActivateOnClose = win->hwndFrame;
 }
 
+void CommandPaletteUpdateTheme() {
+    CommandPaletteWnd* wnd = gCommandPaletteWnd;
+    if (!wnd || !wnd->hwnd) {
+        return;
+    }
+    wnd->UpdateColors();
+}
+
 void CommandPaletteOnAnnotationsChanged() {
     CommandPaletteWnd* wnd = gCommandPaletteWnd;
     if (!wnd || !wnd->hwnd || !wnd->win) {
@@ -1929,12 +1473,18 @@ TempStr CommandPaletteStateTemp(int* exitCodeOut) {
     int n = wnd->listBox ? wnd->listBox->ItemsCount() : 0;
     int selectedCmdId = 0;
     int annotPage = 0;
+    Str selText;
+    Str selValue; // a setting row: its current value
     if (sel >= 0 && sel < n) {
         auto* model = (ListBoxModelCP*)wnd->listBox->model;
+        selText = model->Item(sel);
         ItemDataCP* data = model->Data(sel);
         selectedCmdId = data ? data->cmdId : 0;
         if (data && data->annot) {
             annotPage = data->annot->pageNo;
+        }
+        if (data && IsSettingRow(data) && len(data->settingPath) == 0) {
+            selValue = FormatSettingValueTemp(data->settingType, SettingRowPtr(data));
         }
     }
     int qStart = 0, qEnd = 0, qLen = 0;
@@ -1945,11 +1495,19 @@ TempStr CommandPaletteStateTemp(int* exitCodeOut) {
     int nAnnots = len(wnd->annotations);
     EngineBase* engine = wnd->win && wnd->win->CurrentTab() ? wnd->win->CurrentTab()->GetEngine() : nullptr;
     int annotsDone = EngineMupdfAnnotsLoadDone(engine) ? 1 : 0;
+    // the setting help paints when it is a visible top of the window's virtual tree
+    bool helpShown = false;
+    if (wnd->vroot && wnd->settingHelp && wnd->settingHelp->IsVisible()) {
+        for (VirtCtrl* w : wnd->vroot->tops) {
+            helpShown |= w == wnd->settingHelp;
+        }
+    }
     out.Append(
         fmt("OK sel=%d items=%d querySel=%d,%d queryLen=%d cmd=%d rtl=%d thumb=%d page=%d rendered=%d annots=%d "
-            "annotPage=%d annotsDone=%d\n",
+            "annotPage=%d annotsDone=%d ",
             sel, n, qStart, qEnd, qLen, selectedCmdId, (int)CommandPaletteUiRtl(), (int)wnd->thumbnailMode, thumbPage,
             rendered, nAnnots, annotPage, annotsDone));
+    out.Append(fmt("settingHelp=%d selValue=%s selText=%s\n", (int)helpShown, selValue, selText));
     return finish(0);
 }
 
@@ -1992,7 +1550,11 @@ static TempStr UpdateCommandNameTemp(MainWindow* win, int cmdId, Str s) {
         case CmdToggleBookmarks:
         case CmdToggleTableOfContents: {
             isToggle = true;
-            newIsOn = !win->uiState.tocVisible;
+            newIsOn = !IsSidebarViewShown(win, SidebarView::Bookmarks);
+        } break;
+        case CmdToggleThumbnails: {
+            isToggle = true;
+            newIsOn = !IsSidebarViewShown(win, SidebarView::Thumbnails);
         } break;
         case CmdTogglePresentationMode: {
             isToggle = true;
@@ -2066,6 +1628,13 @@ static TempStr UpdateCommandNameTemp(MainWindow* win, int cmdId, Str s) {
             if (dm) {
                 isToggle = true;
                 newIsOn = !dm->GetTrimEmptyMargins();
+            }
+        } break;
+        case CmdToggleFreePan: {
+            DisplayModel* dm = win->AsFixed();
+            if (dm) {
+                isToggle = true;
+                newIsOn = !dm->GetFreePan();
             }
         } break;
         case CmdFindToggleMatchCase: {
@@ -2383,47 +1952,33 @@ static bool SettingDiffersFromDefault(const ItemDataCP* d) {
     if (d->settingType == SettingType::Float) {
         float def = 0;
         str::Parse(Str((const char*)d->settingDefault), "%f", &def);
-        return *(const float*)d->settingPtr != def;
+        return *(const float*)SettingRowPtr(d) != def;
     }
-    TempStr val = FormatSettingValueTemp(d->settingType, d->settingPtr);
+    TempStr val = FormatSettingValueTemp(d->settingType, SettingRowPtr(d));
     return !str::Eq(val, FormatSettingDefaultTemp(d->settingType, d->settingDefault));
 }
 
-static void CollectSettingsInStruct(StrVecCP& out, const StructInfo* info, u8* base, Str prefix) {
-    if (!info || !base) {
-        return;
-    }
-    const char* fieldName = info->fieldNames;
-    for (u16 i = 0; i < info->fieldCount; i++) {
-        const FieldInfo& field = info->fields[i];
-        Str fname(fieldName);
-        fieldName += len(fname) + 1;
-        if (field.internal || field.type == SettingType::Comment || field.offset == (size_t)-1) {
-            continue;
-        }
-        u8* fieldPtr = base + field.offset;
-        TempStr path = len(prefix) > 0 ? fmt("%s.%s", prefix, fname) : str::DupTemp(fname);
-        if (field.type == SettingType::Struct) {
-            CollectSettingsInStruct(out, (const StructInfo*)field.value, fieldPtr, path);
-            continue;
-        }
-        if (!IsPaletteSettingType(field.type) || len(path) == 0) {
+// one "= settings" row per scalar setting; compact structs and arrays need
+// the advanced settings dialog
+static void CollectSettingRows(StrVecCP& out) {
+    Vec<SettingField> fields;
+    CollectSettingFields(fields);
+    for (const SettingField& sf : fields) {
+        if (!IsPaletteSettingType(sf.field->type) || len(sf.path) == 0) {
             continue;
         }
         ItemDataCP data;
-        data.settingType = field.type;
-        data.settingPtr = fieldPtr;
-        data.settingDefault = field.value;
-        out.Append(path, data);
+        data.settingType = sf.field->type;
+        data.settingOffset = sf.offset;
+        data.settingDefault = sf.field->value;
+        data.settingComment = sf.comment;
+        out.Append(sf.path, data);
     }
 }
 
 void CommandPaletteWnd::CollectSettings() {
     settings.Reset();
-    if (!gSettings) {
-        return;
-    }
-    CollectSettingsInStruct(settings, &gSettingsInfo, (u8*)gSettings, {});
+    CollectSettingRows(settings);
     SortNoCase(&settings);
 
     // changed values first, then the rest; both groups stay alphabetical
@@ -2482,6 +2037,20 @@ void CommandPaletteWnd::CollectStrings(MainWindow* mainWin) {
         data.cmdId = (i32)cmdId;
         // test against the English name: a translation may not carry the prefix
         data.isDebug = str::StartsWith(name, StrL("Debug: "));
+        auto nameTranslated = trans::GetTranslation(name);
+        auto nameUpdated = UpdateCommandNameTemp(mainWin, cmdId, nameTranslated);
+        tempCommands.Append(nameUpdated, data);
+    }
+
+    // the same command under another wording a user may search for
+    int altIdx = 0;
+    for (Str name = SeqStrFirst(gCommandAltDescs); len(name) > 0; name = SeqStrNext(name), altIdx++) {
+        cmdId = gCommandAltDescIds[altIdx];
+        if (!AllowCommand(ctx, (i32)cmdId)) {
+            continue;
+        }
+        ItemDataCP data;
+        data.cmdId = (i32)cmdId;
         auto nameTranslated = trans::GetTranslation(name);
         auto nameUpdated = UpdateCommandNameTemp(mainWin, cmdId, nameTranslated);
         tempCommands.Append(nameUpdated, data);
@@ -2578,8 +2147,8 @@ void CommandPaletteWnd::DrawListBoxItem(VirtListBox::DrawItemEvent* ev) {
     Color rightCol = AccentColor(colText, 80);
     if (data->cmdId != 0) {
         rightStr = CommandPaletteShortcutTemp(data->cmdId);
-    } else if (data->settingPtr && len(data->settingPath) == 0) {
-        rightStr = FormatSettingValueTemp(data->settingType, data->settingPtr);
+    } else if (IsSettingRow(data) && len(data->settingPath) == 0) {
+        rightStr = FormatSettingValueTemp(data->settingType, SettingRowPtr(data));
         rightCol = colText;
         if (SettingDiffersFromDefault(data)) {
             PlatformFont* bold = GetBoldPlatformFont(lb->font);
@@ -2702,8 +2271,8 @@ static void FilterStrings(StrVecCP& strs, const StrVec& words, StrVecCP& matched
             TempStr shortcut = CommandPaletteShortcutTemp(data->cmdId);
             matches = FilterMatches(shortcut, words);
         }
-        if (!matches && data && data->settingPtr) {
-            TempStr val = FormatSettingValueTemp(data->settingType, data->settingPtr);
+        if (!matches && data && IsSettingRow(data)) {
+            TempStr val = FormatSettingValueTemp(data->settingType, SettingRowPtr(data));
             matches = FilterMatches(val, words);
         }
         if (!matches) {
@@ -2727,14 +2296,10 @@ static bool SplitSettingValueQuery(Str query, Str& path, Str& value) {
     return len(path) > 0;
 }
 
-// Rows for the value stage: an enum offers its allowed values, anything else
-// offers the one value being typed. Enter on a row applies it (see
-// ExecuteCurrentSelection).
-void CommandPaletteWnd::FillSettingValueRows(Str path, Str value, StrVecCP& out) {
-    // the full dotted path, or an unambiguous leaf ("Units" for
-    // "FixedPageUI.PageGrid.Units") so the name can be typed by hand
+// The setting at a full dotted path, or an unambiguous leaf ("Units" for
+// "FixedPageUI.PageGrid.Units") so the name can be typed by hand
+ItemDataCP* CommandPaletteWnd::FindSetting(Str path, Str& foundPath) {
     ItemDataCP* found = nullptr;
-    Str foundPath;
     int nLeaf = 0;
     for (int i = 0; i < len(settings); i++) {
         Str s = settings[i];
@@ -2752,8 +2317,17 @@ void CommandPaletteWnd::FillSettingValueRows(Str path, Str value, StrVecCP& out)
         }
     }
     if (nLeaf != 1) {
-        found = nullptr;
+        return nullptr;
     }
+    return found;
+}
+
+// Rows for the value stage: an enum offers its allowed values, anything else
+// offers the one value being typed. Enter on a row applies it (see
+// ExecuteCurrentSelection).
+void CommandPaletteWnd::FillSettingValueRows(Str path, Str value, StrVecCP& out) {
+    Str foundPath;
+    ItemDataCP* found = FindSetting(path, foundPath);
     if (!found || found->settingType == SettingType::Bool) {
         return;
     }
@@ -2814,6 +2388,8 @@ void CommandPaletteWnd::FilterStringsForQuery(Str filter, StrVecCP& strings) {
         if (SplitSettingValueQuery(filter, path, value)) {
             SplitFilterToWords(value, filterWords);
             FillSettingValueRows(path, value, strings);
+            // the rows are the values themselves: nothing to highlight
+            filterWords.Reset();
             return;
         }
     }

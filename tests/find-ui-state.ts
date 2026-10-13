@@ -3,7 +3,7 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { ControlCommand, type ControlClient } from "./control.ts";
-import { cmdId, ROOT, runStandalone, tmpPath } from "./util.ts";
+import { cmdId, ROOT, runStandalone, SETTINGS_FILE, tmpPath } from "./util.ts";
 import { killAndWait, launchControlled, sendCommandSync } from "./win-automation.ts";
 
 type FindUiState = {
@@ -63,7 +63,7 @@ export async function testit(): Promise<void> {
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
   writeFileSync(
-    join(dir, "SumatraPDF-settings.txt"),
+    join(dir, SETTINGS_FILE),
     "UiLanguage = en\nCheckForUpdates = false\nRestoreSession = false\nSearchUIFloating = false\n",
   );
 
@@ -75,11 +75,22 @@ export async function testit(): Promise<void> {
     await waitForTwoDocuments(client);
 
     expectState(await findUiRequest(client, "show-all"), 0, 2, 0);
+    await findUiRequest(client, "set-first-text");
+    let state = await findUiRequest(client, "theme-recreate-first");
+    expectState(state, 0, 2, 0);
+    if (state.firstTextLen !== "stale-term".length) {
+      throw new Error(`find-ui-state: visible term was lost during theme recreation: ${state.raw.trim()}`);
+    }
     expectState(await findUiRequest(client, "toggle-first"), 1, 0, 2);
 
-    let state = await findUiRequest(client, "set-first-text");
+    state = await findUiRequest(client, "set-first-text");
     if (state.firstTextLen !== "stale-term".length) {
       throw new Error(`find-ui-state: failed to seed floating term: ${state.raw.trim()}`);
+    }
+    state = await findUiRequest(client, "theme-recreate-first");
+    expectState(state, 1, 0, 2);
+    if (state.firstTextLen !== "stale-term".length) {
+      throw new Error(`find-ui-state: floating term was lost during theme recreation: ${state.raw.trim()}`);
     }
     await findUiRequest(client, "toggle-first");
     state = await findUiRequest(client, "clear-first");

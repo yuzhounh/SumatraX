@@ -17,9 +17,11 @@ import {
   writeFileSync,
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { inflateSync } from "node:zlib";
 import { ensureModifierKeysUp, enumWindows, getWindowPid, getWindowText, hasInteractiveDesktop } from "./winapi.ts";
 
 export const ROOT = join(import.meta.dir, "..");
+export const SETTINGS_FILE = "SumatraX-settings.txt";
 
 // `-exe <path>` runs the tests against an executable that is already built,
 // e.g. a release or an ASan one, or a build from another checkout. Validated
@@ -69,6 +71,8 @@ const SOURCE_EXE = EXE_FROM_ARGV || process.env.SUMATRA_TEST_EXE || defaultDbgEx
 // every test run. This prevents a manual run, or an earlier test that saves
 // settings, from changing the starting state of later tests.
 export const TESTS_TMP_DIR = join(ROOT, ".work", "tests-tmp");
+// scratch files of tests (see tmpPath())
+export const TMP_DIR = join(TESTS_TMP_DIR, "tmp");
 export let EXE = SOURCE_EXE;
 
 export function prepareTestEnvironment(): void {
@@ -79,10 +83,15 @@ export function prepareTestEnvironment(): void {
     throw new Error(`test executable PDB not found: ${sourcePdb}`);
   }
   rmSync(TESTS_TMP_DIR, { recursive: true, force: true });
-  mkdirSync(TESTS_TMP_DIR, { recursive: true });
+  // a test may have resolved a tmpPath() at import, before this wipe
+  mkdirSync(TMP_DIR, { recursive: true });
   const testExe = join(TESTS_TMP_DIR, exeName);
   copyFileSync(sourceExe, testExe);
   copyFileSync(sourcePdb, join(TESTS_TMP_DIR, sourcePdb.split("\\").pop()!));
+  const sourceDll = join(dirname(sourceExe), "libsumatrapdf.dll");
+  if (existsSync(sourceDll)) {
+    copyFileSync(sourceDll, join(TESTS_TMP_DIR, "libsumatrapdf.dll"));
+  }
   EXE = testExe;
 }
 
@@ -112,6 +121,27 @@ export function drainProcStderr(stderr: Bun.Subprocess["stderr"]): Promise<strin
     }
     throw e;
   });
+}
+
+let appUnitTests: Promise<void> | null = null;
+
+export function runAppUnitTests(): Promise<void> {
+  if (appUnitTests) {
+    return appUnitTests;
+  }
+
+  appUnitTests = (async () => {
+    const proc = Bun.spawn([EXE, "-unit-tests", "-for-ai"], { stdout: "pipe", stderr: "pipe" });
+    const [stdout, stderr, exitCode] = await Promise.all([
+      new Response(proc.stdout).text(),
+      new Response(proc.stderr).text(),
+      proc.exited,
+    ]);
+    if (exitCode !== 0) {
+      throw new Error(`app unit tests failed (exit ${exitCode}):\n${(stdout + stderr).trim()}`);
+    }
+  })();
+  return appUnitTests;
 }
 
 // Quit / kill closing a control pipe or stderr can reject after the test has
@@ -229,14 +259,14 @@ export function makeMinimalPdf(title: string): Buffer {
   );
 }
 
-// Fresh -appdata directory with SumatraPDF-settings.txt. Tests that need extra
+// Fresh -appdata directory with the portable settings file. Tests that need extra
 // files write them into the returned path.
 export function writeAppdata(name: string, settings: string): string {
   const dir = tmpPath(name);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
   const body = settings.endsWith("\n") ? settings : `${settings}\n`;
-  writeFileSync(join(dir, "SumatraPDF-settings.txt"), body);
+  writeFileSync(join(dir, SETTINGS_FILE), body);
   return dir;
 }
 
@@ -337,11 +367,59 @@ export function requireDpiShrank(name: string, high: number, low: number): void 
 // TESTS_TMP_DIR so explicit -appdata directories are isolated from the user's
 // settings and from the executable used by the test. Use tmpPath() to get a
 // path inside it (dir created on demand).
-export const TMP_DIR = join(TESTS_TMP_DIR, "tmp");
-
 export function tmpPath(name: string): string {
   mkdirSync(TMP_DIR, { recursive: true });
   return join(TMP_DIR, name);
+}
+
+function zipCrc32(buf: Uint8Array): number {
+  let c = 0xffffffff;
+  for (const b of buf) {
+    c ^= b;
+    for (let i = 0; i < 8; i++) {
+      c = (c >>> 1) ^ (c & 1 ? 0xedb88320 : 0);
+    }
+  }
+  return (c ^ 0xffffffff) >>> 0;
+}
+
+// Store-only (uncompressed) zip, e.g. a .cbz. Names may include '/' for folders.
+export function writeStoredZip(path: string, files: { name: string; data: Buffer }[]): void {
+  const locals: Buffer[] = [];
+  const centrals: Buffer[] = [];
+  let offset = 0;
+  for (const f of files) {
+    const name = Buffer.from(f.name, "utf8");
+    const crc = zipCrc32(f.data);
+    const lh = Buffer.alloc(30);
+    lh.writeUInt32LE(0x04034b50, 0);
+    lh.writeUInt16LE(20, 4);
+    lh.writeUInt32LE(crc, 14);
+    lh.writeUInt32LE(f.data.length, 18);
+    lh.writeUInt32LE(f.data.length, 22);
+    lh.writeUInt16LE(name.length, 26);
+    locals.push(lh, name, f.data);
+
+    const ch = Buffer.alloc(46);
+    ch.writeUInt32LE(0x02014b50, 0);
+    ch.writeUInt16LE(20, 4);
+    ch.writeUInt16LE(20, 6);
+    ch.writeUInt32LE(crc, 16);
+    ch.writeUInt32LE(f.data.length, 20);
+    ch.writeUInt32LE(f.data.length, 24);
+    ch.writeUInt16LE(name.length, 28);
+    ch.writeUInt32LE(offset, 42);
+    centrals.push(ch, name);
+    offset += lh.length + name.length + f.data.length;
+  }
+  const central = Buffer.concat(centrals);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(files.length, 8);
+  end.writeUInt16LE(files.length, 10);
+  end.writeUInt32LE(central.length, 12);
+  end.writeUInt32LE(offset, 16);
+  writeFileSync(path, Buffer.concat([...locals, central, end]));
 }
 
 // path of an installed Ghostscript console exe, "" when none
@@ -615,4 +693,105 @@ export async function runStandalone(testit: () => void | Promise<void>, name?: s
     process.exit(1);
   }
   process.exit(0);
+}
+
+export type PngImage = { w: number; h: number; nComp: number; data: Uint8Array };
+
+function paethPredictor(a: number, b: number, c: number): number {
+  const p = a + b - c;
+  const pa = Math.abs(p - a);
+  const pb = Math.abs(p - b);
+  const pc = Math.abs(p - c);
+  if (pa <= pb && pa <= pc) {
+    return a;
+  }
+  return pb <= pc ? b : c;
+}
+
+// Minimal PNG reader: 8-bit RGB or RGBA, no interlace (what the app and
+// captureWindowToPng write).
+export function loadPng(path: string): PngImage {
+  const buf = readFileSync(path);
+  let off = 8;
+  let w = 0;
+  let h = 0;
+  let colorType = 0;
+  const idat: Buffer[] = [];
+  while (off + 8 <= buf.length) {
+    const n = buf.readUInt32BE(off);
+    const type = buf.toString("latin1", off + 4, off + 8);
+    const data = buf.subarray(off + 8, off + 8 + n);
+    if (type === "IHDR") {
+      w = data.readUInt32BE(0);
+      h = data.readUInt32BE(4);
+      colorType = data[9]!;
+    } else if (type === "IDAT") {
+      idat.push(data);
+    } else if (type === "IEND") {
+      break;
+    }
+    off += 12 + n;
+  }
+  const nComp = colorType === 6 ? 4 : colorType === 2 ? 3 : 0;
+  if (!nComp || w <= 0 || h <= 0) {
+    throw new Error(`loadPng: unsupported png ${path} ct=${colorType} ${w}x${h}`);
+  }
+  const raw = inflateSync(Buffer.concat(idat));
+  const stride = w * nComp;
+  const data = new Uint8Array(h * stride);
+  let src = 0;
+  for (let y = 0; y < h; y++) {
+    const filter = raw[src++]!;
+    const row = y * stride;
+    const prev = (y - 1) * stride;
+    for (let x = 0; x < stride; x++) {
+      const left = x >= nComp ? data[row + x - nComp]! : 0;
+      const up = y > 0 ? data[prev + x]! : 0;
+      const ul = y > 0 && x >= nComp ? data[prev + x - nComp]! : 0;
+      const v = raw[src++]!;
+      let recon = v;
+      if (filter === 1) {
+        recon = (v + left) & 255;
+      } else if (filter === 2) {
+        recon = (v + up) & 255;
+      } else if (filter === 3) {
+        recon = (v + ((left + up) >> 1)) & 255;
+      } else if (filter === 4) {
+        recon = (v + paethPredictor(left, up, ul)) & 255;
+      } else if (filter !== 0) {
+        throw new Error(`loadPng: png filter ${filter}`);
+      }
+      data[row + x] = recon;
+    }
+  }
+  return { w, h, nComp, data };
+}
+
+// [r, g, b] of one pixel
+export function pngPixel(img: PngImage, x: number, y: number): [number, number, number] {
+  const i = (y * img.w + x) * img.nComp;
+  return [img.data[i]!, img.data[i + 1]!, img.data[i + 2]!];
+}
+
+// n pages of widths first, first+1, ...; bookmark "Target" to page tocPage;
+// a square annotation on page annotPage (0: none), drawn as a filled red square
+export function makePdf(n: number, first: number, tocPage: number, annotPage: number): string {
+  const objs: string[] = [];
+  const pageObj = (i: number) => 5 + i; // objects 5.. are the pages
+  objs[1] = `<< /Type /Catalog /Pages 2 0 R${tocPage ? " /Outlines 3 0 R" : ""} >>`;
+  const kids = Array.from({ length: n }, (_, i) => `${pageObj(i)} 0 R`).join(" ");
+  objs[2] = `<< /Type /Pages /Count ${n} /Kids [${kids}] >>`;
+  objs[3] = "<< /Type /Outlines /First 4 0 R /Last 4 0 R /Count 1 >>";
+  objs[4] = tocPage ? `<< /Title (Target) /Parent 3 0 R /Dest [${pageObj(tocPage - 1)} 0 R /Fit] >>` : "<< >>";
+  const annotObj = 5 + n;
+  for (let i = 0; i < n; i++) {
+    const annots = i + 1 === annotPage ? ` /Annots [${annotObj} 0 R]` : "";
+    objs[pageObj(i)] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${first + i} 792]${annots} >>`;
+  }
+  const apObj = annotObj + 1;
+  objs[annotObj] =
+    `<< /Type /Annot /Subtype /Square /Rect [72 420 192 540] /C [1 0 0] /F 4 /AP << /N ${apObj} 0 R >> >>`;
+  const ap = "1 0 0 rg 0 0 120 120 re f\n";
+  objs[apObj] = `<< /Type /XObject /Subtype /Form /BBox [0 0 120 120] /Length ${ap.length} >>\nstream\n${ap}endstream`;
+  return assemblePdf(objs.slice(1));
 }
