@@ -94,6 +94,7 @@ extern Func0 gOnSessionRestored;
 void NotifySessionRestoreFinished();
 bool IsSessionRestoreFinished();
 bool HasPendingDocumentLoads();
+bool AreLoadThreadsActive();
 // tells the frame's virtual tree which splitters exist (they are created
 // with their panes)
 void FrameSyncSplitters(MainWindow*);
@@ -145,6 +146,12 @@ bool OpenFileExternally(Str path);
 void CloseCurrentTab(MainWindow* win, bool quitIfLast);
 void CloseTab(WindowTab* tab, bool quitIfLast);
 bool MaybeSaveAnnotations(WindowTab* tab);
+enum class UnsavedChangesAction {
+    Discard,
+    SaveExisting,
+    SaveNew
+};
+bool ResolveUnsavedChanges(WindowTab* tab, UnsavedChangesAction action, Str newPath = {});
 void DeleteFileFromDiskAndHistory(Str path);
 WindowTab* FindTabByFilePath(Str path);
 // the tab that currently owns this controller, null if it is no longer shown
@@ -157,7 +164,7 @@ enum class SidebarResizeFrame {
     Keep,
     Adjust
 };
-void SetSidebarVisibility(MainWindow* win, bool tocVisible, bool showFavorites,
+void SetSidebarVisibility(MainWindow* win, bool topVisible, bool bottomVisible,
                           SidebarResizeFrame = SidebarResizeFrame::Keep);
 void RememberFavTreeExpansionState(MainWindow* win);
 void AdvanceFocus(MainWindow* win);
@@ -216,6 +223,7 @@ constexpr u32 kUiTabsDirty = 0x8;    // repaint the tab bar
 // ignored if another pending request wants them updated
 constexpr u32 kUiNoToolbars = 0x10;
 constexpr u32 kUiSidebarDirty = 0x20; // repaint toc/favorites boxes and their splitters
+constexpr u32 kUiPanelsDrag = 0x40;   // live drag of the splitter between the sidebar panels
 
 void ScheduleUiUpdate(MainWindow* win, u32 flags = kUiRelayout, int sidebarDx = -1);
 void DuplicateTabInNewWindow(WindowTab* tab);
@@ -288,6 +296,9 @@ struct LoadArgs {
     FileArgs* fileArgs = nullptr;
 
     TabState* tabState = nullptr;
+    // Clone() deep-copies tabState so an async or parked load never reads a
+    // session snapshot that SaveSettings() has since rebuilt
+    bool ownsTabState = false;
     WindowTab* targetTab = nullptr;
 
     // if set, called on the UI thread when the load finishes,
@@ -315,6 +326,7 @@ void MessageBoxWarning(HWND hwnd, Str msg, Str title = {});
 void UpdateCursorPositionHelper(MainWindow* win, Point pos, NotificationWnd* wnd);
 void EnterFullScreen(MainWindow* win, bool presentation = false);
 void ExitFullScreen(MainWindow* win);
+void SwitchToFullScreen(MainWindow* win, bool presentation);
 void SetCurrentLang(Str langCode);
 void RebuildMenuBarForWindow(MainWindow* win);
 void DeleteMainWindow(MainWindow* win);
@@ -329,6 +341,8 @@ struct SettingsApplyState {
     bool chmUseFixedPageUI = false;
     bool markdownUseFixedPageUI = false;
     bool explorerQuickLook = false;
+    // owned copy of the ebook layout inputs; ApplyChangedSettingsAndRelayout frees it
+    Str ebookLayout;
 };
 SettingsApplyState GetSettingsApplyState();
 void ApplyChangedSettingsAndRelayout(const SettingsApplyState& before);
@@ -337,6 +351,9 @@ void SwitchToDisplayMode(MainWindow* win, DisplayMode displayMode, bool keepCont
 void OnDocumentVerticalScrollIntent(MainWindow* win, bool down);
 void DismissNextFileScrollHint(MainWindow* win);
 void MainWindowRerender(MainWindow* win, bool includeNonClientArea = false);
+void RerenderTabPage(WindowTab*, int pageNo);
+void GetFrameNcStrips(MainWindow*, Vec<Rect>& out);
+EngineBase* CreatePdfEngineForDialog(Str path, HWND hwnd);
 
 TempStr PageInfoOverlayResultTemp(Str pathTwoPages, Str pathOnePage, int* exitCodeOut = nullptr);
 TempStr WindowStateDuringLoadResultTemp(int* exitCodeOut = nullptr);

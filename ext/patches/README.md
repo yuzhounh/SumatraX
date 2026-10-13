@@ -50,6 +50,10 @@ relative to `ext/mupdf`, so `-p1` from inside that directory.
 | `0038-html-css-background-image` | CSS `background-image` / `-size` / `-position` / `-repeat` on block boxes; fixed-layout scan EPUBs were blank (#6131) |
 | `0039-md-empty-buffer-nul-scan` | empty markdown: `len-1` underflow in `fz_md_to_html` (#6143) |
 | `0040-svg-css-class-styles` | SVG `class="st0"` resolved against the `<style>` sheet; such files drew all black (#2155) |
+| `0041-poster-keep-page-tree-while-splitting` | `poster` failed on every file: it emptied `/Kids` before reading pages from it |
+| `0042-merge-backwards-range-bookmarks` | `merge` with a range like `3-1` renumbers the bookmarks too |
+| `0043-merge-exit-code-on-failure` | `merge` exits 1 when an input or the save fails |
+| `0044-svg-unsized-image` | `<image>` with no width/height uses the raster's pixel size; a percentage `<svg>` with no viewBox adopts that size (#6266) |
 
 And eleven that are not ours but that we carry ahead of the release we vendor:
 

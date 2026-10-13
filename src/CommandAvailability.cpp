@@ -36,6 +36,7 @@ static UINT_PTR gNoDocWhitelist[] = {
     CmdOpenFile,
     CmdOpenFileNoHistory,
     CmdOpenFileWithOSFilePicker,
+    CmdOpenFileWithSumatraFilePicker,
     CmdToggleFilePicker,
     CmdToggleBoolSetting,
     CmdNavigateFilesInFolder,
@@ -44,8 +45,8 @@ static UINT_PTR gNoDocWhitelist[] = {
     CmdContributeTranslation,
     CmdOptions,
     CmdSetInverseSearch,
-    CmdAdvancedOptions,
     CmdAdvancedSettings,
+    CmdOpenSettingsFile,
     CmdChangeLanguage,
     CmdChangeTheme,
     CmdCheckUpdate,
@@ -81,6 +82,7 @@ static UINT_PTR gNoDocWhitelist[] = {
     CmdToggleGrayscale,
     CmdFavoriteToggle,
     CmdFavoriteShowInTab,
+    CmdGoToHomePage,
     CmdShowLog,
     CmdClearHistory,
     CmdRemoveDeletedFilesFromHistory,
@@ -153,7 +155,8 @@ static UINT_PTR removeIfNoFullscreenPerms[] = {
 static UINT_PTR removeIfNoPrefsPerms[] = {
     CmdOptions,
     CmdSetInverseSearch,
-    CmdAdvancedOptions,
+    CmdAdvancedSettings,
+    CmdOpenSettingsFile,
     CmdPinSelectedDocument,
     CmdForgetSelectedDocument,
     CmdFavoriteAdd,
@@ -175,6 +178,7 @@ static UINT_PTR removeIfNoCopyPerms[] = {
     CmdSearchSelectionWithWikipedia,
     CmdSearchSelectionWithGoogleScholar,
     CmdSelectAll,
+    CmdSelectCurrentPage,
     CmdCopySelection,
     CmdCopyLinkTarget,
     CmdCopyComment,
@@ -195,6 +199,7 @@ static UINT_PTR removeIfNoDiskAccessPerm[] = {
     CmdOpenFile,
     CmdOpenFileNoHistory,
     CmdOpenFileWithOSFilePicker,
+    CmdOpenFileWithSumatraFilePicker,
     CmdToggleFilePicker,
     CmdOpenNextFileInFolder,
     CmdOpenPrevFileInFolder,
@@ -208,8 +213,8 @@ static UINT_PTR removeIfNoDiskAccessPerm[] = {
     CmdDeleteFileAndOpenNext,
     CmdSendByEmail,
     CmdContributeTranslation,
-    CmdAdvancedOptions,
     CmdAdvancedSettings,
+    CmdOpenSettingsFile,
     CmdFavoriteAdd,
     CmdFavoriteDel,
     CmdFavoriteToggle,
@@ -245,6 +250,7 @@ static UINT_PTR removeIfAnnotsNotSupported[] = {
     // range check doesn't catch it
     CmdCreateAnnotImageFromClipboard,
     CmdInsertImage,
+    CmdSignWithImage,
     CmdAnnotationHighlightBrush,
     CmdFindAnnotation,
     CmdCutAnnotation,
@@ -268,6 +274,7 @@ static UINT_PTR removeIfChm[] = {
     CmdZoomFitWidth,
     CmdZoomFitHeight,
     CmdZoomFitContent,
+    CmdZoomFitVisible,
     CmdDebugShowFitContentArea,
     CmdZoomShrinkToFit,
     CmdZoom6400,
@@ -563,6 +570,9 @@ CommandVisibility GetCommandVisibility(int cmdId, const AppCommandCtx& ctx, Comm
         bool enabled = ctx.tab && ctx.tab->win && HasOpenedDocuments(ctx.tab->win);
         return enabled ? CommandVisibility::Show : CommandVisibility::Disable;
     }
+    if (cmdId == CmdGoToHomePage) {
+        return SettingsUseTabs() ? CommandVisibility::Show : CommandVisibility::Hide;
+    }
     if (cmdId == CmdNextTab || cmdId == CmdPrevTab || cmdId == CmdNextTabSmart || cmdId == CmdPrevTabSmart ||
         cmdId == CmdMoveTabLeft || cmdId == CmdMoveTabRight) {
         return ctx.nTabs >= 2 ? CommandVisibility::Show : CommandVisibility::Hide;
@@ -642,6 +652,14 @@ CommandVisibility GetCommandVisibility(int cmdId, const AppCommandCtx& ctx, Comm
         return ctx.allowToggleMenuBar ? CommandVisibility::Show : CommandVisibility::Hide;
     }
 
+    // the bare command has no text: only the TextSnippets commands made from it
+    if (cmdId == CmdInsertTextSnippet) {
+        return CommandVisibility::Hide;
+    }
+    if (origCmdId == CmdInsertTextSnippet && !ctx.supportsAnnots) {
+        return CommandVisibility::Hide;
+    }
+
     if (!ctx.supportsAnnots) {
         if ((cmdId >= (int)CmdCreateAnnotFirst) && (cmdId <= (int)CmdCreateAnnotLast)) {
             return CommandVisibility::Hide;
@@ -672,7 +690,7 @@ CommandVisibility GetCommandVisibility(int cmdId, const AppCommandCtx& ctx, Comm
         if (cmdId == CmdPdShowInfo || cmdId == CmdPdfBake || cmdId == CmdPdfCompress || cmdId == CmdPdfDecompress ||
             cmdId == CmdPdfEncrypt || cmdId == CmdPdfDecrypt || cmdId == CmdPdfDeletePages ||
             cmdId == CmdPdfExtractPages || cmdId == CmdTogglePageBoxes || cmdId == CmdConvertPdfToImages ||
-            cmdId == CmdToggleEditPDF) {
+            cmdId == CmdToggleEditPDF || cmdId == CmdMergePDF) {
             return CommandVisibility::Hide;
         }
     }
@@ -753,6 +771,10 @@ CommandVisibility GetCommandVisibility(int cmdId, const AppCommandCtx& ctx, Comm
     }
 
     if (cmdId == CmdToggleTrimEmptyMargins && !ctx.isFixedPage) {
+        return CommandVisibility::Hide;
+    }
+
+    if (cmdId == CmdToggleFreePan && !ctx.isFixedPage) {
         return CommandVisibility::Hide;
     }
 
@@ -891,6 +913,9 @@ CommandVisibility GetCommandVisibility(int cmdId, const AppCommandCtx& ctx, Comm
     }
     if ((cmdId == CmdToggleBookmarks) || (cmdId == CmdToggleTableOfContents)) {
         return ctx.hasToc ? CommandVisibility::Show : CommandVisibility::Hide;
+    }
+    if (cmdId == CmdToggleThumbnails) {
+        return ctx.isFixedPage ? CommandVisibility::Show : CommandVisibility::Hide;
     }
 
     // No extractable text on comics, image folders, or single images.

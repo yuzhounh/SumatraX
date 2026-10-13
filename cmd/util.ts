@@ -1,5 +1,9 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join, dirname, extname } from "node:path";
+import { join, dirname, extname, resolve } from "node:path";
+
+// user docs live in the sumatra-website repo, checked out next to this one
+export const websiteDir = resolve(import.meta.dir, "..", "..", "hack", "webapps", "sumatra-website");
+export const websiteDocsDir = join(websiteDir, "www", "docs");
 
 const msBuildRelPath = String.raw`MSBuild\Current\Bin\MSBuild.exe`;
 // VS 2022 ships llvm tools in Llvm\bin, VS 18 in Llvm\x64\bin
@@ -228,6 +232,13 @@ export function extractSumatraVersion(): string {
     }
   }
   throw new Error(`couldn't extract CURR_VERSION from ${path}`);
+}
+
+export function extractSumatraBuildVersion(): string {
+  const headers = ["BuildConfig.h", "Version.h"].map((name) => readFileSync(join("src", name), "utf-8")).join("\n");
+  const preRelease = /^#define PRE_RELEASE_VER (\d+)\s*$/m.exec(headers);
+  const version = extractSumatraVersion();
+  return preRelease ? `${version}.${preRelease[1]}` : version;
 }
 
 function normalizeNewlines(data: string): string {

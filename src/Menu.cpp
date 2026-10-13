@@ -11,8 +11,10 @@
 #include "base/GdiPlusUtil.h"
 
 #include "gui/UIModels.h"
+#include "gui/Layout.h"
 #include "gui/Gfx.h"
 #include "gui/PlatformFont.h"
+#include "gui/VirtCtrl.h"
 
 #include "Settings.h"
 #include "AppSettings.h"
@@ -38,6 +40,7 @@
 #include "HomePage.h"
 #include "Translations.h"
 #include "Toolbar.h"
+#include "PagePosition.h"
 #include "resource.h"
 #include "DarkMode.h"
 #include "Tabs.h"
@@ -48,6 +51,8 @@
 #include "ReadAloud.h"
 #include "ReadingAutoScroll.h"
 #include "ReadingBar.h"
+#include "TableOfContents.h"
+#include "SidebarPanel.h"
 #include "Menu.h"
 
 // value associated with menu item for owner-drawn purposes
@@ -74,6 +79,47 @@ static_assert(CmdViewLayoutLast - CmdViewLayoutFirst == 4, "view layout ids are 
 static_assert(CmdZoomLast - CmdZoomFirst == 19, "zoom ids are not in a continuous range");
 
 // clang-format off
+//[ ACCESSKEY_GROUP File Open Menu
+static MenuDef menuDefFileOpen[] = {
+    {
+        TrN("&Open..."),
+        CmdOpenFile,
+    },
+    {
+        TrN("Open using &Windows File Picker..."),
+        CmdOpenFileWithOSFilePicker,
+    },
+    {
+        TrN("Open using &SumatraPDF File Picker..."),
+        CmdOpenFileWithSumatraFilePicker,
+    },
+    {
+        TrN("Use SumatraPDF File Picker"),
+        CmdToggleFilePicker,
+    },
+    {
+        StrL(kMenuSeparator),
+        0,
+    },
+    {
+        TrN("&Next File In Folder"),
+        CmdOpenNextFileInFolder,
+    },
+    {
+        TrN("&Previous File In Folder"),
+        CmdOpenPrevFileInFolder,
+    },
+    {
+        TrN("&Browse Files In Folder..."),
+        CmdNavigateFilesInFolder,
+    },
+    {
+        {},
+        0,
+    },
+};
+//] ACCESSKEY_GROUP File Open Menu
+
 //[ ACCESSKEY_GROUP File Menu
 static MenuDef menuDefFile[] = {
     {
@@ -81,28 +127,16 @@ static MenuDef menuDefFile[] = {
         CmdNewWindow,
     },
     {
-        TrN("&Open..."),
-        CmdOpenFile,
-    },
-    {
-        TrN("Use SumatraPDF File Picker"),
-        CmdToggleFilePicker,
+        TrN("&Open"),
+        (UINT_PTR)menuDefFileOpen,
     },
     {
         TrN("&Close"),
         CmdClose,
     },
     {
-        TrN("Show in &folder"),
+        TrN("Show in fo&lder"),
         CmdShowInFolder,
-    },
-    {
-        TrN("Open Next File In Folder"),
-        CmdOpenNextFileInFolder,
-    },
-    {
-        TrN("Open Previous File In Folder"),
-        CmdOpenPrevFileInFolder,
     },
     {
         TrN("&Save As..."),
@@ -112,30 +146,10 @@ static MenuDef menuDefFile[] = {
         TrN("Convert to PDF..."),
         CmdConvertToPDF,
     },
-    {
-        TrN("Convert PDF to Images..."),
-        CmdConvertPdfToImages,
-    },
-    {
-        TrN("Save Annotations to existing PDF"),
-        CmdSaveAnnotations,
-    },
-    {
-        TrN("Apply Redactions"),
-        CmdApplyRedactions,
-    },
-    {
-        TrN("Insert Image..."),
-        CmdInsertImage,
-    },
-    {
-        TrN("Sign Document..."),
-        CmdSignDocument,
-    },
 //[ ACCESSKEY_ALTERNATIVE // only one of these two will be shown
 #ifdef ENABLE_SAVE_SHORTCUT
     {
-        TrN("Save S&hortcut..."),
+        TrN("Save Shortc&ut..."),
         CmdCreateShortcutToFile,
     },
 //| ACCESSKEY_ALTERNATIVE
@@ -151,10 +165,6 @@ static MenuDef menuDefFile[] = {
         CmdDeleteFile,
     },
     {
-        TrN("Delete and Open Next File"),
-        CmdDeleteFileAndOpenNext,
-    },
-    {
         TrN("&Print..."),
         CmdPrint,
     },
@@ -168,7 +178,7 @@ static MenuDef menuDefFile[] = {
         CmdOpenWithExplorer,
     },
     {
-        TrN("Open Directory in Directory &Opus"),
+        TrN("Open Directory in Director&y Opus"),
         CmdOpenWithDirectoryOpus,
     },
     {
@@ -204,7 +214,7 @@ static MenuDef menuDefFile[] = {
     //] ACCESSKEY_ALTERNATIVE
     // further entries are added if specified in gSettings.vecCommandLine
     {
-        TrN("Send by &E-mail..."),
+        TrN("Send &by E-mail..."),
         CmdSendByEmail,
     },
     {
@@ -290,15 +300,15 @@ static MenuDef menuDefView[] = {
         CmdTogglePresentationMode,
     },
     {
-        TrN("F&ullscreen"),
+        TrN("Fulls&creen"),
         CmdToggleFullscreen,
     },
     {
-        TrN("A&utomatically Scroll"),
+        TrN("&Automatically Scroll"),
         CmdToggleAutomaticallyScroll,
     },
     {
-        TrN("Reading &Bar"),
+        TrN("Read&ing Bar"),
         CmdToggleReadingBar,
     },
     {
@@ -310,11 +320,15 @@ static MenuDef menuDefView[] = {
         CmdToggleBookmarks,
     },
     {
-        TrN("Show &Menu"),
+        TrN("Sho&w Thumbnails"),
+        CmdToggleThumbnails,
+    },
+    {
+        TrN("Show Me&nu"),
         CmdToggleMenuBar,
     },
     {
-        TrN("Show &Toolbar"),
+        TrN("Sh&ow Toolbar"),
         CmdToggleToolbar,
     },
     {
@@ -435,6 +449,10 @@ static MenuDef menuDefZoomShort[] = {
         CmdZoomFitContent,
     },
     {
+        TrN("Fit &Visible"),
+        CmdZoomFitVisible,
+    },
+    {
         TrN("&Shrink To Fit"),
         CmdZoomShrinkToFit,
     },
@@ -443,7 +461,7 @@ static MenuDef menuDefZoomShort[] = {
         CmdZoomCustom,
     },
     {
-        TrN("To &Selection"),
+        TrN("&To Selection"),
         CmdZoomToSelection,
     },
     {
@@ -483,6 +501,10 @@ static MenuDef menuDefZoom[] = {
         CmdZoomFitContent,
     },
     {
+        TrN("Fit &Visible"),
+        CmdZoomFitVisible,
+    },
+    {
         TrN("&Shrink To Fit"),
         CmdZoomShrinkToFit,
     },
@@ -491,7 +513,7 @@ static MenuDef menuDefZoom[] = {
         CmdZoomCustom,
     },
     {
-        TrN("To &Selection"),
+        TrN("&To Selection"),
         CmdZoomToSelection,
     },
     {
@@ -567,25 +589,25 @@ static MenuDef menuDefThemes[] = {
 
 //[ ACCESSKEY_GROUP Settings Menu
 static MenuDef menuDefSettings[] = {
-    {
-        TrN("Change Language"),
-        CmdChangeLanguage,
-    },
 #if 0
     { TrN("Contribute Translation"),       CmdContributeTranslation },
     { StrL(kMenuSeparator),                       0                  },
 #endif
     {
-        TrN("Use SumatraPDF File Picker"),
-        CmdToggleFilePicker,
-    },
-    {
-        TrN("&Options..."),
+        TrN("&Settings..."),
         CmdOptions,
     },
     {
-        TrN("&Advanced Options..."),
-        CmdAdvancedOptions,
+        TrN("&Advanced Settings..."),
+        CmdAdvancedSettings,
+    },
+    {
+        TrN("&Open Advanced Settings File..."),
+        CmdOpenSettingsFile,
+    },
+    {
+        TrN("Change Language"),
+        CmdChangeLanguage,
     },
     {
         TrN("&Theme"),
@@ -724,7 +746,7 @@ static MenuDef menuDefDebug[] = {
 //[ ACCESSKEY_GROUP Context Menu (Google Lens)
 static MenuDef menuDefGoogleLens[] = {
     {
-        TrN("Selection As &Image"),
+        TrN("&Selection As Image"),
         CmdSearchGoogleLens,
     },
     {
@@ -742,12 +764,67 @@ static MenuDef menuDefGoogleLens[] = {
 };
 //] ACCESSKEY_GROUP Context Menu (Google Lens)
 
+//[ ACCESSKEY_GROUP Translate With Menu
+// shared by the Selection menu and the selection context menu
+static MenuDef menuDefTranslateWith[] = {
+    {
+        TrN("&Google"),
+        CmdTranslateSelectionWithGoogle,
+    },
+    {
+        TrN("&DeepL"),
+        CmdTranslateSelectionWithDeepL,
+    },
+    {
+        TrN("G&rok Build"),
+        CmdTranslateSelectionWithGrokBuild,
+    },
+    {
+        TrN("Claude C&ode"),
+        CmdTranslateSelectionWithClaudeCode,
+    },
+    {
+        TrN("OpenAI Code&x"),
+        CmdTranslateSelectionWithOpenAICodex,
+    },
+    {
+        TrN("A&ntigravity"),
+        CmdTranslateSelectionWithAntiGravity,
+    },
+    {
+        {},
+        0,
+    },
+};
+//] ACCESSKEY_GROUP Translate With Menu
+
+//[ ACCESSKEY_GROUP Search With Menu
+static MenuDef menuDefSearchWith[] = {
+    {
+        TrN("&Google"),
+        CmdSearchSelectionWithGoogle,
+    },
+    {
+        TrN("&Bing"),
+        CmdSearchSelectionWithBing,
+    },
+    {
+        TrN("&Wikipedia"),
+        CmdSearchSelectionWithWikipedia,
+    },
+    {
+        TrN("Google Sc&holar"),
+        CmdSearchSelectionWithGoogleScholar,
+    },
+    {
+        {},
+        0,
+    },
+};
+//] ACCESSKEY_GROUP Search With Menu
+
 //[ ACCESSKEY_GROUP Context Menu (Selection)
 static MenuDef menuDefSelection[] = {
-    {
-        TrN("Select &All"),
-        CmdSelectAll,
-    },
     {
         TrN("&Copy To Clipboard"),
         CmdCopySelection,
@@ -777,44 +854,20 @@ static MenuDef menuDefSelection[] = {
         kMenuSeparatorID,
     },
     {
-        TrN("&Translate With Google"),
-        CmdTranslateSelectionWithGoogle,
+        TrN("&Translate with"),
+        (UINT_PTR)menuDefTranslateWith,
     },
     {
-        TrN("Translate with &DeepL"),
-        CmdTranslateSelectionWithDeepL,
+        TrN("S&earch with"),
+        (UINT_PTR)menuDefSearchWith,
     },
     {
-        TrN("Translate with &Grok Build"),
-        CmdTranslateSelectionWithGrokBuild,
+        TrN("Select C&urrent Page"),
+        CmdSelectCurrentPage,
     },
     {
-        TrN("Translate with &Claude Code"),
-        CmdTranslateSelectionWithClaudeCode,
-    },
-    {
-        TrN("Translate with OpenAI &Codex"),
-        CmdTranslateSelectionWithOpenAICodex,
-    },
-    {
-        TrN("Translate with &Antigravity"),
-        CmdTranslateSelectionWithAntiGravity,
-    },
-    {
-        TrN("Search With &Google"),
-        CmdSearchSelectionWithGoogle,
-    },
-    {
-        TrN("Search With &Bing"),
-        CmdSearchSelectionWithBing,
-    },
-    {
-        TrN("Search with &Wikipedia"),
-        CmdSearchSelectionWithWikipedia,
-    },
-    {
-        TrN("Search with &Google Scholar"),
-        CmdSearchSelectionWithGoogleScholar,
+        TrN("Select &All"),
+        CmdSelectAll,
     },
     {
         {},
@@ -830,44 +883,16 @@ static MenuDef menuDefMainSelection[] = {
         CmdCopySelection,
     },
     {
-        TrN("&Translate With Google"),
-        CmdTranslateSelectionWithGoogle,
+        TrN("&Translate with"),
+        (UINT_PTR)menuDefTranslateWith,
     },
     {
-        TrN("Translate with &DeepL"),
-        CmdTranslateSelectionWithDeepL,
+        TrN("S&earch with"),
+        (UINT_PTR)menuDefSearchWith,
     },
     {
-        TrN("Translate with &Grok Build"),
-        CmdTranslateSelectionWithGrokBuild,
-    },
-    {
-        TrN("Translate with &Claude Code"),
-        CmdTranslateSelectionWithClaudeCode,
-    },
-    {
-        TrN("Translate with OpenAI &Codex"),
-        CmdTranslateSelectionWithOpenAICodex,
-    },
-    {
-        TrN("Translate with &Antigravity"),
-        CmdTranslateSelectionWithAntiGravity,
-    },
-    {
-        TrN("&Search With Google"),
-        CmdSearchSelectionWithGoogle,
-    },
-    {
-        TrN("Search With &Bing"),
-        CmdSearchSelectionWithBing,
-    },
-    {
-        TrN("Search with &Wikipedia"),
-        CmdSearchSelectionWithWikipedia,
-    },
-    {
-        TrN("Search with &Google Scholar"),
-        CmdSearchSelectionWithGoogleScholar,
+        TrN("Select C&urrent Page"),
+        CmdSelectCurrentPage,
     },
     {
         TrN("Select &All"),
@@ -1018,8 +1043,12 @@ static MenuDef menuDefCreateAnnotUnderCursor[] = {
         CmdCreateAnnotImageFromClipboard,
     },
     {
-        TrN("Image From &File..."),
+        TrN("Image From Fi&le..."),
         CmdInsertImage,
+    },
+    {
+        TrN("Si&gn With Image"),
+        CmdSignWithImage,
     },
     {
         TrN("&Caret"),
@@ -1179,7 +1208,7 @@ static MenuDef menuDefDocumentAIChat[] = {
 };
 //] ACCESSKEY_GROUP Context Menu (Document AI chat)
 
-//[ ACCESSKEY_GROUP Context Menu (Document )
+//[ ACCESSKEY_GROUP Context Menu (Document)
 static MenuDef menuDefDocumentOperations[] = {
     {
         TrN("P&roperties"),
@@ -1200,6 +1229,10 @@ static MenuDef menuDefDocumentOperations[] = {
     {
         TrN("Delete Pages From PDF"),
         CmdPdfDeletePages,
+    },
+    {
+        TrN("Merge PDF..."),
+        CmdMergePDF,
     },
     {
         TrN("Extract Text From Document"),
@@ -1230,6 +1263,10 @@ static MenuDef menuDefDocumentOperations[] = {
         CmdInsertImage,
     },
     {
+        TrN("Sign With Image"),
+        CmdSignWithImage,
+    },
+    {
         TrN("Sign Document..."),
         CmdSignDocument,
     },
@@ -1242,7 +1279,7 @@ static MenuDef menuDefDocumentOperations[] = {
         CmdConvertPdfToImages,
     },
     {
-        TrN("Show in &folder"),
+        TrN("Show in fo&lder"),
         CmdShowInFolder,
     },
     {
@@ -1263,7 +1300,7 @@ static MenuDef menuDefContext[] = {
         (UINT_PTR)menuDefGoogleLens,
     },
     {
-        TrN("Copy &Link Address"),
+        TrN("Copy Link &Address"),
         CmdCopyLinkTarget,
     },
     {
@@ -1300,7 +1337,11 @@ static MenuDef menuDefContext[] = {
         CmdToggleBookmarks,
     },
     {
-        TrN("Show &Toolbar"),
+        TrN("Show &Thumbnails"),
+        CmdToggleThumbnails,
+    },
+    {
+        TrN("Sh&ow Toolbar"),
         CmdToggleToolbar,
     },
     {
@@ -1383,20 +1424,6 @@ static int disableIfDirectoryOrBrokenPDF[] = {
     CmdOpenWithFoxIt,
     CmdOpenWithPdfXchange,
     CmdShowInFolder, // TODO: why?
-};
-
-// translate / search selection commands need selected text to operate on
-static UINT_PTR selectionTextCmds[] = {
-    CmdTranslateSelectionWithGoogle,
-    CmdTranslateSelectionWithDeepL,
-    CmdTranslateSelectionWithGrokBuild,
-    CmdTranslateSelectionWithClaudeCode,
-    CmdTranslateSelectionWithOpenAICodex,
-    CmdTranslateSelectionWithAntiGravity,
-    CmdSearchSelectionWithGoogle,
-    CmdSearchSelectionWithBing,
-    CmdSearchSelectionWithWikipedia,
-    CmdSearchSelectionWithGoogleScholar,
 };
 
 static UINT_PTR menusNoTranslate[] = {
@@ -1534,6 +1561,19 @@ static void AppendSelectionHandlersToMenu(HMENU m, bool isEnabled) {
     AppendCommandsToMenu(m, cmds, isEnabled);
 }
 
+// TextSnippets: one is an item of its own, several get a submenu
+static void AppendTextSnippetsToMenu(HMENU m) {
+    Vec<CustomCommand*> cmds;
+    GetCommandsWithOrigId(cmds, CmdInsertTextSnippet);
+    if (len(cmds) < 2) {
+        AppendCommandsToMenu(m, cmds, true);
+        return;
+    }
+    HMENU sub = CreatePopupMenu();
+    AppendCommandsToMenu(sub, cmds, true);
+    AppendMenuW(m, MF_POPUP | MF_ENABLED, (UINT_PTR)sub, ToWStrTemp(Tr("Insert Te&xt")).s);
+}
+
 static void AppendExternalViewersToMenu(HMENU menuFile, Str filePath) {
     if (!CanAccessDisk() || (filePath && !file::Exists(filePath))) {
         return;
@@ -1553,9 +1593,7 @@ static void AppendExternalViewersToMenu(HMENU menuFile, Str filePath) {
         if (str::IsEmptyOrWhiteSpace(cmd->name)) {
             if (str::IsEmptyOrWhiteSpace(name)) {
                 StrNode* args = ParseCmdLine(ToWStrTemp(commandLine));
-                defer {
-                    FreeStrNode(nullptr, args);
-                };
+                AutoFreeStrNode freeArgs(args);
                 StrNode* arg0 = args;
                 for (int i = 0; arg0 && i < 2; i++) {
                     arg0 = arg0->next;
@@ -1655,11 +1693,6 @@ HMENU BuildMenuFromDef(MenuDef* menuDef, HMENU menu, BuildMenuCtx* ctx) {
     bool isDebugMenu = menuDef == menuDefDebug;
     int i = 0;
 
-    // insert before built-in selection handlers
-    if (menuDef == menuDefSelection) {
-        AppendSelectionHandlersToMenu(menu, ctx ? ctx->hasSelection : false);
-    }
-
     if (menuDef == menuDefThemes) {
         AppendThemesToMenu(menu);
     }
@@ -1687,8 +1720,19 @@ HMENU BuildMenuFromDef(MenuDef* menuDef, HMENU menu, BuildMenuCtx* ctx) {
             addExternalViewersNext = true;
         }
 
-        if (menuDef == menuDefMainSelection && cmdId == CmdTranslateSelectionWithGoogle) {
-            AppendSelectionHandlersToMenu(menu, true);
+        // TextSnippets go right after Free Text
+        bool snippetsHere = menuDef == menuDefCreateAnnotUnderCursor && md.idOrSubmenu == CmdAnnotationHighlightBrush;
+        if (snippetsHere && ctx && ctx->supportsAnnots) {
+            AppendTextSnippetsToMenu(menu);
+        }
+
+        // custom selection handlers go before the built-in translate / search submenus
+        if (md.idOrSubmenu == (UINT_PTR)menuDefTranslateWith) {
+            if (menuDef == menuDefMainSelection) {
+                AppendSelectionHandlersToMenu(menu, true);
+            } else if (menuDef == menuDefSelection) {
+                AppendSelectionHandlersToMenu(menu, ctx ? ctx->hasSelection : false);
+            }
         }
 
         MenuDef* subMenuDef = (MenuDef*)md.idOrSubmenu;
@@ -1726,7 +1770,8 @@ HMENU BuildMenuFromDef(MenuDef* menuDef, HMENU menu, BuildMenuCtx* ctx) {
             // in the context menu only show translate / search items for a text
             // selection (the menubar variant is live-updated via
             // SetMenuStateForSelection instead)
-            removeMenu |= (menuDef == menuDefSelection) && !ctx->hasTextSelection && cmdIdInList(selectionTextCmds);
+            bool isTextSelSubMenu = (subMenuDef == menuDefTranslateWith) || (subMenuDef == menuDefSearchWith);
+            removeMenu |= (menuDef == menuDefSelection) && !ctx->hasTextSelection && isTextSelSubMenu;
             bool isRectSel = ctx->hasSelection && !ctx->hasTextSelection;
             if (menuDef == menuDefSelection) {
                 removeMenu |= !ctx->hasSelection && cmdId == CmdCopySelection;
@@ -1744,6 +1789,8 @@ HMENU BuildMenuFromDef(MenuDef* menuDef, HMENU menu, BuildMenuCtx* ctx) {
             }
         }
         removeMenu |= ((subMenuDef == menuDefDebug) && !ShowDebugMenu());
+        // without Annotations.SignatureImage it would just be Insert Image
+        removeMenu |= !isSubMenu && cmdId == CmdSignWithImage && len(gSettings->annotations.signatureImage) == 0;
         if (removeMenu) {
             continue;
         }
@@ -1818,6 +1865,7 @@ static struct {
     { CmdZoomFitHeight,  kZoomFitHeight  },
     { CmdZoomFitByOrientation, kZoomFitByOrientation },
     { CmdZoomFitContent, kZoomFitContent },
+    { CmdZoomFitVisible, kZoomFitVisible },
     { CmdZoomShrinkToFit, kZoomShrinkToFit },
     { CmdZoomActualSize, kZoomActualSize },
 };
@@ -2085,10 +2133,13 @@ static void MenuUpdateStateForWindow(MainWindow* win, HMENU menu = nullptr) {
     MenuSetEnabled(menu, CmdToggleBookmarks, enabled);
 
     bool documentSpecific = win->IsDocLoaded();
-    bool checked = documentSpecific ? win->uiState.tocVisible : gSettings->showToc;
+    bool bookmarksShown = IsSidebarViewShown(win, SidebarView::Bookmarks);
+    bool checked = documentSpecific ? bookmarksShown : gSettings->showToc;
     MenuSetChecked(menu, CmdToggleBookmarks, checked);
+    MenuSetEnabled(menu, CmdToggleThumbnails, CanShowThumbnails(tab));
+    MenuSetChecked(menu, CmdToggleThumbnails, IsSidebarViewShown(win, SidebarView::Thumbnails));
 
-    MenuSetChecked(menu, CmdFavoriteToggle, gSettings->showFavorites);
+    MenuSetChecked(menu, CmdFavoriteToggle, IsSidebarViewShown(win, SidebarView::Favorites));
     MenuSetChecked(menu, CmdFavoriteShowInTab, FindFavoritesTab(win) != nullptr);
     {
         // checked when mode is not "hide" (show or overlay)
@@ -2326,7 +2377,7 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
     onImage = onImage || (engine && engine->kind == kindEngineImage);
     if (pageNoUnderCursor > 0) {
         TempStr pageItem;
-        if (win->ctrl->HasChapters()) {
+        if (ShowChapterUi(win->ctrl)) {
             Location loc = win->ctrl->LocationFromPageNo(pageNoUnderCursor);
             pageItem = fmt(Tr("Chapter %d Page %d").s, loc.chapter, loc.page);
         } else {
@@ -2407,10 +2458,12 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
 
     MenuUpdatePrintItem(win, popup, true);
     MenuSetEnabled(popup, CmdToggleBookmarks, win->ctrl->HasToc());
-    MenuSetChecked(popup, CmdToggleBookmarks, win->uiState.tocVisible);
+    MenuSetChecked(popup, CmdToggleBookmarks, IsSidebarViewShown(win, SidebarView::Bookmarks));
+    MenuSetEnabled(popup, CmdToggleThumbnails, CanShowThumbnails(tab));
+    MenuSetChecked(popup, CmdToggleThumbnails, IsSidebarViewShown(win, SidebarView::Thumbnails));
 
     MenuSetEnabled(popup, CmdFavoriteToggle, HasFavorites());
-    MenuSetChecked(popup, CmdFavoriteToggle, gSettings->showFavorites);
+    MenuSetChecked(popup, CmdFavoriteToggle, IsSidebarViewShown(win, SidebarView::Favorites));
     MenuSetEnabled(popup, CmdFavoriteShowInTab, HasFavorites() && SettingsUseTabs());
     MenuSetChecked(popup, CmdFavoriteShowInTab, FindFavoritesTab(win) != nullptr);
 
@@ -2422,7 +2475,7 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
 
             TempStr addText;
             TempStr delText;
-            if (win->ctrl->HasChapters()) {
+            if (ShowChapterUi(win->ctrl)) {
                 Location loc = win->ctrl->LocationFromPageNo(pageNoUnderCursor);
                 addText = fmt(Tr("Add chapter %d page %d to favorites").s, loc.chapter, loc.page);
                 delText = fmt(Tr("Remove chapter %d page %d from favorites").s, loc.chapter, loc.page);
@@ -2482,6 +2535,11 @@ void OnWindowContextMenu(MainWindow* win, int x, int y) {
     auto* cmd = FindCustomCommand(cmdId);
     if (cmd && cmd->origId == CmdSelectionHandler) {
         HwndSendCommand(win->hwndFrame, cmd->id);
+        return;
+    }
+    // a text snippet goes where the menu was opened
+    if (cmd && cmd->origId == CmdInsertTextSnippet) {
+        HwndSendCommand(win->hwndFrame, cmd->id, MAKELPARAM(x, y));
         return;
     }
 
@@ -2636,7 +2694,8 @@ bool CommandUsesContextMenuPoint(int cmdId) {
         return true;
     }
     return cmdId == CmdDeleteAnnotation || cmdId == CmdCreateAnnotImageFromClipboard || cmdId == CmdInsertImage ||
-           cmdId == CmdPasteAnnotation || cmdId == CmdCopyAnnotation || cmdId == CmdCutAnnotation;
+           cmdId == CmdSignWithImage || cmdId == CmdPasteAnnotation || cmdId == CmdCopyAnnotation ||
+           cmdId == CmdCutAnnotation;
 }
 
 // so that we can do free everything at exit

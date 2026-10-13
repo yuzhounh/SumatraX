@@ -128,7 +128,6 @@ enum {
     CmdSaveAttachment = 319,
     CmdOpenAttachment = 320,
     CmdOptions = 321,
-    CmdAdvancedOptions = 322,
     CmdAdvancedSettings = 323,
     CmdChangeLanguage = 324,
     CmdCheckUpdate = 325,
@@ -317,15 +316,25 @@ enum {
     CmdAutomaticallyScrollSlower = 510,
     CmdToggleReadingBar = 511,
     CmdToggleReadingBarInvert = 512,
-    CmdNone = 513,
-    CmdFileHistory = 514,
-    CmdFavorite = 515,
-    CmdReadAloudFromCursorPosition = 516,
-    CmdToggleGrayscale = 517,
-    CmdPrintSelection = 518,
-    CmdAutoGenerateTOC = 519,
+    CmdGoToHomePage = 513,
+    CmdToggleFreePan = 514,
+    CmdNone = 515,
+    CmdFileHistory = 516,
+    CmdFavorite = 517,
+    CmdReadAloudFromCursorPosition = 518,
+    CmdToggleGrayscale = 519,
+    CmdPrintSelection = 520,
+    CmdAutoGenerateTOC = 521,
+    CmdOpenSettingsFile = 522,
+    CmdOpenFileWithSumatraFilePicker = 523,
+    CmdSelectCurrentPage = 524,
+    CmdZoomFitVisible = 525,
+    CmdSignWithImage = 526,
+    CmdInsertTextSnippet = 527,
+    CmdToggleThumbnails = 528,
+    CmdMergePDF = 529,
 
-    CmdLast = 519,
+    CmdLast = 529,
     CmdFirstCustom = CmdLast + 100,
 
     // aliases, at the end to not mess ordering
@@ -414,6 +423,9 @@ void FreeCustomCommand(CustomCommand* cmd);
 
 extern CustomCommand* gFirstCustomCommand;
 extern SeqStrings gCommandDescriptions;
+// alternate command palette texts, parallel to gCommandAltDescIds
+extern SeqStrings gCommandAltDescs;
+extern i32 gCommandAltDescIds[];
 
 int GetCommandIdByName(Str);
 int GetCommandIdByDesc(Str);
@@ -441,6 +453,8 @@ void GetCommandsWithOrigId(Vec<CustomCommand*>& commands, int origId);
 #define kCmdArgOpacity StrL("opacity")
 #define kCmdArgOpenEdit StrL("openedit")
 #define kCmdArgTextSize StrL("textsize")
+// TextSnippets: the text a CmdInsertTextSnippet inserts
+#define kCmdArgText StrL("text")
 #define kCmdArgBorderWidth StrL("borderwidth")
 #define kCmdArgAlignment StrL("alignment")
 #define kCmdArgInteriorColor StrL("interiorcolor")

@@ -28,6 +28,7 @@
 #include "Commands.h"
 #include "CommandAvailability.h"
 #include "FindBar.h"
+#include "PagePosition.h"
 #include "ReadingAutoScroll.h"
 #include "ReadingBar.h"
 #include "SelectionToolbar.h"
@@ -71,7 +72,7 @@ static TempStr TabPageSuffixTemp(WindowTab* tab) {
     if (count <= 0 || curr < 1) {
         return {};
     }
-    if (tab->ctrl->HasChapters()) {
+    if (ShowChapterUi(tab->ctrl)) {
         Location loc = tab->ctrl->CurrentLocation();
         int chapterPages = tab->ctrl->ChapterPageCount(loc.chapter);
         return fmt(" %d/%d · %d/%d", loc.chapter, tab->ctrl->ChapterCount(), loc.page, chapterPages);
@@ -746,11 +747,12 @@ static NO_INLINE void VerifyWindowTab(MainWindow* win, WindowTab* tdata) {
         }
     }
     // Heading TOC is generated after the document is shown. Until that finishes
-    // the sidebar stays hidden (uiState.tocVisible) but the tab keeps the
+    // the sidebar stays hidden (uiState.sidebarTopVisible) but the tab keeps the
     // caller's showToc preference so we can open it when headings arrive.
-    if (win->uiState.tocVisible != expectedTocVisibility) {
+    bool topVisible = win->uiState.sidebarTopVisible;
+    if (topVisible != expectedTocVisibility) {
         bool headingPending = EngineMupdfHeadingTocPending(tdata->GetEngine());
-        bool okPendingHide = headingPending && expectedTocVisibility && !win->uiState.tocVisible;
+        bool okPendingHide = headingPending && expectedTocVisibility && !topVisible;
         ReportDebugIf(!okPendingHide);
     }
     ReportIf(tdata->canvasRc != win->canvasRc);
@@ -794,6 +796,49 @@ void SaveCurrentWindowTab(MainWindow* win) {
     VecAppend(*win->tabSelectionHistory, tab);
 }
 
+// Home is always the first tab
+static WindowTab* InsertHomeTab(MainWindow* win, bool deferUpdate) {
+    WindowTab* homeTab = new WindowTab(win);
+    homeTab->type = WindowTab::Type::About;
+    homeTab->canvasRc = win->canvasRc;
+    TabInfo* newTab = new TabInfo();
+    newTab->text = str::Dup(StrL("Home"));
+    newTab->tooltip = {};
+    newTab->isPinned = true;
+    newTab->canClose = true;
+    newTab->userData = (UINT_PTR)homeTab;
+    int insertedIdx = win->tabsCtrl->InsertTab(0, newTab, !deferUpdate);
+    ReportIf(insertedIdx != 0);
+    return homeTab;
+}
+
+static WindowTab* FindHomeTab(MainWindow* win) {
+    for (WindowTab* tab : win->Tabs()) {
+        if (tab->IsAboutTab()) {
+            return tab;
+        }
+    }
+    return nullptr;
+}
+
+// select the Home tab, creating it when NoHomeTab left the window without one
+void GoToHomeTab(MainWindow* win) {
+    if (!win || !win->tabsCtrl || !SettingsUseTabs()) {
+        return;
+    }
+    WindowTab* homeTab = FindHomeTab(win);
+    if (homeTab) {
+        TabsSelect(win, win->GetTabIdx(homeTab));
+        return;
+    }
+
+    // InsertTab selects without TCN_SELCHANGE, so save / load the models here
+    SaveCurrentWindowTab(win);
+    homeTab = InsertHomeTab(win, false);
+    UpdateTabWidth(win);
+    LoadModelIntoTab(homeTab);
+}
+
 WindowTab* AddTabToWindow(MainWindow* win, WindowTab* tab, bool deferUpdate) {
     ReportIf(!win);
     if (!win) {
@@ -809,17 +854,7 @@ WindowTab* AddTabToWindow(MainWindow* win, WindowTab* tab, bool deferUpdate) {
     bool noHomeTab = gSettings->noHomeTab || (gSettings && gSettings->minimalViewer);
     bool createHomeTab = useTabs && !noHomeTab && (idx == 0);
     if (createHomeTab) {
-        WindowTab* homeTab = new WindowTab(win);
-        homeTab->type = WindowTab::Type::About;
-        homeTab->canvasRc = win->canvasRc;
-        TabInfo* newTab = new TabInfo();
-        newTab->text = str::Dup(StrL("Home"));
-        newTab->tooltip = {};
-        newTab->isPinned = true;
-        newTab->canClose = true;
-        newTab->userData = (UINT_PTR)homeTab;
-        int insertedIdx = tabs->InsertTab(idx, newTab, !deferUpdate);
-        ReportIf(insertedIdx != 0);
+        InsertHomeTab(win, deferUpdate);
         idx++;
     }
 

@@ -133,7 +133,6 @@ static SeqStrings gCommandNames =
     "CmdSaveAttachment\0"
     "CmdOpenAttachment\0"
     "CmdOptions\0"
-    "CmdAdvancedOptions\0"
     "CmdAdvancedSettings\0"
     "CmdChangeLanguage\0"
     "CmdCheckUpdate\0"
@@ -322,6 +321,8 @@ static SeqStrings gCommandNames =
     "CmdAutomaticallyScrollSlower\0"
     "CmdToggleReadingBar\0"
     "CmdToggleReadingBarInvert\0"
+    "CmdGoToHomePage\0"
+    "CmdToggleFreePan\0"
     "CmdNone\0"
     "CmdFileHistory\0"
     "CmdFavorite\0"
@@ -329,6 +330,14 @@ static SeqStrings gCommandNames =
     "CmdToggleGrayscale\0"
     "CmdPrintSelection\0"
     "CmdAutoGenerateTOC\0"
+    "CmdOpenSettingsFile\0"
+    "CmdOpenFileWithSumatraFilePicker\0"
+    "CmdSelectCurrentPage\0"
+    "CmdZoomFitVisible\0"
+    "CmdSignWithImage\0"
+    "CmdInsertTextSnippet\0"
+    "CmdToggleThumbnails\0"
+    "CmdMergePDF\0"
     "\0";
 
 static i32 gCommandIds[] = {
@@ -451,7 +460,6 @@ static i32 gCommandIds[] = {
     CmdSaveAttachment,
     CmdOpenAttachment,
     CmdOptions,
-    CmdAdvancedOptions,
     CmdAdvancedSettings,
     CmdChangeLanguage,
     CmdCheckUpdate,
@@ -640,6 +648,8 @@ static i32 gCommandIds[] = {
     CmdAutomaticallyScrollSlower,
     CmdToggleReadingBar,
     CmdToggleReadingBarInvert,
+    CmdGoToHomePage,
+    CmdToggleFreePan,
     CmdNone,
     CmdFileHistory,
     CmdFavorite,
@@ -647,6 +657,14 @@ static i32 gCommandIds[] = {
     CmdToggleGrayscale,
     CmdPrintSelection,
     CmdAutoGenerateTOC,
+    CmdOpenSettingsFile,
+    CmdOpenFileWithSumatraFilePicker,
+    CmdSelectCurrentPage,
+    CmdZoomFitVisible,
+    CmdSignWithImage,
+    CmdInsertTextSnippet,
+    CmdToggleThumbnails,
+    CmdMergePDF,
 };
 
 SeqStrings gCommandDescriptions =
@@ -768,8 +786,7 @@ SeqStrings gCommandDescriptions =
     "Open Embedded PDF\0"
     "Save Attachment...\0"
     "Open Attachment\0"
-    "Options...\0"
-    "Advanced Options...\0"
+    "Settings...\0"
     "Advanced Settings...\0"
     "Change Language...\0"
     "Check For Updates\0"
@@ -958,6 +975,8 @@ SeqStrings gCommandDescriptions =
     "Automatically Scroll Slower\0"
     "Reading Bar\0"
     "Reading Bar Invert\0"
+    "Go To Home Page\0"
+    "Toggle Free Pan\0"
     "Do nothing\0"
     "Open Recent File\0"
     "Go to Favorite\0"
@@ -965,7 +984,25 @@ SeqStrings gCommandDescriptions =
     "Toggle Grayscale\0"
     "Print Selection...\0"
     "Generate Table Of Contents\0"
+    "Open Advanced Settings File...\0"
+    "Open File With SumatraPDF File Picker...\0"
+    "Select Current Page\0"
+    "Zoom: Fit Visible\0"
+    "Sign With Image\0"
+    "Insert Text Snippet\0"
+    "Toggle Thumbnails\0"
+    "Merge PDF...\0"
     "\0";
+
+SeqStrings gCommandAltDescs =
+    "Browse Files In Folder...\0"
+    "Advanced Options...\0"
+    "\0";
+
+i32 gCommandAltDescIds[] = {
+    CmdNavigateFilesInFolder,
+    CmdAdvancedSettings,
+};
 // clang-format on
 // @gen-end cmd-c
 
@@ -1023,6 +1060,7 @@ static const ArgSpec argSpecs[] = {
     {CmdTogglePresentationMode, kCmdArgState, CommandArg::Type::Bool}, // default
     {CmdToggleBookmarks, kCmdArgState, CommandArg::Type::Bool},        // default
     {CmdToggleTableOfContents, kCmdArgState, CommandArg::Type::Bool},  // default
+    {CmdToggleThumbnails, kCmdArgState, CommandArg::Type::Bool},       // default
 
     // default string is the setting name, e.g. [CmdToggleBoolSetting Fullscreen.ShowMenubar]
     {CmdToggleBoolSetting, kCmdArgName, CommandArg::Type::String}, // default
@@ -1084,6 +1122,9 @@ int GetCommandIdByName(Str cmdName) {
     if (str::EqI(cmdName, StrL("CmdReadAloud"))) {
         return CmdToggleReadAloud;
     }
+    if (str::EqI(cmdName, StrL("CmdAdvancedOptions"))) {
+        return CmdAdvancedSettings;
+    }
     return -1;
 }
 
@@ -1092,6 +1133,10 @@ int GetCommandIdByDesc(Str cmdDesc) {
     int cmdId = GetCommandIdByNameOrDesc(gCommandDescriptions, cmdDesc);
     if (cmdId >= 0) {
         return cmdId;
+    }
+    int altIdx = SeqStrIndexIS(gCommandAltDescs, cmdDesc);
+    if (altIdx >= 0) {
+        return gCommandAltDescIds[altIdx];
     }
     auto* curr = gFirstCustomCommand;
     while (curr) {

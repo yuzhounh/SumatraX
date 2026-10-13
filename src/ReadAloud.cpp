@@ -67,6 +67,7 @@ bool TtsDidStartQueued() {
 }
 void TtsStop() {}
 void TtsRelease() {}
+void TtsTestPumpOnNextSpeak() {}
 bool TtsIsSpeaking() {
     return false;
 }
@@ -1537,6 +1538,39 @@ void TtsProcessEvents() {
     }
 }
 
+static bool gTtsTestPumpOnSpeak = false;
+constexpr DWORD kTtsTestPumpMs = 3000;
+
+// -for-testing: the next TtsSpeakUtf8 dispatches window messages the way a
+// COM call's modal loop does, until the app quits or a few seconds pass, then fails
+void TtsTestPumpOnNextSpeak() {
+    gTtsTestPumpOnSpeak = gForTesting;
+}
+
+static bool TtsTestPumpMessages() {
+    if (!gTtsTestPumpOnSpeak) {
+        return false;
+    }
+    gTtsTestPumpOnSpeak = false;
+    DWORD deadline = GetTickCount() + kTtsTestPumpMs;
+    MSG msg;
+    for (;;) {
+        while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE)) {
+            if (msg.message == WM_QUIT) {
+                PostQuitMessage((int)msg.wParam);
+                return true;
+            }
+            TranslateMessage(&msg);
+            DispatchMessageW(&msg);
+        }
+        DWORD now = GetTickCount();
+        if (now >= deadline) {
+            return true;
+        }
+        MsgWaitForMultipleObjects(0, nullptr, FALSE, deadline - now, QS_ALLINPUT);
+    }
+}
+
 bool TtsSpeakUtf8(Str text) {
     if (len(text) == 0) {
         return false;
@@ -1544,6 +1578,10 @@ bool TtsSpeakUtf8(Str text) {
 
     TempWStr textW = ToWStrTemp(text);
     if (len(textW) == 0) {
+        return false;
+    }
+
+    if (TtsTestPumpMessages()) {
         return false;
     }
 
@@ -1696,11 +1734,7 @@ Str TtsGetVoiceId() {
 // with the WinRT backend the new speed applies from the next spoken chunk;
 // SAPI adjusts speech in progress
 void TtsSetSpeed(float speed) {
-    if (speed < kTtsSpeedMin) {
-        speed = kTtsSpeedMin;
-    } else if (speed > kTtsSpeedMax) {
-        speed = kTtsSpeedMax;
-    }
+    speed = clampf(speed, kTtsSpeedMin, kTtsSpeedMax);
     gTtsSpeed = speed;
 
     // both no-op if that backend is not initialized
@@ -1846,8 +1880,8 @@ static bool ReadAloudHighlightAppendRaw(Vec<ReadAloudRawByte>& raw, char c, cons
     return true;
 }
 
-static void ReadAloudByteLocSetFromRect(ReadAloudByteLoc& loc, int pageNo, const Rect& r) {
-    loc.pageNo = pageNo;
+static void ReadAloudByteLocSetFromRect(ReadAloudByteLoc& loc, Location pageLoc, const Rect& r) {
+    loc.pageLoc = pageLoc;
     loc.x = r.x;
     loc.y = r.y;
     loc.dx = r.dx;
@@ -1855,7 +1889,7 @@ static void ReadAloudByteLocSetFromRect(ReadAloudByteLoc& loc, int pageNo, const
 }
 
 static bool ReadAloudByteLocHasRect(const ReadAloudByteLoc& loc) {
-    return loc.pageNo > 0 && (loc.x || loc.dx);
+    return loc.pageLoc.IsValid() && (loc.x || loc.dx);
 }
 
 static Rect ReadAloudByteLocToRect(const ReadAloudByteLoc& loc) {
@@ -1974,13 +2008,14 @@ bool ReadAloudHighlightBuildFromPage(EngineBase* engine, int pageNo, ReadAloudHi
         return false;
     }
 
+    Location pageLoc = engine->LocationFromPageNo(pageNo);
     Vec<ReadAloudRawByte> raw;
     int byteIdx = 0;
     for (int i = 0; i < pageText.nCodepoints; i++) {
         ReadAloudByteLoc loc;
         Rect r = pageText.coords[i];
         if (r.x || r.dx) {
-            ReadAloudByteLocSetFromRect(loc, pageNo, r);
+            ReadAloudByteLocSetFromRect(loc, pageLoc, r);
         }
         int n = 0;
         Utf8CodepointAtByte(pageText.text, byteIdx, &n);
@@ -2009,6 +2044,7 @@ static void ReadAloudAppendPageGlyphs(Vec<ReadAloudRawByte>& raw, EngineBase* en
         endGlyph = textLen;
     }
 
+    Location pageLoc = engine->LocationFromPageNo(pageNo);
     ReadAloudByteLoc noLoc;
     int byteIdx = Utf8CodepointToByteIndex(text, startGlyph);
     for (int g = startGlyph; g < endGlyph; g++) {
@@ -2023,7 +2059,7 @@ static void ReadAloudAppendPageGlyphs(Vec<ReadAloudRawByte>& raw, EngineBase* en
         ReadAloudByteLoc loc;
         Rect r = coords[g];
         if (r.x || r.dx) {
-            ReadAloudByteLocSetFromRect(loc, pageNo, r);
+            ReadAloudByteLocSetFromRect(loc, pageLoc, r);
         }
 
         Str utf8(text.s + charStart, byteIdx - charStart);
@@ -2234,11 +2270,13 @@ bool ReadAloudHighlightBuildFromDocument(DisplayModel* dm, int startPage, int st
         return false;
     }
 
+    // walk in the engine's numbering: extracting a placeholder chapter's text
+    // lays it out, which grows engine->PageCount() past the view's page count
+    int enginePage = engine->PageNoFromLocation(dm->GetPageInfo(startPage)->loc);
     Vec<ReadAloudRawByte> raw;
-    int pageCount = dm->PageCount();
-    dbgtts("BuildFromDocument: startPage=%d startGlyph=%d pageCount=%d\n", startPage, startGlyph, pageCount);
-    for (int page = startPage; page <= pageCount; page++) {
-        int glyph = page == startPage ? startGlyph : 0;
+    dbgtts("BuildFromDocument: startPage=%d enginePage=%d startGlyph=%d\n", startPage, enginePage, startGlyph);
+    for (int page = enginePage; page <= engine->PageCount(); page++) {
+        int glyph = page == enginePage ? startGlyph : 0;
         ReadAloudAppendPageGlyphs(raw, engine, page, glyph, -1);
     }
 
@@ -2406,12 +2444,12 @@ bool ReadAloudSentenceRange(Str text, int pos, int* startOut, int* endOut) {
 }
 
 struct ReadAloudLineRun {
-    int pageNo = 0;
+    Location pageLoc;
     RectF bbox;
 };
 
-static bool ReadAloudLineContinues(const ReadAloudLineRun& run, int pageNo, const RectF& g) {
-    if (run.pageNo != pageNo) {
+static bool ReadAloudLineContinues(const ReadAloudLineRun& run, Location pageLoc, const RectF& g) {
+    if (run.pageLoc != pageLoc) {
         return false;
     }
     float aBot = run.bbox.y + run.bbox.dy;
@@ -2431,28 +2469,22 @@ static bool ReadAloudLineContinues(const ReadAloudLineRun& run, int pageNo, cons
 
 static void ReadAloudFlushLine(DisplayModel* dm, Rect canvasRc, const ReadAloudLineRun& run, int minThick, int thickDiv,
                                Vec<Rect>& out) {
-    if (run.pageNo <= 0 || run.bbox.IsEmpty()) {
+    if (!run.pageLoc.IsValid() || run.bbox.IsEmpty()) {
         return;
     }
-    PageInfo* pi = dm->GetPageInfo(run.pageNo);
+    int pageNo = dm->FindPageNoByLoc(run.pageLoc);
+    PageInfo* pi = dm->GetPageInfo(pageNo);
     if (!pi || pi->visibleRatio <= 0.0) {
         return;
     }
-    Rect sr = dm->CvtToScreen(run.pageNo, run.bbox);
+    Rect sr = dm->CvtToScreen(pageNo, run.bbox);
     sr = sr.Intersect(canvasRc);
     if (sr.IsEmpty() || sr.dx <= 0) {
         return;
     }
     int thick = thickDiv > 0 ? sr.dy / thickDiv : minThick;
-    if (thick < minThick) {
-        thick = minThick;
-    }
-    if (thick > sr.dy) {
-        thick = sr.dy;
-    }
-    if (thick < 1) {
-        thick = 1;
-    }
+    // a line cut by the canvas edge can be thinner than minThick: then it's sr.dy
+    thick = std::max(clampi(thick, std::min(minThick, sr.dy), sr.dy), 1);
     Rect u = {sr.x, sr.y + sr.dy - thick, sr.dx, thick};
     if (!u.IsEmpty()) {
         VecAppend(out, u);
@@ -2474,17 +2506,17 @@ static void ReadAloudAppendUnderlines(DisplayModel* dm, Rect canvasRc, ReadAloud
         if (g.IsEmpty()) {
             continue;
         }
-        if (run.pageNo == 0) {
-            run.pageNo = loc.pageNo;
+        if (!run.pageLoc.IsValid()) {
+            run.pageLoc = loc.pageLoc;
             run.bbox = g;
             continue;
         }
-        if (ReadAloudLineContinues(run, loc.pageNo, g)) {
+        if (ReadAloudLineContinues(run, loc.pageLoc, g)) {
             run.bbox = run.bbox.Union(g);
             continue;
         }
         ReadAloudFlushLine(dm, canvasRc, run, minThick, thickDiv, out);
-        run.pageNo = loc.pageNo;
+        run.pageLoc = loc.pageLoc;
         run.bbox = g;
     }
     ReadAloudFlushLine(dm, canvasRc, run, minThick, thickDiv, out);
@@ -2526,7 +2558,7 @@ bool ReadAloudGetProgressPage(WindowTab* tab, int* pageOut, int* pageCountOut) {
         return false;
     }
 
-    int pageNo = map->locs[absPos].pageNo;
+    int pageNo = dm->FindPageNoByLoc(map->locs[absPos].pageLoc);
     if (pageNo <= 0) {
         return false;
     }
@@ -2602,7 +2634,7 @@ static void ReadAloudClampVisual(ReadAloudHighlightMap* map, int wordStartAbs, i
     int maxGap = lineDy * 7 / 4;
 
     int lastY = 0;
-    int lastPage = 0;
+    Location lastPage;
     bool have = false;
     int s = wordStartAbs;
     for (int i = wordStartAbs; i >= *startAbs; i--) {
@@ -2612,12 +2644,12 @@ static void ReadAloudClampVisual(ReadAloudHighlightMap* map, int wordStartAbs, i
         }
         if (!have) {
             lastY = loc.y;
-            lastPage = loc.pageNo;
+            lastPage = loc.pageLoc;
             have = true;
             s = i;
             continue;
         }
-        if (loc.pageNo != lastPage) {
+        if (loc.pageLoc != lastPage) {
             break;
         }
         int yGap = lastY - loc.y;
@@ -2626,7 +2658,7 @@ static void ReadAloudClampVisual(ReadAloudHighlightMap* map, int wordStartAbs, i
         }
         s = i;
         lastY = loc.y;
-        lastPage = loc.pageNo;
+        lastPage = loc.pageLoc;
     }
 
     have = false;
@@ -2638,12 +2670,12 @@ static void ReadAloudClampVisual(ReadAloudHighlightMap* map, int wordStartAbs, i
         }
         if (!have) {
             lastY = loc.y;
-            lastPage = loc.pageNo;
+            lastPage = loc.pageLoc;
             have = true;
             e = i + 1;
             continue;
         }
-        if (loc.pageNo != lastPage) {
+        if (loc.pageLoc != lastPage) {
             break;
         }
         int yGap = loc.y - lastY;
@@ -2652,7 +2684,7 @@ static void ReadAloudClampVisual(ReadAloudHighlightMap* map, int wordStartAbs, i
         }
         e = i + 1;
         lastY = loc.y;
-        lastPage = loc.pageNo;
+        lastPage = loc.pageLoc;
     }
 
     if (s >= *startAbs && s < *endAbs) {
@@ -2741,7 +2773,12 @@ static bool ReadAloudGetCurrentWordScreenRect(MainWindow* win, Rect* rectOut) {
         if (!ReadAloudByteLocHasRect(loc)) {
             continue;
         }
-        Rect sr = dm->CvtToScreen(loc.pageNo, ToRectF(ReadAloudByteLocToRect(loc)));
+        // not laid out, e.g. its chapter is a placeholder after an EPUB restyle
+        int pageNo = dm->FindPageNoByLoc(loc.pageLoc);
+        if (pageNo < 1) {
+            continue;
+        }
+        Rect sr = dm->CvtToScreen(pageNo, ToRectF(ReadAloudByteLocToRect(loc)));
         if (!hasRect) {
             unionRect = sr;
             hasRect = true;
@@ -2858,16 +2895,8 @@ void ReadAloudUpdateAutoScroll(MainWindow* win) {
     }
 
     int maxStep = std::max(canvas.dy / 4, DpiScale(120));
-    if (dx > maxStep) {
-        dx = maxStep;
-    } else if (dx < -maxStep) {
-        dx = -maxStep;
-    }
-    if (dy > maxStep) {
-        dy = maxStep;
-    } else if (dy < -maxStep) {
-        dy = -maxStep;
-    }
+    dx = clampi(dx, -maxStep, maxStep);
+    dy = clampi(dy, -maxStep, maxStep);
 
     win->readAloudScrollFromCode = true;
     win->MoveDocBy(dx, dy);
@@ -3353,6 +3382,41 @@ TempStr ReadAloudPlaybackBarStateTemp(int* exitCodeOut) {
     TtsFreeVoices(voices);
     out.Append(fmt("voices=%d speaking=%d\n", nVoices, (int)TtsIsSpeaking()));
 
+    // the spoken word's page, and its chapter location in the view's numbering
+    WindowTab* srcTab = GetReadAloudSourceTab();
+    int progressPage = 0;
+    int progressPageCount = 0;
+    Location progressLoc;
+    if (srcTab && srcTab->AsFixed() && ReadAloudGetProgressPage(srcTab, &progressPage, &progressPageCount)) {
+        PageInfo* pi = srcTab->AsFixed()->GetPageInfo(progressPage);
+        progressLoc = pi ? pi->loc : kInvalidLocation;
+    }
+    out.Append(fmt("progress page=%d loc=%d:%d\n", progressPage, progressLoc.chapter, progressLoc.page));
+
+    // pages the map covers: a complete map has one entry per page of its span
+    ReadAloudHighlightMap* map = srcTab ? srcTab->readAloudHighlight : nullptr;
+    Location mapStart;
+    Location mapEnd;
+    int mapPages = 0;
+    for (int i = 0; map && i < map->len; i++) {
+        Location l = map->locs[i].pageLoc;
+        if (!l.IsValid() || l == mapEnd) {
+            continue;
+        }
+        if (!mapStart.IsValid()) {
+            mapStart = l;
+        }
+        mapEnd = l;
+        mapPages++;
+    }
+    int mapSpan = 0;
+    if (srcTab && srcTab->AsFixed() && mapPages > 0) {
+        DisplayModel* srcDm = srcTab->AsFixed();
+        mapSpan = srcDm->FindPageNoByLoc(mapEnd) - srcDm->FindPageNoByLoc(mapStart) + 1;
+    }
+    out.Append(fmt("map start=%d:%d end=%d:%d pages=%d span=%d\n", mapStart.chapter, mapStart.page, mapEnd.chapter,
+                   mapEnd.page, mapPages, mapSpan));
+
     if (len(gWindows) == 0) {
         out.Append(StrL("NOTREADY no-window\n"));
         return finish(2);
@@ -3418,6 +3482,13 @@ void ReadAloudPlaybackBarUpdateSession(WindowTab* tab) {
 
 static WindowTab* gReadAloudSourceTab = nullptr;
 static WindowTab* gReadAloudSessionTab = nullptr;
+
+enum class SpeakChunkResult {
+    Ok,
+    Failed,
+    TabGone
+};
+
 static HMENU gReadAloudAppSubmenu = nullptr;
 static HMENU gReadAloudContextSubmenu = nullptr;
 
@@ -3543,7 +3614,7 @@ static void ReadAloudQueueNext(WindowTab* tab) {
     }
 
     TempStr chunk = str::DupTemp(Str(tab->readAloudText.s + start, end - start));
-    if (!TtsQueueUtf8(chunk)) {
+    if (!TtsQueueUtf8(chunk) || !IsWindowTabValid(tab)) {
         return;
     }
     tab->readAloudQueuedEnd = end;
@@ -3631,25 +3702,35 @@ static void ReadAloudFinishSession(WindowTab* tab, MainWindow* win) {
     }
 }
 
-static bool ReadAloudSpeakChunk(WindowTab* tab, Str errMsg) {
+static SpeakChunkResult ReadAloudSpeakChunk(WindowTab* tab, Str errMsg) {
     if (!tab || len(tab->readAloudText) == 0) {
-        return false;
+        return SpeakChunkResult::Failed;
     }
 
     int start = tab->readAloudChunkEnd;
     int textLen = tab->readAloudText.len;
     int end = ReadAloudFindChunkEnd(tab->readAloudText, start, kReadAloudMaxChunkLen);
     if (start >= end) {
-        return false;
+        return SpeakChunkResult::Failed;
     }
 
     int chunkLen = end - start;
     TempStr chunk = str::DupTemp(Str(tab->readAloudText.s + start, (int)((size_t)chunkLen)));
-    if (!TtsSpeakUtf8(chunk)) {
+    // the backend call pumps messages (COM's modal loop), so the user can close
+    // the tab's window inside it; ~WindowTab already reset the session then
+    bool ok = TtsSpeakUtf8(chunk);
+    if (!IsWindowTabValid(tab)) {
+        logf("tts: SpeakChunk: tab closed during speak\n");
+        if (ok) {
+            TtsStop();
+        }
+        return SpeakChunkResult::TabGone;
+    }
+    if (!ok) {
         logf("tts: SpeakChunk: TtsSpeakUtf8 failed\n");
         dbgtts("chunk speak failed %d..%d of %d\n", start, end, textLen);
         ReadAloudShowNotif(tab, errMsg);
-        return false;
+        return SpeakChunkResult::Failed;
     }
     dbgtts("chunk %d..%d of %d mapBase=%d\n", start, end, textLen, tab->readAloudHighlightBase);
 
@@ -3657,9 +3738,14 @@ static bool ReadAloudSpeakChunk(WindowTab* tab, Str errMsg) {
     tab->readAloudChunkEnd = end;
     tab->readAloudQueuedEnd = 0;
     ReadAloudQueueNext(tab);
+    if (!IsWindowTabValid(tab)) {
+        logf("tts: SpeakChunk: tab closed during queue\n");
+        TtsStop();
+        return SpeakChunkResult::TabGone;
+    }
     ToolbarUpdateStateForWindow(tab->win, true);
     HwndInvalidate(tab->win->hwndCanvas);
-    return true;
+    return SpeakChunkResult::Ok;
 }
 
 // Text cleanup for speech
@@ -4025,7 +4111,11 @@ static void ReadAloudStartText(WindowTab* tab, Str cleaned, ReadAloudHighlightMa
     ReadAloudSetSourceTab(tab);
     ReadAloudHighlightTimerStart(tab->win);
 
-    if (!ReadAloudSpeakChunk(tab, errMsg)) {
+    SpeakChunkResult res = ReadAloudSpeakChunk(tab, errMsg);
+    if (res == SpeakChunkResult::TabGone) {
+        return;
+    }
+    if (res == SpeakChunkResult::Failed) {
         ReadAloudFinishSession(tab, tab->win);
         return;
     }
@@ -4211,7 +4301,11 @@ void ReadAloudContinueInTab(WindowTab* tab) {
     ReadAloudSetSourceTab(tab);
     ReadAloudHighlightTimerStart(tab->win);
 
-    if (!ReadAloudSpeakChunk(tab, Tr("No text available to read aloud"))) {
+    SpeakChunkResult res = ReadAloudSpeakChunk(tab, Tr("No text available to read aloud"));
+    if (res == SpeakChunkResult::TabGone) {
+        return;
+    }
+    if (res == SpeakChunkResult::Failed) {
         ReadAloudFinishSession(tab, tab->win);
         return;
     }
@@ -4483,8 +4577,11 @@ void ReadAloudOnTtsEvent(MainWindow* win) {
     }
     dbgtts("event idle hasMore=%d chunkEnd=%d textLen=%d\n", (int)ReadAloudHasMoreChunks(tab), tab->readAloudChunkEnd,
            tab->readAloudText.len);
-    if (ReadAloudHasMoreChunks(tab) && ReadAloudSpeakChunk(tab, Tr("No text available to read aloud"))) {
-        return;
+    if (ReadAloudHasMoreChunks(tab)) {
+        SpeakChunkResult res = ReadAloudSpeakChunk(tab, Tr("No text available to read aloud"));
+        if (res != SpeakChunkResult::Failed) {
+            return;
+        }
     }
     ReadAloudFinishSession(tab, win);
 }

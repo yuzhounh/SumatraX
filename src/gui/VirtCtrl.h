@@ -314,6 +314,7 @@ struct VirtRoot {
     void SetChild(VirtCtrl*);
     // the tops found in a layout tree; not owned
     void SetTops(const Vec<VirtCtrl*>&);
+    void ForgetTops();
     void SetBounds(Rect);
     void LayoutIfNeeded();
     void RequestLayout();
@@ -753,6 +754,7 @@ struct LabelWithClose {
 VirtCloseButton* AsVirtCloseButton(ILayout*);
 LabelWithClose NewLabelWithClose(HWND hwndForDpi, PlatformFont*, const VirtMouseHandler& onClose);
 void ApplyLabelWithCloseDpi(VirtText*, VirtCloseButton*, int dpi);
+void ApplyCloseButtonDpi(VirtCloseButton*, int dpi);
 
 struct VirtImage : VirtCtrl {
     Pixmap* pixmap = nullptr; // not owned
@@ -940,6 +942,21 @@ struct VirtRichText : VirtCtrl {
     void OnMouseUp(VirtMouseEvent*);
     void OnSetCursor(VirtSetCursorEvent*);
     void OnGetTooltip(VirtTooltipEvent*); // link under cursor
+};
+
+// always nLines tall: the text wraps to the width and is cut off past the
+// last line, so the layout around it doesn't move as texts of different
+// lengths come and go
+struct VirtFixedLinesText : VirtRichText {
+    int nLines = 6;
+    Color borderCol = kColorUnset;
+
+    int FixedDy();
+    int MinIntrinsicHeight(int width) override;
+    Size Layout(Constraints bc) override;
+    Size GetIdealSize() override;
+    void Paint(VirtPaintCtx&) override;
+    void SetText(Str);
 };
 
 VirtRichText* ParseTip(Str s);

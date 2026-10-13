@@ -51,6 +51,22 @@ bool WindowTab::IsAboutTab() const {
     return type == WindowTab::Type::About;
 }
 
+// the SidebarView / SidebarBottomView settings
+static const char* kSidebarViewNames[kSidebarViewCount] = {"bookmarks", "thumbnails", "favorites"};
+
+SidebarView SidebarViewFromStr(Str s, SidebarView def) {
+    for (int i = 0; i < kSidebarViewCount; i++) {
+        if (str::EqI(s, Str(kSidebarViewNames[i]))) {
+            return (SidebarView)i;
+        }
+    }
+    return def;
+}
+
+Str SidebarViewToStr(SidebarView v) {
+    return Str(kSidebarViewNames[(int)v]);
+}
+
 bool WindowTab::IsFavoritesTab() const {
     ReportIf(type == WindowTab::Type::None);
     return type == WindowTab::Type::Favorites;
@@ -235,13 +251,15 @@ float WindowTab::NextToggleZoom() const {
         return kZoomFitContent;
     }
     if (kZoomFitContent == currZoom) {
+        return kZoomFitVisible;
+    }
+    if (kZoomFitVisible == currZoom) {
         return kZoomShrinkToFit;
     }
     return kZoomFitPage;
 }
 
 void WindowTab::ToggleZoom() const {
-    ReportIf(!ctrl);
     if (!IsDocLoaded()) {
         return;
     }

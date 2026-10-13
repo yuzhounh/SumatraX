@@ -1,9 +1,9 @@
 // gen-settings.ts - replaces Go "-gen-settings" flag
-// Generates src/Settings.h, website HTML docs, and markdown docs from settings definitions
+// Generates src/Settings.h, src/Settings.cpp, website HTML docs, and markdown docs from settings definitions
 
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
-import { extractSumatraVersion, clangFormatFiles, runLogged, isGitClean } from "./util";
+import { extractSumatraVersion, clangFormatFiles, runLogged, isGitClean, websiteDocsDir } from "./util";
 
 async function runCapture(cmd: string, args: string[], cwd?: string): Promise<string> {
   const proc = Bun.spawn([cmd, ...args], { stdout: "pipe", stderr: "pipe", cwd });
@@ -536,7 +536,7 @@ const comicBookUI: Field[] = [
     Str,
     "",
     "default zoom for comic books; empty uses fit page. " +
-      "valid values: fit page, fit width, fit height, fit content, shrink to fit or percent like 100%",
+      "valid values: fit page, fit width, fit height, fit content, fit visible, shrink to fit or percent like 100%",
   ).ver("3.7"),
   field("DefaultZoomFloat", Float, 0, "value of DefaultZoom for internal usage").notSaved(),
   field(
@@ -555,7 +555,7 @@ const imageUI: Field[] = [
     "DefaultZoom",
     Str,
     "shrink to fit",
-    "default zoom for image files. valid values: fit page, fit width, fit height, fit content, shrink to fit or percent like 100%",
+    "default zoom for image files. valid values: fit page, fit width, fit height, fit content, fit visible, shrink to fit or percent like 100%",
   ).ver("3.7"),
   field("DefaultZoomFloat", Float, 0, "value of DefaultZoom for internal usage").notSaved(),
   field(
@@ -743,6 +743,12 @@ const externalViewer: Field[] = [
     null,
     "optional SVG icon for toolbar button; if both ToolbarSvgIcon and ToolbarText are set, the icon is used",
   ).ver("3.7"),
+];
+
+const textSnippet: Field[] = [
+  field("Name", Str, null, "name shown in the context menu and the command palette"),
+  field("Text", Str, null, "text of the free text annotation it inserts; \\n starts a new line"),
+  field("Key", Str, null, "keyboard shortcut"),
 ];
 
 const selectionHandler: Field[] = [
@@ -947,6 +953,13 @@ const annotations: Field[] = [
     "author recorded on newly created annotations. If not set, the Windows user name is used; " +
       "set it to (none) to leave the author out entirely",
   ).ver("3.4"),
+  field(
+    "SignatureImage",
+    Str,
+    null,
+    "image (e.g. a transparent .png of your signature) that Sign With Image stamps on the page. " +
+      "If not set, or the file is missing, Sign With Image asks for an image",
+  ).ver("3.7"),
 ];
 
 const favorite: Field[] = [
@@ -1092,7 +1105,12 @@ const fileState: Field[] = [
     0,
     "number of pages in the document when it was last open; 0 if unknown. Used to show reading progress on the home page",
   ).ver("3.7"),
-  field("Zoom", Str, "fit page", "zoom (in %) or one of those values: fit page, fit width, fit height, fit content"),
+  field(
+    "Zoom",
+    Str,
+    "fit page",
+    "zoom (in %) or one of those values: fit page, fit width, fit height, fit content, fit visible",
+  ),
   field("Rotation", Int, 0, "how far pages have been rotated as a multiple of 90 degrees"),
   field(
     "WindowState",
@@ -1102,6 +1120,12 @@ const fileState: Field[] = [
   ),
   compactStruct("WindowPos", windowPos, "default position (can be on any monitor)").structName("Rect"),
   field("ShowToc", Bool, false, "if true, show the table of contents (Bookmarks) sidebar when the document has one"),
+  field(
+    "SidebarView",
+    Str,
+    null,
+    "what the sidebar's top panel shows: bookmarks (the default), thumbnails or favorites",
+  ).ver("3.7"),
   field("SidebarDx", Int, 0, "width of the bookmarks / favorites sidebar in screen pixels, as last resized"),
   field("DisplayR2L", Bool, false, "if true, the document is displayed right-to-left in facing and book view modes"),
   field(
@@ -1113,6 +1137,12 @@ const fileState: Field[] = [
   field("TrimEmptyMargins", Bool, false, "if true, empty margins around page content are trimmed from display").ver(
     "3.7",
   ),
+  field(
+    "FreePan",
+    Bool,
+    false,
+    "if true, the view can be panned past the page edges, so any part of a page can be brought to the center of the window",
+  ).ver("3.7"),
   field("BgCol", Color, "", "if given, overrides the background color for this document").ver("3.7"),
   field("TabCol", Color, "", "if given, overrides the tab color for this document").ver("3.7"),
   compactArray(
@@ -1146,6 +1176,7 @@ const fileStateLayout = [
   "Himl",
   "FilePath",
   "DecryptionKey",
+  "SidebarView",
   "DisplayMode",
   "Zoom",
   "BgCol",
@@ -1167,6 +1198,7 @@ const fileStateLayout = [
   "DisplayR2L",
   "UniformPageWidth",
   "TrimEmptyMargins",
+  "FreePan",
 ];
 fileState.sort((a, b) => fileStateLayout.indexOf(a.Name) - fileStateLayout.indexOf(b.Name));
 
@@ -1185,12 +1217,18 @@ const tabState: Field[] = [
     "1",
     "number of the last read page, or `bm:<bookmark>` for documents with chapters (see PagePosition.cpp)",
   ),
-  field("Zoom", Str, "fit page", "zoom (in %) or one of those values: fit page, fit width, fit height, fit content"),
+  field(
+    "Zoom",
+    Str,
+    "fit page",
+    "zoom (in %) or one of those values: fit page, fit width, fit height, fit content, fit visible",
+  ),
   field("Rotation", Int, 0, "how far pages have been rotated as a multiple of 90 degrees"),
   compactStruct("ScrollPos", scrollPos, "how far this document has been scrolled (in x and y direction)").structName(
     "PointF",
   ),
   field("ShowToc", Bool, false, "if true, the table of contents was shown when the document was closed"),
+  field("SidebarView", Str, null, "what the sidebar's top panel showed: bookmarks, thumbnails or favorites").ver("3.7"),
   compactArray("TocState", Int, null, "which table of contents items were expanded (see FileStates -> TocState)"),
 ];
 
@@ -1229,7 +1267,7 @@ const globalPrefs: Field[] = [
     "DefaultZoom",
     Str,
     "fit page",
-    "default zoom. valid values: fit page, fit width, fit height, fit content or percent like 100%",
+    "default zoom. valid values: fit page, fit width, fit height, fit content, fit visible or percent like 100%",
   ),
   field(
     "DisableJavaScript",
@@ -1251,7 +1289,12 @@ const globalPrefs: Field[] = [
     "if true, show the SyncTeX inverse search command line in Settings -> Options, so a " +
       "double-click in the document can jump to the matching line in a LaTeX editor",
   ),
-  field("EscToExit", Bool, false, "if true, Esc key closes SumatraPDF"),
+  field(
+    "EscToExit",
+    Bool,
+    false,
+    "if true, Esc key closes SumatraPDF. In presentation or fullscreen mode, Esc leaves that mode first",
+  ),
   field("FullPathInTitle", Bool, false, "if true, show the full path to the document in the title bar").ver("3.0"),
   field("InverseSearchCmdLine", Str, null, "pattern used to launch the LaTeX editor when doing inverse search"),
   field(
@@ -1312,7 +1355,14 @@ const globalPrefs: Field[] = [
     "if true, a document will be reloaded automatically whenever it's changed " +
       "(currently doesn't work for documents shown in the ebook UI)",
   ).ver("2.5"),
-  field("RememberOpenedFiles", Bool, true, "if true, remember which documents were opened and their display settings"),
+  field(
+    "RememberOpenedFiles",
+    Bool,
+    true,
+    "if true, keep a history of opened documents and their display settings " +
+      "(FileStates); closing a document doesn't remove it from the history. " +
+      "Also required for saving SessionData",
+  ),
   field(
     "RememberStatePerDocument",
     Bool,
@@ -1320,7 +1370,13 @@ const globalPrefs: Field[] = [
     "if true, store display settings for each document separately (i.e. everything " +
       "after UseDefaultState in FileStates)",
   ),
-  field("RestoreSession", Bool, true, "if true and SessionData isn't empty, that session will be restored at startup"),
+  field(
+    "RestoreSession",
+    Bool,
+    false,
+    "if true, documents that were still open when the last window was closed " +
+      "are saved in SessionData and reopened at startup; if false, no session is saved",
+  ),
   field(
     "ReuseInstance",
     Bool,
@@ -1355,6 +1411,15 @@ const globalPrefs: Field[] = [
     Bool,
     true,
     "if true, show reading progress (n/N, or chapter:page for ebooks) on home page thumbnails and list rows",
+  ).ver("3.7"),
+  field(
+    "ShowChaptersInEbooks",
+    Bool,
+    false,
+    "if true, a document with chapters (EPUB, MOBI) shows the current place as a chapter and a page " +
+      "within that chapter, in the toolbar, Go to Page and the page-info tip. if false, those show one " +
+      "page number for the whole document. the saved position stays a chapter bookmark either way, and " +
+      "next / previous page still cross chapters",
   ).ver("3.7"),
   field("ShowTips", Bool, true, "if true, show tips on the home page").ver("3.7"),
   field(
@@ -1392,7 +1457,18 @@ const globalPrefs: Field[] = [
     "if true, the find UI is a floating, movable window with a results list " +
       "instead of the compact toolbar overlay",
   ).ver("3.7"),
-  field("ShowFavorites", Bool, false, "if true, show the Favorites sidebar"),
+  field(
+    "ShowFavorites",
+    Bool,
+    false,
+    "if true, show the sidebar's bottom panel: Favorites, unless SidebarBottomView says otherwise",
+  ),
+  field(
+    "SidebarBottomView",
+    Str,
+    null,
+    "what the sidebar's bottom panel shows: favorites (the default), bookmarks or thumbnails",
+  ).ver("3.7"),
   field(
     "SortFavoritesByName",
     Bool,
@@ -1401,6 +1477,13 @@ const globalPrefs: Field[] = [
       "(or page label); if false (the default), they are sorted by page number",
   ).ver("3.7"),
   field("ShowToc", Bool, false, "if true, show the table of contents (Bookmarks) sidebar when the document has one"),
+  field(
+    "AlwaysShowSidebar",
+    Bool,
+    false,
+    "if true, every document with bookmarks opens with the Bookmarks sidebar, " +
+      "even one that was closed with it hidden",
+  ).ver("3.7"),
   field(
     "SidebarOnRight",
     Bool,
@@ -1628,6 +1711,13 @@ const globalPrefs: Field[] = [
         "Solarized Dark, Dracula, Nebula, Greeny, Choco, Purpy, One Dark, Monokai, Nord, " +
         "GitHub Dark, Catppuccin Mocha, Tokyo Night, Gruvbox, Night Owl, Ayu, Palenight, System",
     ),
+  field(
+    "HelpTheme",
+    Str,
+    "app",
+    "color theme of the in-app manual (F1): app (follow the app's theme), light or dark. " +
+      "The switch in the manual's top-right corner changes it",
+  ).ver("3.7"),
   // remembered by the light/dark toggle and System theme; not user-facing knobs
   field("LastLightTheme", Str, "", "the light theme the light/dark toggle and the System theme switch to")
     .internal()
@@ -1726,7 +1816,7 @@ const globalPrefs: Field[] = [
     false,
     "if true, use the Windows system colors for the document background and text. Overrides other color settings",
   ),
-  field("UseTabs", Bool, false, "if true, documents are opened in tabs instead of new windows").ver("3.0"),
+  field("UseTabs", Bool, true, "if true, documents are opened in tabs instead of new windows").ver("3.0"),
   field(
     "SelectionToolbar",
     Bool,
@@ -1865,6 +1955,12 @@ const globalPrefs: Field[] = [
     "list of handlers for selected text, shown in context menu when text selection is active. See [docs for more information](https://www.sumatrapdfreader.org/docs/Customize-search-translation-services)",
   ),
   emptyLine(),
+  array(
+    "TextSnippets",
+    textSnippet,
+    "predefined text inserted as a free text annotation from the context menu or the command palette",
+  ).ver("3.7"),
+  emptyLine(),
   array("Shortcuts", keyboardShortcut, "custom keyboard shortcuts"),
   emptyLine(),
   array("Themes", theme, "color themes").ver("3.6"),
@@ -1908,8 +2004,18 @@ const globalPrefs: Field[] = [
     .ver("3.7")
     .internal(),
 
-  array("FileStates", fileState, "information about opened files (in most recently used order)"),
-  array("SessionData", sessionData, "state of the last session, usage depends on RestoreSession").ver("3.1"),
+  array(
+    "FileStates",
+    fileState,
+    "history of opened files, most recently used first. A closed file stays " +
+      "here until it drops off the list or the history is cleared",
+  ),
+  array(
+    "SessionData",
+    sessionData,
+    "windows and tabs still open when SumatraPDF was last closed; " +
+      "saved and reopened at startup only if RestoreSession is true",
+  ).ver("3.1"),
 
   compactArray(
     "ReopenOnce",
@@ -1970,6 +2076,7 @@ const globalPrefsLayout = [
   "Theme",
   "LastLightTheme",
   "LastDarkTheme",
+  "HelpTheme",
   "DocumentColorsFollowTheme",
   "ToolbarCustomLayout",
   "TreeFontName",
@@ -2038,11 +2145,13 @@ const globalPrefsLayout = [
   "ShowTips",
   "ShowPageNumberInTabs",
   "ShowHomePageReadingProgress",
+  "ShowChaptersInEbooks",
   "ShowToolbar",
   "SearchUIFloating",
   "ShowFavorites",
   "SortFavoritesByName",
   "ShowToc",
+  "AlwaysShowSidebar",
   "SidebarOnRight",
   "SidebarWindowSize",
   "ShowLinks",
@@ -2144,7 +2253,7 @@ function cdefault(f: Field, built: Record<string, number>): string {
     if (f.Default === null || f.Default === undefined) {
       return "0";
     }
-    return `(intptr_t)"${f.Default}"`;
+    return `(intptr_t)"${escapeCStr(f.Default)}"`;
   }
   const typeName = f.Type.name;
   if (["Struct", "StructPtr", "Array", "Compact"].includes(typeName)) {
@@ -2269,6 +2378,26 @@ function buildStruct(struc: Field, built: Record<string, number>): string {
   return s1 + s2;
 }
 
+// Settings.cpp defines the metadata for (de)serializing the structs; the tables
+// code outside it uses are declared extern in Settings.h, the rest stay static
+const exportedMetadata = [
+  "gSettingsInfo",
+  "gThemesInfo",
+  "gFileStateInfo",
+  "gFileStateFields",
+  "gSessionDataInfo",
+  "gTabStateInfo",
+  "gFavoriteInfo",
+  "gFileEBookUIInfo",
+];
+
+// extern declarations of exportedMetadata, filled by buildMetaData
+const metadataExterns: string[] = [];
+
+function metadataStorage(name: string): string {
+  return exportedMetadata.includes(name) ? "" : "static ";
+}
+
 function buildMetaData(struc: Field, built: Record<string, number>): string {
   const lines: string[] = [];
   const names: string[] = [];
@@ -2310,7 +2439,12 @@ function buildMetaData(struc: Field, built: Record<string, number>): string {
     }
     data.push(dataLine);
   }
-  lines.push(`static const FieldInfo g${fullName}Fields[] = {`);
+  const fieldsName = `g${fullName}Fields`;
+  if (exportedMetadata.includes(fieldsName)) {
+    // with its size: callers take dimof() of it
+    metadataExterns.push(`extern const FieldInfo ${fieldsName}[${data.length}];`);
+  }
+  lines.push(`${metadataStorage(fieldsName)}const FieldInfo ${fieldsName}[] = {`);
   lines.push(...formatArrayLines(data));
   lines.push("};");
   const constStr = fullName !== "FileState" ? "const " : "";
@@ -2327,8 +2461,12 @@ function buildMetaData(struc: Field, built: Record<string, number>): string {
       break;
     }
   }
+  const infoName = `g${fullName}Info`;
+  if (exportedMetadata.includes(infoName)) {
+    metadataExterns.push(`extern ${constStr}StructInfo ${infoName};`);
+  }
   lines.push(
-    `static ${constStr}StructInfo g${fullName}Info = { sizeof(${struc.StructName}), ${names.length}, g${fullName}Fields, "${namesStr}", "${commentsStr}", ${couldBeTemporary} };`,
+    `${metadataStorage(infoName)}${constStr}StructInfo ${infoName} = { sizeof(${struc.StructName}), ${names.length}, ${fieldsName}, "${namesStr}", "${commentsStr}", ${couldBeTemporary} };`,
   );
   return lines.join("\n");
 }
@@ -2358,6 +2496,7 @@ constexpr float kZoomFitContent = -3.F;
 constexpr float kZoomShrinkToFit = -4.F;
 constexpr float kZoomFitByOrientation = -5.F;
 constexpr float kZoomFitHeight = -6.F;
+constexpr float kZoomFitVisible = -7.F;
 constexpr float kZoomActualSize = 100.0F;
 constexpr float kZoomMaxDefault = 6400.F;     /* max zoom in %, unless ZoomLevels raises it */
 constexpr float kZoomMaxAllowed = 1000000.F;  /* the highest ZoomLevels can raise it to */
@@ -2369,27 +2508,50 @@ constexpr float kInvalidZoom = -99.0F;
 
 {{structDef}}
 
-#ifdef INCLUDE_SETTINGSSTRUCTS_METADATA
+// NOLINTEND(modernize-use-designated-initializers)
+
+// (de)serialization metadata, defined in Settings.cpp
+struct FieldInfo;
+struct StructInfo;
+{{metadataExterns}}
+`;
+
+const settingsStructsCpp = `// !!!!! This file is auto-generated by cmd/gen-settings.ts
+
+/* Copyright 2026 the SumatraPDF project authors (see AUTHORS file).
+   License: Simplified BSD (see COPYING) */
+
+#include "base/Base.h"
+#include "base/SettingsUtil.h"
+
+#include "Settings.h"
+
+// NOLINTBEGIN(modernize-use-designated-initializers)
 
 {{structMetadata}}
 
 // NOLINTEND(modernize-use-designated-initializers)
-#endif
 `;
 
-function genSettingsStruct(): string {
+// returns [Settings.h, Settings.cpp]
+function genSettingsStruct(): [string, string] {
   const builtDef: Record<string, number> = {};
   const builtMeta: Record<string, number> = {};
+  metadataExterns.length = 0;
   let structDef = buildStruct(globalPrefsStruct, builtDef);
   let structMetaData = buildMetaData(globalPrefsStruct, builtMeta);
 
   structDef += buildStruct(themesStruct, builtDef);
   structMetaData += buildMetaData(themesStruct, builtMeta);
 
-  let content = settingsStructsHeader;
-  content = content.replaceAll("{{structDef}}", structDef);
-  content = content.replaceAll("{{structMetadata}}", structMetaData);
-  return content;
+  if (metadataExterns.length !== exportedMetadata.length) {
+    throw new Error(`exportedMetadata names tables that weren't generated: ${exportedMetadata.join(", ")}`);
+  }
+  let header = settingsStructsHeader;
+  header = header.replaceAll("{{structDef}}", structDef);
+  header = header.replaceAll("{{metadataExterns}}", metadataExterns.join("\n"));
+  const cpp = settingsStructsCpp.replaceAll("{{structMetadata}}", structMetaData);
+  return [header, cpp];
 }
 
 // ---------------------------------------------------------------------------
@@ -2915,22 +3077,25 @@ export async function main(opts?: { formatOutput?: boolean }) {
   const helpURI = `For documentation, see https://www.sumatrapdfreader.org/settings/settings${verUrlized}.html`;
   globalPrefs[0].Comment = helpURI;
 
-  // Generate C header
-  let s = genSettingsStruct();
-  s = s.replaceAll("\t", "    ");
+  // Generate C header and its .cpp with the metadata
+  const [header, cpp] = genSettingsStruct();
   const settingsPath = join("src", "Settings.h");
-  writeFileMust(settingsPath, s);
+  const settingsCppPath = join("src", "Settings.cpp");
+  writeFileMust(settingsPath, header.replaceAll("\t", "    "));
+  writeFileMust(settingsCppPath, cpp.replaceAll("\t", "    "));
   if (opts?.formatOutput !== false) {
     const rootDir = join(import.meta.dir, "..");
-    await clangFormatFiles(rootDir, [settingsPath]);
+    await clangFormatFiles(rootDir, [settingsPath, settingsCppPath]);
   }
-  console.log(`Wrote '${settingsPath}'`);
+  console.log(`Wrote '${settingsPath}' and '${settingsCppPath}'`);
 
   // Generate settings markdown
-  {
+  const mdPath = join(websiteDocsDir, "Advanced-options-settings.md");
+  if (!existsSync(mdPath)) {
+    console.log(`skipping settings markdown: '${mdPath}' missing (needs sumatra-website checkout)`);
+  } else {
     const inside = genStructMarkdown(globalPrefsStruct, "");
     const mdContent = tmplMarkdown.replaceAll("%INSIDE%", inside);
-    const mdPath = join("docs", "md", "Advanced-options-settings.md");
     const existing = readFileSync(mdPath, "utf-8");
     const marker = "## Settings";
     const idx = existing.indexOf(marker);

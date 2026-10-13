@@ -37,6 +37,7 @@
 #include "AnnotEditToolbar.h"
 #include "AnnotFilterToolbar.h"
 #include "Tabs.h"
+#include "PagePosition.h"
 #include "gui/Layout.h"
 #include "gui/win/WinGui.h"
 #include "gui/PlatformFont.h"
@@ -1275,7 +1276,7 @@ void UpdateToolbarPageText(MainWindow* win, int pageCount, bool updateOnly) {
         return;
     }
 
-    bool hasChapters = win->ctrl && win->ctrl->HasChapters();
+    bool hasChapters = ShowChapterUi(win->ctrl);
     if (tb->pageLabel) {
         tb->pageLabel->SetText(hasChapters ? Tr("Chapter:") : Tr("Page:"));
     }
@@ -2100,16 +2101,30 @@ static void GiveHoverButtonTooltipBack(MainWindow* win) {
     tb->hoverSavedTip = {};
 }
 
+// SetWindowPos / DestroyWindow of the drop-down can deliver a mouse move
+// back into this code. That move must not open a second window.
+static bool gInOpenHover = false;
+
+struct HoverOpenScope {
+    HoverOpenScope() { gInOpenHover = true; }
+    ~HoverOpenScope() { gInOpenHover = false; }
+};
+
 void HideToolbarHoverDropdown(MainWindow* win) {
+    if (gInOpenHover) {
+        return;
+    }
     ToolbarVirt* tb = win ? win->toolbarVirt : nullptr;
     if (!tb) {
         return;
     }
+    HoverOpenScope openScope;
     VecReset(tb->hoverItems);
     GiveHoverButtonTooltipBack(win);
     tb->hoverPendingCmdId = 0;
     tb->hoverCmdId = 0;
     tb->hoverSticky = false;
+    tb->hoverMoveTick = 0;
     if (tb->host) {
         tb->host->KillTimer(kOpenHoverDropdownTimerId);
         tb->host->KillTimer(kCloseHoverDropdownTimerId);
@@ -2161,7 +2176,15 @@ void SetToolbarHoverDropdown(MainWindow* win, int cmdId, const Func1<ToolbarHove
     VecAppend(tb->hoverRegs, reg);
 }
 
+static void NoteHoverButtonMove(ToolbarVirt* tb) {
+    tb->hoverMoveTick = GetTickCount64();
+}
+
 static void OpenHoverDropdown(MainWindow* win, int cmdId) {
+    if (gInOpenHover) {
+        return;
+    }
+    HoverOpenScope openScope;
     ToolbarVirt* tb = win ? win->toolbarVirt : nullptr;
     ToolbarHoverReg* reg = FindHoverReg(tb, cmdId);
     if (!reg || !reg->build.IsValid() || !tb->host) {
@@ -2209,6 +2232,13 @@ static void OpenHoverDropdown(MainWindow* win, int cmdId) {
     }
     Rect r{x, anchor.Bottom(), sz.dx, sz.dy};
     r = ShiftRectToWorkArea(r, win->hwndFrame, true);
+
+    // Live before the show. SetWindowPos can deliver a mouse move; gInOpenHover
+    // makes that move a no-op so it cannot open a second window.
+    tb->hoverHost = host;
+    tb->hoverCmdId = cmdId;
+    tb->hoverPendingCmdId = 0;
+    NoteHoverButtonMove(tb);
     host->SetPos(r, true);
 
     tb->host->KillTimer(kOpenHoverDropdownTimerId);
@@ -2218,9 +2248,6 @@ static void OpenHoverDropdown(MainWindow* win, int cmdId) {
     if (tb->host->vroot) {
         tb->host->vroot->HideTooltip();
     }
-    tb->hoverHost = host;
-    tb->hoverCmdId = cmdId;
-    tb->hoverPendingCmdId = 0;
 }
 
 // Open the drop-down this button has, if any. One already up is left as it is.
@@ -2273,7 +2300,7 @@ static bool ShowToolbarButtonDropdown(MainWindow* win, int cmdId) {
 // on leave, which uses the real cursor so the drop-down stays up in it.
 static void ToolbarHoverDropdownOnMouseMove(MainWindow* win, const Point* clientPt) {
     ToolbarVirt* tb = win ? win->toolbarVirt : nullptr;
-    if (!tb || !tb->host || len(tb->hoverRegs) == 0) {
+    if (gInOpenHover || !tb || !tb->host || len(tb->hoverRegs) == 0) {
         return;
     }
     Point ptScreen = UiCursorScreenPos();
@@ -2299,6 +2326,9 @@ static void ToolbarHoverDropdownOnMouseMove(MainWindow* win, const Point* client
         // one is open: keep it while the mouse is on its button or in it
         if (overMenu || cmdId == tb->hoverCmdId) {
             tb->host->KillTimer(kCloseHoverDropdownTimerId);
+            if (cmdId == tb->hoverCmdId) {
+                NoteHoverButtonMove(tb);
+            }
             return;
         }
         if (cmdId != 0) {
@@ -2313,6 +2343,7 @@ static void ToolbarHoverDropdownOnMouseMove(MainWindow* win, const Point* client
                 GiveHoverButtonTooltipBack(win);
                 tb->hoverCmdId = cmdId;
                 TakeHoverButtonTooltip(win, cmdId);
+                NoteHoverButtonMove(tb);
                 return;
             }
             // moved straight onto another button that has one: swap to it
@@ -2337,6 +2368,34 @@ static void ToolbarHoverDropdownOnMouseMove(MainWindow* win, const Point* client
     }
 }
 
+// Cursor is on this drop-down, or on a button that shares it.
+static bool CursorKeepsHoverMenu(MainWindow* win, Point pt) {
+    ToolbarVirt* tb = win ? win->toolbarVirt : nullptr;
+    if (!tb || tb->hoverCmdId == 0) {
+        return false;
+    }
+    if (ToolbarHoverDropdownContainsScreenPoint(win, pt)) {
+        return true;
+    }
+    if (GetToolbarButtonScreenRect(win, tb->hoverCmdId).Contains(pt)) {
+        return true;
+    }
+    ToolbarHoverReg* from = FindHoverReg(tb, tb->hoverCmdId);
+    int group = from ? from->groupId : 0;
+    if (group == 0) {
+        return false;
+    }
+    for (ToolbarHoverReg& reg : tb->hoverRegs) {
+        if (reg.groupId != group) {
+            continue;
+        }
+        if (GetToolbarButtonScreenRect(win, reg.cmdId).Contains(pt)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 static void OnHoverDropdownTimer(MainWindow* win, int timerId) {
     ToolbarVirt* tb = win ? win->toolbarVirt : nullptr;
     if (!tb || !tb->host) {
@@ -2346,7 +2405,9 @@ static void OnHoverDropdownTimer(MainWindow* win, int timerId) {
         tb->host->KillTimer(kOpenHoverDropdownTimerId);
         int cmdId = tb->hoverPendingCmdId;
         tb->hoverPendingCmdId = 0;
-        if (cmdId != 0) {
+        // one is already up: the show can re-enter here, and a second window
+        // leaves tests looking at whichever EnumWindows returns first
+        if (cmdId != 0 && !tb->hoverHost) {
             OpenHoverDropdown(win, cmdId);
         }
         return;
@@ -2355,12 +2416,13 @@ static void OnHoverDropdownTimer(MainWindow* win, int timerId) {
     if (tb->hoverSticky) {
         return;
     }
-    Point pt = UiCursorScreenPos();
-    if (ToolbarHoverDropdownContainsScreenPoint(win, pt)) {
+    if (CursorKeepsHoverMenu(win, UiCursorScreenPos())) {
         return;
     }
-    // still on the button that opened it: leave it up
-    if (GetToolbarButtonScreenRect(win, tb->hoverCmdId).Contains(pt)) {
+    // Posted moves are not the real cursor. A fresh one on the button keeps
+    // the menu across a cursor yank between them.
+    if (tb->hoverMoveTick != 0 && GetTickCount64() - tb->hoverMoveTick < (u64)kCloseHoverDropdownDelayMs) {
+        tb->host->SetTimer(kCloseHoverDropdownTimerId, kCloseHoverDropdownDelayMs);
         return;
     }
     HideToolbarHoverDropdown(win);
@@ -3656,7 +3718,7 @@ void CreateToolbar(MainWindow* win) {
     DocController* ctrl = win->ctrl;
     UpdateToolbarPageText(win, ctrl ? ctrl->PageCount() : -1);
     if (ctrl && win->pageEdit) {
-        if (ctrl->HasChapters()) {
+        if (ShowChapterUi(ctrl)) {
             Location cur = ctrl->CurrentLocation();
             win->pageEdit->SetText(fmt("%d", cur.page));
             if (win->chapterEdit) {
@@ -3670,6 +3732,7 @@ void CreateToolbar(MainWindow* win) {
     }
     UpdateToolbarFindText(win);
     ToolbarUpdateStateForWindow(win, true);
+    FindBarRestoreState(win);
 }
 
 void DestroyToolbar(MainWindow* win) {
@@ -3680,6 +3743,7 @@ void DestroyToolbar(MainWindow* win) {
     }
     HideToolbarHoverDropdown(win);
     DeleteAnnotFilterToolbar(win);
+    FindBarSaveState(win);
     win->pageEdit = nullptr;
     win->chapterEdit = nullptr;
     win->toolbarVirt = nullptr;
@@ -3759,7 +3823,7 @@ static void OnLocationEditChar(MainWindow* win, Edit::CharEvent* ev) {
     switch ((Key)ev->c) {
         case Key::Enter: {
             DocController* ctrl = win->ctrl;
-            if (ctrl->HasChapters()) {
+            if (ShowChapterUi(ctrl)) {
                 int chapter = win->chapterEdit ? ParseInt(win->chapterEdit->GetTextTemp()) : 1;
                 int page = win->pageEdit ? ParseInt(win->pageEdit->GetTextTemp()) : 1;
                 Location loc = ctrl->ClampLocation({chapter, page});

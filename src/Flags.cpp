@@ -39,7 +39,7 @@ enum class Arg {
     UpgradeFrom = 80, ForTesting = 81, QuickLook = 82, QuickLookAgent = 83,
     WindowPos = 84, DumpExif = 85, DumpChm = 86, Control = 87,
     UnitTests = 88, ForAi = 89, NewWindowTabs = 90, HtmlBackend = 91,
-    StartPerfLog = 92, LogPerfFile = 93,
+    StartPerfLog = 92, LogPerfFile = 93, NoDesktopShortcut = 94,
 };
 
 static SeqStrings gArgNames =
@@ -66,7 +66,7 @@ static SeqStrings gArgNames =
     "upgrade-from\0" "for-testing\0" "quicklook\0" "quicklook-agent\0"
     "window-pos\0" "dump-exif\0" "dump-chm\0" "dbg-control\0"
     "unit-tests\0" "for-ai\0" "new-window-tabs\0" "html-backend\0"
-    "start-perf-log\0" "log-perf-file\0";
+    "start-perf-log\0" "log-perf-file\0" "no-desktop-shortcut\0";
 // clang-format on
 // @gen-end flags
 
@@ -147,9 +147,10 @@ static SeqStrings zoomValues =
     "fit page\0fitpage\0fit-page\0"
     "fit width\0fitwidth\0fit-width\0"
     "fit height\0fitheight\0fit-height\0"
-    "fit content\0fitcontent\0fit-content\0";
+    "fit content\0fitcontent\0fit-content\0"
+    "fit visible\0fitvisible\0fit-visible\0";
 
-// -zoom [fitwidth|fitheight|fitpage|fitcontent|n]
+// -zoom [fitwidth|fitheight|fitpage|fitcontent|fitvisible|n]
 // if a number, it's in percent e.g. 12.5 means 12.5%
 // 100 means 100% i.e. actual size as e.g. given in PDF file
 static void ParseZoomValue(float* zoom, Str txtOrig) {
@@ -161,7 +162,11 @@ static void ParseZoomValue(float* zoom, Str txtOrig) {
         // 3-5 : fit width
         // 6-8 : fit height
         // 9-11: fit content
-        *zoom = kZoomFitContent;
+        // 12-14: fit visible
+        *zoom = kZoomFitVisible;
+        if (zoomVal <= 11) {
+            *zoom = kZoomFitContent;
+        }
         if (zoomVal <= 8) {
             *zoom = kZoomFitHeight;
         }
@@ -348,8 +353,9 @@ FileArgs* ParseFileArgs(Str path) {
     if (!str::CutCharLast(path, '?', &before, &after)) {
         return nullptr;
     }
-    // don't mutilate long file paths that start with "\\?\"
-    if (before.len == 2) {
+    // don't mutilate long file paths that start with "\\?\", or ones with a
+    // '?' but no file before it (a garbled drive letter: "?:\foo.pdf")
+    if (before.len == 2 || before.len == 0) {
         return nullptr;
     }
     FileArgs* res = new FileArgs();
@@ -364,9 +370,7 @@ void ParseFlags(Arena* a, WStr cmdLine, Flags& i, Str toolNames) {
     ReportIf(!a);
     // logf("ParseFlags: cmdLine: '%s'\n", ToUtf8Temp(cmdLine));
     StrNode* root = ParseCmdLine(cmdLine);
-    defer {
-        FreeStrNode(nullptr, root);
-    };
+    AutoFreeStrNode freeRoot(root);
     StrNode* firstArg = root ? root->next : nullptr;
 
     // if the first argument is a tool name, skip parsing flags entirely
@@ -441,7 +445,7 @@ void ParseFlags(Arena* a, WStr cmdLine, Flags& i, Str toolNames) {
             continue;
         }
         if (arg == Arg::Help || arg == Arg::Help2 || arg == Arg::Help3) {
-            i.showHelp = true;
+            i.installer.showHelp = true;
             continue;
         }
         if (arg == Arg::ExitWhenDone || arg == Arg::ExitOnPrint) {
@@ -473,23 +477,27 @@ void ParseFlags(Arena* a, WStr cmdLine, Flags& i, Str toolNames) {
             continue;
         }
         if (arg == Arg::Install) {
-            i.install = true;
+            i.installer.install = true;
             continue;
         }
         if (arg == Arg::FastInstall) {
-            i.fastInstall = true;
+            i.installer.fastInstall = true;
             continue;
         }
         if (arg == Arg::UnInstall) {
-            i.uninstall = true;
+            i.installer.uninstall = true;
             continue;
         }
         if (arg == Arg::WithFilter || arg == Arg::WithSearch) {
-            i.withFilter = true;
+            i.installer.withFilter = true;
             continue;
         }
         if (arg == Arg::WithPreview) {
-            i.withPreview = true;
+            i.installer.withPreview = true;
+            continue;
+        }
+        if (arg == Arg::NoDesktopShortcut) {
+            i.installer.noDesktopShortcut = true;
             continue;
         }
         if (arg == Arg::Rand) {
@@ -501,7 +509,7 @@ void ParseFlags(Arena* a, WStr cmdLine, Flags& i, Str toolNames) {
             continue;
         }
         if (arg == Arg::Extract) {
-            i.justExtractFiles = true;
+            i.installer.justExtractFiles = true;
             continue;
         }
         if (arg == Arg::Tester) {
@@ -560,11 +568,11 @@ void ParseFlags(Arena* a, WStr cmdLine, Flags& i, Str toolNames) {
             continue;
         }
         if (arg == Arg::RunInstallNow) {
-            i.runInstallNow = true;
+            i.installer.runInstallNow = true;
             continue;
         }
         if ((arg == Arg::AllUsers) || (arg == Arg::AllUsers2)) {
-            i.allUsers = true;
+            i.installer.allUsers = true;
             continue;
         }
         if (arg == Arg::CrashOnOpen) {
@@ -756,7 +764,7 @@ void ParseFlags(Arena* a, WStr cmdLine, Flags& i, Str toolNames) {
             continue;
         }
         if (arg == Arg::Dir || arg == Arg::InstallDir) {
-            i.installDir = str::Dup(a, param);
+            i.installer.installDir = str::Dup(a, param);
             continue;
         }
         if (arg == Arg::DDE) {
@@ -835,12 +843,12 @@ void ParseFlags(Arena* a, WStr cmdLine, Flags& i, Str toolNames) {
         }
     }
 
-    if (i.justExtractFiles) {
+    if (i.installer.justExtractFiles) {
         // silently extract files to directory given if /d
         // or current directory if no /d given
         i.silent = true;
-        if (len(i.installDir) == 0) {
-            i.installDir = str::Dup(a, StrL("."));
+        if (len(i.installer.installDir) == 0) {
+            i.installer.installDir = str::Dup(a, StrL("."));
         }
     }
 }
