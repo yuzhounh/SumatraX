@@ -19,7 +19,7 @@
 
 SumatraX 是基于 SumatraPDF 深度定制的专注、极简型多格式文档阅读器。在保持极速启动与超低资源占用的同时，强化了窗口布局记忆、极简界面交互以及增强的 Markdown 与 LaTeX 数学公式渲染体验。
 
-当前 SumatraX 版本与官方预发布版一致，为 3.7.22619（2026-10-01，提交 `181dcfa3f8888ea36c66189ac0658dc100603332`）。后续整合官方版本时同步更新版本号，软件名保持 SumatraX。
+当前版本为 **SumatraX 3.7.22619 Rev.1**，基于官方预发布版 3.7.22619（2026-10-01，提交 `181dcfa3f8888ea36c66189ac0658dc100603332`）。
 
 <p align="center">
   <img src="docs/screenshot.png" width="800" alt="SumatraX main window" />
@@ -43,11 +43,19 @@ SumatraX 是基于 SumatraPDF 深度定制的专注、极简型多格式文档�
 
 ## 更多信息
 
-运行 `bun cmd/build.ts -rel` 编译 x64 发布版，并自动同步 `out/rel64`、`out/release-3.7.22619` 和 `out/release-3.7.22619/SumatraX-v3.7.22619-x64` 中的程序及便携 ZIP。发布路径从源码中的完整版本号生成。单文件版使用静态构建；现有设置文件不被覆盖。
+运行 `bun cmd/build.ts -rel` 编译 x64 发布版，并自动同步 `out/rel64`、`out/release-3.7.22619-r1` 和 `out/release-3.7.22619-r1/SumatraX-v3.7.22619-r1-x64` 中的程序及便携 ZIP。发布路径从源码中的官方基线与 SumatraX 修订号生成。单文件版使用静态构建；现有设置文件不被覆盖。
 
 - [官方网站](https://www.sumatrapdfreader.org/free-pdf-reader)
 - [使用手册](https://www.sumatrapdfreader.org/manual)
 - [开发者文档](https://www.sumatrapdfreader.org/docs/Contribute-to-SumatraPDF)
+
+## 版本规则
+
+- 界面、文件属性和安装信息使用 `3.7.22619 Rev.1`；Git 标签与发布包使用 `v3.7.22619-r1`。
+- 官方基线仅在实际整合相应官方代码后更新。
+- SumatraX 修订号由 `src/Version.h` 中的 `SUMATRAX_REVISION` 统一定义，从 `Rev.1` 开始，每次正式发布递增；普通修改和重复编译不递增。
+- 整合官方新版时修订号继续递增，不归零。
+- Windows 数字版本使用四段：正式基线为“主版本、次版本、补丁号、修订号”，预发布基线为“主版本、次版本、官方构建号、修订号”；当前为 `3.7.22619.1`。完整官方基线始终保留在显示版本中。
 
 ## 开源协议
 

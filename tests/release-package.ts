@@ -8,6 +8,9 @@ export async function testit(): Promise<void> {
   const dir = mkdtempSync(tmpPath("release-package-"));
   const outDir = join(dir, "rel64");
   const version = extractSumatraBuildVersion();
+  if (!/^\d+(?:\.\d+)+-r[1-9]\d*$/.test(version)) {
+    throw new Error(`release version must include the SumatraX revision: ${version}`);
+  }
   const releaseDir = join(dir, `release-${version}`);
   const packageName = `SumatraX-v${version}-x64`;
   const portableDir = join(releaseDir, packageName);
