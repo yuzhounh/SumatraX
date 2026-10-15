@@ -42,6 +42,13 @@ When committing a fix for a GitHub issue, end the commit message's **first line*
 
 When committing work done with AI assistance, append the user prompt(s) that produced the change at the very end of the commit message as a single line: `prompt: ...`. If there were multiple prompts, squash them into one concise line. Record the substantive request only — omit meta-instructions such as "commit", "push", "check work", or "verify".
 
+## SumatraX versioning
+
+- Keep the upstream baseline pinned to the official code actually integrated. Only update it when integrating upstream changes.
+- Define the independent SumatraX revision in `src/Version.h` as `SUMATRAX_REVISION`, starting at 1. Increment it for each formal release, not ordinary edits or rebuilds; never reset it when updating upstream.
+- Display `<upstream> Rev.<revision>` in UI, file properties and installation metadata. Use `<upstream>-r<revision>` for release paths and `v<upstream>-r<revision>` for tags.
+- Keep Windows numeric versions at four words: upstream major/minor/patch/revision for stable baselines, or upstream major/minor/build/revision for prerelease baselines. Generate display and package versions from the same revision.
+
 # Generic coding rules
 
 - When writing something intended for human consumption, (comment, commit message, reply to prompt) use as few words as possible. Pick every word meticulously to reduce the volume to a strict minimum. Be down to the point. Less is more.

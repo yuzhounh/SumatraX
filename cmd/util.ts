@@ -238,7 +238,12 @@ export function extractSumatraBuildVersion(): string {
   const headers = ["BuildConfig.h", "Version.h"].map((name) => readFileSync(join("src", name), "utf-8")).join("\n");
   const preRelease = /^#define PRE_RELEASE_VER (\d+)\s*$/m.exec(headers);
   const version = extractSumatraVersion();
-  return preRelease ? `${version}.${preRelease[1]}` : version;
+  const revision = /^#define SUMATRAX_REVISION (\d+)\s*$/m.exec(headers);
+  if (!revision || Number(revision[1]) < 1 || Number(revision[1]) > 65535) {
+    throw new Error("invalid SUMATRAX_REVISION in src/Version.h");
+  }
+  const upstream = preRelease ? `${version}.${preRelease[1]}` : version;
+  return `${upstream}-r${revision[1]}`;
 }
 
 function normalizeNewlines(data: string): string {
