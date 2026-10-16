@@ -4,7 +4,7 @@ import { existsSync, readFileSync, writeFileSync, statSync, rmSync } from "node:
 import { join, resolve } from "node:path";
 import { createHmac, createHash } from "node:crypto";
 import {
-  extractSumatraBuildVersion,
+  extractPreReleaseVersion,
   extractSumatraVersion,
   runLogged,
   getGitSha1,
@@ -374,8 +374,7 @@ export async function buildCi() {
   getSecrets();
 
   const sumatraVer = extractSumatraVersion();
-  const preRelVer = extractSumatraBuildVersion().slice(sumatraVer.length + 1);
-  if (!/^\d+$/.test(preRelVer)) throw new Error("official pre-release version missing from src/Version.h");
+  const preRelVer = extractPreReleaseVersion();
   const sha1 = await getGitSha1();
   console.log(`preReleaseVer: '${preRelVer}'`);
   console.log(`gitSha1: '${sha1}'`);
