@@ -3763,6 +3763,8 @@ void UpdateAfterThemeChange() {
         RefreshAnnotationHoverOverlay(win);
         UpdateAIChatTheme(win);
         DarkModeApplyToFrameAfterThemeChange(win);
+        OverlayScrollbarUpdateTheme(win->overlayScrollV);
+        OverlayScrollbarUpdateTheme(win->overlayScrollH);
         UpdateWindowFrameBorderColor(win);
         // TODO: this only rerenders canvas, not frame, even with
         // includingNonClientArea == true.
@@ -3792,6 +3794,8 @@ void UpdateWindowTheme(MainWindow* win) {
     RefreshAnnotationHoverOverlay(win);
     UpdateAIChatTheme(win);
     DarkModeApplyToFrameAfterThemeChange(win);
+    OverlayScrollbarUpdateTheme(win->overlayScrollV);
+    OverlayScrollbarUpdateTheme(win->overlayScrollH);
     UpdateWindowFrameBorderColor(win);
     RedrawWindow(win->hwndFrame, nullptr, nullptr, RDW_ERASE | RDW_INVALIDATE | RDW_ALLCHILDREN);
 }

@@ -76,6 +76,8 @@ void OverlayScrollbarHide(OverlayScrollbar* sb);
 
 void OverlayScrollbarNotifyScroll(OverlayScrollbar* sb);
 
+void OverlayScrollbarUpdateTheme(OverlayScrollbar* sb);
+
 void OverlayScrollbarSetMode(OverlayScrollbar* sb, OverlayScrollbar::Mode mode);
 
 bool IsOverlayScrollbarVisible(OverlayScrollbar* sb);
