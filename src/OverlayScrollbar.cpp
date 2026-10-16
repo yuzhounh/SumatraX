@@ -1060,6 +1060,15 @@ void OverlayScrollbarShow(OverlayScrollbar* sb, bool show) {
     PaintScrollbar(sb);
 }
 
+void OverlayScrollbarUpdateTheme(OverlayScrollbar* sb) {
+    if (!sb || !IsVisible(sb)) {
+        return;
+    }
+    // Layered popups keep their pixels until UpdateLayeredWindow is called.
+    WindowThemeScope themeScope(sb->hwndOwner);
+    PaintScrollbar(sb);
+}
+
 // Change the scrollbar mode (Smart vs Thick)
 void OverlayScrollbarSetMode(OverlayScrollbar* sb, OverlayScrollbar::Mode mode) {
     if (!sb || sb->mode == mode) {
