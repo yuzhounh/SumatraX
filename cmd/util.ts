@@ -234,8 +234,18 @@ export function extractSumatraVersion(): string {
   throw new Error(`couldn't extract CURR_VERSION from ${path}`);
 }
 
+function readVersionHeaders(): string {
+  return ["BuildConfig.h", "Version.h"].map((name) => readFileSync(join("src", name), "utf-8")).join("\n");
+}
+
+export function extractPreReleaseVersion(): string {
+  const match = /^#define PRE_RELEASE_VER (\d+)\s*$/m.exec(readVersionHeaders());
+  if (!match) throw new Error("official pre-release version missing from src/Version.h");
+  return match[1];
+}
+
 export function extractSumatraBuildVersion(): string {
-  const headers = ["BuildConfig.h", "Version.h"].map((name) => readFileSync(join("src", name), "utf-8")).join("\n");
+  const headers = readVersionHeaders();
   const preRelease = /^#define PRE_RELEASE_VER (\d+)\s*$/m.exec(headers);
   const version = extractSumatraVersion();
   const revision = /^#define SUMATRAX_REVISION (\d+)\s*$/m.exec(headers);

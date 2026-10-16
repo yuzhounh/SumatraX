@@ -2,7 +2,7 @@ import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { $ } from "bun";
 import {
-  extractSumatraBuildVersion,
+  extractPreReleaseVersion,
   extractSumatraVersion,
   runLogged,
   isGitClean,
@@ -67,8 +67,7 @@ export async function buildDaily() {
   }
 
   const sumatraVer = extractSumatraVersion();
-  const preRelVer = extractSumatraBuildVersion().slice(sumatraVer.length + 1);
-  if (!/^\d+$/.test(preRelVer)) throw new Error("official pre-release version missing from src/Version.h");
+  const preRelVer = extractPreReleaseVersion();
   const sha1 = await getGitSha1();
   console.log(`preReleaseVer: '${preRelVer}'`);
   console.log(`gitSha1: '${sha1}'`);
