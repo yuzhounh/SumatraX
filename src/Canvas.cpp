@@ -3935,6 +3935,50 @@ static void PaintFloatingPageBadge(MainWindow* win, HDC hdc, DisplayModel* dm) {
     gs.DrawString(wstr.s, -1, &gdipFont, rf, &sf, &textBrush);
 }
 
+static Color ImageBackgroundColor(Kind engineKind) {
+    auto& setting =
+        engineKind == kindEngineComicBooks ? gSettings->comicBookUI.windowBgCol : gSettings->imageUI.windowBgCol;
+    return GetParsedColor(setting, kColBlack);
+}
+
+static Color CanvasBackgroundColor(MainWindow* win) {
+    WindowTab* tab = win ? win->CurrentTab() : nullptr;
+    if (!tab) {
+        return ThemeMainWindowBackgroundColor();
+    }
+    EngineBase* engine = tab->GetEngine();
+    Kind engineKind;
+    if (engine) {
+        if (!engine->IsImageCollection()) {
+            return ThemeMainWindowBackgroundColor();
+        }
+        engineKind = engine->kind;
+    } else {
+        // The engine is absent while the next image is loading.
+        FileType type = GuessFileTypeFromName(tab->filePath, true);
+        if (IsEngineImageSupportedFileType(type)) {
+            engineKind = kindEngineImage;
+        } else if (IsEngineCbxSupportedFileType(type)) {
+            engineKind = kindEngineComicBooks;
+        } else {
+            return ThemeMainWindowBackgroundColor();
+        }
+    }
+    if (tab->bgColorCheckered) {
+        return kColorUnset;
+    }
+    return tab->bgColor != kColorUnset ? tab->bgColor : ImageBackgroundColor(engineKind);
+}
+
+static void PaintCanvasBackground(MainWindow* win, HDC hdc, Rect rc) {
+    Color color = CanvasBackgroundColor(win);
+    if (color == kColorUnset) {
+        HdcPaintCheckerboard(hdc, rc.x, rc.y, rc.dx, rc.dy);
+    } else {
+        HdcFillRect(hdc, rc, color);
+    }
+}
+
 static bool DrawDocument(MainWindow* win, HDC hdc, Rect rcArea) {
     ReportIf(!win->AsFixed());
     if (!win->AsFixed()) {
@@ -3953,18 +3997,8 @@ static bool DrawDocument(MainWindow* win, HDC hdc, Rect rcArea) {
     Color colDocBg;
     Color colDocTxt = ThemeDocumentColors(colDocBg);
     if (isImage) {
-        colDocBg = 0x0;
+        colDocBg = ImageBackgroundColor(engine->kind);
         colDocTxt = 0xffffff;
-        // allow ComicBookUI/ImageUI WindowBgCol to override the default black
-        ParsedColor* bgOverride = nullptr;
-        if (engine->kind == kindEngineComicBooks) {
-            bgOverride = GetPrefsColor(gSettings->comicBookUI.windowBgCol);
-        } else {
-            bgOverride = GetPrefsColor(gSettings->imageUI.windowBgCol);
-        }
-        if (bgOverride->parsedOk) {
-            colDocBg = bgOverride->col;
-        }
     } else if (isEbook) {
         ParsedColor* bgOverride = GetPrefsColor(gSettings->eBookUI.windowBgCol);
         if (bgOverride->parsedOk) {
@@ -5581,7 +5615,7 @@ void FillCanvasThemeBackground(HWND hwndCanvas) {
         return;
     }
     HDC hdc = GetDC(hwndCanvas);
-    HdcFillRect(hdc, HwndClientRect(hwndCanvas), ThemeMainWindowBackgroundColor());
+    PaintCanvasBackground(FindMainWindowByHwnd(hwndCanvas), hdc, HwndClientRect(hwndCanvas));
     ReleaseDC(hwndCanvas, hdc);
 }
 
@@ -5655,8 +5689,8 @@ static void OnPaintDocumentStatus(MainWindow* win) {
 
     Gfx* gfx = GfxCreate(hdc);
     PlatformFont* fontRightTxt = GetUserGuiFont(StrL("MS Shell Dlg"), DpiScale(14));
-    auto bgCol = ThemeMainWindowBackgroundColor();
-    gfx->FillRect(ToRect(ps.rcPaint), bgCol);
+    PaintCanvasBackground(win, hdc, ToRect(ps.rcPaint));
+    Color bgCol = CanvasBackgroundColor(win);
     auto* tab = win->CurrentTab();
     Str filePath = tab->filePath;
     if (filePath) {
@@ -5695,7 +5729,11 @@ static void OnPaintDocumentStatus(MainWindow* win) {
                 }
             }
             u32 flags = gfxTextCenter | gfxTextVCenter | (IsUIRtl() ? gfxTextRtl : 0);
-            gfx->DrawText(msg, HwndClientRect(win->hwndCanvas), flags, fontRightTxt, ThemeWindowTextColor());
+            Color textColor = ThemeWindowTextColor();
+            if (IsLightColor(bgCol) == IsLightColor(textColor)) {
+                textColor = IsLightColor(bgCol) ? kColBlack : kColWhite;
+            }
+            gfx->DrawText(msg, HwndClientRect(win->hwndCanvas), flags, fontRightTxt, textColor);
         } else {
             // red, with the file name in bold and the reason (file gone, no
             // permission, locked by another program) on a second line: a bare
@@ -6388,6 +6426,7 @@ void RevokeCanvasDropTarget(HWND hwndCanvas) {
 }
 
 LRESULT CALLBACK WndProcCanvas(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
+    WindowThemeScope themeScope(hwnd);
     DpiScope dpiScope(hwnd);
     // messages that don't require win
 

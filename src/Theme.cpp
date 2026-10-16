@@ -19,6 +19,15 @@ License: GPLv3 */
 #include "Translations.h"
 #include "PdfDarkMode.h"
 #include "base/Win.h"
+#include "base/GuessFileType.h"
+#include "DisplayMode.h"
+#include "DocController.h"
+#include "EngineBase.h"
+#include "EngineAll.h"
+#include "DisplayModel.h"
+#include "WindowTab.h"
+#include "SumatraPDF.h"
+#include "MainWindow.h"
 
 #include "Theme.h"
 
@@ -508,13 +517,88 @@ static int gCurrThemeIndex = 0;
 static Theme* gCurrentTheme = nullptr;
 static Theme* gThemeLight = nullptr;
 static Themes* gParsedThemes = nullptr;
+static thread_local bool gImageUiTheme = false;
+static HHOOK gThemeCallHook = nullptr;
+static HHOOK gThemeReturnHook = nullptr;
+static Vec<bool> gThemeCallStack;
+
+static Theme* UiTheme() {
+    return gImageUiTheme && gThemes ? (*gThemes)[1] : gCurrentTheme;
+}
+
+static void SelectUiTheme(ControlColorContext context) {
+    bool image = context == ControlColorContext::Image;
+    if (gImageUiTheme == image) {
+        return;
+    }
+    gImageUiTheme = image;
+    DarkModeColorContext(context);
+    UpdateGuiColorsFromTheme();
+}
+
+bool WindowUsesImageTheme(MainWindow* win) {
+    WindowTab* tab = win ? win->CurrentTab() : nullptr;
+    if (!tab || tab->IsNonDocumentTab()) {
+        return false;
+    }
+    if (EngineBase* engine = tab->GetEngine()) {
+        return engine->IsImageCollection();
+    }
+    FileType type = GuessFileTypeFromName(tab->filePath, true);
+    return IsEngineImageSupportedFileType(type) || IsEngineCbxSupportedFileType(type);
+}
+
+WindowThemeScope::WindowThemeScope() : previous(gImageUiTheme) {
+    SelectUiTheme(ControlColorContext::Standard);
+}
+
+WindowThemeScope::WindowThemeScope(HWND hwnd) : previous(gImageUiTheme) {
+    if (MainWindow* win = FindMainWindowByHwnd(hwnd)) {
+        SelectUiTheme(WindowUsesImageTheme(win) ? ControlColorContext::Image : ControlColorContext::Standard);
+    }
+}
+
+WindowThemeScope::~WindowThemeScope() {
+    SelectUiTheme(previous ? ControlColorContext::Image : ControlColorContext::Standard);
+}
+
+static LRESULT CALLBACK ThemeBeforeMessage(int code, WPARAM wp, LPARAM lp) {
+    if (code >= 0) {
+        VecAppend(gThemeCallStack, gImageUiTheme);
+        auto* message = (CWPSTRUCT*)lp;
+        if (MainWindow* win = FindMainWindowByHwnd(message->hwnd)) {
+            SelectUiTheme(WindowUsesImageTheme(win) ? ControlColorContext::Image : ControlColorContext::Standard);
+        }
+    }
+    return CallNextHookEx(gThemeCallHook, code, wp, lp);
+}
+
+static LRESULT CALLBACK ThemeAfterMessage(int code, WPARAM wp, LPARAM lp) {
+    LRESULT result = CallNextHookEx(gThemeReturnHook, code, wp, lp);
+    if (code >= 0 && len(gThemeCallStack) > 0) {
+        SelectUiTheme(VecPop(gThemeCallStack) ? ControlColorContext::Image : ControlColorContext::Standard);
+    }
+    return result;
+}
+
+static void InitWindowThemes() {
+    bool previous = gImageUiTheme;
+    SelectUiTheme(ControlColorContext::Image);
+    DarkModeApplyThemeColors();
+    SelectUiTheme(previous ? ControlColorContext::Image : ControlColorContext::Standard);
+    if (!gThemeCallHook) {
+        DWORD threadId = GetCurrentThreadId();
+        gThemeReturnHook = SetWindowsHookExW(WH_CALLWNDPROCRET, ThemeAfterMessage, nullptr, threadId);
+        gThemeCallHook = SetWindowsHookExW(WH_CALLWNDPROC, ThemeBeforeMessage, nullptr, threadId);
+    }
+}
 
 static bool HasCurrentTheme() {
     return gCurrentTheme != nullptr;
 }
 
 bool IsCurrentThemeDefault() {
-    return gCurrThemeIndex == 0;
+    return !gImageUiTheme && gCurrThemeIndex == 0;
 }
 
 // Windows high contrast mode. The user picked a system-wide palette because
@@ -548,10 +632,16 @@ static void RecalcUseHighContrast() {
 // exported so the few places that hardcode a color for the default theme (a
 // white page box on the toolbar, say) can defer to the palette instead
 bool ThemeUsesHighContrastColors() {
-    return gUseHighContrast;
+    return !gImageUiTheme && gUseHighContrast;
 }
 
 void FreeThemes() {
+    if (gThemeCallHook) {
+        UnhookWindowsHookEx(gThemeCallHook);
+        UnhookWindowsHookEx(gThemeReturnHook);
+        gThemeCallHook = gThemeReturnHook = nullptr;
+        VecReset(gThemeCallStack);
+    }
     delete gThemes; // no need to free members, they are owned by gParsedThemes
     gThemes = nullptr;
     FreeParsedThemes(gParsedThemes);
@@ -559,6 +649,7 @@ void FreeThemes() {
 }
 
 void CreateThemeCommands() {
+    WindowThemeScope themeScope;
     FreeThemes();
     DetectHighContrastMode();
 
@@ -634,6 +725,7 @@ int ThemeGetCurrentIndex() {
 }
 
 void SetThemeByIndex(int themeIdx) {
+    WindowThemeScope themeScope;
     ReportIf((themeIdx < 0) || (themeIdx >= gThemeCount));
     if (themeIdx >= gThemeCount) {
         themeIdx = 0;
@@ -871,6 +963,7 @@ static void UpdateGuiColorsFromTheme() {
 // The app's theme, or the system palette it follows, changed: push our colors
 // into gui/'s defaults, then rebuild and repaint everything that shows them.
 void SumatraUpdateTheme() {
+    WindowThemeScope themeScope;
     UpdateGuiColorsFromTheme();
     UpdateAfterThemeChange();
 }
@@ -878,6 +971,7 @@ void SumatraUpdateTheme() {
 // call on WM_SETTINGCHANGE "ImmersiveColorSet": re-resolves the System theme
 // when the user switches Windows between light and dark mode
 void UpdateThemeAfterSystemColorChange() {
+    WindowThemeScope themeScope;
     if (!gThemeFollowsSystem) {
         return;
     }
@@ -887,6 +981,7 @@ void UpdateThemeAfterSystemColorChange() {
 // call on WM_SETTINGCHANGE: the user can turn high contrast on and off at any
 // time (Alt+Shift+PrtScr), which swaps the whole palette out from under us
 void UpdateThemeAfterHighContrastChange() {
+    WindowThemeScope themeScope;
     bool wasUsingHighContrast = gUseHighContrast;
     DetectHighContrastMode();
     RecalcUseHighContrast();
@@ -903,6 +998,7 @@ void UpdateThemeAfterHighContrastChange() {
 
 // call after loading settings
 void SetCurrentThemeFromSettings() {
+    WindowThemeScope themeScope;
     SetTheme(gSettings->theme);
     ParsedColor* bgParsed = GetPrefsColor(gSettings->mainWindowBackground);
     bool isDefault = IsDefaultMainWinColor(bgParsed);
@@ -919,6 +1015,7 @@ void SetCurrentThemeFromSettings() {
     }
     // SetTheme() above ran before we adjusted the Light theme, so re-push
     UpdateGuiColorsFromTheme();
+    InitWindowThemes();
 }
 
 #define GetThemeCol(name, def) GetParsedColor(name, def)
@@ -1013,6 +1110,7 @@ static Color ThemePageRenderColorsNoInvert(Color& bg) {
 }
 
 Color ThemePageRenderColors(Color& bg) {
+    WindowThemeScope themeScope;
     Color text = ThemePageRenderColorsNoInvert(bg);
     if (!gInvertPageColors) {
         return text;
@@ -1022,20 +1120,20 @@ Color ThemePageRenderColors(Color& bg) {
 }
 
 Color ThemeControlBackgroundColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysWindowBgColor();
     }
     // note: we can change it in ThemeUpdateAfterLoadSettings()
-    auto col = GetThemeCol(gCurrentTheme->controlBackgroundColor, kColRed);
+    auto col = GetThemeCol(UiTheme()->controlBackgroundColor, kColRed);
     return col;
 }
 
 Color ThemeMainWindowBackgroundColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysWindowBgColor();
     }
-    Color bgColor = GetThemeCol(gCurrentTheme->backgroundColor, kColRed);
-    if (gCurrThemeIndex == 0) {
+    Color bgColor = GetThemeCol(UiTheme()->backgroundColor, kColRed);
+    if (IsCurrentThemeDefault()) {
         // Special behavior for light theme.
         ParsedColor* bgParsed = GetPrefsColor(gSettings->mainWindowBackground);
         if (bgParsed->parsedOk && !IsDefaultMainWinColor(bgParsed)) {
@@ -1046,18 +1144,18 @@ Color ThemeMainWindowBackgroundColor() {
 }
 
 Color ThemeWindowBackgroundColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysWindowBgColor();
     }
-    auto col = GetThemeCol(gCurrentTheme->backgroundColor, kColRed);
+    auto col = GetThemeCol(UiTheme()->backgroundColor, kColRed);
     return col;
 }
 
 Color ThemeWindowTextColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysWindowTextColor();
     }
-    auto col = GetThemeCol(gCurrentTheme->textColor, kColRed);
+    auto col = GetThemeCol(UiTheme()->textColor, kColRed);
     return col;
 }
 
@@ -1072,88 +1170,88 @@ static Color BlendTextAndBgHalfway() {
 }
 
 Color ThemeWindowTextDisabledColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysDisabledTextColor();
     }
-    return GetThemeCol(gCurrentTheme->disabledTextColor, BlendTextAndBgHalfway());
+    return GetThemeCol(UiTheme()->disabledTextColor, BlendTextAndBgHalfway());
 }
 
 Color ThemeWindowDarkerTextColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         // high contrast has no muted text: muting it is the opposite of the point
         return SysWindowTextColor();
     }
     // fallback: slightly muted primary text (not as flat as disabled)
     Color fallback = AccentColor(ThemeWindowTextColor(), 40);
-    return GetThemeCol(gCurrentTheme->darkerTextColor, fallback);
+    return GetThemeCol(UiTheme()->darkerTextColor, fallback);
 }
 
 Color ThemeWindowControlBackgroundColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysWindowBgColor();
     }
-    auto col = GetThemeCol(gCurrentTheme->controlBackgroundColor, kColRed);
+    auto col = GetThemeCol(UiTheme()->controlBackgroundColor, kColRed);
     return col;
 }
 
 Color ThemeActiveTabBackgroundColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysWindowBgColor();
     }
-    return GetThemeCol(gCurrentTheme->activeTabBackgroundColor, ThemeWindowControlBackgroundColor());
+    return GetThemeCol(UiTheme()->activeTabBackgroundColor, ThemeWindowControlBackgroundColor());
 }
 
 Color ThemeInactiveTabBackgroundColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysWindowBgColor();
     }
     Color fallback = AccentColor(ThemeWindowControlBackgroundColor(), 25);
-    return GetThemeCol(gCurrentTheme->inactiveTabBackgroundColor, fallback);
+    return GetThemeCol(UiTheme()->inactiveTabBackgroundColor, fallback);
 }
 
 Color ThemeWindowLinkColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysLinkColor();
     }
-    auto col = GetThemeCol(gCurrentTheme->linkColor, kColRed);
+    auto col = GetThemeCol(UiTheme()->linkColor, kColRed);
     return col;
 }
 
 Color ThemeHotBackgroundColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysHighlightBgColor();
     }
     Color fallback = AccentColor(ThemeWindowControlBackgroundColor(), 20);
-    return GetThemeCol(gCurrentTheme->hotBackgroundColor, fallback);
+    return GetThemeCol(UiTheme()->hotBackgroundColor, fallback);
 }
 
 Color ThemeEdgeColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         // borders have to stay visible, so they take the text color
         return SysWindowTextColor();
     }
     Color fallback = AccentColor(ThemeWindowControlBackgroundColor(), 40);
-    return GetThemeCol(gCurrentTheme->edgeColor, fallback);
+    return GetThemeCol(UiTheme()->edgeColor, fallback);
 }
 
 Color ThemeHotEdgeColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysHighlightBgColor();
     }
     Color fallback = AccentColor(ThemeEdgeColor(), 30);
-    return GetThemeCol(gCurrentTheme->hotEdgeColor, fallback);
+    return GetThemeCol(UiTheme()->hotEdgeColor, fallback);
 }
 
 Color ThemeDisabledEdgeColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysDisabledTextColor();
     }
     Color fallback = AccentColor(ThemeWindowControlBackgroundColor(), 15);
-    return GetThemeCol(gCurrentTheme->disabledEdgeColor, fallback);
+    return GetThemeCol(UiTheme()->disabledEdgeColor, fallback);
 }
 
 Color ThemeErrorBackgroundColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         // no error color in the system palette; the text carries the message
         return SysWindowBgColor();
     }
@@ -1162,15 +1260,15 @@ Color ThemeErrorBackgroundColor() {
     if (IsLightColor(ThemeWindowControlBackgroundColor())) {
         fallback = RgbToColor(0xffe0e0);
     }
-    return GetThemeCol(gCurrentTheme->errorBackgroundColor, fallback);
+    return GetThemeCol(UiTheme()->errorBackgroundColor, fallback);
 }
 
 Color ThemeNotificationsBackgroundColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysWindowBgColor();
     }
     Color fallback = AdjustLightness2(ThemeWindowBackgroundColor(), 10);
-    return GetThemeCol(gCurrentTheme->notificationBackgroundColor, fallback);
+    return GetThemeCol(UiTheme()->notificationBackgroundColor, fallback);
 }
 
 Color ThemeNotificationsTextColor() {
@@ -1182,7 +1280,7 @@ Color ThemeNotificationsTextColor() {
 // dark amber. Deriving it from the theme's own accent (as we used to) produced
 // saturated, unrelated hues -- Dracula's warnings came out bright purple.
 Color ThemeNotificationsHighlightColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysHighlightBgColor();
     }
     Color fallback;
@@ -1191,11 +1289,11 @@ Color ThemeNotificationsHighlightColor() {
     } else {
         fallback = RgbToColor(0x422006); // dark amber
     }
-    return GetThemeCol(gCurrentTheme->notificationHighlightColor, fallback);
+    return GetThemeCol(UiTheme()->notificationHighlightColor, fallback);
 }
 
 Color ThemeNotificationsHighlightTextColor() {
-    if (gUseHighContrast) {
+    if (ThemeUsesHighContrastColors()) {
         return SysHighlightTextColor();
     }
     Color fallback;
@@ -1204,7 +1302,7 @@ Color ThemeNotificationsHighlightTextColor() {
     } else {
         fallback = RgbToColor(0xFDE68A); // light amber
     }
-    return GetThemeCol(gCurrentTheme->notificationHighlightTextColor, fallback);
+    return GetThemeCol(UiTheme()->notificationHighlightTextColor, fallback);
 }
 
 // Links inside a warning notification. The theme's link color is picked to sit on
@@ -1220,7 +1318,7 @@ Color ThemeNotificationsProgressColor() {
 }
 
 bool ThemeColorizeControls() {
-    if (gCurrentTheme->colorizeControls) {
+    if (UiTheme()->colorizeControls) {
         return true;
     }
     return !IsMenuFontSizeDefault();

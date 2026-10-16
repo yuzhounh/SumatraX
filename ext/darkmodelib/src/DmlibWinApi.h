@@ -41,6 +41,7 @@ namespace dmlib_win32api
 	void InitDarkMode() noexcept;
 	/// Enables or disables dark mode using undocumented API.
 	void SetDarkMode(bool useDark, bool applyScrollBarFix) noexcept;
+	void SetMenuDarkMode(bool useDark) noexcept;
 
 	/// Checks if the host OS is at least Windows 10.
 	[[nodiscard]] bool IsWindows10() noexcept;

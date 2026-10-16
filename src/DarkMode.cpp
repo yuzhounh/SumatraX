@@ -112,6 +112,13 @@ void DarkModeRememberTreeViewStyle() {
     DarkMode::setPrevTreeViewStyle();
 }
 
+void DarkModeColorContext(ControlColorContext context) {
+    if (gUseDarkModeLib) {
+        DarkMode::setColorContext(context == ControlColorContext::Image ? DarkMode::ColorContext::alternate
+                                                                        : DarkMode::ColorContext::main);
+    }
+}
+
 void DarkModeApplyToWindow(HWND hwnd) {
     if (!gUseDarkModeLib) {
         return;
@@ -162,10 +169,17 @@ void DarkModeApplyToPopupWindow(HWND hwnd) {
 }
 
 void DarkModeApplyToMenuWindow(HWND hwnd) {
+    DarkModePrepareMenu();
     if (!DarkModeIsActive() || !hwnd) {
         return;
     }
     DarkMode::setDarkTitleBarEx(hwnd, false);
+}
+
+void DarkModePrepareMenu() {
+    if (gUseDarkModeLib) {
+        DarkMode::prepareMenuTheme();
+    }
 }
 
 void DarkModeApplyToMenuBar(HWND hwndRebar) {
