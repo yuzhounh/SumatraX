@@ -15,6 +15,19 @@ void UpdateThemeAfterHighContrastChange();
 bool ThemeUsesHighContrastColors();
 void CreateThemeCommands();
 
+struct MainWindow;
+bool WindowUsesImageTheme(MainWindow*);
+void UpdateWindowTheme(MainWindow*);
+
+struct WindowThemeScope {
+    bool previous;
+    WindowThemeScope();
+    explicit WindowThemeScope(HWND);
+    ~WindowThemeScope();
+    WindowThemeScope(const WindowThemeScope&) = delete;
+    WindowThemeScope& operator=(const WindowThemeScope&) = delete;
+};
+
 Color ThemeDocumentColors(Color&);
 Color ThemePageRenderColors(Color&);
 Color ThemeMainWindowBackgroundColor();

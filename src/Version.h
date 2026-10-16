@@ -16,7 +16,7 @@
 #define PRE_RELEASE_VER 22619
 #endif
 
-#define SUMATRAX_REVISION 1
+#define SUMATRAX_REVISION 2
 #if SUMATRAX_REVISION < 1 || SUMATRAX_REVISION > 65535
 #error SUMATRAX_REVISION must fit a nonzero Windows version word
 #endif

@@ -682,6 +682,7 @@ struct MainWindow { // NOLINT(clang-analyzer-optin.performance.Padding)
     Point contextMenuPt;
     bool contextMenuPtValid = false;
     HBRUSH brControlBgColor = nullptr;
+    bool imageUiTheme = false;
 
     DocControllerCallback* cbHandler = nullptr;
 

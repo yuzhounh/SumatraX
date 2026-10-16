@@ -18,6 +18,11 @@ void DarkModeInit();
 // push the current theme's palette into darkmodelib
 void DarkModeApplyThemeColors();
 void DarkModeRememberTreeViewStyle();
+enum class ControlColorContext {
+    Standard,
+    Image
+};
+void DarkModeColorContext(ControlColorContext);
 
 // a dialog or other window: theme it and its children
 void DarkModeApplyToWindow(HWND);
@@ -31,6 +36,7 @@ void DarkModeApplyToTitleBar(HWND);
 void DarkModeApplyToPopupWindow(HWND);
 // the window a menu opens in
 void DarkModeApplyToMenuWindow(HWND);
+void DarkModePrepareMenu();
 // the menu bar's rebar
 void DarkModeApplyToMenuBar(HWND hwndRebar);
 // a panel whose child controls need theming

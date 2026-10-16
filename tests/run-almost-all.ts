@@ -267,6 +267,8 @@ import { testit as inkAnnotationPlacement } from "./ink-annotation-placement.ts"
 import { testit as issue5956 } from "./issue-5956.ts";
 import { testit as issue6113 } from "./issue-6113.ts";
 import { testit as imageOnlyPaletteItems } from "./image-only-palette-items.ts";
+import { testit as imageSwitchBackground } from "./image-switch-background.ts";
+import { testit as imageWindowTheme } from "./image-window-theme.ts";
 import { testit as commandPaletteShortcutFilter } from "./command-palette-shortcut-filter.ts";
 import { testit as commandPaletteAltNames } from "./command-palette-alt-names.ts";
 import { testit as commandPaletteThumbnails } from "./command-palette-thumbnails.ts";
@@ -592,6 +594,8 @@ export const tests: NamedTest[] = [
   ["issue-5965", issue5965],
 
   // --- isolated session: -appdata, saveSettings, or own window placement -
+  ["image-switch-background", imageSwitchBackground],
+  ["image-window-theme", imageWindowTheme],
   ["favorites-menu", favoritesMenu],
   ["favorites-tab-after-document-close", favoritesTabAfterDocumentClose],
   ["issue-6045", issue6045],

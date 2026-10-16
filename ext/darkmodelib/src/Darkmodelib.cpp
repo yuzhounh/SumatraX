@@ -208,7 +208,7 @@ static constexpr double kMiddleGrayRange = 2.0;
 namespace // anonymous
 {
 	/// Global struct
-	struct
+	struct DarkModeConfig
 	{
 		DWM_WINDOW_CORNER_PREFERENCE m_roundCorner = DWMWCP_DEFAULT;
 		COLORREF m_borderColor = DWMWA_COLOR_DEFAULT;
@@ -229,13 +229,42 @@ namespace // anonymous
 		bool m_isIniNameSet = false;
 		bool m_iniExist = false;
 #endif
-	} g_dmCfg;
+	};
+	static DarkModeConfig g_mainConfig;
+	static DarkModeConfig g_alternateConfig;
+	static bool g_alternateReady = false;
+	static thread_local dmlib::ColorContext g_colorContext = dmlib::ColorContext::main;
+
+	static DarkModeConfig& getConfig() noexcept
+	{
+		return g_colorContext == dmlib::ColorContext::alternate ? g_alternateConfig : g_mainConfig;
+	}
 } // anonymous namespace
+
+#define g_dmCfg (getConfig())
+
+dmlib::ColorContext dmlib::setColorContext(ColorContext context)
+{
+	if (context == ColorContext::alternate && !g_alternateReady)
+	{
+		g_alternateConfig = g_mainConfig;
+		g_alternateReady = true;
+	}
+	const auto previous = g_colorContext;
+	g_colorContext = context;
+	return previous;
+}
+
+void dmlib::prepareMenuTheme()
+{
+	dmlib_win32api::SetMenuDarkMode(g_dmCfg.m_dmType == DarkModeType::dark);
+}
 
 static dmlib_color::Theme& getTheme() noexcept
 {
-	static dmlib_color::Theme tMain{};
-	return tMain;
+	// Keep each palette's GDI resources alive across nested window messages.
+	static dmlib_color::Theme themes[2]{};
+	return themes[g_colorContext == dmlib::ColorContext::alternate ? 1 : 0];
 }
 
 /**
@@ -267,8 +296,8 @@ int dmlib::getColorTone()
 
 static dmlib_color::ThemeView& getThemeView() noexcept
 {
-	static dmlib_color::ThemeView tView{};
-	return tView;
+	static dmlib_color::ThemeView themes[2]{};
+	return themes[g_colorContext == dmlib::ColorContext::alternate ? 1 : 0];
 }
 
 #ifdef __clang__
@@ -745,7 +774,7 @@ void dmlib::setDarkModeConfigEx(UINT dmType)
 	dmlib::initDarkModeConfig(dmType);
 
 	const bool useDark = g_dmCfg.m_dmType == DarkModeType::dark;
-	dmlib_win32api::SetDarkMode(useDark, true);
+	dmlib_win32api::SetDarkMode(useDark || g_alternateReady, true);
 }
 
 /**
@@ -876,7 +905,7 @@ bool dmlib::isEnabled()
  */
 bool dmlib::isExperimentalActive()
 {
-	return dmlib_win32api::IsDarkModeActive();
+	return g_dmCfg.m_dmType == DarkModeType::dark && dmlib_win32api::IsDarkModeActive();
 }
 
 /**

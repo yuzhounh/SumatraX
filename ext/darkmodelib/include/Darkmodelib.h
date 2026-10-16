@@ -236,6 +236,10 @@ namespace dmlib
 	/// Applies dark mode settings based on the given configuration type. (DarkModeType values)
 	DMLIB_API void setDarkModeConfigEx(UINT dmType);
 
+	enum class ColorContext { main, alternate };
+	DMLIB_API ColorContext setColorContext(ColorContext context);
+	DMLIB_API void prepareMenuTheme();
+
 	/// Applies dark mode settings based on system mode preference.
 	DMLIB_API void setDarkModeConfig();
 

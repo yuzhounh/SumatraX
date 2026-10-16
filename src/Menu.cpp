@@ -2806,8 +2806,8 @@ void FreeMenuOwnerDrawInfoData(HMENU hmenu) {
 }
 #if 1
 void MarkMenuOwnerDraw(HMENU /*hmenu*/, bool /*isMenuBar*/) {
-    // our painting isn't good enough so disable for now
-    // rely on darkmodelib for menu theming, which only does light / dark theme from os
+    // Native popup menus follow their owning window's palette.
+    DarkModePrepareMenu();
 }
 #else
 void MarkMenuOwnerDraw(HMENU hmenu, bool isMenuBar) {

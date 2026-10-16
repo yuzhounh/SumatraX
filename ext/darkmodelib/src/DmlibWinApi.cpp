@@ -270,6 +270,15 @@ static void FlushMenuThemes() noexcept
 	}
 }
 
+void dmlib_win32api::SetMenuDarkMode(bool useDark) noexcept
+{
+	if (pfSetPreferredAppMode != nullptr)
+	{
+		pfSetPreferredAppMode(useDark ? PreferredAppMode::ForceDark : PreferredAppMode::ForceLight);
+		FlushMenuThemes();
+	}
+}
+
 #if defined(_DARKMODELIB_ALLOW_OLD_OS) && (_DARKMODELIB_ALLOW_OLD_OS > 0)
 static constexpr DWORD g_win10Build = 17763;
 #else

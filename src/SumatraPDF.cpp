@@ -2310,6 +2310,8 @@ static void SetFrameTitleForTab(WindowTab* tab, bool needRefresh) {
 }
 
 static void UpdateUiForCurrentTab(MainWindow* win) {
+    UpdateWindowTheme(win);
+    WindowThemeScope themeScope(win->hwndFrame);
     // hide the scrollbars before any other relayouting (for assertion in MainWindow::GetViewPortSize)
     if (!win->AsFixed()) {
         if (!ScrollbarsAreHidden() && !ScrollbarsUseOverlay()) {
@@ -3747,6 +3749,7 @@ void UpdateAfterThemeChange() {
     // painting the pixmaps of the previous theme
     HomePageInvalidateLayoutCache();
     for (auto* win : gWindows) {
+        WindowThemeScope themeScope(win->hwndFrame);
         DeleteObject(win->brControlBgColor);
         win->brControlBgColor = CreateSolidBrush(ThemeControlBackgroundColor());
 
@@ -3769,6 +3772,28 @@ void UpdateAfterThemeChange() {
     }
     CommandPaletteUpdateTheme();
     UpdateDocumentColors();
+}
+
+void UpdateWindowTheme(MainWindow* win) {
+    bool image = WindowUsesImageTheme(win);
+    if (win->imageUiTheme == image) {
+        return;
+    }
+    win->imageUiTheme = image;
+    WindowThemeScope themeScope(win->hwndFrame);
+    DeleteObject(win->brControlBgColor);
+    win->brControlBgColor = CreateSolidBrush(ThemeControlBackgroundColor());
+    UpdateControlsColors(win);
+    UpdateToolbarAfterThemeChange(win);
+    RecreateFindBar(win);
+    UpdateFindWindowTheme(win);
+    RefreshSelectionToolbarIcons(win);
+    RefreshAnnotEditToolbar(win);
+    RefreshAnnotationHoverOverlay(win);
+    UpdateAIChatTheme(win);
+    DarkModeApplyToFrameAfterThemeChange(win);
+    UpdateWindowFrameBorderColor(win);
+    RedrawWindow(win->hwndFrame, nullptr, nullptr, RDW_ERASE | RDW_INVALIDATE | RDW_ALLCHILDREN);
 }
 
 static void RenameFileInHistory(Str oldPath, Str newPath) {
@@ -5380,6 +5405,7 @@ static void RerenderFixedPage() {
 }
 
 void UpdateDocumentColors() {
+    WindowThemeScope themeScope;
     Color bg;
     Color text = ThemePageRenderColors(bg);
     bool pagesDark = !IsLightColor(bg);
@@ -15573,6 +15599,7 @@ static void ApplyEmbeddedWindowChrome(MainWindow* win) {
 }
 
 static LRESULT CALLBACK WndProcSumatraFrame(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
+    WindowThemeScope themeScope(hwnd);
     DpiScope dpiScope(hwnd);
     MainWindow* win = FindMainWindowByHwnd(hwnd);
 
@@ -17056,6 +17083,7 @@ static int RunMessageLoop() {
     MSG msg;
 
     while (GetMessage(&msg, nullptr, 0, 0)) {
+        WindowThemeScope themeScope(msg.hwnd);
         if (PreTranslateMessage(msg)) {
             continue;
         }
