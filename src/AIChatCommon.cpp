@@ -387,6 +387,9 @@ li { margin: 1px 0; }
 var chatDiv = document.getElementById('chat');
 var currentBlock = null;
 var currentRaw = '';
+var renderTimer = null;
+var renderDirty = false;
+var renderDelayMs = 32;
 function addUser(text) {
   flushBlock();
   var d = document.createElement('div');
@@ -447,6 +450,14 @@ function appendText(text) {
     currentRaw = '';
   }
   currentRaw += text;
+  renderDirty = true;
+  if (renderTimer === null) renderTimer = setTimeout(renderBlock, renderDelayMs);
+}
+function renderBlock() {
+  if (renderTimer !== null) clearTimeout(renderTimer);
+  renderTimer = null;
+  if (!currentBlock || !renderDirty) return;
+  renderDirty = false;
   if (typeof marked !== 'undefined') {
     currentBlock.replaceChildren(sanitizedMarkdown(currentRaw));
   } else {
@@ -455,11 +466,15 @@ function appendText(text) {
   scrollToBottom();
 }
 function flushBlock() {
+  renderBlock();
   currentBlock = null; currentRaw = '';
 }
 function clearChat() {
+  if (renderTimer !== null) clearTimeout(renderTimer);
+  renderTimer = null;
+  renderDirty = false;
+  currentBlock = null; currentRaw = '';
   chatDiv.innerHTML = '';
-  flushBlock();
 }
 function scrollToBottom() {
   window.scrollTo(0, document.body.scrollHeight);

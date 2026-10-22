@@ -52,6 +52,7 @@ General options:
   -clean                  Clean the selected output directory first
   -ninja                  Use Ninja instead of MSBuild
   -msbuild                Use MSBuild (the default)
+  SUMATRA_BUILD_JOBS=N     Optional compiler/process concurrency limit
   -32                     Select Win32 (valid only with Windows -rel)`;
 
 class CliError extends Error {}
@@ -191,6 +192,15 @@ function formatElapsed(ms: number): string {
   return `${minutes}m ${seconds % 60}s`;
 }
 
+function buildJobs(): number {
+  const value = process.env.SUMATRA_BUILD_JOBS;
+  if (value === undefined) return Math.max(1, cpus().length - 1);
+  if (!/^[1-9]\d*$/.test(value) || !Number.isSafeInteger(Number(value))) {
+    throw new CliError("SUMATRA_BUILD_JOBS must be a positive integer");
+  }
+  return Number(value);
+}
+
 async function buildApp(msbuildPath: string, configName: string, platform: string, target: string): Promise<void> {
   const targets = ["PdfFilter", "PdfPreview", "sumatrapdf-tool", target];
   for (const name of targets) {
@@ -198,7 +208,8 @@ async function buildApp(msbuildPath: string, configName: string, platform: strin
       String.raw`vs2022\SumatraPDF.sln`,
       `/t:${name}`,
       `/p:Configuration=${configName};Platform=${platform}`,
-      "/m",
+      `/m:${buildJobs()}`,
+      ...(process.env.SUMATRA_BUILD_JOBS ? ["/p:CL_MPCount=1"] : []),
     ]);
   }
 }
@@ -237,7 +248,7 @@ async function buildWindows(config: Config, win32: boolean, clean: boolean, ninj
 
 async function buildNinja(targets: string[]): Promise<void> {
   await ensureNinja();
-  const jobs = Math.max(1, cpus().length - 1);
+  const jobs = buildJobs();
   await runLogged("ninja", ["-C", ninjaDir, "-j", `${jobs}`, ...targets]);
 }
 
@@ -311,7 +322,8 @@ async function buildWindowsAsan(config: Config, clean: boolean, ninja: boolean):
       String.raw`vs2022\SumatraPDF.sln`,
       "/t:SumatraPDF-static",
       `/p:Configuration=${configName};Platform=x64_asan`,
-      "/m",
+      `/m:${buildJobs()}`,
+      ...(process.env.SUMATRA_BUILD_JOBS ? ["/p:CL_MPCount=1"] : []),
     ]);
   }
   printBinaries(outDir, new Set(["SumatraX-static.exe"]));
@@ -332,7 +344,8 @@ async function buildAll(clean: boolean, ninja: boolean): Promise<void> {
       String.raw`vs2022\SumatraPDF.sln`,
       "/t:SumatraPDF-static",
       "/p:Configuration=Release;Platform=x64",
-      "/m",
+      `/m:${buildJobs()}`,
+      ...(process.env.SUMATRA_BUILD_JOBS ? ["/p:CL_MPCount=1"] : []),
     ]);
   }
   printBinaries(outDir, new Set(["SumatraX.exe", "SumatraX-static.exe"]));

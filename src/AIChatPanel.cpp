@@ -863,8 +863,8 @@ TempStr AIChatTestResultTemp(int backend, Str filePath, Str message, int* exitCo
 
 // Inject a canned (user, assistant) turn into the chat webview, taking the exact
 // same WebView* path a real turn does (addUser + appendText + flushBlock), so the
-// rendering can be debugged fast without a live provider round-trip. Opens the
-// grok panel first if it isn't already showing. For the -dbg-control replay test.
+// rendering can be debugged fast without a live provider round-trip. Opens an
+// installed provider's panel first. For the -dbg-control replay test.
 TempStr AIChatTestReplayResultTemp(Str userMsg, Str response, int* exitCode) {
     if (len(gWindows) == 0) {
         if (exitCode) {
@@ -874,9 +874,28 @@ TempStr AIChatTestReplayResultTemp(Str userMsg, Str response, int* exitCode) {
     }
     MainWindow* win = gWindows[0];
     AIChatDebugReset();
-    bool grokOpen = win->uiState.aiChatVisible && win->aiChatProvider == (int)AIChatBackend::Grok;
-    if (!grokOpen) {
-        OnAIChatToggle(win, (int)AIChatBackend::Grok);
+    if (!win->uiState.aiChatVisible) {
+        int providerId = -1;
+        for (int i = 0; i < kAIChatProviderCount; i++) {
+            AIChatProvider* provider = GetAIChatProvider(i);
+            if (provider && provider->IsInstalled()) {
+                providerId = i;
+                break;
+            }
+        }
+        if (providerId < 0) {
+            if (exitCode) {
+                *exitCode = 2;
+            }
+            return str::DupTemp(StrL("UNAVAILABLE no-installed-provider"));
+        }
+        OnAIChatToggle(win, providerId);
+    }
+    if (!win->aiChatWebViewReady) {
+        if (exitCode) {
+            *exitCode = 2;
+        }
+        return str::DupTemp(StrL("NOTREADY webview"));
     }
     WebViewAddUser(win, userMsg);
     WebViewAppendText(win, response);
