@@ -147,6 +147,7 @@ struct TabsCtrl : VirtCtrl {
 
     Size GetIdealSize() override;
     void Paint(VirtPaintCtx&) override;
+    void PaintChildren(VirtPaintCtx&) override;
 
     // show/hide host HWND + VirtCtrl visibility
     void SetIsVisible(bool);

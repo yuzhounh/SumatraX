@@ -2,9 +2,11 @@
    License: Simplified BSD (see COPYING.BSD) */
 
 #include "base/Base.h"
+#include <cmath>
 #include "base/Win.h"
 #include "base/Pixmap.h"
 #include "gui/Dpi.h"
+#include "gui/ChromeStyle.h"
 
 #include "gui/UIModels.h"
 
@@ -128,12 +130,21 @@ static Pixmap* GetAppIconPixmap(int size) {
 
 //--- TabCtrl: one tab
 
-// Chrome-like selected tab: rounded top, flush with the toolbar below, and
-// concave "feet" of this radius at the bottom corners (inset within the tab)
-constexpr int kTabFootDip = 8;
-constexpr int kTabRadiusDip = 8;
-// gap between the tab's top and the card, and between a hover card and the bottom
-constexpr int kTabCardMarginYDip = 4;
+// Tab bodies fill their slots; the concave bottom feet extend into adjacent slots.
+constexpr int kTabFootDip = ChromeStyle::tabFoot;
+constexpr int kTabRadiusDip = ChromeStyle::tabRadius;
+// gap between the tab's top and the card
+constexpr int kTabCardMarginYDip = ChromeStyle::tabTop;
+constexpr int kTabInactiveCloseDip = 84;
+constexpr int kTabContentPadDip = 8;
+constexpr int kTabCloseEdgeDip = 4;
+
+struct TabVisualGeometry {
+    Rect card;
+    Rect icon;
+    int foot = 0;
+    int radius = 0;
+};
 
 // paints the tab (background, title, dirty dot) and hosts its ✕. It doesn't own
 // its TabInfo: the control's `tabs` does
@@ -152,6 +163,7 @@ struct TabCtrl : VirtCtrl {
     bool IsSelected();
     bool IsUnderMouse();
     bool CloseVisible();
+    TabVisualGeometry VisualGeometry(Rect r);
     Color BgColor();
 
     Size GetIdealSize() override;
@@ -163,6 +175,28 @@ struct TabCtrl : VirtCtrl {
     void OnCloseClick(VirtMouseEvent* ev = nullptr);
 };
 
+struct TabCloseButton : VirtCloseButton {
+    void Paint(VirtPaintCtx& ctx) override {
+        Rect r = ctx.content;
+        bool hovered = HasFlag(vwfHovered);
+        HWND hwnd = GetHwnd();
+        int mirrorDx = HwndIsRtl(hwnd) ? HwndClientRect(hwnd).dx : 0;
+        if (mirrorDx) {
+            r.x = mirrorDx - r.Right();
+        }
+        if (hovered) {
+            ctx.gfx->FillEllipse(r, GetColor(kColCloseCircleHover));
+        }
+        int cx = r.x + r.dx / 2;
+        int cy = r.y + r.dy / 2;
+        int arm = std::min(DpiScale(8), std::min(r.dx, r.dy)) / 2;
+        Color color = GetColor(hovered ? kColCloseXHover : kColCloseX);
+        float stroke = (float)DpiScale(140) / 100.0f;
+        ctx.gfx->DrawLineAA({cx - arm, cy - arm}, {cx + arm, cy + arm}, color, stroke);
+        ctx.gfx->DrawLineAA({cx + arm, cy - arm}, {cx - arm, cy + arm}, color, stroke);
+    }
+};
+
 TabCtrl::TabCtrl() {
     kind = kindTabCtrl;
     colorDefaults = gColsTab;
@@ -170,7 +204,7 @@ TabCtrl::TabCtrl() {
     onMouseDown = MkMethod1<TabCtrl, VirtMouseEvent*, &TabCtrl::OnMouseDown>(this);
     onMouseUp = MkMethod1<TabCtrl, VirtMouseEvent*, &TabCtrl::OnMouseUp>(this);
     onGetTooltip = MkMethod1<TabCtrl, VirtTooltipEvent*, &TabCtrl::OnGetTooltip>(this);
-    closeBtn = new VirtCloseButton();
+    closeBtn = new TabCloseButton();
     closeBtn->onClick = MkMethod1<TabCtrl, VirtMouseEvent*, &TabCtrl::OnCloseClick>(this);
     closeBtn->visibility = Visibility::Collapse;
     AddChild(closeBtn);
@@ -218,59 +252,85 @@ Size TabCtrl::GetIdealSize() {
     return idealSize;
 }
 
-// the ✕ is inset from the tab's edge, but its hit area is the whole gutter
-// (~40 DIP, full height) so it stays easy to hit
 void TabCtrl::SetBounds(Rect r) {
     VirtCtrl::SetBounds(r);
-    HWND hwnd = GetHwnd();
-    int dx = r.dx;
-    int dy = r.dy;
-
-    // Close glyph in Chrome is a 18x18 circle/glyph with a 32 DIP hit area
-    int closeDy = DpiScale(18);
-    int closeDx = closeDy;
-    int closePad = DpiScale(kTabFootDip + 6);
-    if (closeDx + closePad > dx && dx > 0) {
-        closeDx = std::min(closeDx, std::max(DpiScale(12), dx - 2));
-        closeDy = closeDx;
-        closePad = std::max(1, (dx - closeDx) / 2);
+    if (r.IsEmpty()) {
+        rClose = {r.x, r.y, 0, 0};
+        closeBtn->SetBounds(rClose);
+        closeBtn->visibility = Visibility::Collapse;
+        return;
     }
-    int closeY = ((dy - closeDy) / 2) + (tabsCtrl ? tabsCtrl->ContentDy() : 0);
-
-    int minHitDx = DpiScale(32);
-    int hitDx = std::max(closeDx + (2 * closePad), minHitDx);
-    hitDx = std::min(hitDx, std::max(closeDx + closePad, dx / 2));
-    hitDx = std::min(hitDx, dx);
-
-    bool isRtl = IsTabsRtl(hwnd);
-    Rect hit;
-    if (isRtl) {
-        hit = Rect{r.x, r.y, hitDx, dy};
-        rClose = Rect{r.x + closePad, r.y + closeY, closeDx, closeDy};
-    } else {
-        hit = Rect{r.x + dx - hitDx, r.y, hitDx, dy};
-        rClose = Rect{r.x + dx - closeDx - closePad, r.y + closeY, closeDx, closeDy};
-    }
-    // the glyph is painted in the button's content rect, so the padding is what
-    // makes the hit area bigger than the ✕ itself
-    closeBtn->padding.left = rClose.x - hit.x;
-    closeBtn->padding.top = rClose.y - hit.y;
-    closeBtn->padding.right = hit.Right() - rClose.Right();
-    closeBtn->padding.bottom = hit.Bottom() - rClose.Bottom();
-    closeBtn->SetBounds(hit);
+    int size = std::min(DpiScale(ChromeStyle::closeHit), std::min(r.dx, r.dy));
+    int pad = std::min(DpiScale(kTabCloseEdgeDip), std::max(0, (r.dx - size) / 2));
+    int x = IsTabsRtl(GetHwnd()) ? r.x + pad : r.Right() - pad - size;
+    int y = r.y + (r.dy - size) / 2 + (tabsCtrl ? tabsCtrl->ContentDy() : 0);
+    rClose = {x, y, size, size};
+    closeBtn->padding = {};
+    closeBtn->SetBounds(rClose);
+    closeBtn->visibility = CloseVisible() ? Visibility::Visible : Visibility::Collapse;
 }
 
-// like Chrome: only the selected tab shows (and hit-tests) its ✕, so a click
-// on a non-selected tab always selects it and can't accidentally close it
-// like Chrome: selected tab always shows its ✕, inactive tab shows it when hovered
+// Active tabs reserve the close target before the favicon, as Chrome does.
 bool TabCtrl::CloseVisible() {
-    return ti->canClose && (IsSelected() || IsUnderMouse());
+    return bounds.dx > 0 && ti->canClose &&
+           (IsSelected() || bounds.dx >= DpiScaleByDpi(DpiGetForHwnd(GetHwnd()), kTabInactiveCloseDip));
+}
+
+TabVisualGeometry TabCtrl::VisualGeometry(Rect r) {
+    DpiScope scope(GetHwnd());
+    TabVisualGeometry result;
+    result.foot = std::min(DpiScale(kTabFootDip), std::max(0, (r.dx - DpiScale(12)) / 4));
+    int marginY = std::min(DpiScale(kTabCardMarginYDip), std::max(0, (r.dy - 1) / 2));
+    int offset = tabsCtrl ? tabsCtrl->ContentDy() : 0;
+    int y = std::max(r.y, std::min(r.Bottom() - 1, r.y + marginY + offset));
+    int padding = std::min(DpiScale(kTabContentPadDip), std::max(0, r.dx / 2));
+    result.card = {r.x + padding, y, std::max(0, r.dx - 2 * padding),
+                   std::max(1, std::min(r.dy - 2 * marginY, r.Bottom() - y))};
+    result.radius = std::max(0, std::min(DpiScale(kTabRadiusDip), std::min(r.dx / 4, result.card.dy / 2)));
+    bool close = CloseVisible();
+    bool showIcon = !close || r.dx - 2 * DpiScale(kTabContentPadDip) >= DpiScale(16 + 16 + 4);
+    int size = showIcon ? std::max(0, std::min(DpiScale(16), std::min(r.dx, result.card.dy))) : 0;
+    bool centerIcon = !close && result.card.dx < DpiScale(16);
+    int x = centerIcon ? r.x + (r.dx - size) / 2 : IsTabsRtl(GetHwnd()) ? result.card.Right() - size : result.card.x;
+    int centerY = r.y + r.dy / 2 + offset;
+    int iconY = std::max(r.y, std::min(r.Bottom() - size, centerY - size / 2));
+    result.icon = {x, iconY, size, size};
+    return result;
+}
+
+static void PaintTabBackground(Gfx* gfx, Rect r, int radius, int foot, Color color) {
+    radius = std::min(radius, r.dy / 2);
+    foot = std::min(foot, r.dy / 2);
+    Vec<Point> quads;
+    auto addBand = [&](int y1, int y2, int inset1, int inset2) {
+        VecAppend(quads, {r.x + inset1, y1});
+        VecAppend(quads, {r.Right() - inset1, y1});
+        VecAppend(quads, {r.Right() - inset2, y2});
+        VecAppend(quads, {r.x + inset2, y2});
+    };
+    auto arcInset = [](int radius, int y) {
+        return radius - (int)std::lround(std::sqrt((double)radius * radius - (double)y * y));
+    };
+    // Fill the contour directly so the feet never erase a neighboring tab's background.
+    for (int y = 0; y < radius; y++) {
+        addBand(r.y + y, r.y + y + 1, arcInset(radius, radius - y), arcInset(radius, radius - y - 1));
+    }
+    if (r.dy > radius + foot) {
+        addBand(r.y + radius, r.Bottom() - foot, 0, 0);
+    }
+    for (int y = 0; y < foot; y++) {
+        addBand(r.Bottom() - foot + y, r.Bottom() - foot + y + 1, -arcInset(foot, y), -arcInset(foot, y + 1));
+    }
+    gfx->FillQuads(quads.els, len(quads) / 4, color);
 }
 
 void TabCtrl::Paint(VirtPaintCtx& ctx) {
     Gfx* gfx = ctx.gfx;
     HWND hwnd = GetHwnd();
     Rect r = ctx.bounds;
+    if (r.IsEmpty()) {
+        return;
+    }
     Color tabBgCol = BgColor();
     bool isSelected = IsSelected();
     bool isUnderMouse = IsUnderMouse();
@@ -280,51 +340,47 @@ void TabCtrl::Paint(VirtPaintCtx& ctx) {
     // content is centered on cy, which contentDy lifts to the caption buttons' center line
     int offY = tabsCtrl->ContentDy();
     int cy = r.y + (r.dy / 2) + offY;
-    int foot = DpiScale(kTabFootDip);
-    int marginY = DpiScale(kTabCardMarginYDip);
-    // hover card: centered on cy; selected card: same top, reaching the bottom
-    Rect cardRect = {r.x + foot, r.y + marginY + offY, r.dx - (foot * 2), r.dy - (marginY * 2)};
-    int radius = DpiScale(kTabRadiusDip);
+    TabVisualGeometry geometry = VisualGeometry(r);
+    int foot = geometry.foot;
+    Rect cardRect = geometry.card;
+    int radius = geometry.radius;
+
+    if (isSelected || isUnderMouse) {
+        Color fill = isSelected
+                         ? (IsSpecialColor(ti->tabColor) ? ChromeStyle::Surface(IsLightColor(tabBgCol)) : tabBgCol)
+                         : ChromeStyle::Overlay(ChromeStyle::Bar(IsLightColor(tabBgCol)),
+                                                ChromeStyle::Text(IsLightColor(tabBgCol)), 0x1A);
+        Rect background = {r.x, cardRect.y, r.dx, r.Bottom() - cardRect.y};
+        Rect clip = {r.x - foot, r.y, r.dx + 2 * foot, r.dy};
+        gfx->PushClip(clip.Intersect(ctx.clip));
+        PaintTabBackground(gfx, background, radius, foot, fill);
+        gfx->PopClip();
+    }
+    gfx->PushClip(r);
 
     Color textColor;
     if (isSelected) {
-        Color cardBg = IsLightColor(tabBgCol) ? MkRgb(0xFF, 0xFF, 0xFF) : MkRgb(0x32, 0x36, 0x39);
-        Color barBg = IsLightColor(tabBgCol) ? MkRgb(0xDD, 0xE3, 0xE9) : MkRgb(0x1F, 0x20, 0x23);
-        Rect rc = {cardRect.x, cardRect.y, cardRect.dx, r.Bottom() - cardRect.y};
-        gfx->FillRoundedRect(rc, radius * 2, cardBg);
-        // square off the bottom corners
-        gfx->FillRect({rc.x, rc.Bottom() - radius, rc.dx, radius}, cardBg);
-        // concave feet: a card-colored square with a bar-colored circle cut out of it
-        int feetY = r.Bottom() - foot;
-        gfx->FillRect({rc.x - foot, feetY, foot, foot}, cardBg);
-        gfx->FillEllipse({rc.x - (foot * 2), feetY - foot, foot * 2, foot * 2}, barBg);
-        gfx->FillRect({rc.Right(), feetY, foot, foot}, cardBg);
-        gfx->FillEllipse({rc.Right(), feetY - foot, foot * 2, foot * 2}, barBg);
-        textColor = IsLightColor(cardBg) ? MkRgb(0x1F, 0x1F, 0x1F) : MkRgb(0xF1, 0xF3, 0xF4);
+        Color cardBg = IsSpecialColor(ti->tabColor) ? ChromeStyle::Surface(IsLightColor(tabBgCol)) : tabBgCol;
+        textColor = TabTextColorForBackground(ChromeStyle::Text(IsLightColor(cardBg)), cardBg);
         closeBtn->SetColor(kColCloseCircle, cardBg);
-        closeBtn->SetColor(kColCloseCircleHover,
-                           IsLightColor(tabBgCol) ? MkRgb(0xDA, 0xDC, 0xE0) : MkRgb(0x4A, 0x4D, 0x51));
-        closeBtn->SetColor(kColCloseX, IsLightColor(tabBgCol) ? MkRgb(0x5F, 0x63, 0x68) : MkRgb(0x9A, 0xA0, 0xA6));
-        closeBtn->SetColor(kColCloseXHover, IsLightColor(tabBgCol) ? MkRgb(0x20, 0x21, 0x24) : MkRgb(0xFF, 0xFF, 0xFF));
+        closeBtn->SetColor(kColCloseCircleHover, ChromeStyle::Overlay(cardBg, textColor, 0x1A));
+        closeBtn->SetColor(kColCloseX, textColor);
+        closeBtn->SetColor(kColCloseXHover, textColor);
     } else {
         if (isUnderMouse) {
-            Color hoverBg = IsLightColor(tabBgCol) ? MkRgb(0xD8, 0xDD, 0xE4) : MkRgb(0x3A, 0x3E, 0x42);
-            gfx->FillRoundedRect(cardRect, radius * 2, hoverBg);
-            textColor = IsLightColor(tabBgCol) ? MkRgb(0x3C, 0x40, 0x43) : MkRgb(0xE8, 0xEA, 0xED);
+            Color hoverBg = ChromeStyle::Overlay(ChromeStyle::Bar(IsLightColor(tabBgCol)),
+                                                 ChromeStyle::Text(IsLightColor(tabBgCol)), 0x1A);
+            textColor = ChromeStyle::Text(IsLightColor(tabBgCol));
             closeBtn->SetColor(kColCloseCircle, hoverBg);
-            closeBtn->SetColor(kColCloseCircleHover,
-                               IsLightColor(tabBgCol) ? MkRgb(0xCC, 0xD1, 0xD9) : MkRgb(0x4A, 0x4D, 0x51));
-            closeBtn->SetColor(kColCloseX, IsLightColor(tabBgCol) ? MkRgb(0x5F, 0x63, 0x68) : MkRgb(0x9A, 0xA0, 0xA6));
-            closeBtn->SetColor(kColCloseXHover,
-                               IsLightColor(tabBgCol) ? MkRgb(0x20, 0x21, 0x24) : MkRgb(0xFF, 0xFF, 0xFF));
+            closeBtn->SetColor(kColCloseCircleHover, ChromeStyle::Overlay(hoverBg, textColor, 0x1A));
+            closeBtn->SetColor(kColCloseX, textColor);
+            closeBtn->SetColor(kColCloseXHover, textColor);
         } else {
-            textColor = IsLightColor(tabBgCol) ? MkRgb(0x5F, 0x63, 0x68) : MkRgb(0x9A, 0xA0, 0xA6);
+            textColor = ChromeStyle::Text(IsLightColor(tabBgCol));
             closeBtn->SetColor(kColCloseCircle, tabBgCol);
-            closeBtn->SetColor(kColCloseCircleHover,
-                               IsLightColor(tabBgCol) ? MkRgb(0xDA, 0xDC, 0xE0) : MkRgb(0x4A, 0x4D, 0x51));
-            closeBtn->SetColor(kColCloseX, IsLightColor(tabBgCol) ? MkRgb(0x5F, 0x63, 0x68) : MkRgb(0x9A, 0xA0, 0xA6));
-            closeBtn->SetColor(kColCloseXHover,
-                               IsLightColor(tabBgCol) ? MkRgb(0x20, 0x21, 0x24) : MkRgb(0xFF, 0xFF, 0xFF));
+            closeBtn->SetColor(kColCloseCircleHover, ChromeStyle::Overlay(tabBgCol, textColor, 0x1A));
+            closeBtn->SetColor(kColCloseX, textColor);
+            closeBtn->SetColor(kColCloseXHover, textColor);
         }
 
         // Draw vertical separator between inactive tabs (like Chrome)
@@ -351,35 +407,32 @@ void TabCtrl::Paint(VirtPaintCtx& ctx) {
     }
 
     // Draw document favicon on the left (like Chrome)
-    int iconSz = DpiScale(16);
-    int iconY = cy - (iconSz / 2);
-    int iconPad = DpiScale(8);
-    int iconX = isRtl ? (cardRect.Right() - iconPad - iconSz) : (cardRect.x + iconPad);
-    Rect rIcon = {iconX, iconY, iconSz, iconSz};
-    Pixmap* pm = GetAppIconPixmap(iconSz);
+    Rect rIcon = geometry.icon;
+    Pixmap* pm = rIcon.dx > 0 ? GetAppIconPixmap(rIcon.dx) : nullptr;
     if (pm) {
         gfx->DrawPixmap(pm, rIcon);
     }
 
     // draw text
     Rect rTxt = {cardRect.x, cy - (r.dy / 2), cardRect.dx, r.dy};
-    int textGap = DpiScale(6);
+    int textGap = DpiScale(8);
     bool closeVisible = CloseVisible();
     if (isRtl) {
-        int textLeft = closeVisible ? (rClose.x + rClose.dx + textGap) : (cardRect.x + textGap);
+        int textLeft = closeVisible ? rClose.Right() : cardRect.x;
         int textRight = rIcon.x - textGap;
         rTxt.x = textLeft;
         rTxt.dx = std::max(0, textRight - textLeft);
     } else {
         int textLeft = rIcon.Right() + textGap;
-        int textRight = closeVisible ? (rClose.x - textGap) : (cardRect.Right() - textGap);
+        int textRight = closeVisible ? rClose.x : cardRect.Right();
         rTxt.x = textLeft;
         rTxt.dx = std::max(0, textRight - textLeft);
     }
 
     PlatformFont* pageFont = font;
     int pageDx = 0;
-    if (len(ti->pageText) > 0) {
+    bool showTitle = rTxt.dx >= DpiScale(20);
+    if (showTitle && len(ti->pageText) > 0) {
         PlatformFont* scaled = GetScaledPlatformFont(font, 85);
         if (scaled) {
             pageFont = scaled;
@@ -404,7 +457,9 @@ void TabCtrl::Paint(VirtPaintCtx& ctx) {
     }
 
     u32 fmt = gfxTextEllipsis | gfxTextVCenter | (isRtl ? gfxTextRight : gfxTextLeft);
-    gfx->DrawText(ti->text, rFile, fmt, font, textColor);
+    if (showTitle) {
+        gfx->DrawText(ti->text, rFile, fmt, font, textColor);
+    }
     if (pageDx > 0) {
         Color pageCol = AccentColor(textColor, 40);
         u32 pageFmt = gfxTextVCenter | gfxTextNoClip | (isRtl ? gfxTextRight : gfxTextLeft);
@@ -413,14 +468,15 @@ void TabCtrl::Paint(VirtPaintCtx& ctx) {
 
     // draw red dot after tab text for dirty (unsaved) tabs
     if (ti->isDirty) {
-        int dotRadius = DpiScale(3);
-        int textDx = std::min(gfx->MeasureText(ti->text, font).dx, rFile.dx);
-        int textEnd = isRtl ? rFile.Right() : rFile.x + textDx;
-        int maxX = rFile.Right() - (dotRadius * 2);
-        int dotX = std::min(textEnd + dotRadius, maxX);
+        int dotRadius = std::max(1, std::min(DpiScale(showTitle ? 3 : 2), r.dx / 4));
+        int textDx = showTitle ? std::min(gfx->MeasureText(ti->text, font).dx, rFile.dx) : 0;
+        int textEnd = showTitle ? (isRtl ? rFile.Right() : rFile.x + textDx) : rIcon.Right();
+        int maxX = (showTitle ? rFile.Right() : r.Right()) - (dotRadius * 2);
+        int dotX = std::max(r.x, std::min(textEnd + dotRadius, maxX));
         int dotY = cy - dotRadius;
         gfx->FillEllipse({dotX, dotY, dotRadius * 2, dotRadius * 2}, MkRgb(0xEE, 0x22, 0x22));
     }
+    gfx->PopClip();
 }
 
 //--- NewTabBtn: the "+" after the last tab
@@ -1000,6 +1056,22 @@ void TabsCtrl::Paint(VirtPaintCtx&) {
     // children paint themselves; host WM_PAINT fills the background
 }
 
+void TabsCtrl::PaintChildren(VirtPaintCtx& ctx) {
+    Point origin{ctx.content.x, ctx.content.y};
+    TabCtrl* top = TabCtrlAt(selectedIdx);
+    for (auto* t : tabCtrls) {
+        if (t != top) {
+            t->PaintTree(ctx.gfx, origin, ctx.clip);
+        }
+    }
+    if (newTabBtn) {
+        newTabBtn->PaintTree(ctx.gfx, origin, ctx.clip);
+    }
+    if (top) {
+        top->PaintTree(ctx.gfx, origin, ctx.clip);
+    }
+}
+
 LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     if (msg == WM_MOUSEACTIVATE) {
         HWND frame = GetAncestor(hwnd, GA_ROOT);
@@ -1245,7 +1317,7 @@ LRESULT TabsCtrl::WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
                 return 0;
             }
             HDC hdc = GetDC(hwnd);
-            Color bgCol = IsLightColor(GetColor(kColTabBg)) ? MkRgb(0xDD, 0xE3, 0xE9) : MkRgb(0x1F, 0x20, 0x23);
+            Color bgCol = IsLightColor(GetColor(kColTabBg)) ? ChromeStyle::Bar(true) : ChromeStyle::Bar(false);
             if (vroot) {
                 PaintVirtTree(vroot, hdc, clientRc, bgCol);
             } else {
